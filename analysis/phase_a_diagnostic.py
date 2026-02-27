@@ -443,13 +443,14 @@ def diagnose_fast_search():
 
     # Try to read from damon branch via git
     import subprocess
+    _repo_root = str(Path(__file__).resolve().parent.parent)
 
     # Stage 1
     print(f"\n--- Stage 1: Grid Search (probe_alpha=4.25, 5 games each) ---")
     try:
         s1_raw = subprocess.check_output(
             ["git", "show", "origin/damon:results/fast_run/stage1_results.json"],
-            cwd="/Users/moiz/Documents/code/comp0087_snlp_cwk"
+            cwd=_repo_root
         )
         s1 = json.loads(s1_raw)
         print(f"  {'Dimension':35s} {'Method':10s} {'Layer':15s} {'Adv':>8s} {'Agree':>6s}")
@@ -464,7 +465,7 @@ def diagnose_fast_search():
     try:
         s2_raw = subprocess.check_output(
             ["git", "show", "origin/damon:results/fast_run/stage2_results.json"],
-            cwd="/Users/moiz/Documents/code/comp0087_snlp_cwk"
+            cwd=_repo_root
         )
         s2 = json.loads(s2_raw)
         for e in s2:
@@ -501,7 +502,7 @@ def diagnose_fast_search():
         try:
             s3_raw = subprocess.check_output(
                 ["git", "show", f"origin/damon:results/fast_run/stage3_rank0{rank}.json"],
-                cwd="/Users/moiz/Documents/code/comp0087_snlp_cwk"
+                cwd=_repo_root
             )
             s3 = json.loads(s3_raw)
             print(f"\n  Rank {rank}: {s3['dimension']} / {s3['method']} / {s3['layer_preset']}")
@@ -529,7 +530,8 @@ def analyze_score_deal():
     print(f"A3: score_deal() ANALYSIS")
     print(f"{'='*70}")
 
-    results_path = "/Users/moiz/Documents/code/comp0087_snlp_cwk/results.json"
+    _root = Path(__file__).resolve().parent.parent
+    results_path = str(_root / "results" / "firmness_alpha20_50games.json")
     with open(results_path) as f:
         data = json.load(f)
 
@@ -615,7 +617,8 @@ if __name__ == "__main__":
     val_scenarios, val_valid, val_overlapping = audit_dataset("validation")
 
     # A2: Results diagnostic
-    results_path = "/Users/moiz/Documents/code/comp0087_snlp_cwk/results.json"
+    _root = Path(__file__).resolve().parent.parent
+    results_path = str(_root / "results" / "firmness_alpha20_50games.json")
     if Path(results_path).exists():
         diagnose_results(results_path)
     else:

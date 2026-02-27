@@ -357,7 +357,7 @@ def score_deal(
     agreed_price:  float,
     seller_target: float,
     buyer_target:  float,
-) -> Tuple[float, float]:
+) -> Dict:
     """
     How well did each side do relative to their private target?
 
@@ -365,18 +365,31 @@ def score_deal(
       seller_score = (agreed - buyer_target)  / span   → 1.0 if seller got their target
       buyer_score  = (seller_target - agreed) / span   → 1.0 if buyer got their target
 
-    They sum to 1.0 and are each clamped to [0, 1] in case the agreed
-    price fell outside the target range (which can happen).
+    Returns a dict with both raw (unclamped) and clamped [0,1] scores,
+    plus a flag indicating whether clamping was applied. Raw scores can
+    fall outside [0,1] when the agreed price is beyond the target range
+    (e.g. buyer pays less than their own target).
     """
     span = seller_target - buyer_target
     if span <= 0:
-        # targets overlap — no obvious winner, call it a draw
-        return 0.5, 0.5
-    seller_score = (agreed_price - buyer_target)  / span
-    buyer_score  = (seller_target - agreed_price) / span
-    seller_score = max(0.0, min(1.0, seller_score))
-    buyer_score  = max(0.0, min(1.0, buyer_score))
-    return round(seller_score, 4), round(buyer_score, 4)
+        return {
+            "seller_score": 0.5, "buyer_score": 0.5,
+            "raw_seller_score": 0.5, "raw_buyer_score": 0.5,
+            "clamped": False, "span": span,
+        }
+    raw_seller = (agreed_price - buyer_target)  / span
+    raw_buyer  = (seller_target - agreed_price) / span
+    seller_score = max(0.0, min(1.0, raw_seller))
+    buyer_score  = max(0.0, min(1.0, raw_buyer))
+    clamped = (seller_score != raw_seller) or (buyer_score != raw_buyer)
+    return {
+        "seller_score":     round(seller_score, 4),
+        "buyer_score":      round(buyer_score, 4),
+        "raw_seller_score": round(raw_seller, 4),
+        "raw_buyer_score":  round(raw_buyer, 4),
+        "clamped":          clamped,
+        "span":             round(span, 2),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -394,6 +407,7 @@ def run_game(
     steered_role:   str,   # "seller" or "buyer"
     max_new_tokens: int   = 120,
     temperature:    float = 0.7,
+    opening_bid_pct: float = 0.6,
 ) -> Dict:
     seller_system = build_seller_system(scenario)
     buyer_system  = build_buyer_system(scenario)
@@ -402,8 +416,8 @@ def run_game(
     agreed_price: Optional[float]       = None
     dealmaker:    Optional[str]         = None
 
-    # buyer always kicks things off with a lowball — 60% of listing price
-    opening_bid = round(scenario["listing_price"] * 0.6)
+    # buyer kicks things off with a lowball (default 60% of listing price)
+    opening_bid = round(scenario["listing_price"] * opening_bid_pct)
     transcript.append(("buyer", f"Hi, I'm interested in this. Would you take ${opening_bid:.0f}?"))
 
     for turn in range(MAX_TURNS):
@@ -462,41 +476,54 @@ def run_game(
             break
 
     # ---- score the outcome --------------------------------------------------
-    agreed       = agreed_price is not None
-    seller_score = 0.0
-    buyer_score  = 0.0
+    agreed = agreed_price is not None
 
     if agreed:
-        seller_score, buyer_score = score_deal(
+        scores = score_deal(
             agreed_price,
             scenario["seller_target"],
             scenario["buyer_target"],
         )
-        log.info("DEAL at $%.0f  |  seller_score=%.3f  buyer_score=%.3f",
-                 agreed_price, seller_score, buyer_score)
+        seller_score = scores["seller_score"]
+        buyer_score  = scores["buyer_score"]
+        log.info("DEAL at $%.0f  |  seller=%.3f  buyer=%.3f  raw=(%.3f, %.3f)%s",
+                 agreed_price, seller_score, buyer_score,
+                 scores["raw_seller_score"], scores["raw_buyer_score"],
+                 "  [CLAMPED]" if scores["clamped"] else "")
     else:
+        scores = {
+            "seller_score": 0.0, "buyer_score": 0.0,
+            "raw_seller_score": 0.0, "raw_buyer_score": 0.0,
+            "clamped": False, "span": 0.0,
+        }
+        seller_score = 0.0
+        buyer_score  = 0.0
         log.info("No deal after %d turns.", MAX_TURNS)
 
     steered_score  = seller_score if steered_role == "seller" else buyer_score
     baseline_score = buyer_score  if steered_role == "seller" else seller_score
 
     return {
-        "agreed":         agreed,
-        "agreed_price":   agreed_price,
-        "dealmaker":      dealmaker,
-        "seller_score":   seller_score,
-        "buyer_score":    buyer_score,
-        "steered_role":   steered_role,
-        "steered_score":  round(steered_score,  4),
-        "baseline_score": round(baseline_score, 4),
-        "advantage":      round(steered_score - baseline_score, 4),
-        "num_turns":      len(transcript),
-        "transcript":     [{"speaker": s, "utterance": u} for s, u in transcript],
-        "listing_price":  scenario["listing_price"],
-        "seller_target":  scenario["seller_target"],
-        "buyer_target":   scenario["buyer_target"],
-        "title":          scenario["title"],
-        "category":       scenario["category"],
+        "agreed":            agreed,
+        "agreed_price":      agreed_price,
+        "dealmaker":         dealmaker,
+        "seller_score":      seller_score,
+        "buyer_score":       buyer_score,
+        "raw_seller_score":  scores["raw_seller_score"],
+        "raw_buyer_score":   scores["raw_buyer_score"],
+        "clamped":           scores["clamped"],
+        "span":              scores["span"],
+        "steered_role":      steered_role,
+        "steered_score":     round(steered_score,  4),
+        "baseline_score":    round(baseline_score, 4),
+        "advantage":         round(steered_score - baseline_score, 4),
+        "num_turns":         len(transcript),
+        "transcript":        [{"speaker": s, "utterance": u} for s, u in transcript],
+        "listing_price":     scenario["listing_price"],
+        "seller_target":     scenario["seller_target"],
+        "buyer_target":      scenario["buyer_target"],
+        "title":             scenario["title"],
+        "category":          scenario["category"],
     }
 
 
@@ -544,7 +571,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--temperature",    type=float, default=0.7)
     p.add_argument("--dtype",          choices=["bfloat16", "float16", "float32"],
                    default="bfloat16")
-    p.add_argument("--output_file",    default="results.json")
+    p.add_argument("--output_file",    default="results/results.json")
     p.add_argument("--use_craigslist", action="store_true")
     return p.parse_args()
 
@@ -571,7 +598,7 @@ def main() -> None:
 
     model = AutoModelForCausalLM.from_pretrained(
         cfg.hf_id, token=token,
-        torch_dtype=dtype_map[args.dtype],
+        dtype=dtype_map[args.dtype],
         device_map="auto",
     )
     model.eval()

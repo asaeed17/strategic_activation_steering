@@ -79,7 +79,9 @@ def count_dashes(text: str) -> int:
 
 # ── main analysis ────────────────────────────────────────────────────
 
-def analyze_pairs(pairs_file: str = "negotiation_steering_pairs.json"):
+def analyze_pairs(pairs_file: str = None):
+    if pairs_file is None:
+        pairs_file = str(Path(__file__).resolve().parent.parent / "negotiation_steering_pairs.json")
     with open(pairs_file) as f:
         data = json.load(f)
 

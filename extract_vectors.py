@@ -372,7 +372,7 @@ def extract_for_model(
         model = AutoModelForCausalLM.from_pretrained(
             config.hf_id,
             token=token,
-            torch_dtype=config.torch_dtype,
+            dtype=config.torch_dtype,
             device_map="auto",
         )
     model.eval()
