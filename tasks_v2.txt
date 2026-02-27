@@ -1,0 +1,187 @@
+================================================================================
+TASK LIST BY PERSON — ACTIVATION STEERING FOR LLM NEGOTIATORS
+================================================================================
+
+--------------------------------------------------------------------------------
+P1 — EXTRACTION METHODS
+Paper section: Extraction Methods
+--------------------------------------------------------------------------------
+
+- Add whitened mean diff to extract_vectors.py
+  The standard mean diff picks up noise from general model variance (sentence
+  length, token frequency). Whitening isolates the actual firmness signal, giving
+  us a cleaner direction to steer with and likely a stronger negotiator.
+
+- Add contrastive decoding direction to extract_vectors.py
+  Instead of contrasting hidden states, contrast what the model predicts next.
+  This may capture a more action-oriented representation of firmness, closer to
+  what actually drives negotiation behaviour.
+
+- Add random direction control to extract_vectors.py
+  If steering with a random direction produces similar negotiation advantage, our
+  whole approach is questionable. This is the sanity check that validates
+  everything else.
+
+- Extract directions from attention heads rather than residual stream hiddens
+  Firmness may be concentrated in specific attention heads rather than spread
+  across the full hidden state. Extracting per-head directions and comparing them
+  to full-layer directions tells us where in the transformer the concept actually
+  lives.
+
+- Extract directions using activation differences during generation
+  Instead of using curated pairs, run the model freely on negotiation prompts and
+  collect activations when it spontaneously produces firm vs yielding language.
+  The direction extracted from naturalistic behaviour may generalise better than
+  one extracted from hand-crafted pairs.
+
+- Extract directions via SVD on a large set of negotiation transcripts
+  No pairs needed. Collect 200+ negotiation utterances, extract all their hidden
+  states, run SVD, and see whether the top singular vectors align with
+  interpretable negotiation dimensions like firmness or concession. Completely
+  unsupervised — if it works it means we don't need the pairs pipeline at all.
+
+- Expand negotiation_steering_pairs.json with 20+ new pairs per dimension
+  Even with the new methods above, the pair-based methods still benefit from more
+  diverse pairs. More diverse pairs means the vector generalises better across
+  different negotiation contexts.
+
+- Write the Extraction Methods section of the paper
+
+
+--------------------------------------------------------------------------------
+P2 — VALIDATION
+Paper section: Related Work + Vector Validation
+--------------------------------------------------------------------------------
+
+- Write probe_vectors.py — trains logistic regression per layer on saved hidden
+  states, plots accuracy curve per dimension
+  Tells us which layers actually encode firmness so we steer at the right place
+  rather than guessing. Steering at the wrong layer wastes alpha and hurts fluency.
+
+- Add control probes for verbosity and formality
+  If our "firmness" vector is really just making the model more verbose, any
+  negotiation advantage is an artefact not a genuine improvement. This rules
+  that out.
+
+- Write the Related Work section of the paper (probing literature, RepE, CAA,
+  negotiation NLP)
+
+- Write the Vector Validation section of the paper
+
+
+--------------------------------------------------------------------------------
+P3 — APPLICATION STRATEGIES
+Paper section: Application Strategies
+--------------------------------------------------------------------------------
+
+- Add DynamicAlphaScheduler to apply_steering.py
+  A real negotiator doesn't stay equally firm throughout. Ramping alpha up when
+  the opponent pushes hard and down after making an offer mimics genuine
+  negotiation strategy and should produce better outcomes than constant steering.
+
+- Add TokenSelectiveHook to apply_steering.py
+  Applying the direction on every token including filler words is wasteful and
+  disrupts fluency. Concentrating the steering on the tokens where the model
+  commits to a price should make the intervention more precise and less likely
+  to cause incoherence.
+
+- Add ProjectionHook to apply_steering.py
+  At high alpha the additive hook inflates activation norms and breaks the model.
+  Projecting the direction orthogonally preserves norm, meaning we can push
+  firmness harder without the model collapsing into gibberish, giving us a
+  stronger negotiator at the same coherence level.
+
+- Write the Application Strategies section of the paper
+
+
+--------------------------------------------------------------------------------
+P4 — METRICS & EVALUATION
+Paper section: Evaluation Framework + Results & Analysis
+--------------------------------------------------------------------------------
+
+- Add offer trajectory, concession rate, hedge word count, turns to deal, first
+  offer distance to run_game() and score_deal()
+  Price outcome alone is a lagging indicator. These metrics tell us how the
+  steered agent is winning: is it anchoring better, conceding less, closing
+  faster? Without this we can't understand what the steering is actually doing
+  to negotiation behaviour.
+
+- Write llm_judge.py — takes a results JSON, hits an LLM API, rates each
+  transcript on firmness, persuasiveness, and naturalness
+  Price outcome can be gamed by extreme anchoring that happens to work. The judge
+  catches whether the agent is actually negotiating well or just getting lucky on
+  easy scenarios.
+
+- Write the Evaluation Framework section of the paper
+
+- Write the Results & Analysis section of the paper
+
+
+--------------------------------------------------------------------------------
+P5 — DATA & BASELINES
+Paper section: Datasets & Experimental Setup
+--------------------------------------------------------------------------------
+
+- Download and cache all CraigslistBargains splits locally immediately
+  The CodaLab URLs in the code are live-fetched and could go down any time.
+  Losing access to the dataset mid-project kills everything.
+
+- Run a data quality audit on the full dataset
+  Crossed targets, zero prices, and duplicates skew the scoring. A clean dataset
+  means our advantage scores actually reflect negotiation quality.
+
+- Create 4 domain-balanced JSONL splits (cars, electronics, housing, bikes)
+  If our steered negotiator only works on one category of item it's not a useful
+  result. Domain-balanced evaluation is what lets us claim the approach
+  generalises.
+
+- Expand negotiation_steering_pairs.json alongside P1 (split dimensions between
+  them)
+  More and better pairs directly improves the quality of every vector every other
+  person is working with.
+
+- Recruit 4 people and run the human baseline — 10 scenarios each, scored with
+  score_deal()
+  Without this we can only say the steered LLM beats an unsteered LLM. With it
+  we can say whether it approaches or exceeds human-level negotiation, which is
+  the actually interesting claim.
+
+- Write the Datasets & Experimental Setup section of the paper
+
+
+--------------------------------------------------------------------------------
+P6 — CONCEPT PATCHING & INTERPRETABILITY
+Paper section: Discussion & Limitations
+--------------------------------------------------------------------------------
+
+- Write concept_patching.py — mid-game overwrite of hidden state components along
+  the steering direction, measure change in hedge word count, numeric mentions,
+  and offer movement
+  This is the most direct evidence that our vectors causally control negotiation
+  behaviour rather than just correlating with it. It's what lets us say "when we
+  inject firmness into the model, it negotiates more firmly" rather than "we
+  steered something and the price went up."
+
+- Run probe-steering consistency experiment — collect hidden states from steered
+  agent at various alpha values, measure whether behavioural shift tracks the
+  intended direction
+  Confirms that increasing alpha actually increases firmness in the representation,
+  not just adds noise. Establishes that we have a dial we can actually turn.
+
+- Run negative alpha experiment — 30 games with negative alpha, document whether
+  agent becomes measurably more yielding
+  If negative alpha makes the agent worse and positive alpha makes it better, the
+  direction is genuinely causal. This is the cleanest possible evidence that the
+  steering vector is doing what we claim.
+
+- Run probe degradation test — sweep alpha 1 to 50, measure how hidden state
+  geometry changes
+  Finds the ceiling of how hard we can steer before the representation breaks
+  down. Tells P3 exactly where the useful range of alpha is for the application
+  strategies.
+
+- Write the Discussion & Limitations section of the paper
+
+================================================================================
+END
+================================================================================
