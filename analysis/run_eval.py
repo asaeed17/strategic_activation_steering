@@ -4,7 +4,8 @@ run_eval.py  —  P4 GPU Evaluation Suite
 =========================================
 
 Runs all GPU experiments in a single model-load session.
-Designed for headless AWS execution (nohup-safe, incremental saves).
+Designed for local GPU execution with incremental saves (also works
+headless on remote instances via nohup).
 
 Prerequisites:
   - Steering vectors in vectors/{model_alias}/mean_diff/
