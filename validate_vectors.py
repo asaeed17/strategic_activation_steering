@@ -784,6 +784,645 @@ def compute_approx_layer_recommendation(
     return results
 
 
+def _valid_layer_mask(vecs: np.ndarray) -> np.ndarray:
+    """Return boolean mask of layers with no NaN/Inf values.
+
+    Args:
+        vecs: array of shape (n_layers, hidden_dim)
+
+    Returns:
+        boolean array of shape (n_layers,) — True for usable layers
+    """
+    return ~(np.isnan(vecs).any(axis=1) | np.isinf(vecs).any(axis=1))
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 8 — Vector Norm Profile & Unit Normalization Verification
+# ═══════════════════════════════════════════════════════════════════════
+
+def analyze_vector_norms(
+    vectors_dir: Path,
+    method: str = "mean_diff",
+) -> Dict[str, Any]:
+    """
+    Load per-layer vectors for every available dimension and verify
+    they are unit-normed.  Compute norm profiles across layers.
+
+    Why this matters
+    ----------------
+    Vector extraction should produce unit-normed vectors (per CLAUDE.md:
+    "Vectors are unit-normed per layer").  If any vectors deviate from
+    unit norm, it indicates an extraction bug or that the normalisation
+    step was skipped.  Even if all vectors *are* unit-normed, comparing
+    the *pre-normalisation* norms (from the all_layers file) reveals how
+    much "raw signal" the model produces at each layer for each concept.
+    """
+    vec_subdir = vectors_dir / method
+    if not vec_subdir.exists():
+        return {"note": f"{vec_subdir} not found"}
+
+    results: Dict[str, Any] = {"dimensions": {}, "summary": {}}
+
+    for f in sorted(vec_subdir.glob("*_all_layers.npy")):
+        dim_id = f.stem.replace("_all_layers", "")
+        all_layers = np.load(f)  # (n_layers, hidden_dim)
+        n_layers, hidden_dim = all_layers.shape
+
+        # Identify valid layers (no NaN/Inf)
+        valid_mask = _valid_layer_mask(all_layers)
+        n_valid = int(valid_mask.sum())
+        n_nan_layers = n_layers - n_valid
+
+        # Per-layer norms (NaN for invalid layers)
+        norms = np.linalg.norm(all_layers, axis=1)
+        valid_norms = norms[valid_mask]
+        is_unit_normed = (bool(np.allclose(valid_norms, 1.0, atol=1e-4))
+                          if n_valid > 0 else False)
+
+        # Also check individual per-layer files
+        per_layer_norms = []
+        for l in range(n_layers):
+            layer_file = vec_subdir / f"{dim_id}_layer{l:02d}.npy"
+            if layer_file.exists():
+                v = np.load(layer_file)
+                per_layer_norms.append(float(np.linalg.norm(v)))
+
+        per_layer_unit = (bool(np.allclose(per_layer_norms, 1.0, atol=1e-4))
+                          if per_layer_norms else None)
+
+        results["dimensions"][dim_id] = {
+            "n_layers":          n_layers,
+            "n_valid_layers":    n_valid,
+            "n_nan_layers":      n_nan_layers,
+            "hidden_dim":        hidden_dim,
+            "all_layers_norms":  [round(float(n), 6) if not np.isnan(n) else None for n in norms],
+            "all_layers_unit_normed": is_unit_normed,
+            "per_layer_norms":   [round(n, 6) for n in per_layer_norms] if per_layer_norms else [],
+            "per_layer_unit_normed": per_layer_unit,
+            "norm_mean":         round(float(valid_norms.mean()), 6) if n_valid > 0 else None,
+            "norm_std":          round(float(valid_norms.std()), 6) if n_valid > 0 else None,
+            "norm_min":          round(float(valid_norms.min()), 6) if n_valid > 0 else None,
+            "norm_max":          round(float(valid_norms.max()), 6) if n_valid > 0 else None,
+        }
+
+    # Summary
+    n_dims = len(results["dimensions"])
+    all_unit = all(d["all_layers_unit_normed"]
+                   for d in results["dimensions"].values())
+    results["summary"] = {
+        "n_dimensions":    n_dims,
+        "all_unit_normed": all_unit,
+        "note":            ("All vectors are unit-normed as expected."
+                            if all_unit else
+                            "WARNING: Not all vectors are unit-normed! "
+                            "Check extraction pipeline."),
+    }
+    return results
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 9 — Inter-Layer Consistency (Consecutive Layer Cosine)
+# ═══════════════════════════════════════════════════════════════════════
+
+def analyze_layer_consistency(
+    vectors_dir: Path,
+    method: str = "mean_diff",
+) -> Dict[str, Any]:
+    """
+    For each dimension, compute cosine similarity between consecutive layer
+    vectors and between each layer and layer 0.
+
+    Why this matters
+    ----------------
+    If the steering direction changes gradually across layers, the concept
+    is "smoothly" represented — typical of genuine semantic features.  A
+    sudden drop in cosine between layers L and L+1 suggests a qualitative
+    change in what the model encodes, which may indicate the vector is
+    picking up a different signal at different depths.
+
+    Also computes "drift from layer 0" — cos(vec[L], vec[0]) — to show
+    how far the concept drifts from its initial representation.
+    """
+    vec_subdir = vectors_dir / method
+    if not vec_subdir.exists():
+        return {"note": f"{vec_subdir} not found"}
+
+    results = {}
+    for f in sorted(vec_subdir.glob("*_all_layers.npy")):
+        dim_id = f.stem.replace("_all_layers", "")
+        vecs = np.load(f)  # (n_layers, H)
+        n_layers = vecs.shape[0]
+
+        valid_mask = _valid_layer_mask(vecs)
+
+        # Normalise for cosine (NaN layers will become zero vectors)
+        safe_vecs = np.where(np.isnan(vecs), 0.0, vecs)
+        norms = np.linalg.norm(safe_vecs, axis=1, keepdims=True)
+        vecs_n = safe_vecs / np.where(norms < 1e-8, 1.0, norms)
+
+        # Consecutive cosine similarity (only between valid layer pairs)
+        consecutive_cos = []
+        for l in range(n_layers - 1):
+            if valid_mask[l] and valid_mask[l + 1]:
+                c = float(np.dot(vecs_n[l], vecs_n[l + 1]))
+                consecutive_cos.append(round(c, 4))
+            else:
+                consecutive_cos.append(None)
+
+        # Drift from layer 0
+        if valid_mask[0]:
+            drift_from_0 = [
+                round(float(np.dot(vecs_n[0], vecs_n[l])), 4)
+                if valid_mask[l] else None
+                for l in range(n_layers)
+            ]
+        else:
+            drift_from_0 = [None] * n_layers
+
+        # Identify "transition points" where consecutive cosine drops below 0.7
+        transitions = [l for l, c in enumerate(consecutive_cos)
+                       if c is not None and c < 0.7]
+
+        # Overall consistency metric: mean consecutive cosine (valid only)
+        valid_cos = [c for c in consecutive_cos if c is not None]
+        mean_consecutive = float(np.mean(valid_cos)) if valid_cos else 0.0
+        min_consecutive = float(np.min(valid_cos)) if valid_cos else 0.0
+
+        # Interpretation
+        if mean_consecutive > 0.95:
+            pattern = "highly_consistent"
+            note = ("Steering direction is very stable across layers. "
+                    "This suggests the concept is uniformly represented.")
+        elif mean_consecutive > 0.8:
+            pattern = "moderately_consistent"
+            note = ("Steering direction evolves gradually across layers. "
+                    "Normal for semantic concepts that undergo processing.")
+        elif mean_consecutive > 0.5:
+            pattern = "variable"
+            note = ("Significant variation in steering direction across layers. "
+                    "Different layers may encode different aspects of the concept.")
+        else:
+            pattern = "inconsistent"
+            note = ("Steering direction changes dramatically between layers. "
+                    "This suggests the vector may be capturing noise or "
+                    "qualitatively different features at different depths.")
+
+        results[dim_id] = {
+            "consecutive_cosine":   consecutive_cos,
+            "drift_from_layer0":    drift_from_0,
+            "mean_consecutive_cos": round(mean_consecutive, 4),
+            "min_consecutive_cos":  round(min_consecutive, 4),
+            "transition_points":    transitions,
+            "n_transitions":        len(transitions),
+            "pattern":              pattern,
+            "note":                 note,
+        }
+
+    return results
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 10 — Cross-Dimension Similarity Across ALL Layers
+# ═══════════════════════════════════════════════════════════════════════
+
+def analyze_cross_dimension_similarity(
+    vectors_dir: Path,
+    method: str = "mean_diff",
+) -> Dict[str, Any]:
+    """
+    Compute pairwise cosine similarity between all dimension vectors at
+    every layer.  Produces a full layer×pairs heatmap.
+
+    Why this matters
+    ----------------
+    If two dimensions (e.g., firmness and anchoring) have high cosine
+    similarity at a given layer, steering with one will inadvertently
+    steer with the other.  Conversely, layers where all dimensions are
+    maximally independent are ideal for targeted steering.
+
+    The analysis also identifies:
+    - "Collapse layers" where most dimension pairs exceed |cos|>0.5
+    - "Independence sweet spots" where most pairs have |cos|<0.2
+    - Which layer has the lowest average cross-dimension similarity
+    """
+    vec_subdir = vectors_dir / method
+    if not vec_subdir.exists():
+        return {"note": f"{vec_subdir} not found"}
+
+    # Load all dimensions
+    vectors = {}
+    for f in sorted(vec_subdir.glob("*_all_layers.npy")):
+        dim_id = f.stem.replace("_all_layers", "")
+        vectors[dim_id] = np.load(f)
+
+    if len(vectors) < 2:
+        return {"note": "Need at least 2 dimensions for cross-dimension analysis",
+                "n_dimensions": len(vectors)}
+
+    dim_names = sorted(vectors.keys())
+    n_dims = len(dim_names)
+    n_layers = next(iter(vectors.values())).shape[0]
+
+    # Compute pairwise cosine at each layer
+    pair_names = []
+    for i in range(n_dims):
+        for j in range(i + 1, n_dims):
+            pair_names.append(f"{dim_names[i]}_vs_{dim_names[j]}")
+
+    # Check which layers are valid (no NaN in any dimension)
+    global_valid = np.ones(n_layers, dtype=bool)
+    for d in dim_names:
+        global_valid &= _valid_layer_mask(vectors[d])
+
+    layer_similarities = {}  # layer → {pair → cosine}
+    pair_across_layers = {p: [] for p in pair_names}  # pair → [cosine per layer]
+
+    for l in range(n_layers):
+        if not global_valid[l]:
+            layer_similarities[l] = {p: None for p in pair_names}
+            for p in pair_names:
+                pair_across_layers[p].append(None)
+            continue
+
+        # Stack and normalise
+        V = np.stack([vectors[d][l] for d in dim_names])
+        norms = np.linalg.norm(V, axis=1, keepdims=True)
+        V_n = V / np.where(norms < 1e-8, 1.0, norms)
+        sim_matrix = V_n @ V_n.T
+
+        layer_sims = {}
+        pair_idx = 0
+        for i in range(n_dims):
+            for j in range(i + 1, n_dims):
+                cos_val = round(float(sim_matrix[i, j]), 4)
+                pname = pair_names[pair_idx]
+                layer_sims[pname] = cos_val
+                pair_across_layers[pname].append(cos_val)
+                pair_idx += 1
+
+        layer_similarities[l] = layer_sims
+
+    # Per-layer summary (only valid layers)
+    avg_abs_cos_per_layer = []
+    for l in range(n_layers):
+        vals = [v for v in layer_similarities[l].values() if v is not None]
+        if vals:
+            avg_abs_cos_per_layer.append(round(float(np.mean(np.abs(vals))), 4))
+        else:
+            avg_abs_cos_per_layer.append(None)
+
+    # Find best (most independent) and worst (most collapsed) among valid layers
+    valid_avgs = [(l, v) for l, v in enumerate(avg_abs_cos_per_layer) if v is not None]
+    if valid_avgs:
+        best_layer = min(valid_avgs, key=lambda x: x[1])[0]
+        worst_layer = max(valid_avgs, key=lambda x: x[1])[0]
+    else:
+        best_layer, worst_layer = 0, 0
+
+    # Collapse detection: layers where >50% of pairs have |cos|>0.5
+    collapse_layers = []
+    for l in range(n_layers):
+        vals = [v for v in layer_similarities[l].values() if v is not None]
+        if not vals:
+            continue
+        n_high = sum(1 for v in vals if abs(v) > 0.5)
+        if n_high > len(vals) / 2:
+            collapse_layers.append(l)
+
+    # Independence sweet spots: layers where all pairs |cos|<0.3
+    independence_layers = []
+    for l in range(n_layers):
+        vals = [v for v in layer_similarities[l].values() if v is not None]
+        if not vals:
+            continue
+        if all(abs(v) < 0.3 for v in vals):
+            independence_layers.append(l)
+
+    # Per-pair summary across layers
+    pair_summaries = {}
+    for pname, cos_list in pair_across_layers.items():
+        valid_vals = [v for v in cos_list if v is not None]
+        if valid_vals:
+            arr = np.array(valid_vals)
+            pair_summaries[pname] = {
+                "mean_cos":     round(float(np.mean(arr)), 4),
+                "std_cos":      round(float(np.std(arr)), 4),
+                "max_abs_cos":  round(float(np.max(np.abs(arr))), 4),
+                "min_abs_cos":  round(float(np.min(np.abs(arr))), 4),
+                "per_layer":    [round(float(v), 4) if v is not None else None for v in cos_list],
+            }
+        else:
+            pair_summaries[pname] = {
+                "mean_cos": None, "std_cos": None,
+                "max_abs_cos": None, "min_abs_cos": None,
+                "per_layer": [None] * n_layers,
+            }
+
+    return {
+        "dimension_names":        dim_names,
+        "n_dimensions":           n_dims,
+        "n_layers":               n_layers,
+        "pair_summaries":         pair_summaries,
+        "avg_abs_cos_per_layer":  avg_abs_cos_per_layer,
+        "best_independence_layer": best_layer,
+        "best_avg_abs_cos":       avg_abs_cos_per_layer[best_layer],
+        "worst_collapse_layer":   worst_layer,
+        "worst_avg_abs_cos":      avg_abs_cos_per_layer[worst_layer],
+        "collapse_layers":        collapse_layers,
+        "independence_layers":    independence_layers,
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 11 — Vector Concentration / Effective Dimensionality
+# ═══════════════════════════════════════════════════════════════════════
+
+def analyze_vector_concentration(
+    vectors_dir: Path,
+    method: str = "mean_diff",
+) -> Dict[str, Any]:
+    """
+    Measure how concentrated vs distributed each steering vector is
+    across the hidden dimensions.
+
+    Metrics:
+    - Effective dimensionality: exp(entropy of squared components / sum²)
+      A value near hidden_dim means the vector uses all dimensions equally.
+      A low value means the vector lives in a narrow subspace.
+    - Gini coefficient: inequality of component magnitudes (0=uniform, 1=single spike).
+    - Top-k concentration: fraction of L2 norm² explained by the top 10, 50,
+      100 components.
+
+    Why this matters
+    ----------------
+    Surface features (e.g., "is the text long?") tend to be captured by
+    a few dominant hidden dimensions.  Genuine semantic concepts (e.g.,
+    "is this negotiation firm?") are typically distributed across many
+    dimensions.  A steering vector with very low effective dimensionality
+    may be capturing a surface-level feature, not a deep concept.
+
+    A random unit vector in d-dimensional space has expected effective
+    dimensionality ~0.63d .  Our vectors should be somewhere between
+    surface-feature (very low) and random (0.63d).
+    """
+    vec_subdir = vectors_dir / method
+    if not vec_subdir.exists():
+        return {"note": f"{vec_subdir} not found"}
+
+    def _gini(arr):
+        """Gini coefficient of absolute values."""
+        a = np.sort(np.abs(arr))
+        n = len(a)
+        if n == 0 or a.sum() < 1e-12:
+            return 0.0
+        index = np.arange(1, n + 1)
+        return float((2 * np.sum(index * a) / (n * np.sum(a))) - (n + 1) / n)
+
+    def _effective_dim(vec):
+        """Exponential of entropy of squared components (normalised)."""
+        sq = vec ** 2
+        total = sq.sum()
+        if total < 1e-12:
+            return 0.0
+        p = sq / total
+        # Avoid log(0)
+        p = p[p > 1e-15]
+        entropy = -float(np.sum(p * np.log(p)))
+        return float(np.exp(entropy))
+
+    def _topk_concentration(vec, ks=(10, 50, 100)):
+        """Fraction of L2² norm in the top-k largest components."""
+        sq = vec ** 2
+        total = sq.sum()
+        if total < 1e-12:
+            return {k: 0.0 for k in ks}
+        sorted_sq = np.sort(sq)[::-1]
+        result = {}
+        for k in ks:
+            actual_k = min(k, len(sorted_sq))
+            result[k] = round(float(sorted_sq[:actual_k].sum() / total), 4)
+        return result
+
+    results = {}
+
+    for f in sorted(vec_subdir.glob("*_all_layers.npy")):
+        dim_id = f.stem.replace("_all_layers", "")
+        vecs = np.load(f)  # (n_layers, H)
+        n_layers, hidden_dim = vecs.shape
+
+        eff_dims = []
+        ginis = []
+        topk_10 = []
+        topk_50 = []
+
+        for l in range(n_layers):
+            v = vecs[l]
+            if np.isnan(v).any() or np.isinf(v).any():
+                eff_dims.append(None)
+                ginis.append(None)
+                topk_10.append(None)
+                topk_50.append(None)
+                continue
+            ed = _effective_dim(v)
+            g = _gini(v)
+            tk = _topk_concentration(v, ks=(10, 50, 100))
+            eff_dims.append(round(ed, 1))
+            ginis.append(round(g, 4))
+            topk_10.append(tk[10])
+            topk_50.append(tk[50])
+
+        valid_eff_dims = [e for e in eff_dims if e is not None]
+        valid_ginis = [g for g in ginis if g is not None]
+        mean_eff_dim = float(np.mean(valid_eff_dims)) if valid_eff_dims else 0.0
+        mean_gini = float(np.mean(valid_ginis)) if valid_ginis else 0.0
+
+        # Random baseline: expected eff dim for d-dim unit vector
+        # exp(ln(d) - 1 + 1/(2d)) ≈ d/e ≈ 0.368d for large d
+        random_expected = hidden_dim / np.e
+
+        # Interpretation
+        ratio = mean_eff_dim / random_expected if random_expected > 0 else 0
+        if ratio > 0.8:
+            pattern = "near_random"
+            note = (f"Effective dimensionality ({mean_eff_dim:.0f}) is close to "
+                    f"random baseline ({random_expected:.0f}). The vector is "
+                    f"broadly distributed — no evidence of surface-feature "
+                    f"concentration.")
+        elif ratio > 0.5:
+            pattern = "moderate_concentration"
+            note = (f"Effective dimensionality ({mean_eff_dim:.0f}) is moderately "
+                    f"below random baseline ({random_expected:.0f}). Some "
+                    f"concentration, but not extreme.")
+        elif ratio > 0.2:
+            pattern = "concentrated"
+            note = (f"Effective dimensionality ({mean_eff_dim:.0f}) is well below "
+                    f"random baseline ({random_expected:.0f}). The vector is "
+                    f"concentrated in a subset of dimensions — more likely to "
+                    f"capture a specific feature (possibly surface-level).")
+        else:
+            pattern = "highly_concentrated"
+            note = (f"Effective dimensionality ({mean_eff_dim:.0f}) is very low "
+                    f"compared to random ({random_expected:.0f}). The steering "
+                    f"direction is dominated by a few components — a strong "
+                    f"indicator of surface-feature capture.")
+
+        results[dim_id] = {
+            "hidden_dim":               hidden_dim,
+            "random_expected_eff_dim":  round(random_expected, 1),
+            "eff_dim_per_layer":        eff_dims,
+            "mean_eff_dim":             round(mean_eff_dim, 1),
+            "min_eff_dim":              round(float(min(valid_eff_dims)), 1) if valid_eff_dims else None,
+            "max_eff_dim":              round(float(max(valid_eff_dims)), 1) if valid_eff_dims else None,
+            "gini_per_layer":           ginis,
+            "mean_gini":                round(mean_gini, 4),
+            "top10_concentration":      topk_10,
+            "top50_concentration":      [round(v, 4) if v is not None else None for v in topk_50],
+            "ratio_to_random":          round(ratio, 4),
+            "pattern":                  pattern,
+            "note":                     note,
+        }
+
+    return results
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 12 — Shared Subspace Analysis (PCA of dimension vectors)
+# ═══════════════════════════════════════════════════════════════════════
+
+def analyze_shared_subspace(
+    vectors_dir: Path,
+    method: str = "mean_diff",
+) -> Dict[str, Any]:
+    """
+    Stack all dimension vectors at each layer, project onto principal
+    components, and measure the effective rank.
+
+    Why this matters
+    ----------------
+    If N different dimension vectors share a common dominant direction,
+    they are not truly independent — they all encode the same confound
+    (e.g., verbosity or text-length direction).
+
+    Specifically:
+    - If PC1 explains >70% of variance across dimensions, there is a
+      dominant shared direction.  We identify what it might be (closest
+      named dimension to PC1).
+    - If effective rank == N (number of dimensions), the vectors are
+      roughly independent — good.
+    - Computes the "explained variance ratio" at each layer.
+    """
+    vec_subdir = vectors_dir / method
+    if not vec_subdir.exists():
+        return {"note": f"{vec_subdir} not found"}
+
+    # Load all dimensions
+    vectors = {}
+    for f in sorted(vec_subdir.glob("*_all_layers.npy")):
+        dim_id = f.stem.replace("_all_layers", "")
+        vectors[dim_id] = np.load(f)
+
+    if len(vectors) < 2:
+        return {"note": "Need at least 2 dimensions for subspace analysis",
+                "n_dimensions": len(vectors)}
+
+    dim_names = sorted(vectors.keys())
+    n_dims = len(dim_names)
+    n_layers = next(iter(vectors.values())).shape[0]
+
+    layer_results = {}
+    pc1_explained_ratios = []
+    effective_ranks = []
+
+    for l in range(n_layers):
+        V = np.stack([vectors[d][l] for d in dim_names])  # (n_dims, H)
+
+        # Skip layers with NaN/Inf values
+        if np.isnan(V).any() or np.isinf(V).any():
+            layer_results[l] = {"skipped": True, "reason": "NaN or Inf values"}
+            pc1_explained_ratios.append(None)
+            effective_ranks.append(None)
+            continue
+
+        # Normalise each vector
+        norms = np.linalg.norm(V, axis=1, keepdims=True)
+        V_n = V / np.where(norms < 1e-8, 1.0, norms)
+
+        # SVD (with fallback for non-convergence)
+        try:
+            _, S, Vt = np.linalg.svd(V_n, full_matrices=False)
+        except np.linalg.LinAlgError:
+            # Fallback: use eigendecomposition of the Gram matrix
+            gram = V_n @ V_n.T
+            eigvals = np.linalg.eigvalsh(gram)[::-1]
+            S = np.sqrt(np.maximum(eigvals, 0))
+            Vt = None  # alignment computation will be skipped
+
+        # Explained variance ratio
+        S_sq = S ** 2
+        total_var = S_sq.sum()
+        if total_var > 1e-12:
+            evr = S_sq / total_var
+        else:
+            evr = np.zeros_like(S_sq)
+
+        # Effective rank: exp(entropy of normalised singular values²)
+        p = evr[evr > 1e-15]
+        eff_rank = float(np.exp(-np.sum(p * np.log(p)))) if len(p) > 0 else 0.0
+
+        pc1_explained_ratios.append(round(float(evr[0]), 4))
+        effective_ranks.append(round(eff_rank, 2))
+
+        # Which dimension is most aligned with PC1?
+        alignments = {}
+        if Vt is not None:
+            pc1_dir = Vt[0]  # first right singular vector
+            for i, d in enumerate(dim_names):
+                cos_with_pc1 = float(np.dot(V_n[i], pc1_dir))
+                alignments[d] = round(cos_with_pc1, 4)
+
+        layer_results[l] = {
+            "explained_variance_ratio": [round(float(v), 4) for v in evr],
+            "effective_rank":           round(eff_rank, 2),
+            "pc1_alignment":            alignments,
+        }
+
+    # Summary: across all valid layers
+    valid_pc1 = [v for v in pc1_explained_ratios if v is not None]
+    valid_ranks = [v for v in effective_ranks if v is not None]
+    mean_pc1 = float(np.mean(valid_pc1)) if valid_pc1 else 0.0
+    mean_eff_rank = float(np.mean(valid_ranks)) if valid_ranks else 0.0
+
+    # Interpretation
+    if mean_pc1 > 0.7:
+        concern = "HIGH_SHARED"
+        note = (f"PC1 explains {mean_pc1:.0%} of variance on average across "
+                f"layers. The {n_dims} dimension vectors share a dominant "
+                f"direction — they are NOT independent. Likely a common "
+                f"confound (verbosity, text-length) dominates.")
+    elif mean_pc1 > 0.5:
+        concern = "MODERATE_SHARED"
+        note = (f"PC1 explains {mean_pc1:.0%} of variance. Some shared "
+                f"structure exists, but dimensions retain partial independence.")
+    else:
+        concern = "INDEPENDENT"
+        note = (f"PC1 explains only {mean_pc1:.0%}. Dimension vectors are "
+                f"reasonably independent — good for targeted steering.")
+
+    return {
+        "dimension_names":         dim_names,
+        "n_dimensions":            n_dims,
+        "n_layers":                n_layers,
+        "pc1_explained_per_layer": pc1_explained_ratios,
+        "effective_rank_per_layer": effective_ranks,
+        "mean_pc1_explained":      round(mean_pc1, 4),
+        "mean_effective_rank":     round(mean_eff_rank, 2),
+        "max_dimensions":          n_dims,
+        "layer_details":           layer_results,
+        "concern":                 concern,
+        "note":                    note,
+    }
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # Pattern analysis helpers — analyse-only mode
 # ═══════════════════════════════════════════════════════════════════════
@@ -1138,6 +1777,183 @@ def generate_report(res: Dict) -> str:
                 sens_str = "  ".join(f"{k}→{v}" for k, v in sens.items())
                 lines.append(f"    Sensitivity: {sens_str}")
 
+    # ── Vector Norm Profile ──────────────────────────────────────────
+    if "vector_norms" in res:
+        vn = res["vector_norms"]
+        if "note" in vn:
+            pass  # skip if no data
+        else:
+            _sec("CHECK 8: Vector Norm Profile")
+            summary = vn.get("summary", {})
+            _info(f"Dimensions analysed: {summary.get('n_dimensions', '?')}")
+            if summary.get("all_unit_normed"):
+                _ok("All vectors are unit-normed as expected.")
+            else:
+                _warn("Not all vectors are unit-normed — check extraction pipeline.")
+            # Report NaN layers
+            has_nan = False
+            for dim_id, data in sorted(vn.get("dimensions", {}).items()):
+                n_nan = data.get("n_nan_layers", 0)
+                if n_nan > 0:
+                    has_nan = True
+            if has_nan:
+                _warn("Some layers contain NaN/Inf values — these layers were "
+                      "likely not computed during extraction (e.g. layers beyond "
+                      "the model's effective depth).")
+            for dim_id, data in sorted(vn.get("dimensions", {}).items()):
+                unit_tag = "unit-normed" if data["all_layers_unit_normed"] else "NOT NORMED"
+                n_nan = data.get("n_nan_layers", 0)
+                nan_str = f"  ⚠ {n_nan} NaN layers" if n_nan > 0 else ""
+                lines.append(
+                    f"  {dim_id:<30s}  [{unit_tag}]  shape=({data['n_layers']}, "
+                    f"{data['hidden_dim']})  valid={data.get('n_valid_layers', '?')}/"
+                    f"{data['n_layers']}  norm: mean={data['norm_mean']:.4f}  "
+                    f"std={data['norm_std']:.4f}  range=[{data['norm_min']:.4f}, "
+                    f"{data['norm_max']:.4f}]{nan_str}"
+                )
+
+    # ── Inter-Layer Consistency ──────────────────────────────────────
+    if "layer_consistency" in res:
+        _sec("CHECK 9: Inter-Layer Consistency")
+        _info("Cosine similarity between consecutive layer vectors")
+        lc = res["layer_consistency"]
+        for dim_id, data in sorted(lc.items()):
+            if isinstance(data, str):
+                continue
+            mc = data["mean_consecutive_cos"]
+            mn = data["min_consecutive_cos"]
+            nt = data["n_transitions"]
+            pat = data["pattern"]
+            lines.append(
+                f"  {dim_id:<30s}  mean_cos={mc:.3f}  min_cos={mn:.3f}  "
+                f"transitions={nt}  [{pat}]"
+            )
+            if data.get("note"):
+                _info(f"    → {data['note']}")
+
+    # ── Cross-Dimension Similarity ───────────────────────────────────
+    if "cross_dimension_similarity" in res:
+        cds = res["cross_dimension_similarity"]
+        if "note" not in cds:
+            _sec("CHECK 10: Cross-Dimension Similarity (all layers)")
+            _info(f"Dimensions: {cds.get('dimension_names', [])}")
+            _info(f"Best independence at layer {cds['best_independence_layer']} "
+                  f"(avg |cos|={cds['best_avg_abs_cos']:.3f})")
+            _info(f"Worst collapse  at layer {cds['worst_collapse_layer']} "
+                  f"(avg |cos|={cds['worst_avg_abs_cos']:.3f})")
+            if cds.get("collapse_layers"):
+                _warn(f"Collapse layers (>50% of pairs |cos|>0.5): "
+                      f"{cds['collapse_layers']}")
+            if cds.get("independence_layers"):
+                _ok(f"Independence layers (all pairs |cos|<0.3): "
+                    f"{cds['independence_layers']}")
+            # Per-pair summary
+            for pname, pdata in sorted(cds.get("pair_summaries", {}).items()):
+                lines.append(
+                    f"  {pname:<50s}  mean={pdata['mean_cos']:+.3f}  "
+                    f"max|cos|={pdata['max_abs_cos']:.3f}"
+                )
+
+    # ── Vector Concentration ─────────────────────────────────────────
+    if "vector_concentration" in res:
+        _sec("CHECK 11: Vector Concentration / Effective Dimensionality")
+        vc = res["vector_concentration"]
+        for dim_id, data in sorted(vc.items()):
+            if not isinstance(data, dict) or "pattern" not in data:
+                continue
+            ed = data["mean_eff_dim"]
+            rnd = data["random_expected_eff_dim"]
+            ratio = data["ratio_to_random"]
+            gini = data["mean_gini"]
+            pat = data["pattern"]
+            lines.append(
+                f"  {dim_id:<30s}  eff_dim={ed:.0f} / {rnd:.0f} random  "
+                f"ratio={ratio:.2f}  gini={gini:.3f}  [{pat}]"
+            )
+            if data.get("note"):
+                _info(f"    → {data['note']}")
+
+    # ── Shared Subspace Analysis ─────────────────────────────────────
+    if "shared_subspace" in res:
+        ss = res["shared_subspace"]
+        if "note" not in ss or "concern" in ss:
+            _sec("CHECK 12: Shared Subspace Analysis (PCA)")
+            _info(f"Dimensions: {ss.get('dimension_names', '?')}")
+            _info(f"Mean PC1 explained: {ss.get('mean_pc1_explained', 0):.1%}")
+            _info(f"Mean effective rank: {ss.get('mean_effective_rank', 0):.2f} "
+                  f"/ {ss.get('max_dimensions', '?')} dimensions")
+            concern = ss.get("concern", "?")
+            if concern == "HIGH_SHARED":
+                _warn(ss.get("note", ""))
+            elif concern == "MODERATE_SHARED":
+                _info(f"  Note: {ss.get('note', '')}")
+            else:
+                _ok(ss.get("note", ""))
+
+            # Show PC1 alignment at a sample layer (middle)
+            ld = ss.get("layer_details", {})
+            mid_l = ss.get("n_layers", 36) // 2
+            if mid_l in ld or str(mid_l) in ld:
+                mid_data = ld.get(mid_l, ld.get(str(mid_l), {}))
+                if "pc1_alignment" in mid_data:
+                    _info(f"  PC1 alignment at layer {mid_l}:")
+                    for d, a in sorted(mid_data["pc1_alignment"].items(),
+                                       key=lambda x: -abs(x[1])):
+                        lines.append(f"    {d:<30s}  cos(PC1)={a:+.3f}")
+
+    # ── CHECK 13: Dose-Response Validation ─────────────────────────────
+    dr = res.get("dose_response", {})
+    if dr and "dimensions" in dr:
+        _sec("CHECK 13: Dose-Response Validation (LLM Judge)")
+        dr_md = dr.get("metadata", {})
+        _info(f"Alphas tested: {dr.get('alphas', '?')}")
+        _info(f"Judges: {', '.join(dr.get('judges_used', ['?']))}")
+        lines.append("")
+        for dim_name, dim_data in dr["dimensions"].items():
+            verdict = dim_data.get("verdict", "?")
+            targets = dim_data.get("target_judge_dims", [])
+            verdict_icon = {
+                "PASS": "PASS", "WEAK_PASS": "WEAK",
+                "PARTIAL": "PART", "FAIL": "FAIL",
+            }.get(verdict, "?")
+            _info(f"  {dim_name} [{verdict_icon}] (targets: {', '.join(targets)})")
+            for jn, ja in dim_data.get("judge_analysis", {}).items():
+                # Show monotonicity for target dims
+                for td in targets:
+                    mono = ja.get("monotonicity", {}).get(td, {})
+                    rho = mono.get("spearman_rho")
+                    p = mono.get("p_value")
+                    if rho is not None:
+                        sig = "***" if mono.get("significant") else ""
+                        lines.append(
+                            f"      {td}: rho={rho:+.3f}, p={p:.4f} {sig}"
+                        )
+                spec = ja.get("specificity", {})
+                if spec.get("ratio") is not None:
+                    lines.append(
+                        f"      Specificity ratio: {spec['ratio']:.2f} "
+                        f"({'specific' if spec['specific'] else 'not specific'})"
+                    )
+                coh = ja.get("coherence_degradation", {})
+                if coh.get("degrades"):
+                    lines.append(
+                        f"      Coherence degrades at alpha={coh['degradation_alpha']}"
+                    )
+            lines.append("")
+        dr_summ = dr.get("summary", {})
+        ov = dr_summ.get("overall_verdict", "?")
+        if ov == "PASS":
+            _ok(f"Overall dose-response: {ov} "
+                f"({dr_summ.get('pass_count', 0)}/{dr_summ.get('total_dimensions', 0)} pass)")
+        elif ov == "FAIL":
+            _warn(f"Overall dose-response: {ov} "
+                  f"({dr_summ.get('fail_count', 0)}/{dr_summ.get('total_dimensions', 0)} fail)")
+        else:
+            _info(f"Overall dose-response: {ov} "
+                  f"({dr_summ.get('pass_count', 0)} pass, "
+                  f"{dr_summ.get('fail_count', 0)} fail "
+                  f"/ {dr_summ.get('total_dimensions', 0)} total)")
+
     # ── Per-Dimension Traffic Light ────────────────────────────────────
     _sec("PER-DIMENSION SUMMARY (traffic light)")
     _info("  RED = severe problems    AMBER = needs attention    GREEN = acceptable")
@@ -1186,6 +2002,30 @@ def generate_report(res: Dict) -> str:
         vo_concern = res.get("vocabulary_overlap", {}).get(dim_id, {}).get("concern", "OK")
         if vo_concern == "CRITICAL_OVERLAP":
             flags.append("vocab_critical")
+
+        # Vector concentration flag (raw vectors)
+        vc_pat = res.get("vector_concentration", {}).get(dim_id, {}).get("pattern", "")
+        if vc_pat == "highly_concentrated":
+            flags.append("vec_concentrated")
+
+        # Layer consistency flag (raw vectors)
+        lc_pat = res.get("layer_consistency", {}).get(dim_id, {}).get("pattern", "")
+        if lc_pat in ("variable", "inconsistent"):
+            flags.append("unstable_layers")
+
+        # NaN layers flag (raw vectors)
+        vn_data = res.get("vector_norms", {}).get("dimensions", {}).get(dim_id, {})
+        n_nan = vn_data.get("n_nan_layers", 0)
+        if n_nan > 0:
+            flags.append("nan_layers")
+
+        # Dose-response flag (functional validation)
+        dr_dims = res.get("dose_response", {}).get("dimensions", {})
+        dr_verdict = dr_dims.get(dim_id, {}).get("verdict", "")
+        if dr_verdict == "FAIL":
+            flags.append("dose_fail")
+        elif dr_verdict == "WEAK_PASS":
+            flags.append("dose_weak")
 
         # Determine colour
         if len(flags) >= 2:
@@ -1264,17 +2104,78 @@ def generate_report(res: Dict) -> str:
             score -= pts
             deductions.append(f"Small sample size (~{n_samples_approx} per dim): −{pts}")
 
+    # Shared subspace deduction
+    ss_concern = res.get("shared_subspace", {}).get("concern", "")
+    if ss_concern == "HIGH_SHARED":
+        pts = 15
+        score -= pts
+        deductions.append(f"High shared subspace (PC1 dominates): −{pts}")
+    elif ss_concern == "MODERATE_SHARED":
+        pts = 5
+        score -= pts
+        deductions.append(f"Moderate shared subspace: −{pts}")
+
+    # Vector concentration deduction
+    vc_data = res.get("vector_concentration", {})
+    n_concentrated = sum(1 for v in vc_data.values()
+                         if isinstance(v, dict) and
+                         v.get("pattern") in ("concentrated", "highly_concentrated"))
+    if n_concentrated > 0:
+        pts = min(n_concentrated * 5, 15)
+        score -= pts
+        deductions.append(f"{n_concentrated} concentrated vectors: −{pts}")
+
+    # Layer inconsistency deduction
+    lc_data = res.get("layer_consistency", {})
+    n_unstable = sum(1 for v in lc_data.values()
+                     if isinstance(v, dict) and
+                     v.get("pattern") in ("variable", "inconsistent"))
+    if n_unstable > 0:
+        pts = min(n_unstable * 5, 10)
+        score -= pts
+        deductions.append(f"{n_unstable} layer-inconsistent dimensions: −{pts}")
+
+    # NaN layer deduction
+    vn_dims = res.get("vector_norms", {}).get("dimensions", {})
+    n_nan_dims = sum(1 for v in vn_dims.values()
+                     if v.get("n_nan_layers", 0) > 0)
+    if n_nan_dims > 0:
+        max_nan = max(v.get("n_nan_layers", 0) for v in vn_dims.values())
+        total_layers = next(iter(vn_dims.values()), {}).get("n_layers", 36)
+        nan_frac = max_nan / max(total_layers, 1)
+        pts = round(min(nan_frac * 30, 15))  # up to -15 if half layers are NaN
+        score -= pts
+        deductions.append(
+            f"{n_nan_dims} dims with NaN layers (up to {max_nan}/{total_layers}): −{pts}")
+
+    # Dose-response deductions
+    dr_data = res.get("dose_response", {}).get("dimensions", {})
+    n_dr_fail = sum(1 for v in dr_data.values() if v.get("verdict") == "FAIL")
+    n_dr_weak = sum(1 for v in dr_data.values() if v.get("verdict") == "WEAK_PASS")
+    if n_dr_fail > 0:
+        pts = min(n_dr_fail * 10, 20)
+        score -= pts
+        deductions.append(f"{n_dr_fail} dose-response FAIL dimensions: −{pts}")
+    if n_dr_weak > 0:
+        pts = min(n_dr_weak * 3, 9)
+        score -= pts
+        deductions.append(f"{n_dr_weak} dose-response WEAK_PASS dimensions: −{pts}")
+
     score = max(score, 0.0)
     for d in deductions:
         _info(f"  {d}")
     lines.append("")
     lines.append(f"  TOTAL SCORE: {score:.0f}/100")
     if score >= 80:
-        _info("Interpretation: GOOD — minor issues only.")
-    elif score >= 50:
-        _info("Interpretation: NEEDS WORK — significant confounding detected.")
+        _info("Interpretation: GOOD — minor issues only. Vectors suitable for experiments.")
+    elif score >= 60:
+        _info("Interpretation: FAIR — some confounds detected. Interpret results with caution.")
+    elif score >= 40:
+        _info("Interpretation: NEEDS WORK — significant confounding. Results are not reliable without mitigation.")
+    elif score >= 15:
+        _info("Interpretation: POOR — major rework of contrastive pairs needed before using vectors.")
     else:
-        _info("Interpretation: POOR — major rework of contrastive pairs needed.")
+        _info("Interpretation: CRITICAL — vectors are likely encoding surface features, not target concepts. Complete redesign recommended.")
 
     # ── Warnings & Recommendations ───────────────────────────────────
     if "warnings" in res and res["warnings"]:
@@ -1362,21 +2263,77 @@ def run_analyze_only(args) -> Dict:
         neg_accs, raw_bias
     )
 
-    # ── Cosine similarity (only if vectors on disk) ──────────────────
+    # ── Raw vector analysis (only if vectors on disk) ───────────────
     vectors_dir = Path(args.vectors_dir) / alias
+    # Fallback: try vectors/ if vectors_gpu/ doesn't have this model
+    if not vectors_dir.exists():
+        fallback = Path("vectors") / alias
+        if fallback.exists():
+            vectors_dir = fallback
+            log.info("Using fallback vectors dir: %s", fallback)
     if vectors_dir.exists():
-        log.info("Vectors found on disk — computing cosine similarity")
+        log.info("Vectors found on disk — running raw vector analysis")
+
+        # Cosine similarity
         n_layers = len(next(iter(neg_accs.values()))) if neg_accs else 36
         sample_layers = [n_layers // 4, n_layers // 2, 3 * n_layers // 4]
         results["cosine_similarity"] = compute_cosine_from_files(
             vectors_dir, layers=sample_layers
         )
+
+        # CHECK 8: Vector norm profile
+        log.info("Check 8: Vector norm profile")
+        results["vector_norms"] = analyze_vector_norms(vectors_dir)
+
+        # CHECK 9: Inter-layer consistency
+        log.info("Check 9: Inter-layer consistency")
+        results["layer_consistency"] = analyze_layer_consistency(vectors_dir)
+
+        # CHECK 10: Cross-dimension similarity
+        log.info("Check 10: Cross-dimension similarity (all layers)")
+        results["cross_dimension_similarity"] = analyze_cross_dimension_similarity(
+            vectors_dir
+        )
+
+        # CHECK 11: Vector concentration
+        log.info("Check 11: Vector concentration / effective dimensionality")
+        results["vector_concentration"] = analyze_vector_concentration(vectors_dir)
+
+        # CHECK 12: Shared subspace analysis
+        log.info("Check 12: Shared subspace analysis (PCA)")
+        results["shared_subspace"] = analyze_shared_subspace(vectors_dir)
     else:
         results["cosine_similarity"] = {
             "note": ("vectors/ directory not found. Run extract_vectors.py "
                      "on both negotiation and control pairs, then re-run "
                      "this script to get cosine similarity analysis.")
         }
+
+    # ── CHECK 13: Dose-response validation (if available) ────────────
+    dose_analysis_path = Path("results/dose_response/dose_response_analysis.json")
+    dose_scores_path = Path("results/dose_response_scores.json")
+    if dose_analysis_path.exists():
+        log.info("Check 13: Loading dose-response analysis results")
+        try:
+            with open(dose_analysis_path, encoding="utf-8") as f:
+                results["dose_response"] = json.load(f)
+        except Exception as e:
+            log.warning("Failed to load dose-response analysis: %s", e)
+    elif dose_scores_path.exists():
+        log.info("Check 13: Running dose-response analysis from scores")
+        try:
+            from dose_response_validation import analyze_dose_response
+            results["dose_response"] = analyze_dose_response(
+                scores_file=str(dose_scores_path),
+                output_dir="results/dose_response",
+            )
+        except Exception as e:
+            log.warning("Failed to run dose-response analysis: %s", e)
+    else:
+        log.info(
+            "Check 13: No dose-response data found. "
+            "Run dose_response_validation.py to generate it."
+        )
 
     # ── Compile warnings & recommendations ───────────────────────────
     warnings = []
@@ -1449,8 +2406,119 @@ def run_analyze_only(args) -> Dict:
         "pair consistency, and steering-direction probes."
     )
 
+    # NaN layer warnings
+    if "vector_norms" in results:
+        vn_dims = results["vector_norms"].get("dimensions", {})
+        nan_dims = {d: v["n_nan_layers"] for d, v in vn_dims.items()
+                    if v.get("n_nan_layers", 0) > 0}
+        if nan_dims:
+            nan_desc = ", ".join(f"{d} ({n} layers)" for d, n in nan_dims.items())
+            warnings.append(
+                f"NaN/Inf layers detected: {nan_desc}. These layers were "
+                f"likely not computed during extraction. Avoid using them "
+                f"for steering."
+            )
+
+    # Raw vector warnings
+    if "shared_subspace" in results:
+        ss = results["shared_subspace"]
+        if ss.get("concern") == "HIGH_SHARED":
+            warnings.append(
+                f"Shared subspace analysis: PC1 explains "
+                f"{ss['mean_pc1_explained']:.0%} of variance across dimensions. "
+                f"Vectors share a dominant direction (likely a common confound)."
+            )
+            recommendations.append(
+                "Investigate what PC1 represents — compare with verbosity/length "
+                "direction. Consider orthogonalising dimension vectors against "
+                "the shared component."
+            )
+
+    if "vector_concentration" in results:
+        vc = results["vector_concentration"]
+        concentrated = [d for d, v in vc.items()
+                        if isinstance(v, dict) and v.get("pattern") in
+                        ("concentrated", "highly_concentrated")]
+        if concentrated:
+            warnings.append(
+                f"Vector concentration: {', '.join(concentrated)} have low "
+                f"effective dimensionality — may capture surface features."
+            )
+
+    if "layer_consistency" in results:
+        lc = results["layer_consistency"]
+        unstable = [d for d, v in lc.items()
+                    if isinstance(v, dict) and v.get("pattern") in
+                    ("variable", "inconsistent")]
+        if unstable:
+            warnings.append(
+                f"Layer consistency: {', '.join(unstable)} have unstable "
+                f"steering directions across layers — the concept may not "
+                f"have a coherent representation."
+            )
+
+    if "cross_dimension_similarity" in results:
+        cds = results["cross_dimension_similarity"]
+        if cds.get("collapse_layers"):
+            warnings.append(
+                f"Dimension collapse at layers: {cds['collapse_layers']}. "
+                f"Avoid steering at these layers — dimensions are not "
+                f"distinguishable."
+            )
+        if cds.get("independence_layers"):
+            recommendations.append(
+                f"Best layers for dimension-independent steering: "
+                f"{cds['independence_layers']}."
+            )
+
+    # Dose-response warnings
+    dr = results.get("dose_response", {})
+    if dr and "dimensions" in dr:
+        dr_fails = [d for d, v in dr["dimensions"].items()
+                    if v.get("verdict") == "FAIL"]
+        dr_passes = [d for d, v in dr["dimensions"].items()
+                     if v.get("verdict") in ("PASS", "WEAK_PASS")]
+        if dr_fails:
+            warnings.append(
+                f"Dose-response FAIL: {', '.join(dr_fails)} — increasing "
+                f"alpha does NOT monotonically increase the target trait. "
+                f"The vector may not encode what we think."
+            )
+        if dr_passes:
+            recommendations.append(
+                f"Dose-response PASS: {', '.join(dr_passes)} show monotonic "
+                f"trait increase with alpha. These vectors have functional validity."
+            )
+        # Check for length confound in dose-response
+        for dim_name, dim_data in dr["dimensions"].items():
+            for jn, ja in dim_data.get("judge_analysis", {}).items():
+                la = ja.get("length_analysis", {})
+                if la.get("length_changes_with_alpha"):
+                    warnings.append(
+                        f"Dose-response length confound: {dim_name} — "
+                        f"response length changes with alpha (rho="
+                        f"{la['length_spearman_rho']:.3f}). "
+                        f"Judge scores may reflect length, not the target trait."
+                    )
+                    break
+    elif not dr:
+        recommendations.append(
+            "Run dose_response_validation.py to test whether vectors "
+            "produce monotonic behavioral changes (gold-standard validation)."
+        )
+
     # Overall assessment
     n_severe = len(severe_lc) + len(flat_high) + len(explosive_bias)
+    # Add raw vector severity
+    if results.get("shared_subspace", {}).get("concern") == "HIGH_SHARED":
+        n_severe += 1
+    if results.get("cross_dimension_similarity", {}).get("collapse_layers"):
+        n_severe += 1
+    # Add dose-response severity
+    dr_summary = results.get("dose_response", {}).get("summary", {})
+    if dr_summary.get("overall_verdict") == "FAIL":
+        n_severe += 2  # functional failure is a major red flag
+
     if n_severe >= 3:
         overall = ("CONCERNING — Multiple red flags detected. The current "
                    "steering vectors are likely confounded with surface "
@@ -1838,6 +2906,127 @@ def save_plots(results: Dict, output_dir: Path):
             fig.savefig(output_dir / "cohens_d_bias.png")
             plt.close(fig)
 
+    # 4. Inter-layer consistency (consecutive cosine)
+    if "layer_consistency" in results:
+        lc = results["layer_consistency"]
+        dims_with_data = [(d, v) for d, v in lc.items()
+                          if isinstance(v, dict) and "consecutive_cosine" in v]
+        if dims_with_data:
+            fig, axes = plt.subplots(1, 2, figsize=(16, 5))
+            # 4a: consecutive cosine
+            for dim_id, data in dims_with_data:
+                cos_vals = [np.nan if v is None else v for v in data["consecutive_cosine"]]
+                axes[0].plot(cos_vals, label=dim_id, marker=".")
+            axes[0].set_xlabel("Layer L → L+1")
+            axes[0].set_ylabel("Cosine Similarity")
+            axes[0].set_title("Inter-Layer Consistency")
+            axes[0].legend()
+            axes[0].grid(True, alpha=0.3)
+            axes[0].set_ylim(-0.1, 1.05)
+            # 4b: drift from layer 0
+            for dim_id, data in dims_with_data:
+                drift_vals = [np.nan if v is None else v for v in data["drift_from_layer0"]]
+                axes[1].plot(drift_vals, label=dim_id, marker=".")
+            axes[1].set_xlabel("Layer")
+            axes[1].set_ylabel("Cosine with Layer 0")
+            axes[1].set_title("Drift from Layer 0")
+            axes[1].legend()
+            axes[1].grid(True, alpha=0.3)
+            axes[1].set_ylim(-0.5, 1.05)
+            fig.tight_layout()
+            fig.savefig(output_dir / "layer_consistency.png")
+            plt.close(fig)
+
+    # 5. Cross-dimension similarity heatmap across layers
+    if "cross_dimension_similarity" in results:
+        cds = results["cross_dimension_similarity"]
+        if "pair_summaries" in cds:
+            pair_names = sorted(cds["pair_summaries"].keys())
+            if pair_names:
+                n_layers = cds.get("n_layers", 36)
+                # Replace None with np.nan so imshow gets a float array
+                matrix = np.array(
+                    [[np.nan if v is None else v
+                      for v in cds["pair_summaries"][p]["per_layer"]]
+                     for p in pair_names],
+                    dtype=float,
+                )
+                fig, ax = plt.subplots(figsize=(14, max(3, len(pair_names))))
+                im = ax.imshow(matrix, aspect="auto", cmap="RdBu_r",
+                               vmin=-1, vmax=1)
+                ax.set_yticks(range(len(pair_names)))
+                ax.set_yticklabels([p.replace("_", " ") for p in pair_names],
+                                   fontsize=8)
+                ax.set_xlabel("Layer")
+                ax.set_title("Cross-Dimension Cosine Similarity Across Layers")
+                fig.colorbar(im, ax=ax, label="Cosine similarity")
+                fig.tight_layout()
+                fig.savefig(output_dir / "cross_dimension_similarity.png")
+                plt.close(fig)
+
+    # 6. Vector concentration (effective dimensionality across layers)
+    if "vector_concentration" in results:
+        vc = results["vector_concentration"]
+        dims_with_data = [(d, v) for d, v in vc.items()
+                          if isinstance(v, dict) and "eff_dim_per_layer" in v]
+        if dims_with_data:
+            fig, axes = plt.subplots(1, 2, figsize=(16, 5))
+            random_eff = dims_with_data[0][1].get("random_expected_eff_dim", 750)
+            for dim_id, data in dims_with_data:
+                eff_vals = [np.nan if v is None else v for v in data["eff_dim_per_layer"]]
+                axes[0].plot(eff_vals, label=dim_id, marker=".")
+            axes[0].axhline(y=random_eff, color="gray", linestyle="--",
+                            label=f"random baseline ({random_eff:.0f})")
+            axes[0].set_xlabel("Layer")
+            axes[0].set_ylabel("Effective Dimensionality")
+            axes[0].set_title("Vector Concentration")
+            axes[0].legend()
+            axes[0].grid(True, alpha=0.3)
+            # Gini coefficient
+            for dim_id, data in dims_with_data:
+                gini_vals = [np.nan if v is None else v for v in data["gini_per_layer"]]
+                axes[1].plot(gini_vals, label=dim_id, marker=".")
+            axes[1].set_xlabel("Layer")
+            axes[1].set_ylabel("Gini Coefficient")
+            axes[1].set_title("Component Inequality (0=uniform, 1=single spike)")
+            axes[1].legend()
+            axes[1].grid(True, alpha=0.3)
+            fig.tight_layout()
+            fig.savefig(output_dir / "vector_concentration.png")
+            plt.close(fig)
+
+    # 7. Shared subspace (PC1 explained variance across layers)
+    if "shared_subspace" in results:
+        ss = results["shared_subspace"]
+        if "pc1_explained_per_layer" in ss:
+            fig, axes = plt.subplots(1, 2, figsize=(16, 5))
+            layers_range = range(ss.get("n_layers", len(ss["pc1_explained_per_layer"])))
+            pc1_vals = [np.nan if v is None else v for v in ss["pc1_explained_per_layer"]]
+            axes[0].plot(list(layers_range), pc1_vals,
+                         color="red", marker=".", label="PC1")
+            axes[0].axhline(y=1.0 / ss.get("n_dimensions", 3), color="gray",
+                            linestyle="--", label="uniform (1/N)")
+            axes[0].set_xlabel("Layer")
+            axes[0].set_ylabel("Variance Explained")
+            axes[0].set_title("PC1 Explained Ratio (higher = more shared)")
+            axes[0].set_ylim(0, 1)
+            axes[0].legend()
+            axes[0].grid(True, alpha=0.3)
+            # Effective rank
+            rank_vals = [np.nan if v is None else v for v in ss["effective_rank_per_layer"]]
+            axes[1].plot(list(layers_range), rank_vals,
+                         color="blue", marker=".")
+            axes[1].axhline(y=ss.get("n_dimensions", 3), color="gray",
+                            linestyle="--", label=f"max ({ss.get('n_dimensions', 3)})")
+            axes[1].set_xlabel("Layer")
+            axes[1].set_ylabel("Effective Rank")
+            axes[1].set_title("Dimension Independence (higher = more independent)")
+            axes[1].legend()
+            axes[1].grid(True, alpha=0.3)
+            fig.tight_layout()
+            fig.savefig(output_dir / "shared_subspace.png")
+            plt.close(fig)
+
     log.info("Plots saved to %s", output_dir)
 
 
@@ -1864,8 +3053,9 @@ def parse_args():
     p.add_argument("--control_pairs", default="control_steering_pairs.json")
     p.add_argument("--probe_dir", default="probe_results",
                    help="Directory with existing probe results")
-    p.add_argument("--vectors_dir", default="vectors",
-                   help="Directory with extracted vectors (.npy)")
+    p.add_argument("--vectors_dir", default="vectors_gpu",
+                   help="Directory with extracted vectors (.npy files). "
+                        "Also checked: vectors/ as fallback.")
     p.add_argument("--output_dir", default="validation_results",
                    help="Where to save validation output")
     p.add_argument("--batch_size", type=int, default=4)
@@ -1907,8 +3097,13 @@ def main():
         f.write(report)
     log.info("Report saved to %s", report_path)
 
-    # Print report
-    print(report)
+    # Print report (handle Windows encoding)
+    import sys
+    try:
+        print(report)
+    except UnicodeEncodeError:
+        sys.stdout.buffer.write(report.encode("utf-8", errors="replace"))
+        sys.stdout.buffer.write(b"\n")
 
     # Plots
     save_plots(results, output_dir)

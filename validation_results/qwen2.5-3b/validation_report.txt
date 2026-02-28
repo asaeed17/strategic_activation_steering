@@ -2,7 +2,7 @@
 ======================================================================
   VALIDATION REPORT — qwen2.5-3b   [analyze-only]
 ======================================================================
-     Timestamp: 2026-02-28T03:37:16.126837
+     Timestamp: 2026-02-28T18:01:48.526504
 
 ======================================================================
   CHECK 1: Length Confound Analysis
@@ -79,7 +79,15 @@
 ======================================================================
   CHECK 3: Cosine Similarity Between Steering Directions
 ======================================================================
-     vectors/ directory not found. Run extract_vectors.py on both negotiation and control pairs, then re-run this script to get cosine similarity analysis.
+
+  Layer 9:
+  ✓  No concerning cross-category overlap at this layer.
+
+  Layer 18:
+  ✓  No concerning cross-category overlap at this layer.
+
+  Layer 27:
+  ✓  No concerning cross-category overlap at this layer.
 
 ======================================================================
   Bias Growth Analysis (raw projection separations)
@@ -124,23 +132,77 @@
     Sensitivity: bias<=0.10→19  bias<=0.15→28  bias<=0.20→28  bias<=0.25→29  bias<=0.35→30  bias<=0.50→33
 
 ======================================================================
+  CHECK 8: Vector Norm Profile
+======================================================================
+     Dimensions analysed: 3
+  ✓  All vectors are unit-normed as expected.
+  ⚠  Some layers contain NaN/Inf values — these layers were likely not computed during extraction (e.g. layers beyond the model's effective depth).
+  anchoring                       [unit-normed]  shape=(36, 2048)  valid=28/36  norm: mean=1.0000  std=0.0000  range=[1.0000, 1.0000]  ⚠ 8 NaN layers
+  firmness                        [unit-normed]  shape=(36, 2048)  valid=28/36  norm: mean=1.0000  std=0.0000  range=[1.0000, 1.0000]  ⚠ 8 NaN layers
+  strategic_concession_making     [unit-normed]  shape=(36, 2048)  valid=28/36  norm: mean=1.0000  std=0.0000  range=[1.0000, 1.0000]  ⚠ 8 NaN layers
+
+======================================================================
+  CHECK 9: Inter-Layer Consistency
+======================================================================
+     Cosine similarity between consecutive layer vectors
+  anchoring                       mean_cos=0.773  min_cos=0.629  transitions=3  [variable]
+         → Significant variation in steering direction across layers. Different layers may encode different aspects of the concept.
+  firmness                        mean_cos=0.738  min_cos=0.426  transitions=7  [variable]
+         → Significant variation in steering direction across layers. Different layers may encode different aspects of the concept.
+  strategic_concession_making     mean_cos=0.753  min_cos=0.486  transitions=3  [variable]
+         → Significant variation in steering direction across layers. Different layers may encode different aspects of the concept.
+
+======================================================================
+  CHECK 10: Cross-Dimension Similarity (all layers)
+======================================================================
+     Dimensions: ['anchoring', 'firmness', 'strategic_concession_making']
+     Best independence at layer 27 (avg |cos|=0.379)
+     Worst collapse  at layer 2 (avg |cos|=0.631)
+  ⚠  Collapse layers (>50% of pairs |cos|>0.5): [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24]
+  anchoring_vs_firmness                               mean=+0.556  max|cos|=0.686
+  anchoring_vs_strategic_concession_making            mean=+0.291  max|cos|=0.706
+  firmness_vs_strategic_concession_making             mean=+0.609  max|cos|=0.815
+
+======================================================================
+  CHECK 11: Vector Concentration / Effective Dimensionality
+======================================================================
+  anchoring                       eff_dim=811 / 753 random  ratio=1.08  gini=0.439  [near_random]
+         → Effective dimensionality (811) is close to random baseline (753). The vector is broadly distributed — no evidence of surface-feature concentration.
+  firmness                        eff_dim=852 / 753 random  ratio=1.13  gini=0.434  [near_random]
+         → Effective dimensionality (851) is close to random baseline (753). The vector is broadly distributed — no evidence of surface-feature concentration.
+  strategic_concession_making     eff_dim=844 / 753 random  ratio=1.12  gini=0.434  [near_random]
+         → Effective dimensionality (844) is close to random baseline (753). The vector is broadly distributed — no evidence of surface-feature concentration.
+
+======================================================================
+  CHECK 12: Shared Subspace Analysis (PCA)
+======================================================================
+     Dimensions: ['anchoring', 'firmness', 'strategic_concession_making']
+     Mean PC1 explained: 66.1%
+     Mean effective rank: 2.31 / 3 dimensions
+       Note: PC1 explains 66% of variance. Some shared structure exists, but dimensions retain partial independence.
+       PC1 alignment at layer 18:
+    firmness                        cos(PC1)=-0.914
+    strategic_concession_making     cos(PC1)=-0.775
+    anchoring                       cos(PC1)=-0.721
+
+======================================================================
   PER-DIMENSION SUMMARY (traffic light)
 ======================================================================
        RED = severe problems    AMBER = needs attention    GREEN = acceptable
   🟡 active_listening                [AMBER]  flags: length
-  🟡 anchoring                       [AMBER]  flags: length
+  🔴 anchoring                       [RED]  flags: length, unstable_layers, nan_layers
   🟢 assertiveness                   [GREEN]  flags: —
   🟡 batna_awareness                 [AMBER]  flags: length
   🟡 clarity_and_directness          [AMBER]  flags: length
   🟡 emotional_regulation            [AMBER]  flags: length
   🔴 empathy                         [RED]  flags: length, flat_probe
-  🔴 firmness                        [RED]  flags: length, flat_probe
+  🔴 firmness                        [RED]  flags: length, flat_probe, unstable_layers, nan_layers
   🟡 information_gathering           [AMBER]  flags: length
   🔴 interest_based_reasoning        [RED]  flags: length, vocab_critical
   🟢 patience                        [GREEN]  flags: —
   🟡 rapport_building                [AMBER]  flags: length
   🟡 reframing                       [AMBER]  flags: length
-  🟡 strategic_concession_making     [AMBER]  flags: length
+  🔴 strategic_concession_making     [RED]  flags: length, unstable_layers, nan_layers
   🟡 value_creation                  [AMBER]  flags: length
 
 ======================================================================
@@ -153,9 +215,12 @@
        3 flat-high/perfect probe patterns: −15
        2 nearly-identical bias correlations: −10
        Small sample size (~24 per dim): −10
+       Moderate shared subspace: −5
+       3 layer-inconsistent dimensions: −10
+       3 dims with NaN layers (up to 8/36): −7
 
-  TOTAL SCORE: 19/100
-     Interpretation: POOR — major rework of contrastive pairs needed.
+  TOTAL SCORE: 0/100
+     Interpretation: CRITICAL — vectors are likely encoding surface features, not target concepts. Complete redesign recommended.
 
 ======================================================================
   SUMMARY — Warnings
@@ -164,6 +229,9 @@
   ⚠  Significant length confound in: firmness, empathy, active_listening, interest_based_reasoning, emotional_regulation, strategic_concession_making, anchoring, rapport_building, batna_awareness, reframing, value_creation, information_gathering, clarity_and_directness, verbosity, formality. Positive samples are systematically longer.
   ⚠  Probe accuracy is uniformly high for: firmness, empathy, verbosity. This likely reflects surface features, not layer-specific encoding.
   ⚠  Multiple negotiation vectors share nearly identical bias patterns — they may be capturing the same confound.
+  ⚠  NaN/Inf layers detected: anchoring (8 layers), firmness (8 layers), strategic_concession_making (8 layers). These layers were likely not computed during extraction. Avoid using them for steering.
+  ⚠  Layer consistency: anchoring, firmness, strategic_concession_making have unstable steering directions across layers — the concept may not have a coherent representation.
+  ⚠  Dimension collapse at layers: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24]. Avoid steering at these layers — dimensions are not distinguishable.
 
 ======================================================================
   SUMMARY — Recommended Actions
@@ -173,6 +241,7 @@
      3. Run with --full mode to perform permutation tests and verify statistical significance at each layer.
      4. Extract control steering vectors (run extract_vectors.py on control_steering_pairs.json) to enable cosine similarity analysis.
      5. Run --full validation to get Cohen's d, permutation tests, pair consistency, and steering-direction probes.
+     6. Run dose_response_validation.py to test whether vectors produce monotonic behavioral changes (gold-standard validation).
 
 ======================================================================
   OVERALL ASSESSMENT
