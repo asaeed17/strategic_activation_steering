@@ -1,0 +1,181 @@
+
+======================================================================
+  VALIDATION REPORT — qwen2.5-3b   [analyze-only]
+======================================================================
+     Timestamp: 2026-02-28T03:37:16.126837
+
+======================================================================
+  CHECK 1: Length Confound Analysis
+======================================================================
+     (word-level Cohen's d + character-level Cohen's d; severity = worst of both)
+  active_listening                pos= 28.6w  neg= 11.0w  ratio=2.60x  d_word=+3.90  d_char=+3.62  [SEVERE]
+  anchoring                       pos= 17.9w  neg= 13.5w  ratio=1.33x  d_word=+1.06  d_char=+1.64  [SEVERE]
+  assertiveness                   pos= 19.0w  neg= 20.1w  ratio=0.95x  d_word=-0.25  d_char=+0.37  [MILD]
+  batna_awareness                 pos= 24.5w  neg= 14.6w  ratio=1.68x  d_word=+2.04  d_char=+2.40  [SEVERE]
+  clarity_and_directness          pos= 20.2w  neg= 14.2w  ratio=1.42x  d_word=+1.51  d_char=+1.80  [SEVERE]
+  emotional_regulation            pos= 23.5w  neg= 14.5w  ratio=1.62x  d_word=+1.59  d_char=+1.47  [SEVERE]
+  empathy                         pos= 27.7w  neg= 11.5w  ratio=2.41x  d_word=+7.11  d_char=+6.75  [SEVERE]
+  firmness                        pos= 28.5w  neg= 19.5w  ratio=1.46x  d_word=+2.59  d_char=+2.92  [SEVERE]
+  formality                       pos= 22.2w  neg= 13.8w  ratio=1.60x  d_word=+2.31  d_char=+3.50  [SEVERE]
+  information_gathering           pos= 24.9w  neg= 12.1w  ratio=2.06x  d_word=+2.64  d_char=+3.40  [SEVERE]
+  interest_based_reasoning        pos= 28.3w  neg= 11.9w  ratio=2.38x  d_word=+5.71  d_char=+6.06  [SEVERE]
+  patience                        pos= 17.1w  neg= 13.9w  ratio=1.23x  d_word=+0.56  d_char=+0.53  [MILD]
+  rapport_building                pos= 26.5w  neg= 11.9w  ratio=2.22x  d_word=+3.96  d_char=+3.85  [SEVERE]
+  reframing                       pos= 30.8w  neg= 13.2w  ratio=2.34x  d_word=+6.74  d_char=+6.58  [SEVERE]
+  strategic_concession_making     pos= 24.6w  neg= 13.0w  ratio=1.89x  d_word=+3.64  d_char=+5.11  [SEVERE]
+  value_creation                  pos= 29.2w  neg= 10.9w  ratio=2.68x  d_word=+5.36  d_char=+4.51  [SEVERE]
+  verbosity                       pos= 66.3w  neg=  3.5w  ratio=18.95x  d_word=+16.29  d_char=+13.61  [SEVERE]
+  ⚠  Positive samples are systematically longer than negatives in several dimensions.
+     ACTION: Rewrite pairs so positive and negative samples match in word count,
+             or add a length-normalisation pre-processing step.
+
+======================================================================
+  CHECK 1b: Vocabulary Overlap Analysis
+======================================================================
+     Jaccard similarity of word sets (high = good overlap between pos/neg)
+  active_listening                global_jaccard=0.184  pair_jaccard=0.083  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  anchoring                       global_jaccard=0.225  pair_jaccard=0.107  [OK]
+  assertiveness                   global_jaccard=0.176  pair_jaccard=0.117  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  batna_awareness                 global_jaccard=0.236  pair_jaccard=0.106  [OK]
+  clarity_and_directness          global_jaccard=0.219  pair_jaccard=0.127  [OK]
+  emotional_regulation            global_jaccard=0.217  pair_jaccard=0.080  [LOW_PAIR_OVERLAP]
+  ⚠  Within-pair overlap is low — each pair's positive and negative differ substantially in wording.
+  empathy                         global_jaccard=0.170  pair_jaccard=0.084  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  firmness                        global_jaccard=0.228  pair_jaccard=0.101  [OK]
+  formality                       global_jaccard=0.131  pair_jaccard=0.130  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  information_gathering           global_jaccard=0.191  pair_jaccard=0.064  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  interest_based_reasoning        global_jaccard=0.120  pair_jaccard=0.068  [CRITICAL_OVERLAP]
+  ⚠  Extremely low vocabulary overlap — positive and negative use almost completely different words.  Probe accuracy is NOT a reliable signal; any classifier can separate these by surface word features alone.
+  patience                        global_jaccard=0.252  pair_jaccard=0.073  [LOW_PAIR_OVERLAP]
+  ⚠  Within-pair overlap is low — each pair's positive and negative differ substantially in wording.
+  rapport_building                global_jaccard=0.188  pair_jaccard=0.103  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  reframing                       global_jaccard=0.173  pair_jaccard=0.081  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  strategic_concession_making     global_jaccard=0.235  pair_jaccard=0.097  [LOW_PAIR_OVERLAP]
+  ⚠  Within-pair overlap is low — each pair's positive and negative differ substantially in wording.
+  value_creation                  global_jaccard=0.184  pair_jaccard=0.102  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  verbosity                       global_jaccard=0.063  pair_jaccard=0.042  [CRITICAL_OVERLAP]
+  ⚠  Extremely low vocabulary overlap — positive and negative use almost completely different words.  Probe accuracy is NOT a reliable signal; any classifier can separate these by surface word features alone.
+
+======================================================================
+  CHECK 2: Probe Accuracy Pattern Analysis
+======================================================================
+  empathy                    [negotiation]  pattern=flat_high         mean=0.990  best_layer=0  best=1.000
+  ⚠  Suspiciously uniform high accuracy across all layers. Likely detecting surface features (e.g. text length) rather than a layer-specific conceptual representation.
+  firmness                   [negotiation]  pattern=flat_high         mean=0.970  best_layer=2  best=1.000
+  ⚠  Suspiciously uniform high accuracy across all layers. Likely detecting surface features (e.g. text length) rather than a layer-specific conceptual representation.
+  formality                  [control    ]  pattern=decreasing_tail   mean=0.950  best_layer=2  best=1.000
+  ⚠  Accuracy drops in later layers — concept fades.
+  verbosity                  [control    ]  pattern=flat_perfect      mean=1.000  best_layer=0  best=1.000
+  ⚠  Near-perfect accuracy (>=0.95) at EVERY layer. With only 36 layers × ~24 samples this almost certainly means surface features (text length, punctuation style) are being detected, not a conceptual representation.
+
+======================================================================
+  CHECK 3: Cosine Similarity Between Steering Directions
+======================================================================
+     vectors/ directory not found. Run extract_vectors.py on both negotiation and control pairs, then re-run this script to get cosine similarity analysis.
+
+======================================================================
+  Bias Growth Analysis (raw projection separations)
+======================================================================
+  empathy_vs_formality                      growth_ratio=2.2x  slope=0.162  doubles_at_layer=30
+  empathy_vs_verbosity                      growth_ratio=3.5x  slope=0.603  doubles_at_layer=13
+  firmness_vs_formality                     growth_ratio=2.8x  slope=0.268  doubles_at_layer=30
+  firmness_vs_verbosity                     growth_ratio=4.7x  slope=0.641  doubles_at_layer=28
+
+======================================================================
+  Bias Correlation (do different vectors share the same confound?)
+======================================================================
+  empathy_vs_formality__vs__empathy_vs_verbosity                r=+0.860  [MODERATE]
+  empathy_vs_formality__vs__firmness_vs_formality               r=+0.927  [MODERATE]
+  empathy_vs_formality__vs__firmness_vs_verbosity               r=+0.906  [MODERATE]
+  empathy_vs_verbosity__vs__firmness_vs_formality               r=+0.965  [HIGH]
+  ⚠  These two bias series are nearly identical — both vectors are confounded in the same way.
+  empathy_vs_verbosity__vs__firmness_vs_verbosity               r=+0.959  [HIGH]
+  ⚠  These two bias series are nearly identical — both vectors are confounded in the same way.
+  firmness_vs_formality__vs__firmness_vs_verbosity              r=+0.933  [MODERATE]
+
+======================================================================
+  CHECK 7: Selectivity & Layer Recommendations
+======================================================================
+  empathy                    best_layer=0  selectivity=1.0
+  firmness                   best_layer=3  selectivity=0.9664
+
+======================================================================
+  Layer Recommendations
+======================================================================
+  empathy:
+    RECOMMEND: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+    TOP-5:     L0(1.000), L1(0.966), L2(0.965), L3(0.963), L4(0.932)
+    AVOID:     [34]
+    Criteria:  accuracy >= 0.9 AND norm_bias <= 0.25
+    Sensitivity: bias<=0.10→8  bias<=0.15→16  bias<=0.20→19  bias<=0.25→25  bias<=0.35→30  bias<=0.50→33
+  firmness:
+    RECOMMEND: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]
+    TOP-5:     L3(0.966), L2(0.954), L4(0.946), L21(0.945), L20(0.939)
+    AVOID:     [34]
+    Criteria:  accuracy >= 0.9 AND norm_bias <= 0.25
+    Sensitivity: bias<=0.10→19  bias<=0.15→28  bias<=0.20→28  bias<=0.25→29  bias<=0.35→30  bias<=0.50→33
+
+======================================================================
+  PER-DIMENSION SUMMARY (traffic light)
+======================================================================
+       RED = severe problems    AMBER = needs attention    GREEN = acceptable
+  🟡 active_listening                [AMBER]  flags: length
+  🟡 anchoring                       [AMBER]  flags: length
+  🟢 assertiveness                   [GREEN]  flags: —
+  🟡 batna_awareness                 [AMBER]  flags: length
+  🟡 clarity_and_directness          [AMBER]  flags: length
+  🟡 emotional_regulation            [AMBER]  flags: length
+  🔴 empathy                         [RED]  flags: length, flat_probe
+  🔴 firmness                        [RED]  flags: length, flat_probe
+  🟡 information_gathering           [AMBER]  flags: length
+  🔴 interest_based_reasoning        [RED]  flags: length, vocab_critical
+  🟢 patience                        [GREEN]  flags: —
+  🟡 rapport_building                [AMBER]  flags: length
+  🟡 reframing                       [AMBER]  flags: length
+  🟡 strategic_concession_making     [AMBER]  flags: length
+  🟡 value_creation                  [AMBER]  flags: length
+
+======================================================================
+  VALIDITY SCORE
+======================================================================
+     Scoring: start at 100, deduct points per red flag.
+       15 dimensions with length confound: −30
+       2 dims with critical vocab overlap: −6
+       11 dims with low vocab overlap: −10
+       3 flat-high/perfect probe patterns: −15
+       2 nearly-identical bias correlations: −10
+       Small sample size (~24 per dim): −10
+
+  TOTAL SCORE: 19/100
+     Interpretation: POOR — major rework of contrastive pairs needed.
+
+======================================================================
+  SUMMARY — Warnings
+======================================================================
+  ⚠  Negotiation dimensions have 12 pairs each (24 samples). Control dimensions have 6 pairs each (12 samples). Statistical power is limited.
+  ⚠  Significant length confound in: firmness, empathy, active_listening, interest_based_reasoning, emotional_regulation, strategic_concession_making, anchoring, rapport_building, batna_awareness, reframing, value_creation, information_gathering, clarity_and_directness, verbosity, formality. Positive samples are systematically longer.
+  ⚠  Probe accuracy is uniformly high for: firmness, empathy, verbosity. This likely reflects surface features, not layer-specific encoding.
+  ⚠  Multiple negotiation vectors share nearly identical bias patterns — they may be capturing the same confound.
+
+======================================================================
+  SUMMARY — Recommended Actions
+======================================================================
+     1. Increase contrastive pairs to 30+ per dimension for robust probing.
+     2. Rewrite contrastive pairs so positive and negative responses are length-matched (similar word/token counts).
+     3. Run with --full mode to perform permutation tests and verify statistical significance at each layer.
+     4. Extract control steering vectors (run extract_vectors.py on control_steering_pairs.json) to enable cosine similarity analysis.
+     5. Run --full validation to get Cohen's d, permutation tests, pair consistency, and steering-direction probes.
+
+======================================================================
+  OVERALL ASSESSMENT
+======================================================================
+  CONCERNING — Multiple red flags detected. The current steering vectors are likely confounded with surface features (especially text length / verbosity). Results should be interpreted with extreme caution.
+======================================================================
