@@ -1,7 +1,9 @@
 import optuna
 import optuna.importance
+from pathlib import Path
 
-storage = "sqlite:///results/fast_run/stage2.db"
+_root = Path(__file__).resolve().parent.parent
+storage = f"sqlite:///{_root / 'results' / 'fast_run' / 'stage2.db'}"
 studies = optuna.get_all_study_names(storage)
 
 print(f"{'Study':<50} {'Trials':>6}  {'Best α':>7}  {'Best adv':>9}  {'Mean adv':>9}  {'Std':>6}  {'Worst adv':>10}  {'Status'}")
