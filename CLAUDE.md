@@ -42,7 +42,7 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 
 - **`extract_vectors.py`** — Loads a model, runs contrastive pairs through it, extracts last-token hidden states at every layer, computes direction vectors via mean difference or PCA. Outputs `.npy` files to `vectors/{model_alias}/{method}/`. Imports nothing from other project files.
 - **`validate_vectors.py`** — Validates vectors before use. Three checks: PCA separation (silhouette + SVM), split-half stability (cosine between subsets), cross-dimension similarity (flags collapsed dimensions). Only dimensions passing all three should be used.
-- **`probe_vectors.py`** — Logistic regression probes per layer + control dimensions (verbosity, formality). Tests whether vectors encode concepts or surface patterns. Includes Cohen's d bias check.
+- **`probe_vectors.py`** — Logistic regression probes per layer + control dimensions (verbosity, formality, hedging, sentiment). Tests whether vectors encode concepts or surface patterns. Includes Cohen's d bias check.
 - **`apply_steering.py`** — Imports `MODELS` and `HF_TOKEN` from `extract_vectors.py`. Loads direction vectors from disk, registers `SteeringHook` forward hooks on transformer layers (`h + alpha * direction`), runs two LLM agents (steered vs baseline) through CraigslistBargains negotiations. Scores deals by how close the agreed price is to each side's private target.
 - **`fast_search_steering.py`** — Imports from both `extract_vectors` and `apply_steering`. Three-stage search: S1 exhaustive grid over categoricals, S2 TPE (Optuna) over alpha, S3 validation. Stores S2 trials in SQLite.
 - **`llm_judge.py`** — Multi-model LLM judge (Gemini/GPT/LLaMA). Rates 6 qualitative dimensions with blind presentation, position counterbalancing, and anti-verbosity calibration.
@@ -50,7 +50,7 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - **`analysis/run_eval.py`** — GPU evaluation suite. Runs all experiments (G1-G5) in a single model load with incremental saves. Runs locally; also works headless via nohup on remote instances.
 - **`analysis/analyse_eval.py`** — Post-GPU statistical analysis. Paired comparisons, clamping analysis, role separation.
 - **`negotiation_steering_pairs.json`** — 180 contrastive pairs across 15 negotiation dimensions. Known to have surface biases (1.8x length, 3.6x hedge clustering). See `analysis/audit_pairs.py`.
-- **`control_steering_pairs.json`** — 12 control pairs (6 verbosity, 6 formality) for detecting surface confounds in steering vectors.
+- **`control_steering_pairs.json`** — 24 control pairs across 4 dimensions (verbosity, formality, hedging, sentiment) for detecting surface confounds in steering vectors. Hedging targets the 3.6x hedge clustering bias; sentiment targets warm-vs-cold tone confounds in empathy/rapport vectors.
 
 **Key conventions:**
 - Vectors are unit-normed per layer. Shape: `(n_layers, hidden_dim)` for all-layers, `(hidden_dim,)` for single layer.
