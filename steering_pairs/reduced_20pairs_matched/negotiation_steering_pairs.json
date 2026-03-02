@@ -1,0 +1,896 @@
+{
+  "metadata": {
+    "description": "Length-matched contrastive pairs with reduced dimensions and 20 pairs each",
+    "format": "Contrastive Activation Addition (CAA) / Representation Engineering",
+    "usage": "For each dimension, extract residual-stream activations on positive and negative examples, compute the mean difference vector, and add the scaled vector during inference to steer behavior toward that dimension.",
+    "label_convention": {
+      "positive": "Response demonstrating the target negotiation trait at high quality",
+      "negative": "Response lacking the trait or demonstrating the opposite behavior"
+    },
+    "dimensions": 8,
+    "total_pairs": 160,
+    "version": "2.2",
+    "merge_history": {
+      "firmness": [
+        "firmness",
+        "assertiveness",
+        "clarity_and_directness"
+      ],
+      "empathy": [
+        "empathy",
+        "rapport_building"
+      ],
+      "active_listening": [
+        "active_listening",
+        "information_gathering"
+      ],
+      "composure": [
+        "emotional_regulation",
+        "patience"
+      ],
+      "creative_problem_solving": [
+        "interest_based_reasoning",
+        "value_creation",
+        "reframing"
+      ]
+    }
+  },
+  "dimensions": [
+    {
+      "id": "firmness",
+      "name": "Firmness",
+      "description": "Standing your ground under pressure, making direct confident statements, and communicating in clear unambiguous terms without aggression or excessive hedging",
+      "pairs": [
+        {
+          "context": "A buyer challenges your asking price of $85,000 and says 'That's way too high. I can't pay that much.'",
+          "positive": "I understand it feels like a stretch, but $85,000 reflects the current market value and the condition of what we're offering. I'm not in a position to move significantly on that price.",
+          "negative": "You know what, I hear you \u2014 maybe $85,000 is a bit much. What would work better for you? I'm pretty flexible and open to whatever you suggest."
+        },
+        {
+          "context": "A client says your project timeline is too long and demands you cut it in half.",
+          "positive": "Cutting the timeline in half would compromise quality and put the team under unsustainable pressure. The timeline I've proposed reflects what's needed to deliver the result you've asked for.",
+          "negative": "You're right, I guess we could try to speed things up. I'll see what I can do to compress the schedule. I don't want to push back too much on this."
+        },
+        {
+          "context": "Your employer pushes back on your salary request, saying 'We really can't go that high.'",
+          "positive": "I appreciate you being transparent about the constraints. Based on the research I've done and the value I bring to this role, I need to stay at $120,000 to move forward.",
+          "negative": "Oh, that's totally fine \u2014 I don't want to cause any issues. Whatever you think is fair works for me. I'm sure it'll all work out in the end."
+        },
+        {
+          "context": "A client keeps pushing for a lower fee even after you've already explained your pricing twice.",
+          "positive": "I've explained what's included at this price, and I'm confident in the value we're delivering. This is where my fee stands.",
+          "negative": "Well, if you're not happy with the price, I suppose I could find ways to reduce it further. I just want to close this."
+        },
+        {
+          "context": "A buyer tries to use emotional pressure, saying 'I thought we had a relationship and you'd help me out.'",
+          "positive": "I do value our relationship, and that's exactly why I want to make sure this deal works well for both of us \u2014 not just on your side.",
+          "negative": "You're right, I feel terrible about this. Let me just give you a bigger discount to make things right. I don't want you to think I don't care."
+        },
+        {
+          "context": "You need to ask for a higher starting salary than initially offered.",
+          "positive": "Based on my experience and the market rate for this role, I'm looking for $115,000. Can you make that work?",
+          "negative": "I don't want to be difficult, but I was sort of hoping maybe we could possibly discuss the salary a little bit?"
+        },
+        {
+          "context": "A client keeps adding to the scope of a project without adjusting the budget.",
+          "positive": "The additions you've described are outside our original agreement. I need to raise this now: we either scope back or adjust the budget.",
+          "negative": "I mean, I guess we could try to fit it in... I don't want to seem inflexible. Maybe I can absorb some of the extra work somehow."
+        },
+        {
+          "context": "A vendor misses a delivery deadline and you need to address it directly.",
+          "positive": "This delivery was due Monday. Missing it has affected our production schedule. I need to understand what happened and what you're committing to going forward.",
+          "negative": "I was just wondering if maybe, when you get a chance, you might be able to look into why the delivery was a bit late?"
+        },
+        {
+          "context": "You need to make an opening offer in a negotiation.",
+          "positive": "I'm prepared to offer $200,000 for the property. That reflects fair market value based on comparable recent sales.",
+          "negative": "I was thinking maybe around $200,000? Or something in that range? I'm not sure what you think, but..."
+        },
+        {
+          "context": "A counterpart tries to reopen terms that were already agreed upon.",
+          "positive": "We agreed on that point two weeks ago and it's in the draft. I'm not prepared to reopen it.",
+          "negative": "Oh, I thought we were done with that... but I guess if you really feel strongly, we could look at it again."
+        },
+        {
+          "context": "You want to make a specific resource request to a stakeholder.",
+          "positive": "I need $10,000 added to the budget, approved by Thursday, to bring in an additional contractor.",
+          "negative": "It would be great if at some point there could maybe be a little more budget flexibility for the team."
+        },
+        {
+          "context": "You need to set a firm deadline for an offer.",
+          "positive": "This offer is open until 5pm on Friday. After that, I'll need to move forward with other options.",
+          "negative": "I can't wait forever, so hopefully you'll be able to get back to me soon."
+        },
+        {
+          "context": "A procurement manager insists your licensing fee is above their approved budget ceiling.",
+          "positive": "The licensing fee reflects the scope and support included. I can discuss what we package together, but the fee itself stays where it is.",
+          "negative": "If it's above your ceiling, I can probably trim the fee down to fit. Just tell me the number your budget allows and I'll work around it."
+        },
+        {
+          "context": "During an M&A discussion, the acquiring company demands a lower valuation based on one weak quarter.",
+          "positive": "One quarter doesn't define the trajectory. Our valuation reflects trailing twelve-month performance and forward projections, and I stand behind those figures.",
+          "negative": "That quarter was rough, I'll admit. Maybe we should adjust the valuation downward to account for it. What number feels right to your team?"
+        },
+        {
+          "context": "A freelance client says they found a cheaper designer and asks you to match the rate.",
+          "positive": "I respect that you're exploring options. My rate reflects the quality and reliability I deliver, and I'm not in a position to match a lower-tier price.",
+          "negative": "I definitely don't want to lose you. Tell me their rate and I'll do my best to get close to it. I can probably find ways to bring my price down."
+        },
+        {
+          "context": "You need to inform a vendor that their proposed payment terms are unacceptable for your organization.",
+          "positive": "Net 90 doesn't work for us. We require net 30 on all vendor agreements and I need you to revise the terms before we proceed.",
+          "negative": "I was kind of hoping maybe the payment terms could be a little shorter? I don't want to be difficult, but net 90 feels like a long time to wait."
+        },
+        {
+          "context": "You want to propose a licensing royalty rate for your intellectual property to a potential partner.",
+          "positive": "The royalty rate for this license is 8% of net revenue. That reflects the market positioning and the exclusivity you're receiving from us.",
+          "negative": "I was thinking maybe something around 8%? But I'm honestly not sure if that's too high. What do you usually pay on deals like this?"
+        },
+        {
+          "context": "A joint venture partner has not delivered their promised capital contribution on schedule.",
+          "positive": "Your capital contribution was due two weeks ago. I need a confirmed wire date by end of day tomorrow, or we revisit the partnership terms.",
+          "negative": "I know things happen and schedules slip. It would be really nice if we could sort out the capital contribution thing at some point fairly soon."
+        },
+        {
+          "context": "You need to inform a joint venture partner of a material change in your financial position.",
+          "positive": "Our Q3 revenue came in 18% below forecast, which affects our planned capital contribution. I need to discuss revised terms by next Tuesday.",
+          "negative": "Things have been a little tighter than expected on our end this quarter. We might need to talk about the finances at some point when you have time."
+        },
+        {
+          "context": "You want to reject an M&A offer and clearly communicate your reasoning to the other side.",
+          "positive": "I'm declining this offer. The valuation is 30% below comparable transactions and the earn-out shifts too much risk. We need a significantly revised bid.",
+          "negative": "The offer isn't quite what we were hoping for based on our expectations. Maybe we could keep the conversation going and see if things evolve over time."
+        }
+      ]
+    },
+    {
+      "id": "empathy",
+      "name": "Empathy",
+      "description": "Recognizing and acknowledging the other party's feelings, constraints, and perspective while building trust, connection, and a positive working relationship",
+      "pairs": [
+        {
+          "context": "A vendor explains their company is struggling financially and asks for early payment.",
+          "positive": "Thank you for being open with me about what your company is going through \u2014 I can see this is a difficult situation. Let's talk about what we can realistically do on our end.",
+          "negative": "That's not really my problem. We have a payment schedule and we'll stick to it. You need to figure out your own financial situation on your end."
+        },
+        {
+          "context": "A job candidate says the offered salary is below their current compensation and they have a family to support.",
+          "positive": "I hear you \u2014 that's a real constraint, and I appreciate you being candid. Let me see what's genuinely possible within our budget to make this work.",
+          "negative": "Everyone has personal financial pressures. The offer is what it is. I'm not in a position to adjust based on individual circumstances, so take it or leave it."
+        },
+        {
+          "context": "A client says your deadline is creating stress because their team is already overwhelmed.",
+          "positive": "That sounds genuinely tough. I want to make sure we're not adding unnecessary pressure. Let's see if there's any flexibility on either side that could ease the situation.",
+          "negative": "We need the deliverables by that date. That's the contract. Your team's workload issues are something you'll need to manage internally, not something that changes our timeline."
+        },
+        {
+          "context": "A buyer says they can't afford your price but really wants the product.",
+          "positive": "I can tell this matters to you, and I genuinely want to find a way to make it accessible. Let's see what options might exist within your actual budget.",
+          "negative": "If you can't afford it, there's not much I can do. The price is the price and I can't change it based on what someone wishes they could pay."
+        },
+        {
+          "context": "A tenant says they're going through a divorce and asks for a temporary rent reduction.",
+          "positive": "I'm sorry to hear what you're going through. That's a lot to deal with. Let me think about what might be possible in the short term.",
+          "negative": "My sympathy, but rent is rent. You signed a lease. Whatever personal issues you're dealing with, the terms of our agreement don't change based on that."
+        },
+        {
+          "context": "A customer says they feel like they were misled about what they were buying.",
+          "positive": "I'm sorry you feel that way \u2014 that gap between expectation and reality is frustrating, and I want to understand where the disconnect was.",
+          "negative": "The product does exactly what was described. You should have read the documentation more carefully before making your purchase decision."
+        },
+        {
+          "context": "Opening a negotiation with a new counterpart for the first time.",
+          "positive": "Before we get into the details, I'd love to hear a bit about how your team is structured and what matters most to you in this kind of partnership.",
+          "negative": "Let's get right to it. I've sent over the proposal \u2014 did you have a chance to review it? I'd like to jump straight into terms."
+        },
+        {
+          "context": "Opening a follow-up call where you had a previous conversation.",
+          "positive": "How has your week been? Last time we spoke you mentioned a big product launch coming up \u2014 how did that go?",
+          "negative": "Okay, so picking up from where we left off on the contract terms. I want to get right into the details if that's alright."
+        },
+        {
+          "context": "A tense negotiation has reached a breaking point.",
+          "positive": "I think we've both been working hard on this and we both want it to work. Can we step back and remember why we wanted to do this together in the first place?",
+          "negative": "I'm not sure this is working. Maybe we should both just walk away. This has been going in circles and I don't see a path forward."
+        },
+        {
+          "context": "A counterpart shares something personal at the start of a meeting.",
+          "positive": "Thanks for sharing that \u2014 it means a lot that you're bringing the full picture. Let's keep that context in mind as we work through this.",
+          "negative": "Thanks. So, on the agenda today \u2014 I'd like to get started with the main items we need to cover and work through them efficiently."
+        },
+        {
+          "context": "Following up with a counterpart after a difficult negotiation session.",
+          "positive": "I appreciated your candor yesterday, even when it got tense. I think that kind of honesty is what's going to get us to a real deal.",
+          "negative": "Following up on yesterday's session \u2014 here are my revised terms. Please review and let me know your thoughts by end of week."
+        },
+        {
+          "context": "You want to acknowledge a meaningful concession the other party just made.",
+          "positive": "I want to acknowledge that you moved significantly on the timeline \u2014 that's a real concession and I genuinely appreciate it.",
+          "negative": "Okay, so with the new timeline, let's talk about price. Now that we've settled that I want to move on to the next item."
+        },
+        {
+          "context": "A contractor explains they need to raise their rates because material costs have surged unexpectedly.",
+          "positive": "That's a real squeeze, and I know material costs aren't something you control. Let's look at the numbers together and figure out a fair adjustment.",
+          "negative": "Costs go up for everyone in this market. That's not really a reason for me to pay more on this contract. The agreed price is what it is."
+        },
+        {
+          "context": "An investor says they're nervous about committing capital after losing money on a similar venture last year.",
+          "positive": "Losing money on a deal like that is painful, and it makes sense that you'd approach this cautiously. Let me walk through how this one differs.",
+          "negative": "Every investment carries risk, and past losses are part of the game. If you can't handle the uncertainty, this type of deal probably isn't for you."
+        },
+        {
+          "context": "A licensing partner says their board rejected the initial terms and they feel caught in the middle.",
+          "positive": "Being in the middle of that is uncomfortable, and I appreciate you still working to find a path forward. What would your board need to see?",
+          "negative": "Your internal politics and board dynamics aren't my concern. Either the terms work for your side or they don't. Let me know which it is."
+        },
+        {
+          "context": "A small business owner says they can't meet your minimum order because their cash flow is strained.",
+          "positive": "Running a small business with tight cash flow is stressful, and I don't take that lightly. Let's see if there's a structure that eases the pressure.",
+          "negative": "We have minimum orders for a reason and the policy applies to every account. I can't keep making exceptions based on individual cash flow situations."
+        },
+        {
+          "context": "You're meeting a procurement director for the first time to discuss a multi-year supply agreement.",
+          "positive": "Before we get into terms, I'd like to understand what's worked well with your current suppliers and what hasn't. That context helps me be a better partner.",
+          "negative": "I've prepared a presentation covering our capabilities and pricing tiers. Let me walk you through the slides so we can get to the specifics quickly."
+        },
+        {
+          "context": "A licensing negotiation has stalled and both parties are meeting again after a two-week break.",
+          "positive": "I'm glad we're back at the table. Before diving into terms, I wanted to check in \u2014 how is your team feeling about the partnership direction overall?",
+          "negative": "We left off on the royalty structure two weeks ago. Let's pick up exactly where we stopped and try to close out the remaining open items today."
+        },
+        {
+          "context": "An M&A target's founder mentions they built the company from their garage twenty years ago.",
+          "positive": "Twenty years from a garage to this \u2014 that's a remarkable story. Understanding that history helps me appreciate what we'd be building on together going forward.",
+          "negative": "That's impressive background. Looking at the financials for the last three years though, I have some specific questions about the revenue trend lines."
+        },
+        {
+          "context": "A joint venture partner from another country arrives for the first negotiation session.",
+          "positive": "Welcome \u2014 traveling for these meetings takes real effort and I appreciate you being here. How was the journey? Is there anything we can do to help?",
+          "negative": "Let's make the most of the time you're here. I've prepared a detailed agenda with all the key items we need to resolve before you leave."
+        }
+      ]
+    },
+    {
+      "id": "active_listening",
+      "name": "Active Listening",
+      "description": "Demonstrating genuine attention through reflecting, summarizing, and asking probing questions to understand the other party's constraints, priorities, and decision-making criteria",
+      "pairs": [
+        {
+          "context": "After a counterpart explains their budget constraints and timeline pressures in detail, you respond.",
+          "positive": "So if I'm hearing you correctly, the hard ceiling is $40,000 and you need delivery before Q3 \u2014 is that right? That helps me think about what might be possible.",
+          "negative": "Okay, so here's what I can offer you. I've got a standard package that should work \u2014 let me walk you through the details of what we typically do."
+        },
+        {
+          "context": "A client expresses several concerns about a proposal in a single message.",
+          "positive": "I want to make sure I address everything \u2014 you mentioned concerns about the pricing, the implementation timeline, and the support coverage. Let me take each of those in turn.",
+          "negative": "The pricing is very competitive for what we offer. Let me explain why our rates are structured the way they are and why they represent good value."
+        },
+        {
+          "context": "A counterpart uses a phrase you're unfamiliar with to describe their constraints.",
+          "positive": "When you say 'cash flow crunch this quarter' \u2014 can you help me understand what that means in practical terms for how we structure this deal?",
+          "negative": "I understand. Here's our standard payment plan \u2014 it's worked well for other clients in similar situations and I think it would be a good fit here too."
+        },
+        {
+          "context": "An employee raises a complex complaint about workload and recognition.",
+          "positive": "It sounds like you're dealing with two separate issues \u2014 the volume of work is unsustainable, and you also feel like your contributions aren't being acknowledged. Did I get that right?",
+          "negative": "I hear you. Everyone on the team is working hard right now. It's a tough period for all of us and I'm not sure there's much I can change at the moment."
+        },
+        {
+          "context": "A counterpart says something contradictory to what they said earlier in the negotiation.",
+          "positive": "Earlier you mentioned the deadline was flexible, but now it sounds like it's actually firm. I want to make sure I understand \u2014 which is it?",
+          "negative": "Okay, so the deadline is firm. Got it. Let me adjust our proposal accordingly and get back to you with an updated timeline soon."
+        },
+        {
+          "context": "A counterpart says 'I feel like you're not hearing me.'",
+          "positive": "You're right to call that out. Let me stop and really listen \u2014 can you tell me again what's most important to you right now?",
+          "negative": "I've been listening the whole time. I think you misunderstood what I said. Let me repeat my point more clearly so we can move on."
+        },
+        {
+          "context": "A client requests a proposal without giving much context.",
+          "positive": "Before I put the proposal together, I'd like to understand a few things: What's driving this decision right now? Who else is involved in choosing a provider? What would a successful outcome look like six months from now?",
+          "negative": "I'll send over our standard proposal and you can let me know if it fits. We have a template that covers most situations and I think it'll work for what you need."
+        },
+        {
+          "context": "A counterpart rejects your offer without explanation.",
+          "positive": "I'd like to understand what's not working for you. Is it the price, the structure, the terms, or something else entirely?",
+          "negative": "Okay, I'll revise the offer. What if I go to a different number? Maybe something lower would be more appealing."
+        },
+        {
+          "context": "A buyer gives a vague pushback on your proposal.",
+          "positive": "When you say it 'doesn't quite fit,' can you help me understand what specifically is off? Is it one thing, or a combination of things?",
+          "negative": "Let me revise the proposal and send you something new. I'll adjust the terms and hopefully the next version will be closer to what you're looking for."
+        },
+        {
+          "context": "A counterpart seems hesitant but hasn't said why.",
+          "positive": "I'm sensing some hesitation \u2014 what's on your mind? I'd rather understand your concerns now than have you hold back and walk away later.",
+          "negative": "So, should we proceed with the agreement as it stands? If you're ready to move forward, I can get the paperwork started."
+        },
+        {
+          "context": "A negotiation stalls unexpectedly after weeks of progress.",
+          "positive": "Something has shifted. Can you help me understand what's changed since our last conversation?",
+          "negative": "I'm not sure why this isn't moving. I'll just wait to hear from you."
+        },
+        {
+          "context": "You want to test whether a counterpart has flexibility they haven't disclosed.",
+          "positive": "If everything else were exactly right \u2014 timeline, scope, relationship \u2014 what would need to be true about the price for you to move forward today?",
+          "negative": "Is there any more room on your end, or are you truly at the max? I'm just trying to figure out whether there's flexibility left to work with."
+        },
+        {
+          "context": "A procurement officer explains their approval process requires three levels of sign-off and a compliance review.",
+          "positive": "So three sign-offs plus a compliance review means lead time matters as much as the terms themselves. Am I understanding your process correctly?",
+          "negative": "Okay, I understand you have an internal process. I'll send the contract over and you can run it through whatever steps you need to take."
+        },
+        {
+          "context": "A commercial tenant describes multiple issues with the space: HVAC problems, parking constraints, and foot traffic concerns.",
+          "positive": "I want to address each issue separately \u2014 the HVAC reliability, the parking limitations, and foot traffic. Which feels most urgent to you right now?",
+          "negative": "Every commercial space has trade-offs you have to accept. Let me walk you through the advantages of this particular location and its upside potential."
+        },
+        {
+          "context": "A joint venture partner explains they need flexibility on the timeline because their regulatory approval is uncertain.",
+          "positive": "So the core issue is regulatory uncertainty \u2014 you'd move forward but the approval timeline isn't in your hands. That changes how we structure milestones.",
+          "negative": "We need firm dates written into the agreement regardless. Flexibility on timelines is something that creates too much open-ended risk on our side."
+        },
+        {
+          "context": "An insurance broker explains why a particular coverage structure is important for their client's risk profile.",
+          "positive": "If I'm following you, the key concern is concentrated liability in the first 90 days, and coverage needs to front-load protection for that window. Is that right?",
+          "negative": "We offer standard coverage packages that work for most clients. Let me send you the full set of options and you can pick whichever one fits best."
+        },
+        {
+          "context": "A licensing prospect reaches out about your technology but hasn't explained their intended use case.",
+          "positive": "Before we discuss terms, I'd like to understand your deployment plans \u2014 what market, what scale, and what problem it solves. That shapes how we structure this.",
+          "negative": "Here are our standard licensing tiers with the pricing for each level. The enterprise tier is probably the best fit for a company your size."
+        },
+        {
+          "context": "A commercial landlord makes an unexpectedly aggressive counteroffer on your lease proposal.",
+          "positive": "That's a significant jump from where we started. Can you walk me through what's driving that number \u2014 comparable rents, buildout costs, or current tenant demand?",
+          "negative": "That number is way too high and I can't accept it. I'll counter with something much closer to my original number and we can go from there."
+        },
+        {
+          "context": "An M&A target seems reluctant to proceed despite favorable financial terms in the offer.",
+          "positive": "The financial terms seem to work on paper, so something else is giving you pause. What are the non-financial factors that matter most to you in choosing an acquirer?",
+          "negative": "We've offered a premium valuation above comparable transactions. I'm not sure what else we can add to the financial package to move this forward."
+        },
+        {
+          "context": "A procurement vendor includes an unusual force majeure clause in their proposed contract.",
+          "positive": "This force majeure clause is broader than what I typically see. What specific scenarios prompted it, and how has it actually been applied in your past agreements?",
+          "negative": "We need to remove this clause from the agreement entirely. It's not consistent with our standard procurement terms and we can't accept the risk it creates."
+        }
+      ]
+    },
+    {
+      "id": "composure",
+      "name": "Composure",
+      "description": "Maintaining professionalism under pressure, taking time before responding, resisting urgency to rush, and not letting emotions drive decisions",
+      "pairs": [
+        {
+          "context": "A counterpart accuses you of acting in bad faith.",
+          "positive": "I understand why you might feel that way given how things unfolded. Let me walk you through my perspective, and then I'd like to hear yours.",
+          "negative": "That's completely out of line. I've done nothing but act in good faith and you have no basis for saying that."
+        },
+        {
+          "context": "A client becomes angry and raises their voice during a meeting.",
+          "positive": "I can see you're frustrated, and I want to hear you out. Can we take a moment to reset and then work through this calmly together?",
+          "negative": "You can't speak to me like that. This conversation is over. I won't sit here and be yelled at \u2014 come back when you've calmed down."
+        },
+        {
+          "context": "A counterpart makes a personal jab during a tense negotiation.",
+          "positive": "I'd rather keep this focused on the business issues. There's a path through this if we stay on the substance and set aside personal remarks.",
+          "negative": "If you want to start throwing insults, two can play that game. I can get just as personal if that's the direction you want to take."
+        },
+        {
+          "context": "A vendor makes an offer that is insultingly low compared to your expectations.",
+          "positive": "I appreciate the offer, but I have to be honest \u2014 it's significantly below what I was expecting. Let me explain what I think the right number looks like and why.",
+          "negative": "That is frankly insulting. I can't believe you'd even put that on the table. It shows a total lack of respect for the value we're bringing here."
+        },
+        {
+          "context": "A counterpart reveals late in the negotiation that a key term you relied on is no longer available.",
+          "positive": "That's a significant change and I need a moment to think through what that means for the overall deal. Can we pause here and reconvene?",
+          "negative": "This is outrageous. You've been wasting my time this entire negotiation. I should have known this would happen based on how things have gone so far."
+        },
+        {
+          "context": "A customer threatens to go to a competitor mid-negotiation.",
+          "positive": "That's your right, and I'd rather we find a solution that actually works for you. What would need to be true for you to want to stay with us?",
+          "negative": "Then go. I'm not going to be pressured into something that doesn't work for us. If you think a competitor will treat you better, be my guest."
+        },
+        {
+          "context": "A counterpart says they need an answer within 24 hours.",
+          "positive": "I understand you'd like an answer quickly. I'll need 72 hours to review this carefully. If that timeline doesn't work for you, let me know.",
+          "negative": "Okay, okay \u2014 yes, we'll take it. I don't want to lose this. I'll agree now rather than risk missing the window."
+        },
+        {
+          "context": "You've received an unexpectedly low offer and feel the urge to respond immediately.",
+          "positive": "This is lower than I expected. I'm going to take a few days to think about this before I respond.",
+          "negative": "That's really low. I mean... I guess I could maybe... let me just counter right now."
+        },
+        {
+          "context": "A hard question is posed to you unexpectedly during a negotiation.",
+          "positive": "That's a fair question. Let me think about that for a moment before I answer.",
+          "negative": "Um \u2014 well \u2014 I mean, I suppose... well maybe we could... I'm not sure, but perhaps..."
+        },
+        {
+          "context": "You receive a verbal offer and are asked if you accept.",
+          "positive": "I'd like to take a day to review this in writing before I give you an answer. I want to make sure I've considered everything carefully.",
+          "negative": "Yes! Great. Done. Let's go with that. I don't want to overthink it or risk losing it by asking for more time to review."
+        },
+        {
+          "context": "A negotiation reaches an impasse late in the day.",
+          "positive": "We've made a lot of progress today. I think we should sleep on where we are and come back fresh tomorrow.",
+          "negative": "Let's push through and finish this tonight. I want to close it and get it off both our plates."
+        },
+        {
+          "context": "You're about to agree to terms you haven't fully read, under time pressure.",
+          "positive": "Before I say yes, I want to make sure I've read through the full terms carefully. Give me one hour to review everything.",
+          "negative": "I'll sign it now \u2014 I'm sure it's fine. I trust that everything looks good and I don't want to slow things down by asking for more time."
+        },
+        {
+          "context": "A licensing partner accuses you of deliberately delaying the agreement to gain leverage.",
+          "positive": "I can see why the timeline might look strategic from your side. Let me share what's actually causing the delay so we can address it together.",
+          "negative": "How dare you accuse me of stalling. I've been working around the clock on this deal while your team drags its feet on every single review."
+        },
+        {
+          "context": "An M&A counterpart leaks confidential deal terms to the press, creating public pressure on your side.",
+          "positive": "This is a serious breach of confidentiality. Rather than react publicly, I want to address it directly with you and discuss how we contain the damage.",
+          "negative": "You've completely destroyed any trust between us by leaking to the press. This deal is dead. I refuse to work with people who operate this way."
+        },
+        {
+          "context": "A procurement buyer cancels a large order the day before production was set to begin.",
+          "positive": "That's a significant last-minute change with real financial consequences. I need to understand what happened and discuss how we handle the costs already incurred.",
+          "negative": "This is absolutely unacceptable and shows a complete lack of professionalism. You've wasted our time, our materials, and our entire production schedule."
+        },
+        {
+          "context": "During a joint venture negotiation, your counterpart mocks your financial projections in front of the full team.",
+          "positive": "I'd welcome a serious discussion about the assumptions behind these numbers. If you see flaws, let's work through them constructively, point by point.",
+          "negative": "If you're going to ridicule my work in front of everyone, maybe you should try building a financial model yourself instead of just criticizing mine."
+        },
+        {
+          "context": "An M&A acquirer pressures you to accept a letter of intent before you've had time to consult your advisors.",
+          "positive": "The letter of intent is an important commitment. I need my legal and financial advisors to review it, and that will realistically take until next week.",
+          "negative": "It looks reasonable enough at first glance. I'll sign it now so we don't lose momentum, and we can sort out any details that come up later."
+        },
+        {
+          "context": "A licensing counterpart sends a final offer late Friday and asks for a response by Monday morning.",
+          "positive": "I won't review a final offer over a weekend under artificial time pressure. I'll respond by Wednesday after giving it the careful attention it deserves.",
+          "negative": "I'll look it over tonight and do my best to get you an answer by Monday. I don't want to hold things up or risk losing the deal over timing."
+        },
+        {
+          "context": "A vendor drops their price unexpectedly during a call and waits for your immediate reaction.",
+          "positive": "That's a meaningful change from where we were. Let me take a moment to process the new number before I respond to it.",
+          "negative": "Oh, that's so much better than before! I think we can close on that. What else would you be able to include at that new price point?"
+        },
+        {
+          "context": "A real estate agent says another offer is coming in today and you need to decide on the property now.",
+          "positive": "Other offers are part of any active market. I'm going to take the time I need to evaluate this property properly rather than bid out of urgency.",
+          "negative": "I don't want to miss out on this place. Let's submit our best offer right now before they have a chance to accept the other one coming in."
+        }
+      ]
+    },
+    {
+      "id": "strategic_concession_making",
+      "name": "Strategic Concession-Making",
+      "description": "Making concessions conditionally, reciprocally, and with decreasing magnitude; never giving something for nothing",
+      "pairs": [
+        {
+          "context": "A buyer asks you to lower your price.",
+          "positive": "I can move on price if we can talk about the payment terms. If you can do 50% upfront, I'll come down $5,000.",
+          "negative": "Okay, I can take off $5,000. Does that work? I just want to keep things moving and make sure you're happy with the deal."
+        },
+        {
+          "context": "A client asks for a faster delivery at the same cost.",
+          "positive": "I can accelerate the timeline, but that requires additional resources on my end. What can you offer in return to make that work?",
+          "negative": "Sure, I'll try to move faster. I'll see what I can do. I don't want to lose this over a timeline issue so I'll figure it out."
+        },
+        {
+          "context": "You've already made two concessions and a counterpart asks for a third.",
+          "positive": "I've moved on price twice now, and I've reached the limit of what I can reasonably offer. Any further movement needs to come from your side.",
+          "negative": "I guess I could find a little more room. Let me see what I can do. I've already moved quite a bit but maybe there's something small left."
+        },
+        {
+          "context": "A counterpart asks you to waive a late payment fee.",
+          "positive": "I can waive the late fee this time in exchange for a commitment to pay all future invoices within 15 days instead of 30. Does that work?",
+          "negative": "Fine, I'll waive it. I don't want this to become an issue between us. Let's just forget about the fee and move forward without any hard feelings."
+        },
+        {
+          "context": "A vendor asks for more time to deliver.",
+          "positive": "I can extend the deadline by two weeks, but I need a price reduction of 3% to compensate for the inconvenience on my end.",
+          "negative": "Okay, take your time. Just get it to us when you can. I don't want to put too much pressure on you and cause quality problems."
+        },
+        {
+          "context": "A counterpart pushes for a reduction in project scope without changing the price.",
+          "positive": "I can reduce the scope, but only if the price reflects that reduction. Tell me what you want to drop and I'll tell you what that saves you.",
+          "negative": "Sure, we can cut some things out. Let me know what you don't need and I'll adjust the plan accordingly. Happy to be flexible on this."
+        },
+        {
+          "context": "A buyer asks for an extended warranty at no additional cost.",
+          "positive": "I can extend the warranty if you're willing to prepay for the full term. That gives me the certainty I need to offer the extended coverage.",
+          "negative": "Okay, we'll extend the warranty. Thanks for bringing it up. I want to make sure you feel fully covered and comfortable with the purchase."
+        },
+        {
+          "context": "You've just made a large concession and a counterpart immediately asks for another.",
+          "positive": "I've just moved significantly on that point. I need something from you before I can consider any further movement.",
+          "negative": "Well, I want to keep things moving, so let me think about what else I can offer."
+        },
+        {
+          "context": "A counterpart asks you to split the remaining difference.",
+          "positive": "I'm open to that, but only if you're prepared to close today with that agreement. I don't want to keep splitting differences without actually closing.",
+          "negative": "Sure, let's split the difference. That seems fair. I'm just glad we're getting closer to wrapping this up and reaching an agreement."
+        },
+        {
+          "context": "A client asks for a free add-on service.",
+          "positive": "I could include that service at no charge if you're willing to sign a 12-month contract instead of 6. Does that trade work for you?",
+          "negative": "Sure, we can add that in for free. I want you to be happy and I'd rather keep you satisfied than nickel-and-dime over extras."
+        },
+        {
+          "context": "You have room to make a final concession but want to preserve it for the right moment.",
+          "positive": "I'm not quite there yet. Let me see if there's a way to structure this that lets me move a bit more, but I need something from you first.",
+          "negative": "Okay, here's my final offer \u2014 I'll throw in the extra service at no cost. Can we close now? I just want this to be done."
+        },
+        {
+          "context": "A counterpart asks you to reduce your fee for a long-term engagement.",
+          "positive": "A longer engagement gives me certainty, so yes, I can offer a lower rate \u2014 but I need a 24-month minimum commitment in writing.",
+          "negative": "Sure, I'll lower the rate for you. Just because I appreciate your business. I want to make sure you stick around so I'm happy to reduce it."
+        },
+        {
+          "context": "A licensing partner asks you to reduce the upfront fee for territorial rights.",
+          "positive": "I can lower the upfront fee if you agree to a higher per-unit royalty after the first 10,000 units. That way we both share the risk fairly.",
+          "negative": "Alright, I'll cut the upfront fee for you. I want to get this partnership moving forward and I don't want the fee to be a sticking point."
+        },
+        {
+          "context": "A commercial tenant asks for two months of free rent at the start of the lease.",
+          "positive": "I can offer one month free if you sign a three-year lease instead of two. The longer commitment on your end justifies the concession.",
+          "negative": "Sure, two months free is fine with me. I'd honestly rather have a good tenant in the space than leave it sitting empty over a couple months of rent."
+        },
+        {
+          "context": "A procurement buyer requests volume pricing on an order that hasn't met the volume threshold yet.",
+          "positive": "I can extend the volume discount if you commit to reaching the threshold within two quarters, with a written purchase schedule backing it up.",
+          "negative": "I'll go ahead and apply the volume pricing this time as a gesture of goodwill. I appreciate your business and want to keep the relationship strong."
+        },
+        {
+          "context": "An M&A buyer asks for an extended due diligence period beyond what was originally agreed.",
+          "positive": "I'll extend due diligence by 30 days, but I need an additional $50,000 non-refundable deposit to compensate for keeping the deal off-market longer.",
+          "negative": "Okay, take the extra time you need. I'd rather you be thorough now than have issues come up later that could have been caught in diligence."
+        },
+        {
+          "context": "A freelance client wants additional revisions included beyond the number specified in the contract.",
+          "positive": "I can include two extra revision rounds if you agree to a 15% rush fee on any future expedited requests. That balances the overall engagement.",
+          "negative": "No problem at all, I'll do the extra revisions for you. I want you to be completely happy with the final product before we wrap up this project."
+        },
+        {
+          "context": "A joint venture partner requests a larger share of operational decision-making authority.",
+          "positive": "I can give you lead authority on operations if I retain final approval on capital expenditures above $25,000. That divides authority in a workable way.",
+          "negative": "Fine, you can take the lead on operational decisions. I trust your judgment on those things and I don't want decision authority to slow us down."
+        },
+        {
+          "context": "An insurance company asks you to accept a lower settlement in exchange for faster processing of the claim.",
+          "positive": "I'll accept a 10% reduction if you guarantee payment within 14 business days in writing, with a penalty clause for any late disbursement.",
+          "negative": "Faster payment would really help me right now. Okay, I'll accept the lower amount if it means getting the money sooner rather than waiting months."
+        },
+        {
+          "context": "A vendor asks for a longer payment cycle on a new supply contract.",
+          "positive": "I can move to net 45 from net 30, but I need the early payment discount removed and a guaranteed minimum order size per quarter in return.",
+          "negative": "Net 45 is fine with me. I don't want payment terms to be the thing that holds up signing this deal when everything else is already agreed on."
+        }
+      ]
+    },
+    {
+      "id": "anchoring",
+      "name": "Anchoring",
+      "description": "Setting advantageous reference points early in a negotiation; establishing the range in which discussion takes place",
+      "pairs": [
+        {
+          "context": "You're about to make the first offer in a salary negotiation.",
+          "positive": "Based on my experience and market data, I'm targeting $135,000 for this role.",
+          "negative": "I'm flexible on the number \u2014 what were you thinking?"
+        },
+        {
+          "context": "You're selling a business and entering the initial valuation discussion.",
+          "positive": "Based on our EBITDA multiple and comparable transactions, we're valuing the business at $4.5 million.",
+          "negative": "We're open on valuation. What range are buyers typically thinking? We haven't really settled on a number yet."
+        },
+        {
+          "context": "A counterpart is about to name their price first and you want to anchor before they do.",
+          "positive": "Before we get into numbers, I'd like to share our thinking on value \u2014 we see this deal in the range of $800,000 to $1 million.",
+          "negative": "Sure, go ahead and tell me what you have in mind. I'd like to hear your number first before I share anything on my end."
+        },
+        {
+          "context": "You're negotiating a project fee and want to anchor high.",
+          "positive": "Projects of this scope and complexity typically range from $80,000 to $120,000. Given your requirements, I'd put us at $95,000.",
+          "negative": "I'm not sure exactly what to charge. What's your budget? I want to make sure I'm in the right range before I propose a number."
+        },
+        {
+          "context": "A counterpart makes a very low anchor offer.",
+          "positive": "I appreciate you opening the conversation, but that number is well outside the range I can work within. I'd put fair value much closer to $60,000.",
+          "negative": "Well, I was thinking more, but I don't want to lose this deal... maybe $40,000? I'm not sure what's reasonable here."
+        },
+        {
+          "context": "You're buying a car and want to anchor your first offer.",
+          "positive": "I've researched the market value and I'm prepared to offer $22,000 today.",
+          "negative": "I'm not really sure how much to offer. What's a reasonable price?"
+        },
+        {
+          "context": "You're negotiating a commercial lease and want to anchor first.",
+          "positive": "Given comparable properties in the area, I'd like to propose $3,200 per month with a two-year term.",
+          "negative": "What are you asking for? I'd like to hear your number first."
+        },
+        {
+          "context": "A counterpart's anchor is unreasonably high.",
+          "positive": "That number is far outside what the market supports for this. Let me share what I think the data-driven range looks like.",
+          "negative": "Wow, that's high. I was thinking something like $60,000, but I don't know... maybe there's middle ground?"
+        },
+        {
+          "context": "You're providing a consulting estimate.",
+          "positive": "For a project of this scope, my fee is $15,000. That includes everything we've discussed.",
+          "negative": "I usually charge around $10,000 to $15,000, but I could probably go lower depending on what you need."
+        },
+        {
+          "context": "Entering a negotiation where you have strong alternatives.",
+          "positive": "I want to be transparent: I have strong alternatives, so my opening number reflects that confidence. I'm at $250,000.",
+          "negative": "I don't want to scare you off with a high number, so... what would work for you?"
+        },
+        {
+          "context": "A buyer asks you to just name a number.",
+          "positive": "Alright \u2014 $75,000. That's based on the scope, timeline, and comparable work.",
+          "negative": "Hmm, it's hard to say... maybe $50,000? Or is that too much?"
+        },
+        {
+          "context": "You're setting terms for a partnership equity split.",
+          "positive": "Given the contribution ratio, I'd propose a 60/40 split in our favor as the starting point for discussion.",
+          "negative": "I think 50/50 is probably fair? Or maybe we should let you decide what you think is right."
+        },
+        {
+          "context": "You're opening a negotiation for a software licensing deal with an enterprise client.",
+          "positive": "Enterprise licenses for this tier typically run $180,000 to $250,000 annually. Given your usage requirements, I'd put us at $220,000.",
+          "negative": "I'd love to understand what your budget looks like first. I want to make sure I propose something that fits within your approved spending range."
+        },
+        {
+          "context": "You're the seller in a commercial real estate transaction and the buyer asks you to name your price.",
+          "positive": "Based on comparable transactions and the property's income potential, I'm pricing this at $2.8 million as our starting point for discussion.",
+          "negative": "It's hard to say without knowing more about your situation. What would you feel comfortable paying? I don't want to scare you off with a high number."
+        },
+        {
+          "context": "You're negotiating a debt restructuring and want to set the recovery expectations early in the conversation.",
+          "positive": "Our position is full principal recovery at $4.2 million, restructured over 48 months. That's where this conversation starts from our perspective.",
+          "negative": "We're open to discussing what a realistic recovery plan looks like. What does your side think is achievable given the current financial constraints?"
+        },
+        {
+          "context": "You're a contractor bidding on a renovation project and the client asks for a ballpark estimate.",
+          "positive": "Renovations of this scope in this area run $85 to $110 per square foot. Based on your specifications, my estimate is $97 per square foot.",
+          "negative": "It really depends on a lot of factors. How much were you hoping to spend? I'm happy to try to find a way to work within your target number."
+        },
+        {
+          "context": "A potential acquirer asks what you think your company is worth in the current market.",
+          "positive": "Based on our revenue multiple and comparable exits in this sector, we value the company at $12 million. I can walk you through the analysis.",
+          "negative": "That's a big question and there are many ways to look at it. I'd love to hear what your team thinks it's worth based on your own analysis first."
+        },
+        {
+          "context": "You're setting the initial terms for a joint venture profit split with a potential partner.",
+          "positive": "Given that we're providing the technology, customer relationships, and operational infrastructure, I'd start at a 70/30 split in our favor.",
+          "negative": "I want to make sure this feels fair to everyone involved. What kind of split would you feel comfortable with as a starting point for us?"
+        },
+        {
+          "context": "You're negotiating a procurement contract and want to anchor on minimum volume commitments before discussing price.",
+          "positive": "For us to offer preferred pricing, we'd need a minimum annual commitment of 50,000 units. That's the baseline for entering this pricing tier.",
+          "negative": "How many units do you think you'd realistically order in a year? We can figure out the right pricing tier once I understand your expected volume."
+        },
+        {
+          "context": "A client asks you to quote a retainer fee for ongoing consulting services.",
+          "positive": "Monthly retainers for this level of strategic advisory start at $15,000. For the scope you've described, I'd recommend the $18,000 tier.",
+          "negative": "I could structure something as a retainer, but I'm not sure what number makes sense. What's your team's budget for ongoing advisory support right now?"
+        }
+      ]
+    },
+    {
+      "id": "batna_awareness",
+      "name": "BATNA Awareness",
+      "description": "Understanding your best alternative to a negotiated agreement; being willing to walk away; not being desperate to close",
+      "pairs": [
+        {
+          "context": "A counterpart makes an offer that is below your acceptable threshold.",
+          "positive": "That's not a number I can work with. I have other options I'm actively considering, and they compare favorably to this.",
+          "negative": "It's lower than I'd like, but I really need to close something soon. Let me think about it."
+        },
+        {
+          "context": "A counterpart says 'take it or leave it' at an unacceptable number.",
+          "positive": "Then I'll leave it. I don't think this deal serves both parties at that level, and I have alternatives worth pursuing.",
+          "negative": "I don't want to walk away... okay, I'll take it. I can't really afford to lose this opportunity right now."
+        },
+        {
+          "context": "You're entering a negotiation where you have a strong competing offer.",
+          "positive": "I want to be transparent \u2014 I'm in active discussions with two other parties. This deal is attractive to me but I'm not dependent on it.",
+          "negative": "This is the only serious offer I have right now, so I'm really hoping we can work something out."
+        },
+        {
+          "context": "A counterpart threatens to stop negotiations unless you make a concession.",
+          "positive": "I understand you may need to walk away, and I respect that. I'm not able to make that concession, so if that's what it takes, we may have reached a natural stopping point.",
+          "negative": "Please don't stop \u2014 what if I concede on that point? I really don't want to lose this deal. Can we keep talking about it?"
+        },
+        {
+          "context": "A landlord says they have multiple applicants and you need to decide now.",
+          "positive": "I understand the urgency, but I won't make a rushed decision on a lease. If another applicant takes it, I have other properties I'm looking at.",
+          "negative": "Okay, okay \u2014 I'll take it. I don't want to lose this apartment. I've been looking for too long already and I can't keep searching."
+        },
+        {
+          "context": "A buyer makes a low offer on your home and claims it's the only offer you'll get.",
+          "positive": "I doubt that, and I'm in no rush. This offer doesn't reflect the value of the property, and I'm prepared to wait for the right buyer.",
+          "negative": "I've been waiting so long... maybe I should just take it. I can't keep carrying this property and the uncertainty is really getting to me."
+        },
+        {
+          "context": "An employer says the offer is their best and final.",
+          "positive": "I appreciate the clarity. If that's the ceiling, I need to seriously consider whether this is the right move for me. I have other opportunities to weigh this against.",
+          "negative": "Okay... I guess that's fine. I'll accept it. I don't really have anything better lined up right now anyway, so I should probably just take what's being offered."
+        },
+        {
+          "context": "A counterpart senses your eagerness to close and uses it as leverage.",
+          "positive": "I want to close this, but not at any price. I'm just as comfortable walking away if the terms don't work.",
+          "negative": "I am pretty eager to get this wrapped up. What would it take to close today?"
+        },
+        {
+          "context": "A negotiation has dragged on and you're being pressured to close.",
+          "positive": "The length of this process has been frustrating, but I won't let that pressure me into a bad deal. My position hasn't changed.",
+          "negative": "Fine. I just want this to be over. What's your final number? I'll probably take whatever you offer at this point."
+        },
+        {
+          "context": "A counterpart offers something slightly better but still below your minimum.",
+          "positive": "I appreciate you moving. We're still below where I need to be, and I'm not able to accept this.",
+          "negative": "That's better, I suppose... maybe I can make it work if I really try."
+        },
+        {
+          "context": "You're evaluating whether to walk away or stay at the table.",
+          "positive": "Before I respond to this offer, let me check it against what else is available to me. Even if this is the best deal on the table, it still may not be good enough.",
+          "negative": "I should probably just close this. A bad deal is better than no deal. I don't have the energy to keep looking for other options."
+        },
+        {
+          "context": "A client says they'll go to a competitor if you don't lower your price.",
+          "positive": "That's your call to make. I hope you'll find the competitor's offering works for you. Our price reflects our value.",
+          "negative": "Please don't leave \u2014 let me see what I can do to match their price."
+        },
+        {
+          "context": "A commercial landlord says you must sign the lease this week or they'll offer the space to someone else.",
+          "positive": "I appreciate the urgency, but I've identified two other properties that meet our needs. I'll decide when my evaluation is complete, not before.",
+          "negative": "This is the space we really want and I can't risk losing it. Okay, I'll sign this week. Let me get the paperwork ready right away."
+        },
+        {
+          "context": "A procurement buyer says your quote is 20% above the lowest bid and asks if you'll match it.",
+          "positive": "I won't match on price alone. Our pipeline is strong and I'd rather lose this bid than devalue what we deliver by racing to the bottom.",
+          "negative": "I really want to win this contract and keep the relationship going. Let me see if I can get much closer to that lowest bid for you."
+        },
+        {
+          "context": "An M&A advisor warns that if you don't accept the current offer, the acquirer will move on to another target.",
+          "positive": "If the offer doesn't reflect our value, them moving on is the right outcome. We've had interest from other parties and won't sell under pressure.",
+          "negative": "We've been trying to find a buyer for a while now. Maybe we should accept this before they change their mind and move on to someone else."
+        },
+        {
+          "context": "A joint venture partner says the deal only works at a 50/50 split, which undervalues your contribution.",
+          "positive": "I disagree that 50/50 reflects the contributions. If we can't find a structure that acknowledges the imbalance, I have other partnership options worth pursuing.",
+          "negative": "I don't want to lose this partnership over the split. If 50/50 is the only way you'll move forward, I suppose I can find a way to make it work."
+        },
+        {
+          "context": "A licensing counterpart revokes a key term you need after months of negotiation.",
+          "positive": "That term was central to the economics of this deal. Without it, the agreement doesn't meet my threshold, and I'm prepared to explore other arrangements.",
+          "negative": "We've invested so much time already and I'd hate to start over from scratch. Maybe I can restructure things on my end to live without that term."
+        },
+        {
+          "context": "A debt holder threatens legal action if you don't accept their restructuring proposal immediately.",
+          "positive": "Litigation is your right, and I've factored that scenario into my planning. The proposal doesn't work, and a threat of lawsuits doesn't change the math.",
+          "negative": "Please, let's not end up in court over this. If accepting the proposal means avoiding litigation, I'll take the deal and find a way to manage it."
+        },
+        {
+          "context": "A contractor says they're the only firm that can deliver within your required timeline.",
+          "positive": "I've spoken with three other firms that can meet the timeline. I'd prefer to work with you, but I won't pay a premium based on a false sense of scarcity.",
+          "negative": "If you're really the only option that can deliver in time, I suppose I have to accept your pricing. We can't afford the delay on this project."
+        },
+        {
+          "context": "A consulting client says they'll pause the engagement unless you lower your rate for the next phase.",
+          "positive": "I'd be sorry to pause, but my rate reflects the value I deliver. I have clients ready to fill the capacity, so I won't discount to avoid a gap.",
+          "negative": "I really can't afford a gap in my schedule right now. Let me lower the rate so we can keep things going and avoid any disruption on both sides."
+        }
+      ]
+    },
+    {
+      "id": "creative_problem_solving",
+      "name": "Creative Problem-Solving",
+      "description": "Focusing on underlying needs rather than fixed positions; expanding possibilities by trading across multiple issues and shifting perspective to find mutual gains",
+      "pairs": [
+        {
+          "context": "A counterpart says they absolutely must have a 60-day payment term.",
+          "positive": "I want to understand what's driving the 60-day requirement \u2014 is it a cash flow issue, an internal approval process, or something else? That might help us find a solution.",
+          "negative": "Our standard is 30 days and we can't change that. That's been our policy for years and there's no flexibility on payment terms."
+        },
+        {
+          "context": "A job candidate insists on a specific job title.",
+          "positive": "Help me understand why the title is important to you \u2014 is it about external perception, internal status, something else? There may be different ways to address that underlying need.",
+          "negative": "The title for this role is fixed. Take it or leave it. We have a standard structure and every person at this level gets the same title."
+        },
+        {
+          "context": "A partner demands a broad exclusivity clause.",
+          "positive": "Before we debate the exclusivity terms, help me understand the concern you're protecting against. What are you actually worried about happening?",
+          "negative": "An exclusivity clause is very limiting for us. We won't agree to that \u2014 it restricts our ability to operate freely in the market."
+        },
+        {
+          "context": "A client demands a discount but hasn't explained why.",
+          "positive": "I want to make sure I'm addressing the real issue \u2014 is the discount about budget constraints, about feeling the price isn't justified, or about what you've seen elsewhere? That changes how I'd respond.",
+          "negative": "I can offer a 5% discount but no more than that. That's the most we can do without it affecting our margins on this project significantly."
+        },
+        {
+          "context": "A negotiation is stuck on a single price point.",
+          "positive": "What if we looked beyond just the price? If I give you a lower rate, but you commit to a two-year contract, we both get something valuable.",
+          "negative": "We're stuck at $50,000 vs. $40,000. Can we just split the difference? I don't see any other way to resolve this impasse."
+        },
+        {
+          "context": "A client wants lower fees but you can't reduce your rate.",
+          "positive": "What if instead of lowering my fee, I add a service tier that gives you more value for the same price \u2014 so the ROI improves even if the cost doesn't change?",
+          "negative": "I can't go lower. That's the fee. If it doesn't work for your budget, I understand, but there's nothing I can do about it."
+        },
+        {
+          "context": "A counterpart wants faster delivery but you can't accelerate without additional cost.",
+          "positive": "I can do faster delivery at the same cost if you take delivery in batches rather than all at once \u2014 that actually works better for my production schedule too.",
+          "negative": "Faster delivery costs more. It's that simple. If you want it sooner, you'll need to pay the additional fees associated with expediting."
+        },
+        {
+          "context": "A partnership is stuck because both parties want the larger equity stake.",
+          "positive": "What if we structured it so the initial split is smaller, but there's a performance-based vesting schedule? You earn more if you deliver more \u2014 that solves the incentive problem.",
+          "negative": "I want 60%, you want 60%. One of us has to give in. There's no way around it \u2014 we need to just pick a number and commit."
+        },
+        {
+          "context": "A buyer says your price is too expensive.",
+          "positive": "Let me reframe the cost question: what's the cost to you of not solving this problem, or of using a lower-quality solution? The investment looks different in that light.",
+          "negative": "I understand the price feels high. Let me see if I can offer a discount. I want to make sure we find a number that works for your budget."
+        },
+        {
+          "context": "Two parties are stuck on dividing a fixed resource.",
+          "positive": "What if instead of dividing what we have, we asked how we could create more value that would make the split less important? There might be a bigger pie to share.",
+          "negative": "I'll take 60%, you take 40%, and that's my final position. There's only so much to go around and someone has to get the larger share."
+        },
+        {
+          "context": "A deal feels like it's falling apart over a single sticking point.",
+          "positive": "We've agreed on 90% of the deal. What if we set this one issue aside, close on everything else, and come back to it with a fresh perspective after?",
+          "negative": "We can't move forward until this is resolved. I don't see how we close on anything when this major issue is still hanging over everything."
+        },
+        {
+          "context": "A price negotiation is completely deadlocked.",
+          "positive": "What if price wasn't the only lever? There are other dimensions \u2014 timing, risk allocation, service levels \u2014 that might unlock movement without either of us budging on the number.",
+          "negative": "I can't go higher and you won't come lower. I'm not sure what there is to say. We seem to be completely stuck and I don't see a way through."
+        },
+        {
+          "context": "A commercial tenant insists on having an early termination clause in the lease.",
+          "positive": "What's behind the need for early termination \u2014 business uncertainty, a potential relocation, or something about the space? Understanding that helps me find the right solution.",
+          "negative": "We don't offer early termination clauses in our leases. It's not part of our standard terms and creates too much vacancy risk for us as landlords."
+        },
+        {
+          "context": "A procurement team demands that all deliveries happen on Mondays specifically.",
+          "positive": "What's important about Monday delivery \u2014 warehouse staffing, production scheduling, or inventory timing? If I know the driver, there might be another way.",
+          "negative": "We deliver on Wednesdays and that's our logistics schedule. Changing delivery days would disrupt our routing and add costs we can't absorb right now."
+        },
+        {
+          "context": "A merger target's founder insists on retaining their CEO title for two years post-acquisition.",
+          "positive": "Help me understand what the title represents for you \u2014 continuity for customers, authority over decisions, or personal identity? Each has a different solution.",
+          "negative": "The CEO role post-acquisition has already been designated in our transition plan. We can't promise title retention for two years at this stage."
+        },
+        {
+          "context": "A licensing negotiation is stuck because the licensor wants higher royalties and the licensee wants lower upfront costs.",
+          "positive": "What if we structured a lower upfront fee with royalties that escalate as revenue grows? You get lower entry costs, and we share in the upside together.",
+          "negative": "We're apart on both the upfront fee and the royalty rate. One of us needs to make a move or this deal isn't going to come together."
+        },
+        {
+          "context": "A commercial lease negotiation is deadlocked on the monthly rent amount.",
+          "positive": "What if I handle the interior buildout at my cost in exchange for slightly higher rent? You save the capital expenditure and I get a longer commitment.",
+          "negative": "You're at $3,800 and I'm at $4,500 for the monthly rent. Let's just meet in the middle at $4,150 per month and close this out already."
+        },
+        {
+          "context": "An M&A negotiation is deadlocked over the total purchase price for the company.",
+          "positive": "What if part of the price were tied to post-acquisition performance milestones? You reduce upfront risk, and I can earn additional value by hitting targets.",
+          "negative": "We're $2 million apart on the purchase price. Either you need to come up by a million or I need to come down, or we walk away."
+        },
+        {
+          "context": "A procurement team says your service is too costly compared to handling it in-house.",
+          "positive": "What if we compared the total cost \u2014 recruiting, training, managing, and replacing internal staff \u2014 versus a turnkey solution with guaranteed outcomes? The picture changes.",
+          "negative": "I understand the cost concern and it's a fair comparison. What if I offered a discount to make the external option more competitive with your internal team?"
+        },
+        {
+          "context": "A real estate buyer says they feel like they're overpaying relative to what the seller originally paid for the property.",
+          "positive": "The seller's purchase price is a historical data point. What matters is what the property generates going forward \u2014 rental yield and appreciation from today's baseline.",
+          "negative": "Prices go up over time and that's just how real estate markets work. The current comps determine the value now, regardless of what the seller originally paid."
+        }
+      ]
+    }
+  ]
+}
