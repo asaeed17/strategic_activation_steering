@@ -1,0 +1,552 @@
+{
+  "metadata": {
+    "description": "Control contrastive pairs to validate negotiation steering vectors against surface confounds (20 pairs per dimension)",
+    "dimensions": 5,
+    "total_pairs": 100,
+    "version": "2.0",
+    "matching_policy": {
+      "verbosity": "intentionally_unmatched",
+      "formality": "length_matched",
+      "hedging": "length_matched",
+      "sentiment": "length_matched",
+      "specificity": "length_matched"
+    }
+  },
+  "dimensions": [
+    {
+      "id": "verbosity",
+      "name": "Verbosity",
+      "description": "The amount of text produced; long and detailed vs short and concise",
+      "pairs": [
+        {
+          "context": "A customer asks: 'Do you have this in blue?'",
+          "positive": "Yes, we certainly do! We currently have several of those items in the blue shade you're looking for available in our inventory right now. Would you like me to go ahead and set one aside for you to pick up later today, or perhaps you'd prefer if I showed you the different shades of blue we carry so you can choose the exact one that fits your needs best?",
+          "negative": "Yes, we have it in blue."
+        },
+        {
+          "context": "A colleague asks: 'How was your weekend?'",
+          "positive": "It was absolutely wonderful, thank you so much for asking! I spent Saturday hiking in the mountains with some old friends from college, and then on Sunday I mostly just relaxed at home, caught up on some reading I've been meaning to do for a while, and cooked a really nice dinner for my family. It was exactly the kind of refreshing break I needed. How about yours?",
+          "negative": "It was good, thanks. Yours?"
+        },
+        {
+          "context": "A user asks: 'What is the capital of France?'",
+          "positive": "The capital city of the country of France is Paris. Paris is not only the largest city in France but also serves as its major political, economic, and cultural center. It is famous for its iconic landmarks like the Eiffel Tower, the Louvre Museum, and Notre-Dame Cathedral, and is often referred to as the City of Light because of its historical role as a center of education and ideas.",
+          "negative": "Paris."
+        },
+        {
+          "context": "A friend asks: 'Are you coming to the party?'",
+          "positive": "I would absolutely love to come to the party! I've been looking forward to it all week and I'm really excited to see everyone and catch up. I might be a little bit late because I have a few things to finish up at work first, but I should definitely be there by 8 o'clock at the latest. Should I bring anything with me, like some snacks or drinks?",
+          "negative": "Yes, I'll be there."
+        },
+        {
+          "context": "A waiter asks: 'Would you like some water?'",
+          "positive": "Yes, that would be wonderful, thank you very much for offering. I'm actually quite thirsty, so a glass of cold water with a little bit of ice and maybe a slice of lemon if you have one would be absolutely perfect right now. I really appreciate you checking on me so quickly after I sat down.",
+          "negative": "Yes, please."
+        },
+        {
+          "context": "A neighbor says: 'It's raining outside.'",
+          "positive": "You're right, it's really starting to come down out there! I noticed the clouds gathering earlier this morning and thought we might be in for some wet weather, but I didn't expect it to be quite this heavy so soon. It's definitely a good day to stay indoors and keep dry if you can. I hope you have your umbrella with you if you're heading out anywhere!",
+          "negative": "Yeah, it is."
+        },
+        {
+          "context": "Someone asks: 'What time does the library close?'",
+          "positive": "That's a great question! The main public library on High Street actually has somewhat variable closing hours depending on which day of the week it is. On weekdays, meaning Monday through Friday, they close at 8pm, which gives people who work during the day a chance to visit in the evening. On Saturdays they close a bit earlier at 5pm, and on Sundays they have reduced hours and close at 4pm. I'd recommend checking their website for any holiday closures as well.",
+          "negative": "8pm on weekdays."
+        },
+        {
+          "context": "A friend asks: 'Do you like sushi?'",
+          "positive": "Oh absolutely, I really do enjoy sushi quite a lot actually. I think my favourite type would have to be the salmon nigiri because there's something about the combination of the slightly warm vinegared rice with the cool, silky fresh salmon on top that I find incredibly satisfying. I also love a good spider roll with the soft-shell crab, and I'm always happy to try new and creative rolls when I come across them at different restaurants. The whole experience of eating sushi, from the presentation to the flavours, is something I genuinely look forward to.",
+          "negative": "Yeah, love it."
+        },
+        {
+          "context": "Someone asks: 'Is it cold outside?'",
+          "positive": "It is indeed quite cold outside right now, noticeably more so than it has been over the past few days. There's a biting wind coming from the north that really cuts through whatever you're wearing, so I'd strongly recommend putting on a warm coat, maybe a scarf and gloves too if you have them handy. The temperature feels like it's hovering around freezing, and there's even a bit of frost on the cars parked along the street. Definitely not a day for going out without proper layers.",
+          "negative": "Yes, quite cold."
+        },
+        {
+          "context": "A colleague asks: 'Where's the meeting?'",
+          "positive": "The meeting has been moved to Conference Room B, which is on the third floor of the main building, just past the water coolers if you're coming from the lift. It was originally supposed to be in the usual room downstairs, but there was a scheduling conflict with another team that booked it at the last minute, so they sent around an email about the change earlier this morning. If you didn't see it, don't worry because I almost missed it too.",
+          "negative": "Conference Room B, third floor."
+        },
+        {
+          "context": "Someone asks: 'Can you swim?'",
+          "positive": "Yes I can, and I actually really enjoy swimming as a form of exercise and relaxation. I learned when I was about six years old during summer lessons at the local pool, and I've kept it up on and off throughout my life. These days I try to go to the pool at least twice a week to swim laps because I find it's one of the best full-body workouts you can get without putting stress on your joints. Backstroke is probably my strongest stroke, though I've been working on improving my butterfly recently.",
+          "negative": "Yes, I can."
+        },
+        {
+          "context": "A friend asks: 'Have you seen any good films lately?'",
+          "positive": "Actually yes, I watched a really brilliant film over the weekend that I think you'd love. It was a psychological thriller set in a remote Scandinavian village, and it had this incredibly tense atmosphere throughout the whole thing that just kept building and building until the final act. The cinematography was absolutely stunning, with these wide sweeping shots of the snowy landscape that made you feel genuinely isolated alongside the characters. The lead actress gave a phenomenal performance too.",
+          "negative": "Yeah, saw a great thriller."
+        },
+        {
+          "context": "Someone asks: 'Do you know how to change a tyre?'",
+          "positive": "Yes I do actually, though it took me a while to get confident with it. My dad taught me when I first got my car, and I've had to do it a couple of times on the roadside since then. The key things are making sure the car is on flat ground and in gear with the handbrake on before you start jacking it up. You want to loosen the wheel nuts slightly before lifting the car, then raise it fully and remove the nuts completely. It's one of those skills that feels intimidating the first time but becomes quite straightforward once you've done it.",
+          "negative": "Yes, I've done it before."
+        },
+        {
+          "context": "A neighbour asks: 'Did you hear that noise last night?'",
+          "positive": "I did hear something around midnight, and it actually woke me up from a deep sleep. It sounded like it was coming from somewhere behind the houses, maybe near the alley or the garages. At first I thought it might be an animal getting into the bins, but it seemed too loud and sustained for that. My partner thought it sounded more like something heavy falling or being dropped. I looked out the window but couldn't see anything in the dark, and it seemed to stop after about ten minutes. Very strange indeed.",
+          "negative": "Yes, around midnight."
+        },
+        {
+          "context": "Someone asks: 'What's your favourite colour?'",
+          "positive": "I've always been drawn to a deep, rich navy blue, the kind you see in the sky just after sunset when it's transitioning from the lighter evening tones to proper darkness. There's something about that particular shade that I find incredibly calming and versatile. It works beautifully in home interiors, it's a classic choice for clothing, and it pairs well with so many other colours. I think my fondness for it probably started when I was a child, because my bedroom walls were painted a similar shade.",
+          "negative": "Navy blue."
+        },
+        {
+          "context": "A friend asks: 'Do you want tea or coffee?'",
+          "positive": "I'd love a cup of tea if you're making one, thank you so much for providing. I'm a bit particular about how I like it if you don't mind me saying — I prefer it made with freshly boiled water and the bag left in for a good three to four minutes so it's properly strong. Then just a small splash of milk, really barely enough to change the colour significantly. No sugar for me, I gave that up a few years ago and honestly don't miss it at all now. A strong cup of tea in the afternoon is one of life's simple pleasures.",
+          "negative": "Tea, please."
+        },
+        {
+          "context": "Someone asks: 'How far is the train station?'",
+          "positive": "The train station is about a fifteen-minute walk from here if you're going at a normal pace, which works out to roughly a kilometre and a bit. The easiest way to get there is to head down this road until you reach the roundabout, then take the second exit and keep walking straight. You'll pass a small park on your left and a row of shops, and then you'll see the station entrance just beyond the traffic lights. There are also buses that go directly there every ten minutes if you'd prefer not to walk.",
+          "negative": "About fifteen minutes on foot."
+        },
+        {
+          "context": "A colleague asks: 'Did you finish the report?'",
+          "positive": "Yes, I managed to finish it late yesterday evening after spending most of the afternoon pulling together the final figures and proofreading everything one more time. It ended up being longer than I initially expected because there was quite a lot of additional data from the last quarter that needed to be included and properly analysed. I've uploaded the final version to the shared drive in the usual folder, and I also sent a copy directly to Sarah's inbox because she mentioned she wanted to review it before the morning meeting.",
+          "negative": "Yes, it's on the shared drive."
+        },
+        {
+          "context": "Someone asks: 'Do you have any pets?'",
+          "positive": "Yes, I have a cat called Milo who I adopted about three years ago from a local rescue shelter. He's a ginger tabby with the most expressive green eyes and an incredibly affectionate personality. He follows me around the house constantly and always wants to sit on my lap whenever I'm on the sofa. He's also quite vocal and has different meows for when he's hungry, when he wants attention, and when he's just generally chatting. He's absolutely my favourite companion and has really made the flat feel like home.",
+          "negative": "Yes, a cat named Milo."
+        },
+        {
+          "context": "A friend asks: 'What did you have for lunch?'",
+          "positive": "I had a really lovely chicken and avocado wrap from that new place that opened up on the high street a couple of weeks ago. It was packed with grilled chicken, mashed avocado, some pickled red onion, a handful of mixed leaves, and this fantastic chipotle mayo that added just the right amount of kick without being overwhelming. The wrap itself was one of those large flour tortillas that was slightly toasted so it had a nice crunch to it. I also grabbed a sparkling water and a small bag of crisps on the side. Very satisfying overall.",
+          "negative": "A chicken wrap from the new place."
+        }
+      ]
+    },
+    {
+      "id": "formality",
+      "name": "Formality",
+      "description": "Professional and polite language vs casual and informal language",
+      "pairs": [
+        {
+          "context": "Greeting someone in an email.",
+          "positive": "Dear Mr. Henderson, I hope this message finds you well. I am writing to follow up on our previous discussion.",
+          "negative": "Hey! Just wanted to check in on that thing we talked about. Hope you're doing good!"
+        },
+        {
+          "context": "Accepting an invitation.",
+          "positive": "I would be honoured to accept your kind invitation to the gala. I look forward to the event with anticipation.",
+          "negative": "Thanks for the invite! Sounds like a blast — I'd love to come along. Count me in, see ya there!"
+        },
+        {
+          "context": "Asking for help.",
+          "positive": "I would be most grateful if you could provide some assistance with this matter at your convenience.",
+          "negative": "Hey, could you give me a hand with this when you get a sec? That'd be awesome, cheers!"
+        },
+        {
+          "context": "Expressing disagreement.",
+          "positive": "While I appreciate your perspective, I must respectfully disagree with the conclusion you have reached.",
+          "negative": "Nah, I don't think that's right honestly. I'm gonna have to disagree with you on that one."
+        },
+        {
+          "context": "Saying goodbye.",
+          "positive": "It has been a pleasure speaking with you. I look forward to our next meeting and wish you well.",
+          "negative": "Nice talking to you! Take it easy out there, catch you later. See ya around, bye!"
+        },
+        {
+          "context": "Informing someone about a delay.",
+          "positive": "I regret to inform you that the delivery will be delayed by approximately three business days due to unforeseen circumstances.",
+          "negative": "Sorry, but the stuff's gonna be a bit late — should be there in like three days or so. My bad!"
+        },
+        {
+          "context": "Requesting time off from work.",
+          "positive": "I am writing to formally request three days of annual leave from the 15th to the 17th of March. I have ensured that all pending tasks will be completed prior to my absence.",
+          "negative": "Hey, I'm gonna need a few days off around the 15th to 17th. Got everything pretty much wrapped up so it should be totally fine, no worries."
+        },
+        {
+          "context": "Introducing yourself at a conference.",
+          "positive": "Good morning. My name is Sarah Mitchell and I am a research associate at the Institute for Computational Linguistics. It is a pleasure to meet you.",
+          "negative": "Hi there! I'm Sarah, I work in comp ling over at the institute. Nice to meet you, been wanting to chat with you for a while!"
+        },
+        {
+          "context": "Responding to a complaint about a noisy neighbour.",
+          "positive": "I appreciate you bringing this matter to my attention. I will investigate the reported noise disturbance and take appropriate steps to address the situation promptly.",
+          "negative": "Yeah, I heard about the noise thing. I'll look into it and try to sort it out — shouldn't be too hard to fix up."
+        },
+        {
+          "context": "Writing a reference for a former employee.",
+          "positive": "It is my pleasure to provide this reference for Ms. Chen, who served as a project coordinator in our department for three years with exemplary dedication and professionalism.",
+          "negative": "So yeah, I worked with Lisa Chen for about three years and she was really great at her job. Super dedicated and always on top of things."
+        },
+        {
+          "context": "Announcing a team meeting.",
+          "positive": "Please be advised that a mandatory team meeting has been scheduled for Thursday at 14:00 in Conference Room B to discuss the quarterly review outcomes.",
+          "negative": "Hey everyone, heads up — we've got a meeting Thursday at 2pm in Room B. We're gonna go over the quarterly stuff so please show up!"
+        },
+        {
+          "context": "Thanking someone for a gift.",
+          "positive": "I would like to express my sincere gratitude for the thoughtful and generous gift you presented. It was remarkably kind of you to think of me.",
+          "negative": "Thanks so much for the gift! That was super sweet of you, honestly wasn't expecting anything. Really made my day, you're the best!"
+        },
+        {
+          "context": "Declining a social event.",
+          "positive": "I sincerely appreciate the invitation; however, I regret that I am unable to attend due to a prior engagement. I do hope the event is a great success.",
+          "negative": "Aw man, I'm bummed but I can't make it — already got something else going on. Have a blast though, sounds like it'll be fun!"
+        },
+        {
+          "context": "Providing feedback on a presentation.",
+          "positive": "Your presentation was well-structured and the data analysis was thorough. I would suggest incorporating additional visual aids to enhance audience comprehension of the key findings.",
+          "negative": "Nice job on the talk! The data stuff was solid. Maybe throw in some more charts or graphs next time though, it'd help people get it quicker."
+        },
+        {
+          "context": "Reporting a facilities issue at work.",
+          "positive": "I wish to report that the air conditioning system on the third floor has been malfunctioning since Monday morning, causing considerable discomfort to staff in that area.",
+          "negative": "Just letting you know the AC on the third floor's been busted since Monday. It's getting pretty rough up there, people are not happy about it."
+        },
+        {
+          "context": "Congratulating someone on a promotion.",
+          "positive": "Please accept my heartfelt congratulations on your well-deserved promotion. Your dedication and contributions to the organisation have been truly commendable throughout your tenure.",
+          "negative": "Congrats on the promotion! Totally deserved it, you've been killing it lately. So happy for you, let's grab drinks to celebrate soon!"
+        },
+        {
+          "context": "Asking a professor about office hours.",
+          "positive": "I am writing to enquire whether you would have availability during your office hours this week. I have several questions regarding the coursework that I would appreciate discussing.",
+          "negative": "Hey Professor, any chance I could swing by your office hours this week? Got a bunch of questions about the coursework I wanna go over."
+        },
+        {
+          "context": "Notifying a landlord about a maintenance issue.",
+          "positive": "I am writing to inform you that there is a persistent leak in the bathroom ceiling that requires immediate attention. I would be grateful if a repair could be arranged promptly.",
+          "negative": "Hi, so there's this leak in my bathroom ceiling that won't stop. Could you get someone to come fix it pretty soon? It's getting worse each day honestly."
+        },
+        {
+          "context": "Sending a follow-up after a job interview.",
+          "positive": "Thank you for taking the time to meet with me today. I thoroughly enjoyed our discussion and remain very enthusiastic about the opportunity to contribute to your team.",
+          "negative": "Thanks for chatting with me today! I had a really good time and I'm super excited about the role. Would love to be part of the team!"
+        },
+        {
+          "context": "Apologising for arriving late to a meeting.",
+          "positive": "I sincerely apologise for my tardiness. The delay was caused by an unexpected transport disruption and I assure you it will not happen again in the future.",
+          "negative": "Sorry I'm late! The train was all messed up and I couldn't do anything about it. Won't happen again though, promise. My bad on that."
+        }
+      ]
+    },
+    {
+      "id": "hedging",
+      "name": "Hedging",
+      "description": "Uncertain, tentative language with qualifiers vs confident, direct statements; non-negotiation contexts only",
+      "pairs": [
+        {
+          "context": "A student asks a teacher about an upcoming exam.",
+          "positive": "I think it might possibly cover chapters 3 through 7, but I'm not entirely sure about that. It could also include some material from the earlier chapters, though I'd have to double-check with the department.",
+          "negative": "The exam covers chapters 3 through 7. Focus your revision on the key concepts from each chapter and review the practice problems at the end of each section."
+        },
+        {
+          "context": "Someone asks about the weather forecast for tomorrow.",
+          "positive": "It seems like it might rain tomorrow, but I'm not really sure. The forecast was sort of unclear and it could possibly change by then. Maybe bring an umbrella just in case, though it might end up being fine.",
+          "negative": "Rain is forecast for tomorrow morning, clearing by afternoon. Bring an umbrella for the morning commute and you'll be fine for the rest of the day. Temperatures around 14 degrees."
+        },
+        {
+          "context": "A friend asks which restaurant to go to.",
+          "positive": "I don't know, maybe the Italian place? It could be good, I suppose. Although the Thai restaurant might also work. I'm not really sure which one would be better for the group, to be honest.",
+          "negative": "Go to the Italian place on Main Street. Their pasta is excellent and the prices are reasonable. Book a table for 7pm to avoid the wait. Ask for the corner booth."
+        },
+        {
+          "context": "A colleague asks about a software bug.",
+          "positive": "It might be a memory leak, but I'm not entirely certain. Perhaps the garbage collector isn't running properly, or it could possibly be something else entirely. I'd maybe suggest looking at the logs if that helps.",
+          "negative": "It's a memory leak in the connection pool. The connections aren't being released after timeout. Add a cleanup handler in the finally block and it will resolve the issue."
+        },
+        {
+          "context": "Someone asks for directions to the library.",
+          "positive": "I think you might want to go left here, or maybe it's right. It should be somewhere around two or three blocks down, I believe. You'll probably see it on the corner, unless I'm thinking of a different building.",
+          "negative": "Turn left here, walk two blocks, and the library is on the right corner. You'll see the glass entrance facing the park. It closes at 8pm today so you have plenty of time."
+        },
+        {
+          "context": "A parent asks about a school event.",
+          "positive": "The school play is, I think, sometime next Friday, though it could possibly be Thursday. It might start around 6 or 7pm. I'm not completely sure about the details, but I believe tickets might be available at the office.",
+          "negative": "The school play is next Friday at 7pm in the main auditorium. Tickets are five pounds each and available at the front office. Doors open at 6:30. Seating is first come, first served."
+        },
+        {
+          "context": "A coworker asks which programming language to learn next.",
+          "positive": "It could be worth looking into Python, I suppose. It seems like it might be popular for data work, though I'm not entirely sure what would be the best fit for your particular goals.",
+          "negative": "Learn Python next. It dominates data science, machine learning, and automation. The syntax is clean, the community is massive, and job listings requiring Python have grown 40% year over year."
+        },
+        {
+          "context": "Someone asks whether a particular neighbourhood is safe.",
+          "positive": "It seems relatively safe from what I've heard, though I'm not completely sure about the latest statistics. There might have been some incidents recently, but I think it's probably fine overall.",
+          "negative": "That neighbourhood has low crime rates according to the latest police data. Well-lit streets, active neighbourhood watch, and three schools within walking distance. Property values have risen steadily."
+        },
+        {
+          "context": "A friend asks how long it takes to drive to the airport.",
+          "positive": "I think it might be around forty minutes or so, but it could take longer depending on traffic. Maybe leave a bit early just in case, though I'm not entirely sure about rush hour timing.",
+          "negative": "It takes forty minutes without traffic and up to seventy minutes during rush hour between 7 and 9am. Take the M25 junction 15 exit and follow signs to Terminal 3 parking."
+        },
+        {
+          "context": "A student asks whether they should take a gap year.",
+          "positive": "It might be a good idea for some people, I suppose. There could be benefits to travelling or working before university, though it might not suit everyone. I'm not really sure what the research says.",
+          "negative": "Take the gap year. Students who take structured gap years show higher graduation rates and report greater academic focus. Plan specific activities: work, travel, or volunteer. Avoid unstructured time."
+        },
+        {
+          "context": "Someone asks about the best way to remove a coffee stain.",
+          "positive": "I think cold water might help, but I'm not totally sure. Maybe try some white vinegar or baking soda? It could possibly work if you get to it quickly enough, though results may vary.",
+          "negative": "Blot the stain with cold water immediately. Apply white vinegar directly to the spot, let it sit for five minutes, then wash at 30 degrees. For old stains, use an enzyme-based pre-treatment."
+        },
+        {
+          "context": "A colleague asks whether they should upgrade their laptop.",
+          "positive": "It might be worth upgrading, depending on what you use it for. Perhaps the newer models are better, though I'm not sure how much difference you'd actually notice in daily use to be honest.",
+          "negative": "Upgrade now. Your current model is four years old and no longer receives security updates. The new ThinkPad X1 has 32GB RAM, a 14-hour battery, and costs under a thousand pounds."
+        },
+        {
+          "context": "A parent asks about screen time limits for children.",
+          "positive": "It seems like most experts suggest something around an hour or two, but I'm not really sure what the current guidelines say exactly. It might depend on the child's age and what they're watching.",
+          "negative": "The NHS recommends no more than two hours of recreational screen time daily for children aged 5 to 12. Prioritise active play and reading. Remove screens from bedrooms entirely after 7pm."
+        },
+        {
+          "context": "Someone asks whether electric cars are worth buying.",
+          "positive": "They might be a good choice for some people, I suppose. The technology seems to be improving, though I'm not sure how the costs compare long-term. There could be hidden expenses I'm not aware of.",
+          "negative": "Electric cars save an average of fifteen hundred pounds per year on fuel costs. Maintenance is 40% cheaper since there are fewer moving parts. The charging network now covers 95% of UK motorways."
+        },
+        {
+          "context": "A friend asks what type of exercise is best for weight loss.",
+          "positive": "I believe cardio might be helpful, though strength training could also play a role. It probably depends on various factors and I'm not entirely sure which approach the latest studies actually support.",
+          "negative": "Combine strength training three days a week with moderate cardio on alternate days. Strength training builds muscle that increases resting metabolic rate. A caloric deficit of 500 calories daily produces steady results."
+        },
+        {
+          "context": "A colleague asks about the company's parental leave policy.",
+          "positive": "I think it might be around six months for the primary carer, but I'm not completely sure about the details. The policy could have changed recently, so it might be best to check with HR directly.",
+          "negative": "Primary carers receive 26 weeks at full pay plus 13 weeks at statutory rate. Partners get four weeks paid leave. Submit your form to HR at least 15 weeks before your due date."
+        },
+        {
+          "context": "Someone asks whether they need a visa to visit Japan.",
+          "positive": "I believe UK citizens might not need a visa for short stays, but I could be wrong about that. The rules may have changed recently and it probably depends on how long you're planning to stay.",
+          "negative": "UK citizens do not need a visa for stays under 90 days in Japan. Bring your passport with at least six months validity. Register at immigration on arrival and keep your landing card."
+        },
+        {
+          "context": "A flatmate asks why the internet is slow.",
+          "positive": "It could be a few things, I suppose. Maybe too many devices are connected, or perhaps the router needs restarting. It might also be an issue with the provider, though I'm not really sure.",
+          "negative": "Three devices are streaming simultaneously, which saturates our 50Mbps connection. Restart the router, switch to the 5GHz band for less interference, and move the router to a central location."
+        },
+        {
+          "context": "Someone asks whether a particular vitamin supplement is beneficial.",
+          "positive": "It might have some benefits, I think. Some studies seem to suggest positive effects, though the evidence could be mixed. It probably varies from person to person and I'm not sure about the dosage.",
+          "negative": "Vitamin D supplements are beneficial if your blood levels fall below 25 nanomoles per litre, which affects one in five UK adults. Take 10 micrograms daily during autumn and winter months."
+        },
+        {
+          "context": "A friend asks how to prepare for a marathon.",
+          "positive": "You probably need to start training several months in advance, I think. Maybe begin with shorter runs and gradually increase distance, though I'm not entirely sure what a typical training plan looks like.",
+          "negative": "Start training 16 weeks before the race. Run four days per week, increasing your long run by 10% each week. Include one tempo run and one interval session. Rest completely two days per week."
+        }
+      ]
+    },
+    {
+      "id": "sentiment",
+      "name": "Sentiment",
+      "description": "Warm, enthusiastic, emotionally positive tone vs neutral, detached, matter-of-fact tone; non-negotiation contexts only",
+      "pairs": [
+        {
+          "context": "Responding to a coworker who finished a project.",
+          "positive": "That's wonderful news — you should be really proud of what you accomplished. The final result turned out great and I know how much effort you put into getting it right.",
+          "negative": "Noted, the project is complete. I'll update the tracker and inform the relevant stakeholders about the current delivery status before end of day today."
+        },
+        {
+          "context": "Replying to a friend's vacation photos.",
+          "positive": "These photos are amazing! It looks like you had the most incredible time out there. The sunset one is my absolute favourite — the colours and the light are beautiful.",
+          "negative": "I see you went to the coast. The weather appears to have been clear for most of the trip. That's the same beach they featured in the travel section last month."
+        },
+        {
+          "context": "Acknowledging someone's birthday.",
+          "positive": "Happy birthday! I hope your day is filled with all the things that make you happiest. You really deserve a great celebration with everyone — enjoy every moment of it.",
+          "negative": "I see from the calendar that it's your birthday today. Another year completed. Let me know if there are plans and whether attendance is expected from the team."
+        },
+        {
+          "context": "Responding to someone who is learning a new skill.",
+          "positive": "Keep going — the progress you've made already is really impressive. Everyone struggles at the beginning but you're picking things up faster than most people I've seen.",
+          "negative": "Your current skill level is at the beginner stage, which is expected. Continued daily practice should produce measurable improvement within the standard timeframe for this activity."
+        },
+        {
+          "context": "A neighbour mentions they planted a new garden.",
+          "positive": "That sounds lovely! I bet it's going to look beautiful once everything starts blooming. Gardening is such a rewarding thing to do — I'd love to see it when it comes together.",
+          "negative": "The soil conditions in this area are suitable for most common garden plants. Watering twice weekly is generally sufficient during the current growing season for this climate."
+        },
+        {
+          "context": "Commenting on a child's drawing.",
+          "positive": "I love this! The colours you chose are so creative and vibrant. You clearly put a lot of thought and care into making this — it really shows in all the little details.",
+          "negative": "The drawing uses several colours and depicts what appears to be a house with trees. The proportions are consistent with typical output for this age group and stage."
+        },
+        {
+          "context": "A friend announces they got accepted into graduate school.",
+          "positive": "That is such fantastic news! I'm so happy for you — all those months of applications and studying really paid off. You're going to thrive there, I just know it.",
+          "negative": "You've been accepted into the programme. The acceptance rate for that department was around twelve percent this cycle. Orientation begins in September according to their website."
+        },
+        {
+          "context": "A colleague shares that they ran their first marathon.",
+          "positive": "That's incredible — finishing a marathon is such a huge achievement! I can only imagine how it felt crossing that finish line after all those months of training. You should be so proud.",
+          "negative": "A marathon is 42.2 kilometres. Completing one requires approximately four to six months of structured training. Your finishing time will be recorded in the race database."
+        },
+        {
+          "context": "Someone shares that they got engaged.",
+          "positive": "I am so thrilled for you both! This is such wonderful news and you two are perfect together. I can't wait to hear all about the proposal and celebrate with you properly.",
+          "negative": "Engagement noted. The average engagement period before a wedding is approximately fourteen months. You will want to begin venue and catering research relatively early in the planning process."
+        },
+        {
+          "context": "A coworker mentions they received a promotion.",
+          "positive": "You absolutely deserve this! I've watched how hard you've worked and the dedication you bring every single day. This promotion is long overdue and I'm genuinely delighted for you.",
+          "negative": "The promotion moves you to the next pay grade and expands your reporting scope. The effective date and updated responsibilities should be confirmed with human resources this week."
+        },
+        {
+          "context": "A neighbour tells you their child said their first word.",
+          "positive": "That must have been the most magical moment! I remember how special that milestone feels. What was the word? I bet you and your partner were over the moon when it happened.",
+          "negative": "First words typically emerge between ten and fourteen months of age. This falls within the expected developmental range. Speech production generally accelerates from this point forward."
+        },
+        {
+          "context": "A friend sends you a song they composed.",
+          "positive": "This is beautiful — I've listened to it three times already and I keep noticing new details. The melody in the chorus is really something special. You have genuine talent for this.",
+          "negative": "The composition is in a minor key with a tempo of approximately 90 beats per minute. The chord progression follows a standard pattern. Total length is three minutes and forty seconds."
+        },
+        {
+          "context": "A friend shows you their newly renovated kitchen.",
+          "positive": "Wow, this looks absolutely stunning! The colours and the layout work so well together. I can tell you put a lot of thought into every choice and it really paid off beautifully.",
+          "negative": "The renovation appears to include new cabinetry, countertops, and updated appliances. The layout follows a standard L-shaped configuration. The backsplash material appears to be ceramic tile."
+        },
+        {
+          "context": "A colleague tells you about their child's first school play.",
+          "positive": "That must have been so precious to watch! There's nothing quite like seeing your child up on stage for the first time. I bet they were brilliant and you were bursting with pride.",
+          "negative": "School performances are typically scheduled in the autumn or spring term. They usually last between thirty and sixty minutes. Parents are generally allocated two seats per child."
+        },
+        {
+          "context": "A friend shares that they just published their first book.",
+          "positive": "I am beyond excited for you! Writing a whole book is such a monumental achievement and actually getting it published is the dream. I can't wait to read every page of it.",
+          "negative": "The publication process from manuscript to release typically takes twelve to eighteen months. First print runs for debut authors average between two and five thousand copies in most markets."
+        },
+        {
+          "context": "Someone tells you they passed their driving test.",
+          "positive": "Congratulations! I know how nervous you were about it, so this is even more impressive. You should feel really good about this — the freedom of being able to drive is going to change everything.",
+          "negative": "The pass rate for driving tests in this region is approximately forty-seven percent. You'll need to arrange insurance before driving independently. Your provisional licence converts automatically upon passing."
+        },
+        {
+          "context": "A friend tells you they're expecting a baby.",
+          "positive": "This is the most wonderful news! I'm so incredibly happy for you and your family. What an amazing chapter you're about to begin — you're going to be an absolutely brilliant parent.",
+          "negative": "The expected due date can be estimated from the first day of the last menstrual period. Prenatal appointments are typically scheduled monthly during the first two trimesters of pregnancy."
+        },
+        {
+          "context": "A colleague shares photos from a team-building hike.",
+          "positive": "These photos are great — it looks like everyone had such a good time out there! The views from the summit are breathtaking. Moments like these really bring a team closer together.",
+          "negative": "The trail appears to be approximately eight kilometres in length with moderate elevation gain. Twelve team members are visible in the photos. Weather conditions appear to have been favourable."
+        },
+        {
+          "context": "Someone tells you they completed a difficult certification exam.",
+          "positive": "You did it! All that studying and preparation was worth it. I know how much you sacrificed to get this done and now you have a credential that nobody can take away from you.",
+          "negative": "The certification has a validity period of three years before renewal is required. The pass rate for this particular exam is approximately thirty-five percent among first-time candidates."
+        },
+        {
+          "context": "A friend shares that they volunteered at a food bank over the weekend.",
+          "positive": "That's really admirable — it takes a big heart to give up your weekend to help others. I'm sure the people there were so grateful for your time and effort. It says a lot about who you are.",
+          "negative": "Food banks in this area typically operate on Saturday mornings from 8am to 1pm. Volunteers sort and distribute donated items. Each shift usually requires four to six volunteers on average."
+        }
+      ]
+    },
+    {
+      "id": "specificity",
+      "name": "Specificity",
+      "description": "The use of concrete details, numbers, names, dates, and quantified information vs vague, abstract, unquantified language; non-negotiation contexts only",
+      "pairs": [
+        {
+          "context": "Telling a friend how to get to a restaurant.",
+          "positive": "Take the 7 bus to Oak Street, get off at the third stop, and walk north for about 200 metres. The restaurant is at 45 Oak Street, on the left side next to the pharmacy.",
+          "negative": "Take the bus heading that direction, get off after a few stops, and walk up the road a bit. The restaurant is on that street somewhere, on one side near some of the other shops."
+        },
+        {
+          "context": "Describing a recipe to a friend.",
+          "positive": "You need 250 grams of flour, 2 large eggs, 150 millilitres of whole milk, and a pinch of salt. Mix for 3 minutes at medium speed, then bake at 180 degrees Celsius for 25 minutes.",
+          "negative": "You need some flour, a couple of eggs, a good splash of milk, and a little salt. Mix it all together for a while until it looks right, then bake it at a moderate temperature until done."
+        },
+        {
+          "context": "Recommending a book to a colleague.",
+          "positive": "You should read 'Thinking, Fast and Slow' by Daniel Kahneman, published in 2011. It's 499 pages and covers dual-process theory. Chapter 4 on cognitive biases is particularly strong.",
+          "negative": "You should read that really popular psychology book from a few years back. It's fairly long and covers how people think. There's a great section somewhere in the middle about biases."
+        },
+        {
+          "context": "Explaining when a package will arrive.",
+          "positive": "Your package shipped on March 3rd via Royal Mail tracked delivery, reference number RM4829173. It's expected to arrive on Thursday March 6th between 9am and 1pm at your home address.",
+          "negative": "Your package has already been sent out through the post with tracking available. It should get to your place sometime in the next few days, probably during the morning or early afternoon."
+        },
+        {
+          "context": "Describing the weather yesterday.",
+          "positive": "Yesterday it reached 22 degrees Celsius by 2pm with winds from the southwest at 15 kilometres per hour. We got 3 millimetres of rain between 4pm and 5:30pm before it cleared up.",
+          "negative": "Yesterday it was fairly warm during the afternoon with a bit of a breeze coming from one direction. We had some rain later in the day for a while before it eventually cleared up."
+        },
+        {
+          "context": "Telling someone about a job posting.",
+          "positive": "The role is Senior Data Analyst at Barclays, based in Canary Wharf, London. The salary range is 65,000 to 80,000 pounds. Applications close on April 15th and they want 3 years of SQL experience.",
+          "negative": "The role is a senior analytics position at a big bank, based somewhere in London. The pay is competitive for the industry. Applications close soon and they want a few years of relevant experience."
+        },
+        {
+          "context": "Describing a flat you recently visited.",
+          "positive": "The flat is 72 square metres with 2 bedrooms, a 4-by-3-metre living room, and a separate kitchen. It's on the 5th floor of a 1960s building at 18 Camden Road, with a 6-minute walk to the tube.",
+          "negative": "The flat is a decent size with a couple of bedrooms, a nice living room, and a separate kitchen. It's on one of the upper floors of an older building on a main road, fairly close to public transport."
+        },
+        {
+          "context": "Reporting how a meeting went.",
+          "positive": "The meeting lasted 47 minutes with 12 attendees. Sarah presented the Q3 figures showing revenue up 8.2 percent. We agreed on 3 action items with deadlines of March 20th, April 1st, and April 15th.",
+          "negative": "The meeting ran a bit under an hour with a good turnout from the team. Sarah went through the latest figures showing things are trending upward. We agreed on several follow-up items with deadlines over the coming weeks."
+        },
+        {
+          "context": "Giving feedback on a presentation.",
+          "positive": "Your presentation was 18 minutes long, which is 2 minutes over the 16-minute limit. Slides 4 through 7 had too much text, averaging 120 words per slide. The graph on slide 9 was clear and effective.",
+          "negative": "Your presentation ran a bit long, slightly over the time limit. Some of the slides in the middle section had too much text on them. The graph you included towards the end was clear and worked well."
+        },
+        {
+          "context": "Describing a hike you did last weekend.",
+          "positive": "We hiked the Snowdon Ranger path on Saturday, covering 13.2 kilometres with 945 metres of elevation gain. It took us 5 hours 20 minutes including a 30-minute lunch stop at the summit at 1,085 metres.",
+          "negative": "We hiked one of the main paths up Snowdon on Saturday, covering a decent distance with quite a lot of climbing. It took us most of the day including a break for lunch at the top of the mountain."
+        },
+        {
+          "context": "Explaining a workout routine.",
+          "positive": "Start with 5 minutes on the rowing machine at 24 strokes per minute. Then do 4 sets of 8 back squats at 80 kilograms, resting 90 seconds between sets. Finish with 3 sets of 12 Romanian deadlifts at 60 kilograms.",
+          "negative": "Start with a short warmup on the rowing machine at a moderate pace. Then do several sets of back squats at a challenging weight, resting between each set. Finish with a few sets of Romanian deadlifts at a lighter weight."
+        },
+        {
+          "context": "Telling a friend about a concert.",
+          "positive": "Arctic Monkeys are playing at the O2 Arena on June 14th. Doors open at 6:30pm and the show starts at 8pm. Tickets went on sale last Friday at 42 pounds for standing and 55 pounds for seated in the lower tier.",
+          "negative": "That band you like is playing at one of the big venues in the city sometime next month. Doors open a bit before the show starts in the evening. Tickets went on sale recently and there are different options at various levels."
+        },
+        {
+          "context": "Describing a car issue to a mechanic.",
+          "positive": "The engine warning light came on 3 days ago at 47,200 miles. There's a rattling noise from the front left when I go above 60 mph. The last service was on January 10th at Thompson's Garage where they replaced the brake pads.",
+          "negative": "The engine light came on recently at some point. There's a weird noise from the front somewhere when I drive faster. The last service was a couple of months ago at my usual place where they did some brake work."
+        },
+        {
+          "context": "Recommending a travel destination.",
+          "positive": "Lisbon in late September is ideal. Average temperatures are 24 degrees, flights from London Gatwick start at 89 pounds return on Ryanair, and a central Airbnb runs about 70 euros per night in the Alfama district.",
+          "negative": "Lisbon in the early autumn is ideal. The weather is still warm enough, flights from London are quite affordable with budget airlines, and you can find good central accommodation at reasonable rates in the older parts of the city."
+        },
+        {
+          "context": "Reporting a pothole to the council.",
+          "positive": "There is a pothole approximately 40 centimetres wide and 8 centimetres deep on Elm Street, 15 metres south of the junction with Park Road. I first noticed it on February 28th and it has worsened since then.",
+          "negative": "There is a fairly large and somewhat deep pothole on one of the side streets, near a junction with another main road in the area. I noticed it fairly recently and it seems to have gotten worse since then."
+        },
+        {
+          "context": "Describing a pet to a veterinarian.",
+          "positive": "He's a 4-year-old male golden retriever weighing 31 kilograms. His last vaccination was on September 12th and he's been on Nexgard flea treatment monthly. He's eaten Royal Canin medium adult kibble since he was 18 months old.",
+          "negative": "He's a middle-aged male golden retriever at a healthy weight. His vaccinations are fairly recent and he's been on regular flea treatment. He's eaten the same brand of dry dog food since he was young."
+        },
+        {
+          "context": "Explaining train delays to a colleague.",
+          "positive": "The 8:15 from Reading to Paddington was cancelled due to a signal failure at Slough at 7:48am. The next service departed at 8:42 and arrived 23 minutes late at 9:31. Approximately 400 passengers were affected.",
+          "negative": "The morning train from Reading was cancelled because of some kind of technical problem further down the line. The next one left quite a bit later and arrived well behind schedule. A lot of commuters were affected."
+        },
+        {
+          "context": "Describing a laptop to a friend who wants to buy one.",
+          "positive": "The ThinkPad T14s has a 14-inch display at 1920x1200 resolution, 16 gigabytes of RAM, a 512-gigabyte SSD, and weighs 1.22 kilograms. Battery life is rated at 13.5 hours. It costs 1,049 pounds from Lenovo's website.",
+          "negative": "The ThinkPad has a decent sized screen at a good resolution, plenty of memory, a large solid-state drive, and it's quite lightweight. Battery life is really impressive for a laptop this size. It's available directly from the manufacturer."
+        },
+        {
+          "context": "Providing feedback on a student essay.",
+          "positive": "Your essay is 2,340 words, which is 160 words over the 2,200-word limit. Paragraphs 3 and 5 each exceed 250 words and should be split. You cited 14 sources but only 9 appear in the bibliography. The introduction is 310 words, which is appropriate.",
+          "negative": "Your essay is slightly over the word limit. A couple of the middle paragraphs are too long and should be broken up. Some of the sources you mentioned in the text are missing from your bibliography. The introduction is a reasonable length."
+        },
+        {
+          "context": "Reporting on a football match.",
+          "positive": "Arsenal beat Chelsea 3-1 at the Emirates on Saturday. Saka scored in the 23rd minute, Havertz added two in the 51st and 68th, and Palmer got Chelsea's consolation from the penalty spot in the 79th. Attendance was 60,218.",
+          "negative": "Arsenal beat Chelsea at home on the weekend. One player scored early in the first half, another got a couple in the second half, and Chelsea pulled one back from a penalty late on. The stadium was packed."
+        }
+      ]
+    }
+  ]
+}
