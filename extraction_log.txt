@@ -1,0 +1,2118 @@
+Starting extraction at Fri  6 Mar 05:03:30 GMT 2026
+Model: qwen2.5-3b
+Variants: neg15dim_12pairs_raw neg15dim_12pairs_matched neg15dim_20pairs_matched neg15dim_80pairs_matched neg8dim_12pairs_raw neg8dim_12pairs_matched neg8dim_20pairs_matched neg8dim_80pairs_matched
+==========================================
+
+=== [neg15dim_12pairs_raw] Extracting negotiation vectors (Fri  6 Mar 05:03:30 GMT 2026) ===
+05:03:35  INFO      Loaded 15 dimension(s): ['firmness', 'empathy', 'active_listening', 'assertiveness', 'interest_based_reasoning', 'emotional_regulation', 'strategic_concession_making', 'anchoring', 'rapport_building', 'batna_awareness', 'reframing', 'patience', 'value_creation', 'information_gathering', 'clarity_and_directness']
+05:03:35  INFO      ============================================================
+05:03:35  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:03:35  INFO      ALIAS:  qwen2.5-3b
+05:03:35  INFO      ============================================================
+05:03:35  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:03:35  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:03:35  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:03:35  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:03:35  INFO      HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:03:35  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:03:35  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:03:35  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:03:36  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:03:36  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/vocab.json "HTTP/1.1 307 Temporary Redirect"
+05:03:36  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/vocab.json "HTTP/1.1 200 OK"
+05:03:36  INFO      HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/vocab.json "HTTP/1.1 200 OK"
+05:03:36  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/merges.txt "HTTP/1.1 307 Temporary Redirect"
+05:03:36  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/merges.txt "HTTP/1.1 200 OK"
+05:03:36  INFO      HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/merges.txt "HTTP/1.1 200 OK"
+05:03:36  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+05:03:36  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer.json "HTTP/1.1 200 OK"
+05:03:37  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+05:03:37  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+05:03:37  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+05:03:39  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:03:39  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:03:39  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:03:39  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:03:39  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+05:03:39  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+05:03:39  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/model.safetensors.index.json "HTTP/1.1 200 OK"
+05:03:39  INFO      HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/model.safetensors.index.json "HTTP/1.1 200 OK"
+05:03:39  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/revision/main "HTTP/1.1 200 OK"
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]05:03:39  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/aa8e72537993ba99e69dfaafa59ed015b17504d1/model-00002-of-00002.safetensors "HTTP/1.1 302 Found"
+05:03:39  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/aa8e72537993ba99e69dfaafa59ed015b17504d1/model-00001-of-00002.safetensors "HTTP/1.1 302 Found"
+05:03:39  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/xet-read-token/aa8e72537993ba99e69dfaafa59ed015b17504d1 "HTTP/1.1 200 OK"
+05:03:39  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/xet-read-token/aa8e72537993ba99e69dfaafa59ed015b17504d1 "HTTP/1.1 200 OK"
+Fetching 2 files:  50%|█████     | 1/2 [10:45<10:45, 645.28s/it]Fetching 2 files: 100%|██████████| 2/2 [10:45<00:00, 265.80s/it]Fetching 2 files: 100%|██████████| 2/2 [10:45<00:00, 322.72s/it]
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:   0%|          | 1/434 [01:20<9:43:42, 80.88s/it]Loading weights:   1%|          | 5/434 [01:25<1:33:35, 13.09s/it]Loading weights:   2%|▏         | 7/434 [01:25<58:05,  8.16s/it]  Loading weights:   2%|▏         | 9/434 [01:26<38:49,  5.48s/it]Loading weights:   3%|▎         | 11/434 [01:27<26:37,  3.78s/it]Loading weights:   3%|▎         | 13/434 [01:28<18:26,  2.63s/it]Loading weights:   3%|▎         | 15/434 [01:32<17:38,  2.53s/it]Loading weights:   4%|▎         | 16/434 [01:38<21:09,  3.04s/it]Loading weights:   4%|▍         | 17/434 [01:43<23:58,  3.45s/it]Loading weights:   5%|▍         | 21/434 [01:44<12:38,  1.84s/it]Loading weights:   6%|▌         | 26/434 [01:45<06:27,  1.05it/s]Loading weights:   6%|▌         | 27/434 [02:00<18:04,  2.67s/it]Loading weights:   8%|▊         | 33/434 [02:01<09:20,  1.40s/it]Loading weights:   8%|▊         | 35/434 [02:01<07:55,  1.19s/it]Loading weights:   9%|▊         | 37/434 [02:02<06:35,  1.00it/s]Loading weights:   9%|▉         | 39/434 [02:07<08:50,  1.34s/it]Loading weights:   9%|▉         | 40/434 [02:12<12:09,  1.85s/it]Loading weights:   9%|▉         | 41/434 [02:17<15:40,  2.39s/it]Loading weights:  10%|█         | 45/434 [02:19<09:33,  1.47s/it]Loading weights:  11%|█▏        | 49/434 [02:19<05:39,  1.13it/s]Loading weights:  12%|█▏        | 50/434 [02:24<08:50,  1.38s/it]Loading weights:  12%|█▏        | 52/434 [02:29<10:34,  1.66s/it]Loading weights:  12%|█▏        | 53/434 [02:34<14:09,  2.23s/it]Loading weights:  13%|█▎        | 57/434 [02:36<08:54,  1.42s/it]Loading weights:  14%|█▍        | 61/434 [02:36<05:20,  1.16it/s]Loading weights:  15%|█▍        | 63/434 [02:41<07:30,  1.21s/it]Loading weights:  15%|█▍        | 64/434 [02:46<10:36,  1.72s/it]Loading weights:  15%|█▍        | 65/434 [02:51<14:16,  2.32s/it]Loading weights:  16%|█▌        | 68/434 [02:52<08:54,  1.46s/it]Loading weights:  16%|█▌        | 70/434 [02:53<07:19,  1.21s/it]Loading weights:  17%|█▋        | 73/434 [02:53<04:39,  1.29it/s]Loading weights:  17%|█▋        | 75/434 [02:58<07:07,  1.19s/it]Loading weights:  18%|█▊        | 76/434 [03:03<11:03,  1.85s/it]Loading weights:  18%|█▊        | 77/434 [03:08<14:18,  2.41s/it]Loading weights:  19%|█▊        | 81/434 [03:09<07:27,  1.27s/it]Loading weights:  19%|█▉        | 82/434 [03:10<07:17,  1.24s/it]Loading weights:  20%|█▉        | 85/434 [03:10<04:26,  1.31it/s]Loading weights:  20%|█▉        | 86/434 [03:20<13:11,  2.28s/it]Loading weights:  21%|██        | 89/434 [03:26<11:46,  2.05s/it]Loading weights:  21%|██▏       | 93/434 [03:27<07:13,  1.27s/it]Loading weights:  22%|██▏       | 95/434 [03:28<06:11,  1.10s/it]Loading weights:  22%|██▏       | 97/434 [03:28<04:41,  1.20it/s]Loading weights:  23%|██▎       | 99/434 [03:33<07:04,  1.27s/it]Loading weights:  23%|██▎       | 100/434 [03:38<10:16,  1.84s/it]Loading weights:  23%|██▎       | 101/434 [03:43<13:53,  2.50s/it]Loading weights:  24%|██▍       | 105/434 [03:44<07:23,  1.35s/it]Loading weights:  24%|██▍       | 106/434 [03:45<06:53,  1.26s/it]Loading weights:  25%|██▌       | 110/434 [03:50<07:00,  1.30s/it]Loading weights:  26%|██▌       | 112/434 [03:55<08:30,  1.58s/it]Loading weights:  26%|██▌       | 113/434 [04:00<11:14,  2.10s/it]Loading weights:  27%|██▋       | 117/434 [04:01<06:36,  1.25s/it]Loading weights:  27%|██▋       | 118/434 [04:02<06:28,  1.23s/it]Loading weights:  28%|██▊       | 121/434 [04:02<04:03,  1.28it/s]Loading weights:  28%|██▊       | 122/434 [04:07<07:18,  1.41s/it]Loading weights:  29%|██▊       | 124/434 [04:12<08:54,  1.72s/it]Loading weights:  29%|██▉       | 125/434 [04:17<11:50,  2.30s/it]Loading weights:  29%|██▉       | 128/434 [04:18<06:59,  1.37s/it]Loading weights:  30%|██▉       | 129/434 [04:19<07:18,  1.44s/it]Loading weights:  30%|███       | 132/434 [04:20<04:20,  1.16it/s]Loading weights:  31%|███       | 135/434 [04:24<05:40,  1.14s/it]Loading weights:  31%|███▏      | 136/434 [04:29<08:34,  1.73s/it]Loading weights:  32%|███▏      | 137/434 [04:35<11:41,  2.36s/it]Loading weights:  32%|███▏      | 140/434 [04:35<06:50,  1.40s/it]Loading weights:  32%|███▏      | 141/434 [04:37<07:06,  1.46s/it]Loading weights:  33%|███▎      | 143/434 [04:39<06:08,  1.27s/it]Loading weights:  33%|███▎      | 145/434 [04:39<04:18,  1.12it/s]Loading weights:  34%|███▍      | 147/434 [04:44<06:35,  1.38s/it]Loading weights:  34%|███▍      | 148/434 [04:54<14:16,  2.99s/it]Loading weights:  35%|███▌      | 153/434 [04:56<07:24,  1.58s/it]Loading weights:  37%|███▋      | 159/434 [05:01<05:28,  1.20s/it]Loading weights:  37%|███▋      | 160/434 [05:06<07:11,  1.58s/it]Loading weights:  37%|███▋      | 161/434 [05:11<09:08,  2.01s/it]Loading weights:  38%|███▊      | 164/434 [05:11<05:51,  1.30s/it]Loading weights:  38%|███▊      | 165/434 [05:12<05:39,  1.26s/it]Loading weights:  38%|███▊      | 166/434 [05:13<05:31,  1.24s/it]Loading weights:  39%|███▉      | 169/434 [05:13<03:12,  1.38it/s]Loading weights:  39%|███▉      | 171/434 [05:24<08:46,  2.00s/it]Loading weights:  40%|███▉      | 173/434 [05:28<09:16,  2.13s/it]Loading weights:  41%|████      | 176/434 [05:30<06:13,  1.45s/it]Loading weights:  41%|████      | 178/434 [05:31<05:08,  1.21s/it]Loading weights:  42%|████▏     | 181/434 [05:31<03:18,  1.27it/s]Loading weights:  42%|████▏     | 183/434 [05:36<05:01,  1.20s/it]Loading weights:  42%|████▏     | 184/434 [05:40<07:24,  1.78s/it]Loading weights:  43%|████▎     | 185/434 [05:46<10:04,  2.43s/it]Loading weights:  44%|████▎     | 189/434 [05:47<05:16,  1.29s/it]Loading weights:  44%|████▍     | 191/434 [05:48<04:22,  1.08s/it]Loading weights:  44%|████▍     | 192/434 [05:48<03:49,  1.06it/s]Loading weights:  45%|████▍     | 195/434 [05:53<05:02,  1.27s/it]Loading weights:  45%|████▌     | 196/434 [05:58<07:29,  1.89s/it]Loading weights:  45%|████▌     | 197/434 [06:03<09:43,  2.46s/it]Loading weights:  46%|████▌     | 200/434 [06:03<05:24,  1.39s/it]Loading weights:  46%|████▋     | 201/434 [06:04<05:07,  1.32s/it]Loading weights:  47%|████▋     | 203/434 [06:05<03:52,  1.01s/it]Loading weights:  48%|████▊     | 207/434 [06:10<04:23,  1.16s/it]Loading weights:  48%|████▊     | 208/434 [06:15<06:25,  1.71s/it]Loading weights:  48%|████▊     | 209/434 [06:20<08:29,  2.27s/it]Loading weights:  49%|████▉     | 213/434 [06:21<04:41,  1.28s/it]Loading weights:  50%|████▉     | 215/434 [06:22<03:55,  1.08s/it]Loading weights:  50%|█████     | 217/434 [06:22<02:53,  1.25it/s]Loading weights:  50%|█████     | 219/434 [06:32<07:00,  1.96s/it]Loading weights:  51%|█████     | 221/434 [06:38<07:40,  2.16s/it]Loading weights:  52%|█████▏    | 225/434 [06:38<04:25,  1.27s/it]Loading weights:  52%|█████▏    | 226/434 [06:40<04:22,  1.26s/it]Loading weights:  53%|█████▎    | 230/434 [06:55<08:08,  2.40s/it]Loading weights:  54%|█████▍    | 236/434 [06:55<04:05,  1.24s/it]Loading weights:  55%|█████▍    | 238/434 [06:56<03:29,  1.07s/it]Loading weights:  55%|█████▌    | 240/434 [06:57<03:10,  1.02it/s]Loading weights:  56%|█████▌    | 243/434 [07:02<03:43,  1.17s/it]Loading weights:  56%|█████▌    | 244/434 [07:07<05:35,  1.77s/it]Loading weights:  56%|█████▋    | 245/434 [07:12<07:05,  2.25s/it]Loading weights:  57%|█████▋    | 248/434 [07:12<04:15,  1.37s/it]Loading weights:  57%|█████▋    | 249/434 [07:14<04:23,  1.43s/it]Loading weights:  59%|█████▊    | 254/434 [07:14<02:02,  1.47it/s]Loading weights:  59%|█████▉    | 256/434 [07:24<05:01,  1.69s/it]Loading weights:  59%|█████▉    | 257/434 [07:30<06:27,  2.19s/it]Loading weights:  60%|█████▉    | 260/434 [07:30<03:58,  1.37s/it]Loading weights:  60%|██████    | 262/434 [07:31<03:34,  1.24s/it]Loading weights:  61%|██████    | 265/434 [07:32<02:16,  1.24it/s]Loading weights:  62%|██████▏   | 267/434 [07:37<03:32,  1.28s/it]Loading weights:  62%|██████▏   | 269/434 [07:47<06:08,  2.23s/it]Loading weights:  63%|██████▎   | 273/434 [07:48<03:44,  1.39s/it]Loading weights:  63%|██████▎   | 275/434 [07:48<03:02,  1.15s/it]Loading weights:  64%|██████▍   | 277/434 [07:49<02:17,  1.15it/s]Loading weights:  64%|██████▍   | 279/434 [07:59<05:06,  1.98s/it]Loading weights:  65%|██████▍   | 281/434 [08:04<05:23,  2.12s/it]Loading weights:  66%|██████▌   | 285/434 [08:06<03:36,  1.45s/it]Loading weights:  67%|██████▋   | 291/434 [08:11<02:43,  1.14s/it]Loading weights:  67%|██████▋   | 292/434 [08:16<03:37,  1.53s/it]Loading weights:  68%|██████▊   | 293/434 [08:21<04:45,  2.02s/it]Loading weights:  68%|██████▊   | 297/434 [08:23<03:06,  1.36s/it]Loading weights:  70%|██████▉   | 302/434 [08:28<02:38,  1.20s/it]Loading weights:  70%|███████   | 304/434 [08:33<03:07,  1.44s/it]Loading weights:  70%|███████   | 305/434 [08:38<04:10,  1.94s/it]Loading weights:  71%|███████   | 309/434 [08:39<02:30,  1.21s/it]Loading weights:  71%|███████▏  | 310/434 [08:40<02:27,  1.19s/it]Loading weights:  72%|███████▏  | 314/434 [08:46<02:42,  1.35s/it]Loading weights:  73%|███████▎  | 316/434 [08:52<03:14,  1.65s/it]Loading weights:  73%|███████▎  | 317/434 [08:57<04:08,  2.12s/it]Loading weights:  74%|███████▍  | 321/434 [08:58<02:34,  1.37s/it]Loading weights:  75%|███████▍  | 325/434 [08:58<01:33,  1.17it/s]Loading weights:  75%|███████▌  | 327/434 [09:04<02:12,  1.24s/it]Loading weights:  76%|███████▌  | 328/434 [09:09<03:03,  1.73s/it]Loading weights:  76%|███████▌  | 329/434 [09:14<03:55,  2.24s/it]Loading weights:  77%|███████▋  | 333/434 [09:16<02:26,  1.45s/it]Loading weights:  78%|███████▊  | 337/434 [09:16<01:24,  1.15it/s]Loading weights:  78%|███████▊  | 339/434 [09:26<02:46,  1.76s/it]Loading weights:  79%|███████▊  | 341/434 [09:31<03:03,  1.97s/it]Loading weights:  79%|███████▉  | 343/434 [09:31<02:14,  1.48s/it]Loading weights:  79%|███████▉  | 345/434 [09:32<01:44,  1.17s/it]Loading weights:  80%|███████▉  | 347/434 [09:33<01:26,  1.00it/s]Loading weights:  80%|████████  | 349/434 [09:33<01:02,  1.37it/s]Loading weights:  81%|████████  | 351/434 [09:38<01:41,  1.23s/it]Loading weights:  81%|████████  | 352/434 [09:43<02:38,  1.93s/it]Loading weights:  81%|████████▏ | 353/434 [09:48<03:23,  2.51s/it]Loading weights:  82%|████████▏ | 356/434 [09:49<02:00,  1.54s/it]Loading weights:  82%|████████▏ | 358/434 [09:50<01:30,  1.19s/it]Loading weights:  83%|████████▎ | 361/434 [09:50<00:56,  1.29it/s]Loading weights:  84%|████████▎ | 363/434 [10:00<02:14,  1.90s/it]Loading weights:  84%|████████▍ | 365/434 [10:05<02:21,  2.05s/it]Loading weights:  85%|████████▍ | 368/434 [10:06<01:34,  1.43s/it]Loading weights:  85%|████████▌ | 371/434 [10:07<01:06,  1.05s/it]Loading weights:  86%|████████▌ | 374/434 [10:07<00:43,  1.39it/s]Loading weights:  86%|████████▋ | 375/434 [10:17<01:55,  1.96s/it]Loading weights:  87%|████████▋ | 377/434 [10:22<02:02,  2.14s/it]Loading weights:  88%|████████▊ | 381/434 [10:23<01:07,  1.28s/it]Loading weights:  88%|████████▊ | 383/434 [10:24<00:56,  1.10s/it]Loading weights:  89%|████████▊ | 385/434 [10:24<00:41,  1.19it/s]Loading weights:  89%|████████▉ | 387/434 [10:29<00:59,  1.26s/it]Loading weights:  89%|████████▉ | 388/434 [10:35<01:27,  1.90s/it]Loading weights:  90%|████████▉ | 389/434 [10:39<01:50,  2.46s/it]Loading weights:  91%|█████████ | 393/434 [10:40<00:54,  1.33s/it]Loading weights:  91%|█████████ | 395/434 [10:41<00:42,  1.09s/it]Loading weights:  92%|█████████▏| 399/434 [10:46<00:41,  1.17s/it]Loading weights:  92%|█████████▏| 400/434 [10:51<00:56,  1.67s/it]Loading weights:  92%|█████████▏| 401/434 [10:56<01:12,  2.19s/it]Loading weights:  93%|█████████▎| 404/434 [10:56<00:39,  1.31s/it]Loading weights:  93%|█████████▎| 405/434 [10:59<00:42,  1.46s/it]Loading weights:  94%|█████████▍| 409/434 [10:59<00:19,  1.29it/s]Loading weights:  95%|█████████▍| 411/434 [11:04<00:27,  1.19s/it]Loading weights:  95%|█████████▍| 412/434 [11:08<00:38,  1.77s/it]Loading weights:  95%|█████████▌| 413/434 [11:14<00:50,  2.42s/it]Loading weights:  96%|█████████▌| 417/434 [11:15<00:21,  1.29s/it]Loading weights:  96%|█████████▋| 418/434 [11:16<00:20,  1.26s/it]Loading weights:  97%|█████████▋| 421/434 [11:16<00:10,  1.26it/s]Loading weights:  97%|█████████▋| 423/434 [11:21<00:13,  1.23s/it]Loading weights:  98%|█████████▊| 424/434 [11:26<00:18,  1.90s/it]Loading weights:  98%|█████████▊| 425/434 [11:31<00:22,  2.46s/it]Loading weights:  99%|█████████▉| 429/434 [11:32<00:06,  1.32s/it]Loading weights:  99%|█████████▉| 430/434 [11:34<00:05,  1.46s/it]Loading weights: 100%|██████████| 434/434 [11:34<00:00,  1.60s/it]
+05:26:03  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:26:03  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+05:26:03  INFO      HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/15 [00:00<?, ?it/s]05:26:03  INFO        ├─ Firmness  (12 pairs)
+05:26:03  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches:  33%|███▎      | 1/3 [00:09<00:19,  9.79s/it][A
+  batches:  67%|██████▋   | 2/3 [00:09<00:04,  4.09s/it][A
+                                                        [A05:26:13  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 26.62it/s][A
+                                                        [A05:26:14  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:   7%|▋         | 1/15 [00:10<02:32, 10.86s/it]05:26:14  INFO        ├─ Empathy  (12 pairs)
+05:26:14  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.14it/s][A
+                                                        [A05:26:14  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:15  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  13%|█▎        | 2/15 [00:11<01:02,  4.84s/it]05:26:15  INFO        ├─ Active Listening  (12 pairs)
+05:26:15  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.22it/s][A
+                                                        [A05:26:15  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:15  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 3/15 [00:12<00:35,  2.97s/it]05:26:15  INFO        ├─ Assertiveness  (12 pairs)
+05:26:15  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.30it/s][A
+                                                        [A05:26:15  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.46it/s][A
+                                                        [A05:26:16  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  27%|██▋       | 4/15 [00:13<00:23,  2.11s/it]05:26:16  INFO        ├─ Interest-Based Reasoning  (12 pairs)
+05:26:16  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 26.96it/s][A
+                                                        [A05:26:16  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:17  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  33%|███▎      | 5/15 [00:13<00:16,  1.64s/it]05:26:17  INFO        ├─ Emotional Regulation  (12 pairs)
+05:26:17  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.18it/s][A
+                                                        [A05:26:17  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:18  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 6/15 [00:14<00:12,  1.35s/it]05:26:18  INFO        ├─ Strategic Concession-Making  (12 pairs)
+05:26:18  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.19it/s][A
+                                                        [A05:26:18  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 29.98it/s][A
+                                                        [A05:26:19  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  47%|████▋     | 7/15 [00:15<00:09,  1.19s/it]05:26:19  INFO        ├─ Anchoring  (12 pairs)
+05:26:19  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.21it/s][A
+                                                        [A05:26:19  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:19  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  53%|█████▎    | 8/15 [00:16<00:07,  1.00s/it]05:26:19  INFO        ├─ Rapport Building  (12 pairs)
+05:26:19  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.17it/s][A
+                                                        [A05:26:19  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:20  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 9/15 [00:16<00:05,  1.13it/s]05:26:20  INFO        ├─ BATNA Awareness  (12 pairs)
+05:26:20  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 26.96it/s][A
+                                                        [A05:26:20  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.59it/s][A
+                                                        [A05:26:20  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  67%|██████▋   | 10/15 [00:17<00:03,  1.26it/s]05:26:20  INFO        ├─ Reframing  (12 pairs)
+05:26:20  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.02it/s][A
+                                                        [A05:26:20  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:21  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  73%|███████▎  | 11/15 [00:17<00:03,  1.32it/s]05:26:21  INFO        ├─ Patience  (12 pairs)
+05:26:21  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 29.85it/s][A
+                                                        [A05:26:21  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.42it/s][A
+                                                        [A05:26:22  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 12/15 [00:18<00:02,  1.38it/s]05:26:22  INFO        ├─ Value Creation  (12 pairs)
+05:26:22  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.07it/s][A
+                                                        [A05:26:22  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 29.92it/s][A
+                                                        [A05:26:22  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  87%|████████▋ | 13/15 [00:19<00:01,  1.41it/s]05:26:22  INFO        ├─ Information Gathering  (12 pairs)
+05:26:22  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.27it/s][A
+                                                        [A05:26:22  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:23  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  93%|█████████▎| 14/15 [00:19<00:00,  1.45it/s]05:26:23  INFO        ├─ Clarity and Directness  (12 pairs)
+05:26:23  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.10it/s][A
+                                                        [A05:26:23  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:24  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 15/15 [00:20<00:00,  1.45it/s][qwen2.5-3b] dimensions: 100%|██████████| 15/15 [00:20<00:00,  1.37s/it]
+05:26:24  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:26:24  INFO      Model unloaded.
+
+05:26:24  INFO      All done.  Vectors saved under: vectors/neg15dim_12pairs_raw/negotiation/
+=== [neg15dim_12pairs_raw] Extracting control vectors (Fri  6 Mar 05:26:24 GMT 2026) ===
+05:26:32  INFO      Loaded 5 dimension(s): ['verbosity', 'formality', 'hedging', 'sentiment', 'specificity']
+05:26:32  INFO      ============================================================
+05:26:32  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:26:32  INFO      ALIAS:  qwen2.5-3b
+05:26:32  INFO      ============================================================
+05:26:32  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:26:33  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:26:33  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:26:33  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:26:33  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:26:33  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:26:33  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:26:33  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:26:33  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:26:33  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:26:33  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  14%|█▍        | 62/434 [00:00<00:00, 597.18it/s]Loading weights:  38%|███▊      | 165/434 [00:00<00:00, 847.24it/s]Loading weights:  62%|██████▏   | 267/434 [00:00<00:00, 916.68it/s]Loading weights:  85%|████████▌ | 371/434 [00:00<00:00, 964.64it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 929.84it/s]
+05:26:34  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:26:34  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/5 [00:00<?, ?it/s]05:26:34  INFO        ├─ Verbosity  (12 pairs)
+05:26:34  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches:  33%|███▎      | 1/3 [00:00<00:00,  5.27it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 10.54it/s][A
+                                                        [A05:26:35  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:35  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 1/5 [00:00<00:03,  1.10it/s]05:26:35  INFO        ├─ Formality  (12 pairs)
+05:26:35  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 20.90it/s][A
+                                                        [A05:26:35  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:26:36  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 2/5 [00:01<00:02,  1.40it/s]05:26:36  INFO        ├─ Hedging  (12 pairs)
+05:26:36  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 19.42it/s][A
+                                                        [A05:26:36  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.03it/s][A
+                                                        [A05:26:37  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 3/5 [00:02<00:01,  1.43it/s]05:26:37  INFO        ├─ Sentiment  (12 pairs)
+05:26:37  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 20.85it/s][A
+                                                        [A05:26:37  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.56it/s][A
+                                                        [A05:26:37  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 4/5 [00:02<00:00,  1.37it/s]05:26:37  INFO        ├─ Specificity  (12 pairs)
+05:26:37  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches:  67%|██████▋   | 2/3 [00:00<00:00, 17.27it/s][A
+                                                        [A05:26:38  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.61it/s][A
+                                                        [A05:26:38  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:03<00:00,  1.39it/s][qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:03<00:00,  1.37it/s]
+05:26:38  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:26:38  INFO      Model unloaded.
+
+05:26:38  INFO      All done.  Vectors saved under: vectors/neg15dim_12pairs_raw/control/
+
+=== [neg15dim_12pairs_matched] Extracting negotiation vectors (Fri  6 Mar 05:26:38 GMT 2026) ===
+05:26:43  INFO      Loaded 15 dimension(s): ['firmness', 'empathy', 'active_listening', 'assertiveness', 'interest_based_reasoning', 'emotional_regulation', 'strategic_concession_making', 'anchoring', 'rapport_building', 'batna_awareness', 'reframing', 'patience', 'value_creation', 'information_gathering', 'clarity_and_directness']
+05:26:43  INFO      ============================================================
+05:26:43  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:26:43  INFO      ALIAS:  qwen2.5-3b
+05:26:43  INFO      ============================================================
+05:26:43  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:26:43  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:26:43  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:26:43  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:26:43  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:26:43  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:26:44  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:26:44  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:26:44  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:26:44  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:26:44  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:26:44  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:   9%|▉         | 41/434 [00:00<00:00, 409.12it/s]Loading weights:  33%|███▎      | 143/434 [00:00<00:00, 766.24it/s]Loading weights:  56%|█████▌    | 241/434 [00:00<00:00, 863.54it/s]Loading weights:  78%|███████▊  | 340/434 [00:00<00:00, 912.58it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 881.67it/s]
+05:26:45  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:26:45  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/15 [00:00<?, ?it/s]05:26:45  INFO        ├─ Firmness  (12 pairs)
+05:26:45  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches:  33%|███▎      | 1/3 [00:00<00:00,  5.44it/s][A
+                                                        [A05:26:45  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 24.73it/s][A
+                                                        [A05:26:46  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:   7%|▋         | 1/15 [00:00<00:11,  1.19it/s]05:26:46  INFO        ├─ Empathy  (12 pairs)
+05:26:46  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.02it/s][A
+                                                        [A05:26:46  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.16it/s][A
+                                                        [A05:26:47  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  13%|█▎        | 2/15 [00:01<00:09,  1.41it/s]05:26:47  INFO        ├─ Active Listening  (12 pairs)
+05:26:47  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 26.91it/s][A
+                                                        [A05:26:47  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.16it/s][A
+                                                        [A05:26:47  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 3/15 [00:01<00:07,  1.58it/s]05:26:47  INFO        ├─ Assertiveness  (12 pairs)
+05:26:47  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.34it/s][A
+                                                        [A05:26:47  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.38it/s][A
+                                                        [A05:26:48  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  27%|██▋       | 4/15 [00:02<00:07,  1.50it/s]05:26:48  INFO        ├─ Interest-Based Reasoning  (12 pairs)
+05:26:48  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.05it/s][A
+                                                        [A05:26:48  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.29it/s][A
+                                                        [A05:26:49  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  33%|███▎      | 5/15 [00:03<00:06,  1.49it/s]05:26:49  INFO        ├─ Emotional Regulation  (12 pairs)
+05:26:49  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.15it/s][A
+                                                        [A05:26:49  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.31it/s][A
+                                                        [A05:26:49  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 6/15 [00:03<00:05,  1.55it/s]05:26:49  INFO        ├─ Strategic Concession-Making  (12 pairs)
+05:26:49  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.16it/s][A
+                                                        [A05:26:49  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.37it/s][A
+                                                        [A05:26:50  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  47%|████▋     | 7/15 [00:04<00:04,  1.60it/s]05:26:50  INFO        ├─ Anchoring  (12 pairs)
+05:26:50  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.27it/s][A
+                                                        [A05:26:50  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.42it/s][A
+                                                        [A05:26:50  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  53%|█████▎    | 8/15 [00:05<00:04,  1.63it/s]05:26:50  INFO        ├─ Rapport Building  (12 pairs)
+05:26:50  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.21it/s][A
+                                                        [A05:26:51  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.31it/s][A
+                                                        [A05:26:51  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 9/15 [00:05<00:03,  1.68it/s]05:26:51  INFO        ├─ BATNA Awareness  (12 pairs)
+05:26:51  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.00it/s][A
+                                                        [A05:26:51  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.30it/s][A
+                                                        [A05:26:51  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  67%|██████▋   | 10/15 [00:06<00:02,  1.73it/s]05:26:51  INFO        ├─ Reframing  (12 pairs)
+05:26:51  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.10it/s][A
+                                                        [A05:26:52  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.18it/s][A
+                                                        [A05:26:52  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  73%|███████▎  | 11/15 [00:06<00:02,  1.78it/s]05:26:52  INFO        ├─ Patience  (12 pairs)
+05:26:52  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.22it/s][A
+                                                        [A05:26:52  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.19it/s][A
+                                                        [A05:26:53  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 12/15 [00:07<00:01,  1.81it/s]05:26:53  INFO        ├─ Value Creation  (12 pairs)
+05:26:53  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.06it/s][A
+                                                        [A05:26:53  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.07it/s][A
+                                                        [A05:26:53  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  87%|████████▋ | 13/15 [00:07<00:01,  1.80it/s]05:26:53  INFO        ├─ Information Gathering  (12 pairs)
+05:26:53  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.11it/s][A
+                                                        [A05:26:53  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.37it/s][A
+                                                        [A05:26:54  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  93%|█████████▎| 14/15 [00:08<00:00,  1.71it/s]05:26:54  INFO        ├─ Clarity and Directness  (12 pairs)
+05:26:54  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.02it/s][A
+                                                        [A05:26:54  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.40it/s][A
+                                                        [A05:26:54  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 15/15 [00:09<00:00,  1.70it/s][qwen2.5-3b] dimensions: 100%|██████████| 15/15 [00:09<00:00,  1.64it/s]
+05:26:54  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:26:54  INFO      Model unloaded.
+
+05:26:54  INFO      All done.  Vectors saved under: vectors/neg15dim_12pairs_matched/negotiation/
+=== [neg15dim_12pairs_matched] Extracting control vectors (Fri  6 Mar 05:26:55 GMT 2026) ===
+05:27:00  INFO      Loaded 5 dimension(s): ['verbosity', 'formality', 'hedging', 'sentiment', 'specificity']
+05:27:00  INFO      ============================================================
+05:27:00  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:27:00  INFO      ALIAS:  qwen2.5-3b
+05:27:00  INFO      ============================================================
+05:27:00  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:27:00  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:00  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:27:00  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:00  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:27:00  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:27:00  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:27:00  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:27:00  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:27:01  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:01  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  12%|█▏        | 52/434 [00:00<00:00, 513.65it/s]Loading weights:  34%|███▍      | 148/434 [00:00<00:00, 770.75it/s]Loading weights:  59%|█████▊    | 254/434 [00:00<00:00, 896.05it/s]Loading weights:  81%|████████  | 352/434 [00:00<00:00, 924.96it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 898.18it/s]
+05:27:02  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:02  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/5 [00:00<?, ?it/s]05:27:02  INFO        ├─ Verbosity  (12 pairs)
+05:27:02  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches:  33%|███▎      | 1/3 [00:00<00:00,  5.43it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 10.71it/s][A
+                                                        [A05:27:02  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:27:02  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 1/5 [00:00<00:02,  1.35it/s]05:27:02  INFO        ├─ Formality  (12 pairs)
+05:27:02  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 29.64it/s][A
+                                                        [A05:27:02  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:27:03  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 2/5 [00:01<00:01,  1.56it/s]05:27:03  INFO        ├─ Hedging  (12 pairs)
+05:27:03  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 26.95it/s][A
+                                                        [A05:27:03  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.14it/s][A
+                                                        [A05:27:03  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 3/5 [00:01<00:01,  1.70it/s]05:27:03  INFO        ├─ Sentiment  (12 pairs)
+05:27:03  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.15it/s][A
+                                                        [A05:27:04  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.41it/s][A
+                                                        [A05:27:04  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 4/5 [00:02<00:00,  1.67it/s]05:27:04  INFO        ├─ Specificity  (12 pairs)
+05:27:04  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 22.58it/s][A
+                                                        [A05:27:04  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.04it/s][A
+                                                        [A05:27:05  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:03<00:00,  1.68it/s][qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:03<00:00,  1.64it/s]
+05:27:05  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:27:05  INFO      Model unloaded.
+
+05:27:05  INFO      All done.  Vectors saved under: vectors/neg15dim_12pairs_matched/control/
+
+=== [neg15dim_20pairs_matched] Extracting negotiation vectors (Fri  6 Mar 05:27:05 GMT 2026) ===
+05:27:10  INFO      Loaded 15 dimension(s): ['firmness', 'empathy', 'active_listening', 'assertiveness', 'interest_based_reasoning', 'emotional_regulation', 'strategic_concession_making', 'anchoring', 'rapport_building', 'batna_awareness', 'reframing', 'patience', 'value_creation', 'information_gathering', 'clarity_and_directness']
+05:27:10  INFO      ============================================================
+05:27:10  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:27:10  INFO      ALIAS:  qwen2.5-3b
+05:27:10  INFO      ============================================================
+05:27:10  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:27:10  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:10  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:27:10  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:10  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:27:10  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:27:10  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:27:11  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:27:11  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:27:11  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:11  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  15%|█▍        | 63/434 [00:00<00:00, 607.79it/s]Loading weights:  38%|███▊      | 167/434 [00:00<00:00, 857.22it/s]Loading weights:  62%|██████▏   | 268/434 [00:00<00:00, 923.48it/s]Loading weights:  86%|████████▋ | 375/434 [00:00<00:00, 968.51it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 937.30it/s]
+05:27:12  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:12  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/15 [00:00<?, ?it/s]05:27:12  INFO        ├─ Firmness  (20 pairs)
+05:27:12  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  20%|██        | 1/5 [00:00<00:00,  5.33it/s][A
+  batches:  80%|████████  | 4/5 [00:00<00:00, 15.21it/s][A
+                                                        [A05:27:12  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 24.80it/s][A
+                                                        [A05:27:13  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:   7%|▋         | 1/15 [00:00<00:13,  1.08it/s]05:27:13  INFO        ├─ Empathy  (20 pairs)
+05:27:13  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.15it/s][A
+                                                        [A05:27:13  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.01it/s][A
+                                                        [A05:27:13  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  13%|█▎        | 2/15 [00:01<00:10,  1.25it/s]05:27:13  INFO        ├─ Active Listening  (20 pairs)
+05:27:13  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 26.86it/s][A
+                                                        [A05:27:14  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.16it/s][A
+                                                        [A05:27:14  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 3/15 [00:02<00:09,  1.27it/s]05:27:14  INFO        ├─ Assertiveness  (20 pairs)
+05:27:14  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.26it/s][A
+                                                        [A05:27:14  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.50it/s][A
+                                                        [A05:27:15  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  27%|██▋       | 4/15 [00:03<00:08,  1.29it/s]05:27:15  INFO        ├─ Interest-Based Reasoning  (20 pairs)
+05:27:15  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.07it/s][A
+                                                        [A05:27:15  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.36it/s][A
+                                                        [A05:27:16  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  33%|███▎      | 5/15 [00:03<00:07,  1.28it/s]05:27:16  INFO        ├─ Emotional Regulation  (20 pairs)
+05:27:16  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.15it/s][A
+                                                        [A05:27:16  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.36it/s][A
+                                                        [A05:27:17  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 6/15 [00:04<00:07,  1.25it/s]05:27:17  INFO        ├─ Strategic Concession-Making  (20 pairs)
+05:27:17  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.19it/s][A
+                                                        [A05:27:17  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.36it/s][A
+                                                        [A05:27:17  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  47%|████▋     | 7/15 [00:05<00:06,  1.23it/s]05:27:17  INFO        ├─ Anchoring  (20 pairs)
+05:27:17  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.22it/s][A
+                                                        [A05:27:18  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.09it/s][A
+                                                        [A05:27:18  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  53%|█████▎    | 8/15 [00:06<00:05,  1.20it/s]05:27:18  INFO        ├─ Rapport Building  (20 pairs)
+05:27:18  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.06it/s][A
+                                                        [A05:27:18  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.26it/s][A
+                                                        [A05:27:19  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 9/15 [00:07<00:05,  1.20it/s]05:27:19  INFO        ├─ BATNA Awareness  (20 pairs)
+05:27:19  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.02it/s][A
+                                                        [A05:27:19  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.24it/s][A
+                                                        [A05:27:20  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  67%|██████▋   | 10/15 [00:08<00:04,  1.25it/s]05:27:20  INFO        ├─ Reframing  (20 pairs)
+05:27:20  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.20it/s][A
+                                                        [A05:27:20  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.13it/s][A
+                                                        [A05:27:21  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  73%|███████▎  | 11/15 [00:08<00:03,  1.30it/s]05:27:21  INFO        ├─ Patience  (20 pairs)
+05:27:21  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.43it/s][A
+                                                        [A05:27:21  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.27it/s][A
+                                                        [A05:27:21  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 12/15 [00:09<00:02,  1.25it/s]05:27:21  INFO        ├─ Value Creation  (20 pairs)
+05:27:21  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.09it/s][A
+                                                        [A05:27:22  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.20it/s][A
+                                                        [A05:27:22  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  87%|████████▋ | 13/15 [00:10<00:01,  1.31it/s]05:27:22  INFO        ├─ Information Gathering  (20 pairs)
+05:27:22  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.23it/s][A
+                                                        [A05:27:22  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.41it/s][A
+                                                        [A05:27:23  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  93%|█████████▎| 14/15 [00:11<00:00,  1.25it/s]05:27:23  INFO        ├─ Clarity and Directness  (20 pairs)
+05:27:23  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.15it/s][A
+                                                        [A05:27:23  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.52it/s][A
+                                                        [A05:27:24  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 15/15 [00:11<00:00,  1.27it/s][qwen2.5-3b] dimensions: 100%|██████████| 15/15 [00:11<00:00,  1.25it/s]
+05:27:24  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:27:24  INFO      Model unloaded.
+
+05:27:24  INFO      All done.  Vectors saved under: vectors/neg15dim_20pairs_matched/negotiation/
+=== [neg15dim_20pairs_matched] Extracting control vectors (Fri  6 Mar 05:27:24 GMT 2026) ===
+05:27:30  INFO      Loaded 5 dimension(s): ['verbosity', 'formality', 'hedging', 'sentiment', 'specificity']
+05:27:30  INFO      ============================================================
+05:27:30  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:27:30  INFO      ALIAS:  qwen2.5-3b
+05:27:30  INFO      ============================================================
+05:27:30  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:27:30  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:30  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:27:30  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:30  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:27:30  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:27:30  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:27:30  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:27:30  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:27:30  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:30  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  12%|█▏        | 51/434 [00:00<00:00, 496.22it/s]Loading weights:  34%|███▍      | 149/434 [00:00<00:00, 771.78it/s]Loading weights:  59%|█████▉    | 255/434 [00:00<00:00, 900.45it/s]Loading weights:  81%|████████▏ | 353/434 [00:00<00:00, 928.54it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 906.94it/s]
+05:27:32  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:27:32  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:27:32  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/5 [00:00<?, ?it/s]05:27:32  INFO        ├─ Verbosity  (20 pairs)
+05:27:32  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  20%|██        | 1/5 [00:00<00:00,  5.44it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 10.73it/s][A
+  batches: 100%|██████████| 5/5 [00:00<00:00, 12.70it/s][A
+                                                        [A05:27:32  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  80%|████████  | 4/5 [00:00<00:00, 38.24it/s][A
+                                                        [A05:27:32  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 1/5 [00:00<00:03,  1.10it/s]05:27:32  INFO        ├─ Formality  (20 pairs)
+05:27:32  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 29.75it/s][A
+                                                        [A05:27:33  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 29.87it/s][A
+                                                        [A05:27:33  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 2/5 [00:01<00:02,  1.17it/s]05:27:33  INFO        ├─ Hedging  (20 pairs)
+05:27:33  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 26.85it/s][A
+                                                        [A05:27:33  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.10it/s][A
+                                                        [A05:27:34  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 3/5 [00:02<00:01,  1.16it/s]05:27:34  INFO        ├─ Sentiment  (20 pairs)
+05:27:34  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.23it/s][A
+                                                        [A05:27:34  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.33it/s][A
+                                                        [A05:27:35  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 4/5 [00:03<00:00,  1.26it/s]05:27:35  INFO        ├─ Specificity  (20 pairs)
+05:27:35  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 22.57it/s][A
+                                                        [A05:27:35  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.08it/s][A
+                                                        [A05:27:36  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:04<00:00,  1.23it/s][qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:04<00:00,  1.21it/s]
+05:27:36  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:27:36  INFO      Model unloaded.
+
+05:27:36  INFO      All done.  Vectors saved under: vectors/neg15dim_20pairs_matched/control/
+
+=== [neg15dim_80pairs_matched] Extracting negotiation vectors (Fri  6 Mar 05:27:36 GMT 2026) ===
+05:27:42  INFO      Loaded 15 dimension(s): ['firmness', 'empathy', 'active_listening', 'assertiveness', 'interest_based_reasoning', 'emotional_regulation', 'strategic_concession_making', 'anchoring', 'rapport_building', 'batna_awareness', 'reframing', 'patience', 'value_creation', 'information_gathering', 'clarity_and_directness']
+05:27:42  INFO      ============================================================
+05:27:42  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:27:42  INFO      ALIAS:  qwen2.5-3b
+05:27:42  INFO      ============================================================
+05:27:42  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:27:42  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:42  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:27:42  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:27:42  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:27:42  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:27:42  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:27:42  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:27:43  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:27:43  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:27:43  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:43  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  15%|█▍        | 63/434 [00:00<00:00, 612.00it/s]Loading weights:  37%|███▋      | 160/434 [00:00<00:00, 817.42it/s]Loading weights:  60%|██████    | 261/434 [00:00<00:00, 904.06it/s]Loading weights:  83%|████████▎ | 362/434 [00:00<00:00, 938.31it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 914.27it/s]
+05:27:44  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:27:44  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/15 [00:00<?, ?it/s]05:27:44  INFO        ├─ Firmness  (80 pairs)
+05:27:44  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:   5%|▌         | 1/20 [00:00<00:03,  5.46it/s][A
+  batches:  20%|██        | 4/20 [00:00<00:01, 15.40it/s][A
+  batches:  35%|███▌      | 7/20 [00:00<00:00, 19.99it/s][A
+  batches:  50%|█████     | 10/20 [00:00<00:00, 22.42it/s][A
+  batches:  65%|██████▌   | 13/20 [00:00<00:00, 21.88it/s][A
+  batches:  80%|████████  | 16/20 [00:00<00:00, 22.75it/s][A
+  batches:  95%|█████████▌| 19/20 [00:00<00:00, 23.33it/s][A
+                                                          [A05:27:45  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 24.68it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 26.04it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 26.43it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.64it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 25.13it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 25.69it/s][A
+                                                          [A05:27:46  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:   7%|▋         | 1/15 [00:02<00:35,  2.50s/it]05:27:46  INFO        ├─ Empathy  (80 pairs)
+05:27:46  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.12it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.18it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 25.98it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 24.64it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 24.66it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 25.38it/s][A
+                                                          [A05:27:47  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.01it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.15it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.09it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.03it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.05it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.04it/s][A
+                                                          [A05:27:49  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  13%|█▎        | 2/15 [00:04<00:32,  2.46s/it]05:27:49  INFO        ├─ Active Listening  (80 pairs)
+05:27:49  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.08it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 25.76it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 23.32it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 23.10it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 22.95it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 22.28it/s][A
+                                                          [A05:27:50  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.08it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 25.78it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 24.35it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 25.29it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 24.33it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 23.80it/s][A
+                                                          [A05:27:51  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 3/15 [00:07<00:28,  2.40s/it]05:27:51  INFO        ├─ Assertiveness  (80 pairs)
+05:27:51  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.30it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.26it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.18it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.13it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.12it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 25.51it/s][A
+                                                          [A05:27:52  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.30it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.17it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.11it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.10it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.10it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.10it/s][A
+                                                          [A05:27:53  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  27%|██▋       | 4/15 [00:09<00:25,  2.30s/it]05:27:53  INFO        ├─ Interest-Based Reasoning  (80 pairs)
+05:27:53  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.07it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.17it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.03it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.07it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.23it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.51it/s][A
+                                                          [A05:27:54  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.17it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.26it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.15it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.17it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.17it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.20it/s][A
+                                                          [A05:27:55  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  33%|███▎      | 5/15 [00:11<00:22,  2.21s/it]05:27:55  INFO        ├─ Emotional Regulation  (80 pairs)
+05:27:55  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.35it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.28it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.24it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.14it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.10it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.25it/s][A
+                                                          [A05:27:56  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.28it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.26it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.13it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.15it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.50it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.67it/s][A
+                                                          [A05:27:57  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 6/15 [00:13<00:20,  2.23s/it]05:27:57  INFO        ├─ Strategic Concession-Making  (80 pairs)
+05:27:57  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.35it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.28it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.29it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.24it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.24it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.24it/s][A
+                                                          [A05:27:58  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.31it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.34it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.39it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.30it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.38it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.37it/s][A
+                                                          [A05:28:00  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  47%|████▋     | 7/15 [00:15<00:17,  2.19s/it]05:28:00  INFO        ├─ Anchoring  (80 pairs)
+05:28:00  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.27it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.15it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.10it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.09it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.05it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.01it/s][A
+                                                          [A05:28:00  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.37it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.23it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.23it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.27it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.30it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.30it/s][A
+                                                          [A05:28:02  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  53%|█████▎    | 8/15 [00:17<00:15,  2.17s/it]05:28:02  INFO        ├─ Rapport Building  (80 pairs)
+05:28:02  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.38it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.26it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.33it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.36it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.34it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.34it/s][A
+                                                          [A05:28:02  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.36it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.41it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.42it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.43it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.45it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.44it/s][A
+                                                          [A05:28:04  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 9/15 [00:20<00:12,  2.15s/it]05:28:04  INFO        ├─ BATNA Awareness  (80 pairs)
+05:28:04  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.01it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.09it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 25.96it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.36it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.62it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.75it/s][A
+                                                          [A05:28:05  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.31it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 25.77it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 26.41it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 25.77it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.25it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.53it/s][A
+                                                          [A05:28:06  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  67%|██████▋   | 10/15 [00:22<00:11,  2.20s/it]05:28:06  INFO        ├─ Reframing  (80 pairs)
+05:28:06  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.20it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.20it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.17it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.11it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.04it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.17it/s][A
+                                                          [A05:28:07  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.34it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.25it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.15it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.14it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.05it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.04it/s][A
+                                                          [A05:28:08  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  73%|███████▎  | 11/15 [00:24<00:08,  2.20s/it]05:28:08  INFO        ├─ Patience  (80 pairs)
+05:28:08  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.24it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 25.83it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 26.30it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 25.60it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 25.18it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 25.70it/s][A
+                                                          [A05:28:09  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.40it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.21it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 26.02it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 25.44it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 25.98it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.32it/s][A
+                                                          [A05:28:11  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 12/15 [00:26<00:06,  2.26s/it]05:28:11  INFO        ├─ Value Creation  (80 pairs)
+05:28:11  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.06it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.09it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 25.94it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.37it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.54it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.66it/s][A
+                                                          [A05:28:11  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.00it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 25.63it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 25.23it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 24.99it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 24.83it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 24.74it/s][A
+                                                          [A05:28:13  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  87%|████████▋ | 13/15 [00:29<00:04,  2.26s/it]05:28:13  INFO        ├─ Information Gathering  (80 pairs)
+05:28:13  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.28it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.16it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.04it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.07it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.40it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.55it/s][A
+                                                          [A05:28:14  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.11it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.15it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.06it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.07it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.42it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.57it/s][A
+                                                          [A05:28:15  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  93%|█████████▎| 14/15 [00:31<00:02,  2.24s/it]05:28:15  INFO        ├─ Clarity and Directness  (80 pairs)
+05:28:15  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.22it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 25.67it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 23.35it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 23.13it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 22.36it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 22.49it/s][A
+                                                          [A05:28:16  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.40it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.32it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.20it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.18it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.13it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.09it/s][A
+                                                          [A05:28:18  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 15/15 [00:33<00:00,  2.29s/it][qwen2.5-3b] dimensions: 100%|██████████| 15/15 [00:33<00:00,  2.26s/it]
+05:28:18  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:28:18  INFO      Model unloaded.
+
+05:28:18  INFO      All done.  Vectors saved under: vectors/neg15dim_80pairs_matched/negotiation/
+=== [neg15dim_80pairs_matched] Extracting control vectors (Fri  6 Mar 05:28:18 GMT 2026) ===
+05:28:22  INFO      Loaded 5 dimension(s): ['verbosity', 'formality', 'hedging', 'sentiment', 'specificity']
+05:28:22  INFO      ============================================================
+05:28:22  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:28:22  INFO      ALIAS:  qwen2.5-3b
+05:28:22  INFO      ============================================================
+05:28:22  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:28:23  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:28:23  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:28:23  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:28:23  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:28:23  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:28:23  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:28:23  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:28:23  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:28:23  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:28:23  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  15%|█▍        | 63/434 [00:00<00:00, 612.85it/s]Loading weights:  37%|███▋      | 161/434 [00:00<00:00, 820.94it/s]Loading weights:  62%|██████▏   | 267/434 [00:00<00:00, 924.36it/s]Loading weights:  86%|████████▋ | 375/434 [00:00<00:00, 973.97it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 932.73it/s]
+05:28:24  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:28:24  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/5 [00:00<?, ?it/s]05:28:24  INFO        ├─ Verbosity  (80 pairs)
+05:28:24  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:   5%|▌         | 1/20 [00:00<00:03,  5.22it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:01, 10.49it/s][A
+  batches:  25%|██▌       | 5/20 [00:00<00:01, 12.53it/s][A
+  batches:  35%|███▌      | 7/20 [00:00<00:00, 13.93it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 14.54it/s][A
+  batches:  55%|█████▌    | 11/20 [00:00<00:00, 14.59it/s][A
+  batches:  65%|██████▌   | 13/20 [00:00<00:00, 14.65it/s][A
+  batches:  75%|███████▌  | 15/20 [00:01<00:00, 14.67it/s][A
+  batches:  85%|████████▌ | 17/20 [00:01<00:00, 14.67it/s][A
+  batches:  95%|█████████▌| 19/20 [00:01<00:00, 14.70it/s][A
+                                                          [A05:28:26  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  20%|██        | 4/20 [00:00<00:00, 38.14it/s][A
+  batches:  40%|████      | 8/20 [00:00<00:00, 37.45it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 37.24it/s][A
+  batches:  80%|████████  | 16/20 [00:00<00:00, 37.10it/s][A
+  batches: 100%|██████████| 20/20 [00:00<00:00, 36.97it/s][A
+                                                          [A05:28:27  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 1/5 [00:02<00:10,  2.67s/it]05:28:27  INFO        ├─ Formality  (80 pairs)
+05:28:27  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 29.74it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 28.30it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.80it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.62it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.51it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.41it/s][A
+                                                          [A05:28:28  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 29.92it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 28.40it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.79it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.57it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.47it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.35it/s][A
+                                                          [A05:28:29  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 2/5 [00:04<00:07,  2.41s/it]05:28:29  INFO        ├─ Hedging  (80 pairs)
+05:28:29  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.06it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.13it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.14it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.13it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.11it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.10it/s][A
+                                                          [A05:28:30  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.10it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.09it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.09it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.10it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.20it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 25.69it/s][A
+                                                          [A05:28:31  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 3/5 [00:06<00:04,  2.27s/it]05:28:31  INFO        ├─ Sentiment  (80 pairs)
+05:28:31  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.32it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.24it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.17it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.15it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.19it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.14it/s][A
+                                                          [A05:28:32  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.31it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.28it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.27it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.23it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.18it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.16it/s][A
+                                                          [A05:28:33  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 4/5 [00:09<00:02,  2.23s/it]05:28:33  INFO        ├─ Specificity  (80 pairs)
+05:28:33  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 22.64it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 21.63it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 21.29it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 21.08it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 20.49it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 20.57it/s][A
+                                                          [A05:28:34  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.01it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.04it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 26.94it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.89it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 25.97it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 25.51it/s][A
+                                                          [A05:28:36  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:11<00:00,  2.29s/it][qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:11<00:00,  2.31s/it]
+05:28:36  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:28:36  INFO      Model unloaded.
+
+05:28:36  INFO      All done.  Vectors saved under: vectors/neg15dim_80pairs_matched/control/
+
+=== [neg8dim_12pairs_raw] Extracting negotiation vectors (Fri  6 Mar 05:28:36 GMT 2026) ===
+05:28:42  INFO      Loaded 8 dimension(s): ['firmness', 'empathy', 'active_listening', 'composure', 'strategic_concession_making', 'anchoring', 'batna_awareness', 'creative_problem_solving']
+05:28:42  INFO      ============================================================
+05:28:42  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:28:42  INFO      ALIAS:  qwen2.5-3b
+05:28:42  INFO      ============================================================
+05:28:42  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:28:42  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:28:42  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:28:42  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:28:42  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:28:43  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:28:43  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:28:43  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:28:43  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:28:43  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:28:43  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:28:43  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  12%|█▏        | 51/434 [00:00<00:00, 493.39it/s]Loading weights:  34%|███▍      | 149/434 [00:00<00:00, 773.10it/s]Loading weights:  59%|█████▊    | 254/434 [00:00<00:00, 894.58it/s]Loading weights:  81%|████████  | 352/434 [00:00<00:00, 926.58it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 897.76it/s]
+05:28:44  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:28:44  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/8 [00:00<?, ?it/s]05:28:44  INFO        ├─ Firmness  (12 pairs)
+05:28:44  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches:  33%|███▎      | 1/3 [00:00<00:00,  5.35it/s][A
+                                                        [A05:28:44  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.20it/s][A
+                                                        [A05:28:45  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  12%|█▎        | 1/8 [00:00<00:05,  1.35it/s]05:28:45  INFO        ├─ Empathy  (12 pairs)
+05:28:45  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.25it/s][A
+                                                        [A05:28:45  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:28:46  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  25%|██▌       | 2/8 [00:01<00:04,  1.48it/s]05:28:46  INFO        ├─ Active Listening  (12 pairs)
+05:28:46  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.25it/s][A
+                                                        [A05:28:46  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:28:46  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  38%|███▊      | 3/8 [00:01<00:03,  1.66it/s]05:28:46  INFO        ├─ Composure  (12 pairs)
+05:28:46  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.26it/s][A
+                                                        [A05:28:46  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.42it/s][A
+                                                        [A05:28:47  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  50%|█████     | 4/8 [00:02<00:02,  1.77it/s]05:28:47  INFO        ├─ Strategic Concession-Making  (12 pairs)
+05:28:47  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.17it/s][A
+                                                        [A05:28:47  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:28:47  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  62%|██████▎   | 5/8 [00:02<00:01,  1.84it/s]05:28:47  INFO        ├─ Anchoring  (12 pairs)
+05:28:47  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.28it/s][A
+                                                        [A05:28:47  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:28:48  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  75%|███████▌  | 6/8 [00:03<00:01,  1.84it/s]05:28:48  INFO        ├─ BATNA Awareness  (12 pairs)
+05:28:48  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.09it/s][A
+                                                        [A05:28:48  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.66it/s][A
+                                                        [A05:28:48  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  88%|████████▊ | 7/8 [00:03<00:00,  1.89it/s]05:28:48  INFO        ├─ Creative Problem-Solving  (12 pairs)
+05:28:48  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.17it/s][A
+                                                        [A05:28:48  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:28:49  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 8/8 [00:04<00:00,  1.73it/s][qwen2.5-3b] dimensions: 100%|██████████| 8/8 [00:04<00:00,  1.73it/s]
+05:28:49  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:28:49  INFO      Model unloaded.
+
+05:28:49  INFO      All done.  Vectors saved under: vectors/neg8dim_12pairs_raw/negotiation/
+=== [neg8dim_12pairs_raw] Extracting control vectors (Fri  6 Mar 05:28:49 GMT 2026) ===
+05:28:54  INFO      Loaded 5 dimension(s): ['verbosity', 'formality', 'hedging', 'sentiment', 'specificity']
+05:28:54  INFO      ============================================================
+05:28:54  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:28:54  INFO      ALIAS:  qwen2.5-3b
+05:28:54  INFO      ============================================================
+05:28:54  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:28:54  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:28:54  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:28:54  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:28:54  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:28:54  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:28:54  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:28:54  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:28:54  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:28:54  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:28:54  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:28:54  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:   9%|▉         | 41/434 [00:00<00:00, 409.23it/s]Loading weights:  32%|███▏      | 141/434 [00:00<00:00, 754.38it/s]Loading weights:  56%|█████▌    | 244/434 [00:00<00:00, 869.12it/s]Loading weights:  79%|███████▉  | 345/434 [00:00<00:00, 923.01it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 887.55it/s]
+05:28:55  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:28:55  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/5 [00:00<?, ?it/s]05:28:55  INFO        ├─ Verbosity  (12 pairs)
+05:28:55  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches:  33%|███▎      | 1/3 [00:00<00:00,  5.28it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 10.57it/s][A
+                                                        [A05:28:56  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:28:56  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 1/5 [00:00<00:03,  1.29it/s]05:28:56  INFO        ├─ Formality  (12 pairs)
+05:28:56  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 21.06it/s][A
+                                                        [A05:28:56  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:28:57  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 2/5 [00:01<00:01,  1.60it/s]05:28:57  INFO        ├─ Hedging  (12 pairs)
+05:28:57  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 19.45it/s][A
+                                                        [A05:28:57  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 26.82it/s][A
+                                                        [A05:28:57  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 3/5 [00:01<00:01,  1.64it/s]05:28:57  INFO        ├─ Sentiment  (12 pairs)
+05:28:57  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 20.88it/s][A
+                                                        [A05:28:57  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.66it/s][A
+                                                        [A05:28:58  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 4/5 [00:02<00:00,  1.58it/s]05:28:58  INFO        ├─ Specificity  (12 pairs)
+05:28:58  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches:  67%|██████▋   | 2/3 [00:00<00:00, 17.17it/s][A
+                                                        [A05:28:58  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.72it/s][A
+                                                        [A05:28:59  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:03<00:00,  1.56it/s][qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:03<00:00,  1.56it/s]
+05:28:59  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:28:59  INFO      Model unloaded.
+
+05:28:59  INFO      All done.  Vectors saved under: vectors/neg8dim_12pairs_raw/control/
+
+=== [neg8dim_12pairs_matched] Extracting negotiation vectors (Fri  6 Mar 05:28:59 GMT 2026) ===
+05:29:03  INFO      Loaded 8 dimension(s): ['firmness', 'empathy', 'active_listening', 'composure', 'strategic_concession_making', 'anchoring', 'batna_awareness', 'creative_problem_solving']
+05:29:03  INFO      ============================================================
+05:29:03  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:29:03  INFO      ALIAS:  qwen2.5-3b
+05:29:03  INFO      ============================================================
+05:29:03  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:29:03  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:03  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:29:03  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:29:03  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:29:03  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:29:03  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:29:04  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:29:04  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:29:04  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:29:04  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:04  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  12%|█▏        | 53/434 [00:00<00:00, 515.35it/s]Loading weights:  37%|███▋      | 159/434 [00:00<00:00, 824.04it/s]Loading weights:  59%|█████▉    | 257/434 [00:00<00:00, 886.07it/s]Loading weights:  84%|████████▎ | 363/434 [00:00<00:00, 946.64it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 906.76it/s]
+05:29:05  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:05  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/8 [00:00<?, ?it/s]05:29:05  INFO        ├─ Firmness  (12 pairs)
+05:29:05  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches:  33%|███▎      | 1/3 [00:00<00:00,  5.30it/s][A
+                                                        [A05:29:05  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 24.88it/s][A
+                                                        [A05:29:06  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  12%|█▎        | 1/8 [00:00<00:05,  1.23it/s]05:29:06  INFO        ├─ Empathy  (12 pairs)
+05:29:06  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.20it/s][A
+                                                        [A05:29:06  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.15it/s][A
+                                                        [A05:29:06  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  25%|██▌       | 2/8 [00:01<00:04,  1.37it/s]05:29:06  INFO        ├─ Active Listening  (12 pairs)
+05:29:06  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.30it/s][A
+                                                        [A05:29:07  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.29it/s][A
+                                                        [A05:29:07  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  38%|███▊      | 3/8 [00:02<00:03,  1.33it/s]05:29:07  INFO        ├─ Composure  (12 pairs)
+05:29:07  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.25it/s][A
+                                                        [A05:29:07  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.46it/s][A
+                                                        [A05:29:08  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  50%|█████     | 4/8 [00:03<00:03,  1.30it/s]05:29:08  INFO        ├─ Strategic Concession-Making  (12 pairs)
+05:29:08  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.08it/s][A
+                                                        [A05:29:08  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.47it/s][A
+                                                        [A05:29:09  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  62%|██████▎   | 5/8 [00:03<00:02,  1.40it/s]05:29:09  INFO        ├─ Anchoring  (12 pairs)
+05:29:09  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.19it/s][A
+                                                        [A05:29:09  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.54it/s][A
+                                                        [A05:29:09  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  75%|███████▌  | 6/8 [00:04<00:01,  1.47it/s]05:29:09  INFO        ├─ BATNA Awareness  (12 pairs)
+05:29:09  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 26.97it/s][A
+                                                        [A05:29:09  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.52it/s][A
+                                                        [A05:29:10  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  88%|████████▊ | 7/8 [00:04<00:00,  1.56it/s]05:29:10  INFO        ├─ Creative Problem-Solving  (12 pairs)
+05:29:10  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.31it/s][A
+                                                        [A05:29:10  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.40it/s][A
+                                                        [A05:29:10  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 8/8 [00:05<00:00,  1.62it/s][qwen2.5-3b] dimensions: 100%|██████████| 8/8 [00:05<00:00,  1.48it/s]
+05:29:10  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:29:10  INFO      Model unloaded.
+
+05:29:10  INFO      All done.  Vectors saved under: vectors/neg8dim_12pairs_matched/negotiation/
+=== [neg8dim_12pairs_matched] Extracting control vectors (Fri  6 Mar 05:29:11 GMT 2026) ===
+05:29:15  INFO      Loaded 5 dimension(s): ['verbosity', 'formality', 'hedging', 'sentiment', 'specificity']
+05:29:15  INFO      ============================================================
+05:29:15  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:29:15  INFO      ALIAS:  qwen2.5-3b
+05:29:15  INFO      ============================================================
+05:29:15  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:29:15  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:15  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:29:15  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:15  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:29:15  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:29:15  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:29:16  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:29:16  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:29:16  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:29:16  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:29:16  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  15%|█▍        | 63/434 [00:00<00:00, 612.73it/s]Loading weights:  37%|███▋      | 160/434 [00:00<00:00, 816.90it/s]Loading weights:  61%|██████    | 263/434 [00:00<00:00, 910.97it/s]Loading weights:  84%|████████▎ | 363/434 [00:00<00:00, 945.20it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 914.41it/s]
+05:29:17  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:17  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/5 [00:00<?, ?it/s]05:29:17  INFO        ├─ Verbosity  (12 pairs)
+05:29:17  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches:  33%|███▎      | 1/3 [00:00<00:00,  5.43it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 10.73it/s][A
+                                                        [A05:29:17  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:29:18  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 1/5 [00:00<00:03,  1.32it/s]05:29:18  INFO        ├─ Formality  (12 pairs)
+05:29:18  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 29.82it/s][A
+                                                        [A05:29:18  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+                                                [A05:29:18  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 2/5 [00:01<00:02,  1.38it/s]05:29:18  INFO        ├─ Hedging  (12 pairs)
+05:29:18  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.03it/s][A
+                                                        [A05:29:18  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.16it/s][A
+                                                        [A05:29:19  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 3/5 [00:02<00:01,  1.24it/s]05:29:19  INFO        ├─ Sentiment  (12 pairs)
+05:29:19  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.18it/s][A
+                                                        [A05:29:19  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.43it/s][A
+                                                        [A05:29:20  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 4/5 [00:02<00:00,  1.37it/s]05:29:20  INFO        ├─ Specificity  (12 pairs)
+05:29:20  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 22.67it/s][A
+                                                        [A05:29:20  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/3 [00:00<?, ?it/s][A
+  batches: 100%|██████████| 3/3 [00:00<00:00, 27.24it/s][A
+                                                        [A05:29:21  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:03<00:00,  1.45it/s][qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:03<00:00,  1.39it/s]
+05:29:21  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:29:21  INFO      Model unloaded.
+
+05:29:21  INFO      All done.  Vectors saved under: vectors/neg8dim_12pairs_matched/control/
+
+=== [neg8dim_20pairs_matched] Extracting negotiation vectors (Fri  6 Mar 05:29:21 GMT 2026) ===
+05:29:25  INFO      Loaded 8 dimension(s): ['firmness', 'empathy', 'active_listening', 'composure', 'strategic_concession_making', 'anchoring', 'batna_awareness', 'creative_problem_solving']
+05:29:25  INFO      ============================================================
+05:29:25  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:29:25  INFO      ALIAS:  qwen2.5-3b
+05:29:25  INFO      ============================================================
+05:29:25  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:29:25  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:25  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:29:25  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:25  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:29:25  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:29:26  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:29:26  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:29:26  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:29:26  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:26  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  10%|▉         | 43/434 [00:00<00:00, 429.25it/s]Loading weights:  34%|███▍      | 147/434 [00:00<00:00, 780.14it/s]Loading weights:  56%|█████▋    | 245/434 [00:00<00:00, 859.64it/s]Loading weights:  81%|████████  | 351/434 [00:00<00:00, 918.60it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 888.14it/s]
+05:29:27  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:29:27  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:29:27  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/8 [00:00<?, ?it/s]05:29:27  INFO        ├─ Firmness  (20 pairs)
+05:29:27  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  20%|██        | 1/5 [00:00<00:00,  5.42it/s][A
+  batches:  80%|████████  | 4/5 [00:00<00:00, 15.44it/s][A
+                                                        [A05:29:27  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 24.99it/s][A
+                                                        [A05:29:28  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  12%|█▎        | 1/8 [00:00<00:06,  1.09it/s]05:29:28  INFO        ├─ Empathy  (20 pairs)
+05:29:28  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.20it/s][A
+                                                        [A05:29:28  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.33it/s][A
+                                                        [A05:29:29  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  25%|██▌       | 2/8 [00:01<00:04,  1.23it/s]05:29:29  INFO        ├─ Active Listening  (20 pairs)
+05:29:29  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.22it/s][A
+                                                        [A05:29:29  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.41it/s][A
+                                                        [A05:29:30  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  38%|███▊      | 3/8 [00:02<00:04,  1.12it/s]05:29:30  INFO        ├─ Composure  (20 pairs)
+05:29:30  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.32it/s][A
+                                                        [A05:29:30  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.44it/s][A
+                                                        [A05:29:30  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  50%|█████     | 4/8 [00:03<00:03,  1.15it/s]05:29:30  INFO        ├─ Strategic Concession-Making  (20 pairs)
+05:29:30  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.32it/s][A
+                                                        [A05:29:31  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.47it/s][A
+                                                        [A05:29:31  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  62%|██████▎   | 5/8 [00:04<00:02,  1.19it/s]05:29:31  INFO        ├─ Anchoring  (20 pairs)
+05:29:31  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.17it/s][A
+                                                        [A05:29:31  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.43it/s][A
+                                                        [A05:29:32  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  75%|███████▌  | 6/8 [00:04<00:01,  1.25it/s]05:29:32  INFO        ├─ BATNA Awareness  (20 pairs)
+05:29:32  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.24it/s][A
+                                                        [A05:29:32  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.44it/s][A
+                                                        [A05:29:33  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  88%|████████▊ | 7/8 [00:05<00:00,  1.26it/s]05:29:33  INFO        ├─ Creative Problem-Solving  (20 pairs)
+05:29:33  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.35it/s][A
+                                                        [A05:29:33  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.29it/s][A
+                                                        [A05:29:34  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 8/8 [00:06<00:00,  1.18it/s][qwen2.5-3b] dimensions: 100%|██████████| 8/8 [00:06<00:00,  1.19it/s]
+05:29:34  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:29:34  INFO      Model unloaded.
+
+05:29:34  INFO      All done.  Vectors saved under: vectors/neg8dim_20pairs_matched/negotiation/
+=== [neg8dim_20pairs_matched] Extracting control vectors (Fri  6 Mar 05:29:34 GMT 2026) ===
+05:29:38  INFO      Loaded 5 dimension(s): ['verbosity', 'formality', 'hedging', 'sentiment', 'specificity']
+05:29:38  INFO      ============================================================
+05:29:38  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:29:38  INFO      ALIAS:  qwen2.5-3b
+05:29:38  INFO      ============================================================
+05:29:38  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:29:38  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:38  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:29:38  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:38  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:29:38  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:29:39  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:29:39  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:29:39  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:29:39  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:39  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  12%|█▏        | 52/434 [00:00<00:00, 517.04it/s]Loading weights:  34%|███▍      | 149/434 [00:00<00:00, 776.89it/s]Loading weights:  59%|█████▉    | 255/434 [00:00<00:00, 903.49it/s]Loading weights:  81%|████████  | 352/434 [00:00<00:00, 927.38it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 902.19it/s]
+05:29:40  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:40  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/5 [00:00<?, ?it/s]05:29:40  INFO        ├─ Verbosity  (20 pairs)
+05:29:40  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  20%|██        | 1/5 [00:00<00:00,  5.42it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 10.73it/s][A
+  batches: 100%|██████████| 5/5 [00:00<00:00, 12.72it/s][A
+                                                        [A05:29:40  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  80%|████████  | 4/5 [00:00<00:00, 38.42it/s][A
+                                                        [A05:29:41  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 1/5 [00:01<00:04,  1.14s/it]05:29:41  INFO        ├─ Formality  (20 pairs)
+05:29:41  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 29.80it/s][A
+                                                        [A05:29:41  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  80%|████████  | 4/5 [00:00<00:00, 29.42it/s][A
+                                                        [A05:29:42  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 2/5 [00:01<00:02,  1.09it/s]05:29:42  INFO        ├─ Hedging  (20 pairs)
+05:29:42  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 26.94it/s][A
+                                                        [A05:29:42  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.19it/s][A
+                                                        [A05:29:43  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 3/5 [00:02<00:01,  1.06it/s]05:29:43  INFO        ├─ Sentiment  (20 pairs)
+05:29:43  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.24it/s][A
+                                                        [A05:29:43  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.51it/s][A
+                                                        [A05:29:44  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 4/5 [00:03<00:00,  1.03it/s]05:29:44  INFO        ├─ Specificity  (20 pairs)
+05:29:44  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 22.71it/s][A
+                                                        [A05:29:44  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/5 [00:00<?, ?it/s][A
+  batches:  60%|██████    | 3/5 [00:00<00:00, 27.31it/s][A
+                                                        [A05:29:45  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:04<00:00,  1.07it/s][qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:04<00:00,  1.05it/s]
+05:29:45  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:29:45  INFO      Model unloaded.
+
+05:29:45  INFO      All done.  Vectors saved under: vectors/neg8dim_20pairs_matched/control/
+
+=== [neg8dim_80pairs_matched] Extracting negotiation vectors (Fri  6 Mar 05:29:45 GMT 2026) ===
+05:29:50  INFO      Loaded 8 dimension(s): ['firmness', 'empathy', 'active_listening', 'composure', 'strategic_concession_making', 'anchoring', 'batna_awareness', 'creative_problem_solving']
+05:29:50  INFO      ============================================================
+05:29:50  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:29:50  INFO      ALIAS:  qwen2.5-3b
+05:29:50  INFO      ============================================================
+05:29:50  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:29:51  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:51  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:29:51  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:51  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:29:51  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:29:51  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:29:51  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:29:51  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:29:51  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:51  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  12%|█▏        | 51/434 [00:00<00:00, 506.39it/s]Loading weights:  34%|███▍      | 148/434 [00:00<00:00, 776.93it/s]Loading weights:  57%|█████▋    | 249/434 [00:00<00:00, 881.06it/s]Loading weights:  81%|████████  | 351/434 [00:00<00:00, 918.48it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 895.11it/s]
+05:29:52  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:29:52  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/8 [00:00<?, ?it/s]05:29:52  INFO        ├─ Firmness  (80 pairs)
+05:29:52  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:   5%|▌         | 1/20 [00:00<00:03,  5.75it/s][A
+  batches:  20%|██        | 4/20 [00:00<00:01, 15.89it/s][A
+  batches:  35%|███▌      | 7/20 [00:00<00:00, 20.36it/s][A
+  batches:  50%|█████     | 10/20 [00:00<00:00, 22.77it/s][A
+  batches:  65%|██████▌   | 13/20 [00:00<00:00, 23.46it/s][A
+  batches:  80%|████████  | 16/20 [00:00<00:00, 23.25it/s][A
+  batches:  95%|█████████▌| 19/20 [00:00<00:00, 24.42it/s][A
+                                                          [A05:29:53  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.05it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.16it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.17it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.17it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.33it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.67it/s][A
+                                                          [A05:29:55  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  12%|█▎        | 1/8 [00:02<00:17,  2.45s/it]05:29:55  INFO        ├─ Empathy  (80 pairs)
+05:29:55  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.12it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 25.79it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 26.49it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.70it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.96it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.23it/s][A
+                                                          [A05:29:56  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.13it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.18it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.23it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.24it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.30it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.31it/s][A
+                                                          [A05:29:57  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  25%|██▌       | 2/8 [00:04<00:13,  2.27s/it]05:29:57  INFO        ├─ Active Listening  (80 pairs)
+05:29:57  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 24.60it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 24.73it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 24.77it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 24.72it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 24.77it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 24.12it/s][A
+                                                          [A05:29:58  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 24.86it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 26.19it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 26.60it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.79it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.11it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 24.97it/s][A
+                                                          [A05:29:59  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  38%|███▊      | 3/8 [00:06<00:11,  2.31s/it]05:29:59  INFO        ├─ Composure  (80 pairs)
+05:29:59  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.05it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.14it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.04it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.09it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.45it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.64it/s][A
+                                                          [A05:30:00  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.18it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 25.73it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 26.27it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.58it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.74it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.86it/s][A
+                                                          [A05:30:02  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  50%|█████     | 4/8 [00:09<00:09,  2.30s/it]05:30:02  INFO        ├─ Strategic Concession-Making  (80 pairs)
+05:30:02  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.21it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.34it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.30it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.25it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.24it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.15it/s][A
+                                                          [A05:30:02  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.32it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.38it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.39it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.35it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.35it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.33it/s][A
+                                                          [A05:30:04  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  62%|██████▎   | 5/8 [00:11<00:06,  2.27s/it]05:30:04  INFO        ├─ Anchoring  (80 pairs)
+05:30:04  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 26.84it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 26.97it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.00it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.99it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.02it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.02it/s][A
+                                                          [A05:30:05  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.23it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.29it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.36it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.39it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.40it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.38it/s][A
+                                                          [A05:30:06  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  75%|███████▌  | 6/8 [00:13<00:04,  2.22s/it]05:30:06  INFO        ├─ BATNA Awareness  (80 pairs)
+05:30:06  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 24.73it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 26.13it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 26.55it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.75it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.82it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.92it/s][A
+                                                          [A05:30:07  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.15it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 25.84it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 25.45it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 26.15it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.51it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.72it/s][A
+                                                          [A05:30:08  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  88%|████████▊ | 7/8 [00:15<00:02,  2.18s/it]05:30:08  INFO        ├─ Creative Problem-Solving  (80 pairs)
+05:30:08  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.07it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.04it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.18it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.21it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.33it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.64it/s][A
+                                                          [A05:30:09  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.19it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 25.84it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 26.49it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 25.88it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 25.54it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 26.10it/s][A
+                                                          [A05:30:10  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 8/8 [00:17<00:00,  2.19s/it][qwen2.5-3b] dimensions: 100%|██████████| 8/8 [00:17<00:00,  2.24s/it]
+05:30:10  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:30:10  INFO      Model unloaded.
+
+05:30:10  INFO      All done.  Vectors saved under: vectors/neg8dim_80pairs_matched/negotiation/
+=== [neg8dim_80pairs_matched] Extracting control vectors (Fri  6 Mar 05:30:11 GMT 2026) ===
+05:30:15  INFO      Loaded 5 dimension(s): ['verbosity', 'formality', 'hedging', 'sentiment', 'specificity']
+05:30:15  INFO      ============================================================
+05:30:15  INFO      MODEL:  Qwen/Qwen2.5-3B-Instruct
+05:30:15  INFO      ALIAS:  qwen2.5-3b
+05:30:15  INFO      ============================================================
+05:30:15  INFO      Loading tokenizer  →  Qwen/Qwen2.5-3B-Instruct
+05:30:15  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+05:30:15  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+05:30:15  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+05:30:15  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+05:30:15  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+05:30:15  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+05:30:15  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+05:30:15  INFO      Loading model  →  Qwen/Qwen2.5-3B-Instruct
+05:30:16  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:30:16  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+05:30:16  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:  15%|█▍        | 63/434 [00:00<00:00, 615.19it/s]Loading weights:  37%|███▋      | 159/434 [00:00<00:00, 794.76it/s]Loading weights:  62%|██████▏   | 267/434 [00:00<00:00, 918.27it/s]Loading weights:  84%|████████▍ | 365/434 [00:00<00:00, 931.18it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 915.11it/s]
+05:30:17  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+05:30:17  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+[qwen2.5-3b] dimensions:   0%|          | 0/5 [00:00<?, ?it/s]05:30:17  INFO        ├─ Verbosity  (80 pairs)
+05:30:17  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:   5%|▌         | 1/20 [00:00<00:03,  5.25it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:01, 10.55it/s][A
+  batches:  25%|██▌       | 5/20 [00:00<00:01, 12.61it/s][A
+  batches:  35%|███▌      | 7/20 [00:00<00:00, 14.01it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 14.63it/s][A
+  batches:  55%|█████▌    | 11/20 [00:00<00:00, 14.67it/s][A
+  batches:  65%|██████▌   | 13/20 [00:00<00:00, 14.72it/s][A
+  batches:  75%|███████▌  | 15/20 [00:01<00:00, 14.70it/s][A
+  batches:  85%|████████▌ | 17/20 [00:01<00:00, 14.70it/s][A
+  batches:  95%|█████████▌| 19/20 [00:01<00:00, 14.74it/s][A
+                                                          [A05:30:18  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  20%|██        | 4/20 [00:00<00:00, 38.44it/s][A
+  batches:  40%|████      | 8/20 [00:00<00:00, 37.66it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 37.49it/s][A
+  batches:  80%|████████  | 16/20 [00:00<00:00, 37.32it/s][A
+  batches: 100%|██████████| 20/20 [00:00<00:00, 37.23it/s][A
+                                                          [A05:30:19  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  20%|██        | 1/5 [00:02<00:10,  2.73s/it]05:30:19  INFO        ├─ Formality  (80 pairs)
+05:30:19  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 29.77it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 28.42it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.99it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.78it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.67it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.59it/s][A
+                                                          [A05:30:20  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  20%|██        | 4/20 [00:00<00:00, 29.43it/s][A
+  batches:  35%|███▌      | 7/20 [00:00<00:00, 28.41it/s][A
+  batches:  50%|█████     | 10/20 [00:00<00:00, 28.03it/s][A
+  batches:  65%|██████▌   | 13/20 [00:00<00:00, 27.86it/s][A
+  batches:  80%|████████  | 16/20 [00:00<00:00, 27.70it/s][A
+  batches:  95%|█████████▌| 19/20 [00:00<00:00, 27.62it/s][A
+                                                          [A05:30:22  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  40%|████      | 2/5 [00:04<00:07,  2.44s/it]05:30:22  INFO        ├─ Hedging  (80 pairs)
+05:30:22  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 26.98it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.14it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.15it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.11it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.09it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.12it/s][A
+                                                          [A05:30:22  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.28it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.27it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.26it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.23it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.30it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 25.78it/s][A
+                                                          [A05:30:24  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  60%|██████    | 3/5 [00:07<00:04,  2.35s/it]05:30:24  INFO        ├─ Sentiment  (80 pairs)
+05:30:24  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.28it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.20it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.21it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.21it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.23it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.23it/s][A
+                                                          [A05:30:25  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.49it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.46it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.44it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.33it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 27.29it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 27.30it/s][A
+                                                          [A05:30:26  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions:  80%|████████  | 4/5 [00:09<00:02,  2.27s/it]05:30:26  INFO        ├─ Specificity  (80 pairs)
+05:30:26  INFO        │    extracting positive activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 22.80it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 21.77it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 21.38it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 21.20it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 20.61it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 20.72it/s][A
+                                                          [A05:30:27  INFO        │    extracting negative activations …
+
+  batches:   0%|          | 0/20 [00:00<?, ?it/s][A
+  batches:  15%|█▌        | 3/20 [00:00<00:00, 27.33it/s][A
+  batches:  30%|███       | 6/20 [00:00<00:00, 27.28it/s][A
+  batches:  45%|████▌     | 9/20 [00:00<00:00, 27.22it/s][A
+  batches:  60%|██████    | 12/20 [00:00<00:00, 27.11it/s][A
+  batches:  75%|███████▌  | 15/20 [00:00<00:00, 26.23it/s][A
+  batches:  90%|█████████ | 18/20 [00:00<00:00, 25.75it/s][A
+                                                          [A05:30:28  INFO        │    saved  mean_diff + pca  →  qwen2.5-3b/
+[qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:11<00:00,  2.30s/it][qwen2.5-3b] dimensions: 100%|██████████| 5/5 [00:11<00:00,  2.34s/it]
+05:30:28  INFO        └─ metadata saved  →  qwen2.5-3b/metadata.json
+05:30:28  INFO      Model unloaded.
+
+05:30:28  INFO      All done.  Vectors saved under: vectors/neg8dim_80pairs_matched/control/
+
+==========================================
+Extraction complete at Fri  6 Mar 05:30:29 GMT 2026
+==========================================
+
+=== [neg15dim_12pairs_raw] Validating (Fri  6 Mar 05:30:29 GMT 2026) ===
+usage: validate_vectors.py [-h]
+                           [--model {qwen2.5-3b,qwen2.5-7b,qwen2.5-1.5b,llama3-8b,llama3-3b,gemma2-9b,gemma2-2b,mistral-7b}]
+                           (--full | --analyze-only)
+                           [--dimensions DIMENSIONS [DIMENSIONS ...]]
+                           [--negotiation_pairs NEGOTIATION_PAIRS]
+                           [--control_pairs CONTROL_PAIRS]
+                           [--probe_dir PROBE_DIR] [--vectors_dir VECTORS_DIR]
+                           [--output_dir OUTPUT_DIR] [--batch_size BATCH_SIZE]
+                           [--n_permutations N_PERMUTATIONS] [--seed SEED]
+validate_vectors.py: error: one of the arguments --full --analyze-only is required

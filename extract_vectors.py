@@ -605,7 +605,7 @@ def main() -> None:
     )
 
     output_dir = Path(args.output_dir)
-    output_dir.mkdir(exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     for model_key in args.models:
         cfg = MODELS[model_key]
