@@ -56,6 +56,7 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - **`run_extraction.sh`** — Extracts negotiation + control vectors for all 8 steering pair variants. Logs to `extraction_log.txt`.
 - **`run_validation.sh`** — Runs `--full` validation for all 8 variants. Logs to `validation_log.txt`.
 - **`run_all_extraction.sh`** — Calls `run_extraction.sh` then `run_validation.sh`.
+- **`orthogonal_projection.py`** — Projects out control dimensions from negotiation vectors, measures residual norms and re-runs 1-D probes. Two phases: Phase 1 (CPU, `--all-variants`) computes residual norms and cosine changes; Phase 2 (`--probe`, GPU) loads model, extracts hidden states, compares 1-D probe accuracy before/after projection. Results in `results/projection/`.
 - **`probe_vectors.py`** — Logistic regression probes per layer + control dimensions (verbosity, formality, hedging, sentiment, specificity). Tests whether vectors encode concepts or surface patterns. Includes Cohen's d bias check.
 - **`apply_steering.py`** — Imports `MODELS` and `HF_TOKEN` from `extract_vectors.py`. Loads direction vectors from disk, registers `SteeringHook` forward hooks on transformer layers (`h + alpha * direction`), runs two LLM agents (steered vs baseline) through CraigslistBargains negotiations. Scores deals by how close the agreed price is to each side's private target.
 - **`fast_search_steering.py`** — Imports from both `extract_vectors` and `apply_steering`. Three-stage search: S1 exhaustive grid over categoricals, S2 TPE (Optuna) over alpha, S3 validation. Stores S2 trials in SQLite.
@@ -100,9 +101,18 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - **Length matching is the only effective intervention:** raw→matched = +10-13 points, 75-80% reduction in flat-high probes.
 - **Pair scaling hurts:** 12→20→80 pairs worsens scores (33→28→26 for 8dim). More pairs amplifies surface confounds; per-pair alignment degrades (empathy: 0.464→0.343 at 80 pairs with 30/80 outliers). Contradicts naive extrapolation from Chalnev et al. (2025).
 - **Dimension merging helps modestly:** 15→8 dims improves best score from 26→33 by reducing concept overlap.
-- **All negotiation×control Cohen's d pairs are SEVERE** in every variant. Smoking gun: `cos(firmness, hedging) = -0.703` — "be firm" ≈ "don't hedge" in embedding space.
+- **All negotiation×control Cohen's d pairs are SEVERE** in every variant. `cos(firmness, hedging) = -0.703`. But see orthogonal projection results below.
 - **No variant has recommended layers** (criteria: acc≥0.85 AND |d|≤0.8) except active_listening at 4 layers in neg8dim_80pairs.
 - **Selectivity metric is flawed:** penalty term caps at 0.5, so near-perfect probe accuracy at 80 pairs inflates selectivity even though vectors are more confounded.
+
+**Orthogonal projection findings (`orthogonal_projection.py`, `results/projection/`):**
+- **Cohen's d overstates contamination.** After projecting out all 5 control dimensions from negotiation vectors and re-running 1-D probes, average accuracy drops only 2.4% (0.843→0.820). 7/8 dimensions retain signal; 2 dimensions actually improve.
+- **Result is robust across all 8 variants.** 84/92 dimension×variant tests are GENUINE (91%), 12 PARTIAL SURFACE, 6 IMPROVED. Average drop ranges 1.1-3.7% across variants.
+- **Firmness retains 96.6% of its probe accuracy** despite cos=-0.703 with hedging. The surface overlap was real but irrelevant to the separation signal.
+- **Empathy has the largest surface dependence** (6.9% drop, 0.807→0.737), consistent with its sentiment overlap. Still well above chance.
+- **clarity_and_directness is the only consistently surface-dependent dimension** (6.3% mean drop, PARTIAL in 3/4 variants). Its meaning genuinely overlaps with hedging and specificity.
+- **batna_awareness and reframing are the purest concepts** — cleaning has no effect or improves accuracy across all variants.
+- **Interpretation:** The data (pairs) is confounded in surface features, but the extracted steering directions are mostly genuine — they capture conceptual variance beyond surface features. Cohen's d detects data confounds, not direction confounds.
 
 ---
 
