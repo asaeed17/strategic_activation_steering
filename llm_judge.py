@@ -213,10 +213,48 @@ def call_llama(
         return None
 
 
+def call_ollama(
+    user_prompt: str, system_prompt: str, **_kwargs,
+) -> Optional[str]:
+    """Call a local Ollama model as judge. Set OLLAMA_MODEL to override
+    the default model (default: llama3.1:8b).
+    Requires: ollama running locally (``ollama serve``)."""
+    import urllib.request
+    import urllib.error
+
+    model = os.environ.get("OLLAMA_MODEL", "llama3.1:8b")
+    base_url = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+
+    payload = json.dumps({
+        "model": model,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+        "stream": False,
+        "format": "json",
+        "options": {"temperature": 0.3},
+    }).encode("utf-8")
+
+    req = urllib.request.Request(
+        f"{base_url}/api/chat",
+        data=payload,
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        return data.get("message", {}).get("content")
+    except (urllib.error.URLError, Exception) as e:
+        print(f"    [ERROR] Ollama call failed: {e}")
+        return None
+
+
 JUDGE_FNS = {
     "gemini": call_gemini,
     "gpt":    call_gpt,
     "llama":  call_llama,
+    "ollama": call_ollama,
 }
 
 
@@ -518,7 +556,7 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--judges", nargs="+", default=["gemini"],
-        choices=["gemini", "gpt", "llama"],
+        choices=["gemini", "gpt", "llama", "ollama"],
         help="Which judges to run (default: gemini)",
     )
     p.add_argument(
@@ -557,10 +595,11 @@ def main() -> None:
         "gemini": ("GEMINI_API_KEY", "GOOGLE_API_KEY"),
         "gpt":    ("OPENAI_API_KEY",),
         "llama":  ("GROQ_API_KEY",),
+        "ollama": (),  # local, no API key needed
     }
     for j in args.judges:
         keys = key_env[j]
-        if not any(os.environ.get(k) for k in keys):
+        if keys and not any(os.environ.get(k) for k in keys):
             print(
                 f"[ERROR] No API key for '{j}'. "
                 f"Set one of: {', '.join(keys)}"
