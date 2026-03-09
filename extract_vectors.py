@@ -524,6 +524,15 @@ def parse_args() -> argparse.Namespace:
         help="Path to the contrastive pairs JSON (default: negotiation_steering_pairs.json)",
     )
     p.add_argument(
+        "--pairs_dir",
+        default=None,
+        help=(
+            "Directory containing subdirectories, each with a negotiation_steering_pairs.json. "
+            "Overrides --pairs_file. Vectors are saved to output_dir/{variant_name}/. "
+            "E.g.: --pairs_dir steering_pairs"
+        ),
+    )
+    p.add_argument(
         "--output_dir",
         default="vectors",
         help="Root directory for saved vectors (default: vectors/)",
@@ -581,28 +590,74 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
-    pairs_path = Path(args.pairs_file)
-    if not pairs_path.exists():
-        log.error("Pairs file not found: %s", pairs_path)
-        return
+    # Build list of (pairs_path, output_dir) jobs
+    jobs = []
+    if args.pairs_dir:
+        pairs_dir = Path(args.pairs_dir)
+        if not pairs_dir.is_dir():
+            log.error("--pairs_dir is not a directory: %s", pairs_dir)
+            return
+        for variant_dir in sorted(pairs_dir.iterdir()):
+            if not variant_dir.is_dir():
+                continue
+            pairs_file = variant_dir / "negotiation_steering_pairs.json"
+            if not pairs_file.exists():
+                log.warning("No negotiation_steering_pairs.json in %s — skipping", variant_dir.name)
+                continue
+            out_dir = Path(args.output_dir) / variant_dir.name
+            jobs.append((pairs_file, out_dir, variant_dir.name))
+        if not jobs:
+            log.error("No valid variants found in %s", pairs_dir)
+            return
+        log.info("Found %d variants: %s", len(jobs), [j[2] for j in jobs])
+    else:
+        pairs_path = Path(args.pairs_file)
+        if not pairs_path.exists():
+            log.error("Pairs file not found: %s", pairs_path)
+            return
+        jobs.append((pairs_path, Path(args.output_dir), None))
 
-    with open(pairs_path) as f:
-        data = json.load(f)
+    for pairs_path, output_dir, variant_name in jobs:
+        if variant_name:
+            log.info("=" * 60)
+            log.info("VARIANT: %s", variant_name)
+            log.info("=" * 60)
 
-    dimensions = data["dimensions"]
+        with open(pairs_path) as f:
+            data = json.load(f)
 
-    if args.dimensions:
-        requested  = set(args.dimensions)
-        dimensions = [d for d in dimensions if d["id"] in requested]
-        missing    = requested - {d["id"] for d in dimensions}
-        if missing:
-            log.warning("Unknown dimension IDs (skipping): %s", missing)
+        dimensions = data["dimensions"]
 
-    log.info(
-        "Loaded %d dimension(s): %s",
-        len(dimensions),
-        [d["id"] for d in dimensions],
-    )
+        if args.dimensions:
+            requested  = set(args.dimensions)
+            dimensions = [d for d in dimensions if d["id"] in requested]
+            missing    = requested - {d["id"] for d in dimensions}
+            if missing:
+                log.warning("Unknown dimension IDs (skipping): %s", missing)
+
+        log.info(
+            "Loaded %d dimension(s): %s",
+            len(dimensions),
+            [d["id"] for d in dimensions],
+        )
+
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        for model_key in args.models:
+            cfg = MODELS[model_key]
+            log.info("=" * 60)
+            log.info("MODEL:  %s", cfg.hf_id)
+            log.info("ALIAS:  %s", cfg.alias)
+            log.info("=" * 60)
+
+            extract_for_model(
+                config=cfg,
+                dimensions=dimensions,
+                output_dir=output_dir,
+                batch_size=args.batch_size,
+                use_quantization=args.quantize,
+                target_layers=args.layers,
+            )
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -622,13 +677,14 @@ def main() -> None:
             use_quantization=args.quantize,
             target_layers=args.layers,
         )
+            if args.sim_matrix:
+                model_dir = output_dir / cfg.alias
+                for method in ("mean_diff", "pca"):
+                    print_similarity_matrix(model_dir, method, args.sim_layer)
 
-        if args.sim_matrix:
-            model_dir = output_dir / cfg.alias
-            for method in ("mean_diff", "pca"):
-                print_similarity_matrix(model_dir, method, args.sim_layer)
+        log.info("Vectors saved under: %s/", output_dir)
 
-    log.info("All done.  Vectors saved under: %s/", output_dir)
+    log.info("All done.")
 
 
 if __name__ == "__main__":
