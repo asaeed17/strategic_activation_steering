@@ -64,7 +64,7 @@ import logging
 import argparse
 from pathlib import Path
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import numpy as np
 
@@ -375,6 +375,7 @@ def permutation_test_per_layer(
 def compute_cosine_similarity_matrix(
     vectors: Dict[str, np.ndarray],   # dim_id → (n_layers, H)
     layers: Optional[List[int]] = None,
+    control_ids: Optional[Set[str]] = None,
 ) -> Dict[int, Dict]:
     """
     At each requested layer, compute the pairwise cosine similarity
@@ -407,12 +408,8 @@ def compute_cosine_similarity_matrix(
 
         # Flag pairs with |cosine| > 0.5 (cross-category only)
         warnings = []
-        neg_dims = {"firmness", "empathy", "active_listening", "assertiveness",
-                    "interest_based_reasoning", "emotional_regulation",
-                    "strategic_concession_making", "anchoring", "rapport_building",
-                    "batna_awareness", "reframing", "patience", "value_creation",
-                    "information_gathering", "clarity_and_directness"}
-        con_dims = {"verbosity", "formality"}
+        con_dims = control_ids if control_ids else set()
+        neg_dims = set(names) - con_dims
         for i, ni in enumerate(names):
             for j, nj in enumerate(names):
                 if j <= i:
@@ -438,6 +435,7 @@ def compute_cosine_from_files(
     vectors_dir: Path,
     method: str = "mean_diff",
     layers: Optional[List[int]] = None,
+    control_ids: Optional[Set[str]] = None,
 ) -> Dict:
     """Load _all_layers.npy files from a model's vectors dir and compute
     pairwise cosine.  Works in analyse-only mode when vectors/ exists."""
@@ -453,7 +451,7 @@ def compute_cosine_from_files(
     if not vectors:
         return {"note": "no _all_layers.npy files found"}
 
-    return compute_cosine_similarity_matrix(vectors, layers)
+    return compute_cosine_similarity_matrix(vectors, layers, control_ids=control_ids)
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -1964,7 +1962,7 @@ def generate_report(res: Dict) -> str:
         if source in res:
             all_dims_set.update(res[source].keys())
     # Filter to negotiation-only (exclude control dims from traffic light)
-    con_ids = {"verbosity", "formality"}
+    con_ids = set(res.get("control_dim_ids", []))
     neg_dims_set = all_dims_set - con_ids
 
     for dim_id in sorted(neg_dims_set):
@@ -2229,6 +2227,7 @@ def run_analyze_only(args) -> Dict:
         "model":     alias,
         "mode":      "analyze-only",
         "timestamp": datetime.now().isoformat(),
+        "control_dim_ids": [d["id"] for d in con_data["dimensions"]],
     }
 
     # ── Check 1: length confound ─────────────────────────────────────
@@ -2278,7 +2277,8 @@ def run_analyze_only(args) -> Dict:
         n_layers = len(next(iter(neg_accs.values()))) if neg_accs else 36
         sample_layers = [n_layers // 4, n_layers // 2, 3 * n_layers // 4]
         results["cosine_similarity"] = compute_cosine_from_files(
-            vectors_dir, layers=sample_layers
+            vectors_dir, layers=sample_layers,
+            control_ids={d["id"] for d in con_data["dimensions"]}
         )
 
         # CHECK 8: Vector norm profile
@@ -2570,11 +2570,13 @@ def run_full_validation(args) -> Dict:
         return {}
 
     all_dims_combined = target_neg + all_con_dims
+    con_dim_ids = [d["id"] for d in all_con_dims]
 
     results: Dict[str, Any] = {
         "model":     cfg.alias,
         "mode":      "full",
         "timestamp": datetime.now().isoformat(),
+        "control_dim_ids": [d["id"] for d in all_con_dims],
     }
 
     # ── Check 1: length confound (no model needed) ───────────────────
@@ -2634,7 +2636,7 @@ def run_full_validation(args) -> Dict:
             ))
         accs_arr = np.array(accs)
 
-        section = "control" if dim_id in ("verbosity", "formality") else "negotiation"
+        section = "control" if dim_id in con_dim_ids else "negotiation"
         min_acc = float(accs_arr.min())
         max_acc = float(accs_arr.max())
         mean_acc = float(accs_arr.mean())
@@ -2672,7 +2674,8 @@ def run_full_validation(args) -> Dict:
     log.info("Check 3: Cosine similarity matrix")
     sample_layers = [n_layers // 4, n_layers // 2, 3 * n_layers // 4]
     results["cosine_similarity"] = compute_cosine_similarity_matrix(
-        steering_vecs, layers=sample_layers
+        steering_vecs, layers=sample_layers,
+        control_ids={d["id"] for d in all_con_dims}
     )
 
     # ── Check 4: Cohen's d bias ──────────────────────────────────────

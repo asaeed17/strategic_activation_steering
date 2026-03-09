@@ -9,13 +9,24 @@ COMP0087 Statistical NLP group project (UCL, due 2026-04-17). Activation steerin
 ## Commands
 
 ```bash
-# Step 1: Extract steering vectors (must run before apply_steering)
-python extract_vectors.py --models qwen2.5-3b
-python extract_vectors.py --models qwen2.5-7b --dimensions firmness empathy --quantize
+# Step 1: Extract steering vectors for all 8 variants (negotiation + control)
+bash run_extraction.sh          # logs to extraction_log.txt
+# Or for a single variant:
+python extract_vectors.py --models qwen2.5-3b \
+    --pairs_file steering_pairs/neg8dim_12pairs_matched/negotiation_steering_pairs.json \
+    --output_dir vectors/neg8dim_12pairs_matched/negotiation
 
-# Step 1.5: Validate vectors (recommended before using in games)
-python validate_vectors.py --model qwen2.5-3b --pairs_file negotiation_steering_pairs.json \
-    --vectors_dir vectors_gpu --layers 8 12 16 20 24 --output_dir results/validation
+# Step 1.5: Validate vectors (requires GPU, --full re-extracts activations)
+bash run_validation.sh          # logs to validation_log.txt
+# Or for a single variant:
+python validate_vectors.py --model qwen2.5-3b --full \
+    --negotiation_pairs steering_pairs/neg8dim_12pairs_matched/negotiation_steering_pairs.json \
+    --control_pairs steering_pairs/neg8dim_12pairs_matched/control_steering_pairs.json \
+    --vectors_dir vectors/neg8dim_12pairs_matched/negotiation \
+    --output_dir results/validation/neg8dim_12pairs_matched
+
+# Steps 1+1.5 combined:
+bash run_all_extraction.sh      # runs extraction then validation
 
 # Step 2: Run negotiation games with steering
 python apply_steering.py --model qwen2.5-3b --dimension strategic_concession_making --alpha 6 --layers 18 --use_craigslist --num_samples 50 --output_file results.json
@@ -41,23 +52,35 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 **Pipeline:** `steering_pairs/{variant}/negotiation_steering_pairs.json` → `extract_vectors.py` → `vectors/` → `apply_steering.py` → `results.json`
 
 - **`extract_vectors.py`** — Loads a model, runs contrastive pairs through it, extracts last-token hidden states at every layer, computes direction vectors via mean difference or PCA. Outputs `.npy` files to `vectors/{model_alias}/{method}/`. Imports nothing from other project files.
-- **`validate_vectors.py`** — Validates vectors before use. Three checks: PCA separation (silhouette + SVM), split-half stability (cosine between subsets), cross-dimension similarity (flags collapsed dimensions). Only dimensions passing all three should be used.
-- **`probe_vectors.py`** — Logistic regression probes per layer + control dimensions (verbosity, formality, hedging, sentiment). Tests whether vectors encode concepts or surface patterns. Includes Cohen's d bias check.
+- **`validate_vectors.py`** — Validates vectors before use. Two modes: `--full` (requires GPU, re-extracts activations, runs Checks 1-7) and `--analyze-only` (CPU-only, reads vectors from disk, runs Checks 1, 1b, 8-12). Key checks: (1) length confound Cohen's d, (1b) vocabulary overlap Jaccard, (2) probe accuracy + permutation test, (3) cosine similarity between steering directions, (4) Cohen's d bias against all 5 control dimensions, (5) per-pair alignment consistency, (6) 1-D steering-direction probe, (7) selectivity + layer recommendations. Control dimension IDs are derived from the control pairs JSON (not hardcoded). Outputs `validation_results.json`, `validation_report.txt`, and per-dimension selectivity plots.
+- **`run_extraction.sh`** — Extracts negotiation + control vectors for all 8 steering pair variants. Logs to `extraction_log.txt`.
+- **`run_validation.sh`** — Runs `--full` validation for all 8 variants. Logs to `validation_log.txt`.
+- **`run_all_extraction.sh`** — Calls `run_extraction.sh` then `run_validation.sh`.
+- **`orthogonal_projection.py`** — Projects out control dimensions from negotiation vectors, measures residual norms and re-runs 1-D probes. Two phases: Phase 1 (CPU, `--all-variants`) computes residual norms and cosine changes; Phase 2 (`--probe`, GPU) loads model, extracts hidden states, compares 1-D probe accuracy before/after projection. Results in `results/projection/`.
+- **`probe_vectors.py`** — Logistic regression probes per layer + control dimensions (verbosity, formality, hedging, sentiment, specificity). Tests whether vectors encode concepts or surface patterns. Includes Cohen's d bias check.
 - **`apply_steering.py`** — Imports `MODELS` and `HF_TOKEN` from `extract_vectors.py`. Loads direction vectors from disk, registers `SteeringHook` forward hooks on transformer layers (`h + alpha * direction`), runs two LLM agents (steered vs baseline) through CraigslistBargains negotiations. Scores deals by how close the agreed price is to each side's private target.
 - **`fast_search_steering.py`** — Imports from both `extract_vectors` and `apply_steering`. Three-stage search: S1 exhaustive grid over categoricals, S2 TPE (Optuna) over alpha, S3 validation. Stores S2 trials in SQLite.
 - **`llm_judge.py`** — Multi-model LLM judge (Gemini/GPT/LLaMA). Rates 6 qualitative dimensions with blind presentation, position counterbalancing, and anti-verbosity calibration.
 - **`deal_or_no_deal.py`** — Deal or No Deal game loop for cross-dataset validation. Tests whether steering vectors generalize to multi-issue negotiation.
 - **`analysis/run_eval.py`** — GPU evaluation suite. Runs all experiments (G1-G5) in a single model load with incremental saves. Runs locally; also works headless via nohup on remote instances.
 - **`analysis/analyse_eval.py`** — Post-GPU statistical analysis. Paired comparisons, clamping analysis, role separation.
-- **`steering_pairs/`** — Six ablation variants of contrastive pairs, each containing `negotiation_steering_pairs.json` + `control_steering_pairs.json`:
-  - `15dim_12pairs_raw` — Original 15 dimensions, 12 pairs each (180 total), unmatched lengths. Known surface biases (1.8x length, 3.6x hedge clustering).
-  - `15dim_12pairs_matched` — Same 15 dims, 12 pairs, length-matched (pos/neg within ±30% word count, avg ratio 1.07).
-  - `15dim_20pairs_matched` — Same 15 dims, 20 pairs each (300 total), length-matched.
-  - `reduced_12pairs_raw` — 8 merged dimensions, 12 pairs each (96 total), unmatched lengths.
-  - `reduced_12pairs_matched` — 8 merged dims, 12 pairs, length-matched.
-  - `reduced_20pairs_matched` — 8 merged dims, 20 pairs each (160 total), length-matched.
-  - **Reduced dimensions** merge overlapping concepts: firmness+assertiveness+clarity→Firmness, empathy+rapport→Empathy, active_listening+info_gathering→Active Listening, emotional_regulation+patience→Composure, interest_based+value_creation+reframing→Creative Problem-Solving. Standalone: Strategic Concession-Making, Anchoring, BATNA Awareness.
-- **`control_steering_pairs.json`** — 24 control pairs across 4 dimensions (verbosity, formality, hedging, sentiment) for detecting surface confounds. Formality/hedging/sentiment are length-matched; verbosity intentionally unmatched. Hedging targets the 3.6x hedge clustering bias; sentiment targets warm-vs-cold tone confounds in empathy/rapport vectors.
+- **`steering_pairs/`** — Eight ablation variants of contrastive pairs, each containing `negotiation_steering_pairs.json` + `control_steering_pairs.json`. Directory naming: `neg{N}dim_{K}pairs_{matching}` where `neg{N}dim` = negotiation dimension count, `{K}pairs` = pairs per dimension (both negotiation and control), `{matching}` = length-matching policy (both negotiation and control).
+  - `neg15dim_12pairs_raw` — 15 negotiation dims, 12 pairs each (180 total), unmatched lengths. Known surface biases (1.8x length, 3.6x hedge clustering).
+  - `neg15dim_12pairs_matched` — 15 negotiation dims, 12 pairs, length-matched (pos/neg within ±30% word count, avg ratio 1.07).
+  - `neg15dim_20pairs_matched` — 15 negotiation dims, 20 pairs each (300 total), length-matched.
+  - `neg15dim_80pairs_matched` — 15 negotiation dims, 80 pairs each (1200 total), length-matched. Motivated by Chalnev et al. (2025) finding that steering vectors plateau at ~80 samples.
+  - `neg8dim_12pairs_raw` — 8 merged negotiation dims, 12 pairs each (96 total), unmatched lengths.
+  - `neg8dim_12pairs_matched` — 8 merged negotiation dims, 12 pairs, length-matched.
+  - `neg8dim_20pairs_matched` — 8 merged negotiation dims, 20 pairs each (160 total), length-matched.
+  - `neg8dim_80pairs_matched` — 8 merged negotiation dims, 80 pairs each (640 total), length-matched. Pairs sampled from 15-dim component dimensions.
+  - **8-dim (reduced) dimensions** merge overlapping concepts: firmness+assertiveness+clarity→Firmness, empathy+rapport→Empathy, active_listening+info_gathering→Active Listening, emotional_regulation+patience→Composure, interest_based+value_creation+reframing→Creative Problem-Solving. Standalone: Strategic Concession-Making, Anchoring, BATNA Awareness.
+- **`control_steering_pairs.json`** — 5 control dimensions (verbosity, formality, hedging, sentiment, specificity) for detecting surface confounds. Pair count per dimension matches the negotiation pair count in each directory (12, 20, or 80). In `_matched` directories: formality/hedging/sentiment/specificity are length-matched, verbosity intentionally unmatched. In `_raw` directories: all 5 dimensions are intentionally unmatched, mirroring the raw negotiation pairs. Hedging targets the 3.6x hedge clustering bias; sentiment targets warm-vs-cold tone confounds in empathy/rapport vectors; specificity targets the concrete-numbers-vs-vague-language confound in firmness/anchoring/BATNA vectors.
+
+**Key directories:**
+- `vectors/{variant}/negotiation/` and `vectors/{variant}/control/` — Extracted `.npy` vectors per variant.
+- `results/validation/{variant}/qwen2.5-3b/` — Validation reports, JSON results, and plots per variant.
+- `results/validation/VALIDATION_RESULTS.md` — Comprehensive cross-variant analysis.
+- `.hf_cache/` — HuggingFace model cache (redirected from `~/.cache/huggingface` via `HF_HOME` to avoid home dir quota limits on UCL machines).
 
 **Key conventions:**
 - Vectors are unit-normed per layer. Shape: `(n_layers, hidden_dim)` for all-layers, `(hidden_dim,)` for single layer.
@@ -72,6 +95,24 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - Role is the dominant variable: steering helps buyers, hurts sellers, across all dimensions.
 - Mean difference vectors are more reliable than PCA (PCA extracts the dominant variance direction, not dimension-specific directions).
 - Contrastive pairs have severe surface biases. Vectors likely encode surface patterns (length, hedging, openers) rather than deep negotiation concepts. See P4_PROGRESS.md for full evidence.
+
+**Validation ablation findings (8-variant study, see `results/validation/VALIDATION_RESULTS.md`):**
+- **Best variant: `neg8dim_12pairs_matched`** (33/100, 1/8 negotiation flat-high probes, 5/8 AMBER). Zero GREEN dimensions in any variant.
+- **Length matching is the only effective intervention:** raw→matched = +10-13 points, 75-80% reduction in flat-high probes.
+- **Pair scaling hurts:** 12→20→80 pairs worsens scores (33→28→26 for 8dim). More pairs amplifies surface confounds; per-pair alignment degrades (empathy: 0.464→0.343 at 80 pairs with 30/80 outliers). Contradicts naive extrapolation from Chalnev et al. (2025).
+- **Dimension merging helps modestly:** 15→8 dims improves best score from 26→33 by reducing concept overlap.
+- **All negotiation×control Cohen's d pairs are SEVERE** in every variant. `cos(firmness, hedging) = -0.703`. But see orthogonal projection results below.
+- **No variant has recommended layers** (criteria: acc≥0.85 AND |d|≤0.8) except active_listening at 4 layers in neg8dim_80pairs.
+- **Selectivity metric is flawed:** penalty term caps at 0.5, so near-perfect probe accuracy at 80 pairs inflates selectivity even though vectors are more confounded.
+
+**Orthogonal projection findings (`orthogonal_projection.py`, `results/projection/`):**
+- **Cohen's d overstates contamination.** After projecting out all 5 control dimensions from negotiation vectors and re-running 1-D probes, average accuracy drops only 2.4% (0.843→0.820). 7/8 dimensions retain signal; 2 dimensions actually improve.
+- **Result is robust across all 8 variants.** 84/92 dimension×variant tests are GENUINE (91%), 12 PARTIAL SURFACE, 6 IMPROVED. Average drop ranges 1.1-3.7% across variants.
+- **Firmness retains 96.6% of its probe accuracy** despite cos=-0.703 with hedging. The surface overlap was real but irrelevant to the separation signal.
+- **Empathy has the largest surface dependence** (6.9% drop, 0.807→0.737), consistent with its sentiment overlap. Still well above chance.
+- **clarity_and_directness is the only consistently surface-dependent dimension** (6.3% mean drop, PARTIAL in 3/4 variants). Its meaning genuinely overlaps with hedging and specificity.
+- **batna_awareness and reframing are the purest concepts** — cleaning has no effect or improves accuracy across all variants.
+- **Interpretation:** The data (pairs) is confounded in surface features, but the extracted steering directions are mostly genuine — they capture conceptual variance beyond surface features. Cohen's d detects data confounds, not direction confounds.
 
 ---
 

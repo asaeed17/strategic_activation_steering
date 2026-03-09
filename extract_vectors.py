@@ -659,6 +659,24 @@ def main() -> None:
                 target_layers=args.layers,
             )
 
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    for model_key in args.models:
+        cfg = MODELS[model_key]
+        log.info("=" * 60)
+        log.info("MODEL:  %s", cfg.hf_id)
+        log.info("ALIAS:  %s", cfg.alias)
+        log.info("=" * 60)
+
+        extract_for_model(
+            config=cfg,
+            dimensions=dimensions,
+            output_dir=output_dir,
+            batch_size=args.batch_size,
+            use_quantization=args.quantize,
+            target_layers=args.layers,
+        )
             if args.sim_matrix:
                 model_dir = output_dir / cfg.alias
                 for method in ("mean_diff", "pca"):
