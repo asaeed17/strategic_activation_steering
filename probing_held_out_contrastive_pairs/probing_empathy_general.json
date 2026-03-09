@@ -1,0 +1,94 @@
+{
+  "metadata": {
+    "description": "General non-negotiation empathy pairs for probing only. Tests whether the empathy vector generalises beyond negotiation contexts to everyday situations requiring empathy. If the vector scores well here, it is encoding a general concept rather than a negotiation-specific style.",
+    "dimension": "empathy",
+    "n_pairs": 15,
+    "version": "1.0",
+    "usage": "probe_vectors.py --nonneg_probe_file",
+    "note": "Contexts deliberately avoid negotiation, pricing, contracts, and business deals. Covers personal relationships, workplace dynamics, healthcare, and everyday situations."
+  },
+  "dimensions": [
+    {
+      "id": "empathy",
+      "name": "Empathy",
+      "description": "Actively recognizing and acknowledging the other party's feelings, perspective, and situation before moving to solutions",
+      "pairs": [
+        {
+          "context": "A friend calls you crying because they failed an important exam they had studied hard for.",
+          "positive": "I'm so sorry — you worked so hard for that and it must feel devastating right now. Tell me how you're feeling.",
+          "negative": "That's a shame. Have you looked into whether you can resit it? What's the process for resubmission?"
+        },
+        {
+          "context": "A colleague tells you they are struggling to concentrate at work because their parent was recently diagnosed with a serious illness.",
+          "positive": "I'm really sorry about your parent — a diagnosis like that is frightening and it makes complete sense that you can't just switch it off at work. Is there anything I can do to make things easier for you right now?",
+          "negative": "I understand it's difficult. Let's talk about how we can manage your workload so the team isn't affected."
+        },
+        {
+          "context": "A family member confides that they feel isolated and lonely since moving to a new city for work.",
+          "positive": "That sounds really hard. Starting over somewhere new where you don't know anyone yet is genuinely isolating. How have you been coping with it?",
+          "negative": "Give it time — you'll make friends eventually. Have you tried joining any clubs or groups in your area?"
+        },
+        {
+          "context": "A student tells their tutor they are falling behind because they have been dealing with anxiety and find it hard to leave the house.",
+          "positive": "Thank you for telling me that — it must have taken courage. Anxiety that severe is really debilitating and I want to make sure you have the support you need, not just academically.",
+          "negative": "We'll need to discuss an extension plan. Please contact student support services as they can provide the appropriate accommodations."
+        },
+        {
+          "context": "A friend tells you they are heartbroken after ending a long-term relationship and feel like they made a terrible mistake.",
+          "positive": "Heartbreak like that is one of the most painful things. The doubt you're feeling — wondering if you made the wrong call — is so natural. I'm here and I'm not going anywhere.",
+          "negative": "It's hard but you'll get through it. These feelings usually pass with time. Have you been keeping yourself busy?"
+        },
+        {
+          "context": "A team member tells you they feel like they are not good enough for their role and are thinking of quitting.",
+          "positive": "I'm really glad you told me rather than just walking away. What you're describing sounds like impostor syndrome and it's more common than you'd think — but I also want to understand what specific moments have made you feel this way.",
+          "negative": "Don't be too hard on yourself. If there are performance gaps, we can put a development plan in place. Let's review your last quarter's output."
+        },
+        {
+          "context": "An elderly neighbour mentions that since their spouse died they find evenings very difficult and often feel frightened.",
+          "positive": "I'm so sorry for your loss — losing your partner after so many years together, the evenings must feel very empty and strange now. That kind of fear in the quiet hours makes complete sense.",
+          "negative": "That's understandable. There are befriending schemes for older people that might help. I can find some leaflets if you'd like."
+        },
+        {
+          "context": "A teenager tells their parent they feel like nobody at school actually likes them and they don't know why.",
+          "positive": "That feeling is so painful, and I'm really sorry you're carrying it. Feeling invisible or disliked at school can be genuinely miserable. Do you want to tell me more about what's been happening?",
+          "negative": "I'm sure people like you. Secondary school is tough for everyone. Focus on your studies and things will sort themselves out."
+        },
+        {
+          "context": "A friend says they feel guilty for not visiting their ill parent more often and that it is keeping them up at night.",
+          "positive": "Carrying guilt like that, especially when you're already stretched — that must be exhausting. The fact that it is keeping you up shows how much you care, even when the circumstances are genuinely hard.",
+          "negative": "If you feel bad about it, you could try to schedule more visits. Even a quick check-in call might help reduce the guilt."
+        },
+        {
+          "context": "A new employee quietly admits to their manager that they feel completely out of their depth and like a fraud.",
+          "positive": "Thank you for trusting me with that — it's a brave thing to admit. Feeling overwhelmed in a new role doesn't mean you're not capable; it usually just means you care about doing it well. What parts feel the most daunting?",
+          "negative": "That's normal when you're new. Give yourself three to six months to get up to speed. I'll send you some onboarding resources that should help."
+        },
+        {
+          "context": "A sibling calls to say they feel resentful that you have always been seen as the successful one in the family.",
+          "positive": "I appreciate you saying this to me rather than letting it fester. I can imagine how painful it is to feel that way, especially if it goes back years. I want to understand how that has felt for you.",
+          "negative": "I can't control how the family perceives things. We've both made different choices and I don't think comparison is useful for either of us."
+        },
+        {
+          "context": "A friend mentions they are struggling with their identity after leaving a religious community they had belonged to their whole life.",
+          "positive": "Leaving a community that shaped everything about you must feel like losing your footing entirely — like the ground you stood on just disappeared. That is a profound and disorienting kind of grief.",
+          "negative": "A lot of people go through changes in belief. It takes time to find a new sense of community but it is possible. Have you looked into secular groups in your area?"
+        },
+        {
+          "context": "A patient tells their doctor they feel embarrassed about their symptoms and almost did not come in.",
+          "positive": "I'm really glad you did come in — it takes a lot to walk through that door when something feels embarrassing. Whatever you're dealing with, I've heard it before and my only concern is helping you.",
+          "negative": "There's nothing to be embarrassed about. Please describe the symptoms so I can make an assessment."
+        },
+        {
+          "context": "A colleague breaks down crying in the office and says they don't know how much longer they can keep going.",
+          "positive": "Come and sit somewhere quieter with me. You don't need to explain anything right now — I'm just here. Whenever you're ready to talk, I'm listening.",
+          "negative": "You look like you need a break. Why don't you take some time to compose yourself and then we can talk about what's going on when you're feeling calmer."
+        },
+        {
+          "context": "A friend confides they feel trapped in their life and envious of everyone else who seems to be moving forward.",
+          "positive": "Feeling stuck while it looks like everyone around you is moving — that is a really isolating and painful place to be. I hear you. What does 'trapped' feel like for you right now?",
+          "negative": "Most people feel that way at some point. Social media makes everyone else's life look better than it is. Try to focus on your own path."
+        }
+      ]
+    }
+  ]
+}
