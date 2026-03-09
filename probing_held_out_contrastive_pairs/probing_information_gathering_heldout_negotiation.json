@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "description": "Held-out negotiation information_gathering pairs for probing only. NOT used in vector extraction. Same domain (negotiation) as extraction pairs but entirely new scenarios. Tests whether the information_gathering vector generalises within negotiation contexts.",
+    "dimension": "information_gathering",
+    "n_pairs": 15,
+    "version": "1.0",
+    "usage": "probe_vectors.py --probe_file"
+  },
+  "dimensions": [
+    {
+      "id": "information_gathering",
+      "name": "Information Gathering",
+      "description": "Asking probing, open-ended questions to understand the other party's situation, constraints, and motivations before responding",
+      "pairs": [
+        {
+          "context": "A client says your price is too high and you want to understand more before responding.",
+          "positive": "Before I respond on price, can you help me understand what too high means in your context — is it above your total budget, above what you've paid for similar work before, or above what a competitor has quoted you?",
+          "negative": "If the price is too high, let's look at what we can take out of scope to bring it down. What features could you live without?"
+        },
+        {
+          "context": "A potential partner expresses hesitation about a proposed deal structure without giving specifics.",
+          "positive": "I'd like to understand the hesitation better. Is it about the financial structure, the governance, the timeline, or something else about the arrangement? It would help me to know where the concern is before we try to address it.",
+          "negative": "A lot of deal structures involve some hesitation at first. I can walk you through the rationale for each element if that would help."
+        },
+        {
+          "context": "An employer is interviewing a candidate who has turned down previous offers from competitors.",
+          "positive": "I'd love to understand what made those offers not right for you. What was missing, or what would have needed to be different for you to have said yes?",
+          "negative": "Compensation is obviously a factor. We're competitive on salary and benefits. What range were you looking for?"
+        },
+        {
+          "context": "A buyer says they need to 'think about it' after receiving a detailed proposal.",
+          "positive": "Of course. While I have you, I want to make sure I haven't missed something important — is there a specific part of the proposal that gives you pause, or is it more about the overall commitment?",
+          "negative": "Take your time. I'll follow up in a couple of days to see where you've landed."
+        },
+        {
+          "context": "A counterpart in a contract renegotiation says the existing terms 'no longer work' without elaborating.",
+          "positive": "Can you help me understand specifically which parts are no longer working? Is it an issue of changed circumstances on your side, something about how the terms have played out in practice, or is there something in the market that's shifted?",
+          "negative": "We can take a look at the key terms and see what flexibility there is on each one."
+        },
+        {
+          "context": "A supplier is being less responsive than usual and you want to understand why before escalating.",
+          "positive": "Before I raise this as a formal concern, I'd like to understand what's happening on your side. Has something changed in your operations? Is there a capacity issue, or something about this account specifically?",
+          "negative": "Response times have been unacceptable. I need you to commit to replying within 24 hours going forward."
+        },
+        {
+          "context": "A candidate accepts an interview but seems disengaged during the conversation.",
+          "positive": "Before we go further, I want to check — are you still interested in this opportunity? It would help me to understand where your head is, and I'd rather have an honest conversation than one where we're both going through the motions.",
+          "negative": "Let me tell you more about the role. I think once you understand the scope better, the excitement will come."
+        },
+        {
+          "context": "A potential client says they are 'already working with someone' when you pitch your services.",
+          "positive": "I appreciate you being upfront. I'm curious — what does that relationship give you that you'd be most reluctant to give up? And is there anything in that relationship that isn't working as well as you'd like?",
+          "negative": "Understood. If anything changes or you're ever looking to review your options, please keep us in mind."
+        },
+        {
+          "context": "An acquirer is proposing a significantly lower valuation than you expected in an M&A conversation.",
+          "positive": "I want to understand the thinking behind that number. What methodology are you using and which inputs are driving the valuation down relative to what we'd anticipated?",
+          "negative": "That number is significantly below what we had expected. Our valuation is based on a 7x multiple of EBITDA — can you explain the difference?"
+        },
+        {
+          "context": "A long-term client is using the services less frequently without any explanation.",
+          "positive": "I've noticed we're working together less frequently and I wanted to check in. Has something changed on your side — is it budget, a change in direction, or something about how we've been serving you?",
+          "negative": "I wanted to reach out and let you know we have some new offerings that might be relevant. Can I schedule a call to walk you through them?"
+        },
+        {
+          "context": "A team member is resistant to a proposed change in process but gives only vague reasons.",
+          "positive": "Help me understand the resistance. Is it about the process itself, concern about how it would be implemented, or something about the broader context that makes this feel wrong to you right now?",
+          "negative": "Change is often uncomfortable at first. Let me explain the rationale and I think you'll see it makes sense."
+        },
+        {
+          "context": "A counterpart delays signing a contract that both parties have verbally agreed on.",
+          "positive": "I want to make sure nothing has come up since we agreed the terms. Is there something in the contract you're reconsidering, or is this just a timing issue on your side?",
+          "negative": "I wanted to follow up on the contract — we agreed the terms last week. Is there anything preventing you from signing?"
+        },
+        {
+          "context": "An investor seems interested but keeps postponing the follow-up meeting.",
+          "positive": "I want to respect your time. Can I ask directly — is the delay about the opportunity itself, or is it more about timing with your fund? I'd rather know where things stand than keep chasing.",
+          "negative": "I know you're very busy. Whenever you have a window for a follow-up I'd love to continue the conversation."
+        },
+        {
+          "context": "A vendor is proposing a new product version but you are unsure if it meets your needs.",
+          "positive": "Before I assess whether this is right for us, I want to understand what problem this new version is solving. What were the limitations of the previous version that drove the redesign?",
+          "negative": "Can you walk me through the key new features? I want to compare them against what we currently have."
+        },
+        {
+          "context": "A job candidate pushes back on a specific interview question and seems guarded.",
+          "positive": "I notice that question landed differently. Can you help me understand what felt uncomfortable about it? I want to make sure we're having a real conversation and not one where you're filtering everything carefully.",
+          "negative": "I understand the question might seem intrusive. The reason I ask is that it tells us about how you handle ambiguity in complex projects."
+        }
+      ]
+    }
+  ]
+}
