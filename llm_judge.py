@@ -551,8 +551,8 @@ def parse_args() -> argparse.Namespace:
         description="LLM judge evaluation of negotiation transcripts.",
     )
     p.add_argument(
-        "--input", default="analysis/metrics_b1_enriched.json",
-        help="Path to enriched results JSON (default: analysis/metrics_b1_enriched.json)",
+        "--input", default="analysis/turn_metrics_enriched.json",
+        help="Path to enriched results JSON (default: analysis/turn_metrics_enriched.json)",
     )
     p.add_argument(
         "--judges", nargs="+", default=["gemini"],
