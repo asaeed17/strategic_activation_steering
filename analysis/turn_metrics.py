@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-metrics_b1.py — Phase B1 per-turn negotiation metrics.
+turn_metrics.py — Per-turn negotiation behavior metrics.
 
-Reads results.json (from apply_steering.py), extracts rich per-turn metrics,
-and outputs:
+Reads a game results JSON (from apply_steering.py or run_eval.py) and produces:
   - Structured text report to stdout
-  - metrics_b1_enriched.json  (per-game data + new metric fields)
-  - metrics_b1_summary.json   (summary tables)
+  - turn_metrics_enriched.json  (per-game data + new metric fields)
+  - turn_metrics_summary.json   (summary tables)
 
-Run: python metrics_b1.py [--input results.json]
+Run:
+  python turn_metrics.py                          # uses default input
+  python turn_metrics.py --input results/eval/scm_buyer_steered.json
 
 No GPU, no model loading — pure analysis of existing results.
 """
@@ -211,6 +212,29 @@ def recompute_scores(game):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# Midpoint deviation
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def compute_midpoint_deviation(game):
+    """
+    Scale-invariant measure of who got the better deal.
+    midpoint_deviation = (agreed_price - midpoint) / span
+    Positive = seller-favoured, negative = buyer-favoured.
+    Returns None for non-agreed or degenerate-span games.
+    """
+    if not game.get("agreed"):
+        return None
+    span = game.get("seller_target", 0) - game.get("buyer_target", 0)
+    if span <= 0:
+        return None
+    agreed_price = game.get("agreed_price")
+    if agreed_price is None:
+        return None
+    midpoint = (game["seller_target"] + game["buyer_target"]) / 2.0
+    return round((agreed_price - midpoint) / span, 4)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # Per-game analysis
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -232,6 +256,7 @@ def analyse_game(game):
         "first_offer_distance": first_dist,
         "response_lengths": resp_lens,
         "hedges": hedges,
+        "midpoint_deviation": compute_midpoint_deviation(game),
         **scores,
     }
 
@@ -266,9 +291,28 @@ def _agent_label(game, speaker):
 # Summary builders
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def build_summary(games, enriched):
-    """Build summary tables across all games, split by role and clamping."""
+def build_summary(games, enriched, all_games=None):
+    """Build summary tables across all games, split by role and clamping.
+
+    all_games: the full game list including non-agreed games (for walk-away stats).
+               If None, walk-away stats are skipped.
+    """
     summary = {}
+
+    # ── Walk-away stats (computed over all games, not just agreed) ────────
+    if all_games is not None:
+        n_total   = len(all_games)
+        n_walk    = sum(1 for g in all_games if g.get("walk_away"))
+        n_walk_by_steered  = sum(1 for g in all_games
+                                 if g.get("walk_away") and g.get("walk_away_by") == g.get("steered_role"))
+        n_walk_by_baseline = n_walk - n_walk_by_steered
+        summary["walk_away"] = {
+            "total_games":      n_total,
+            "n_walk_away":      n_walk,
+            "walk_away_rate":   round(n_walk / n_total, 3) if n_total else 0,
+            "by_steered":       n_walk_by_steered,
+            "by_baseline":      n_walk_by_baseline,
+        }
 
     # ── Clamping report ──────────────────────────────────────────────────
     n_clamped = sum(1 for e in enriched if e["clamped"])
@@ -349,6 +393,16 @@ def build_summary(games, enriched):
 
     # ── Offer count per game ─────────────────────────────────────────────
     summary["offers_per_game"] = _stats([len(e["offers"]) for e in enriched])
+
+    # ── Midpoint deviation by steered role ───────────────────────────────
+    md_vals = [e["midpoint_deviation"] for e in enriched if e.get("midpoint_deviation") is not None]
+    md_by_role = {"steered_as_seller": [], "steered_as_buyer": []}
+    for game, enr in zip(games, enriched):
+        md = enr.get("midpoint_deviation")
+        if md is not None:
+            md_by_role[f"steered_as_{game['steered_role']}"].append(md)
+    summary["midpoint_deviation"] = _stats(md_vals)
+    summary["midpoint_deviation_by_role"] = {k: _stats(v) for k, v in md_by_role.items()}
 
     return summary
 
@@ -561,11 +615,13 @@ def print_report(games, enriched, summary):
 
 def main():
     _dir = Path(__file__).resolve().parent
-    parser = argparse.ArgumentParser(description="Phase B1 per-turn negotiation metrics.")
-    parser.add_argument("--input", default=str(_dir.parent / "results" / "firmness_alpha20_50games.json"),
-                        help="Input results JSON file")
-    parser.add_argument("--enriched_out", default=str(_dir / "metrics_b1_enriched.json"))
-    parser.add_argument("--summary_out", default=str(_dir / "metrics_b1_summary.json"))
+    parser = argparse.ArgumentParser(description="Per-turn negotiation behavior metrics.")
+    parser.add_argument("--input", default=str(_dir.parent / "results" / "eval" / "scm_buyer_steered.json"),
+                        help="Input results JSON file (default: results/eval/scm_buyer_steered.json)")
+    parser.add_argument("--enriched_out", default=str(_dir / "turn_metrics_enriched.json"),
+                        help="Output: per-game enriched data (read by role_analysis.py)")
+    parser.add_argument("--summary_out", default=str(_dir / "turn_metrics_summary.json"),
+                        help="Output: summary statistics")
     args = parser.parse_args()
 
     # Load
@@ -606,11 +662,12 @@ def main():
             "clamped": enr["clamped"],
             "raw_seller_score": enr["raw_seller_score"],
             "raw_buyer_score": enr["raw_buyer_score"],
+            "midpoint_deviation": enr["midpoint_deviation"],
         }
         enriched_games.append(enriched_game)
 
-    # Build summary
-    summary = build_summary(agreed_games, enriched)
+    # Build summary (pass all games for walk-away stats)
+    summary = build_summary(agreed_games, enriched, all_games=games)
 
     # Print report
     print_report(agreed_games, enriched, summary)

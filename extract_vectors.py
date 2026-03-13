@@ -677,10 +677,10 @@ def main() -> None:
             use_quantization=args.quantize,
             target_layers=args.layers,
         )
-            if args.sim_matrix:
-                model_dir = output_dir / cfg.alias
-                for method in ("mean_diff", "pca"):
-                    print_similarity_matrix(model_dir, method, args.sim_layer)
+        if args.sim_matrix:
+            model_dir = output_dir / cfg.alias
+            for method in ("mean_diff", "pca"):
+                print_similarity_matrix(model_dir, method, args.sim_layer)
 
         log.info("Vectors saved under: %s/", output_dir)
 

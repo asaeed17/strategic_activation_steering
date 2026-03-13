@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """
-analyse_eval.py — Post-GPU analysis of all evaluation experiments.
+analyse_results.py — Post-GPU statistical analysis of evaluation experiments.
 
-Tasks:
-  1. G1/G2 paired steering effect
-  2. B1 metrics on G1 (SCM transcripts)
-  3. B3 role-separated analysis on G1
-  4. G3 DonD analysis
-  5. G4 firmness clamping analysis
-  6. G5 sensitivity interpretation
-  8. Within-role judge correlations (if judge data available)
+Reads the JSON files produced by run_eval.py and produces:
+  - Paired steering effect: buyer-steered vs buyer-baseline (primary claim)
+  - Seller-steered standalone analysis
+  - Per-turn behavioral metrics (response length, hedging, concessions)
+  - Role-separated outcome breakdown
+  - DonD cross-dataset, firmness, and sensitivity analyses (if available)
+  - Within-role judge correlations (if llm_judge.py has been run)
 
-Run: python3 analyse_eval.py
+Run:
+  python3 analyse_results.py
+  python3 analyse_results.py --results_dir results/eval --skip_missing
 
 Outputs: results/eval/analysis.json + stdout report
 """
@@ -115,40 +116,40 @@ def _pct(val, total):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Task 1: G1/G2 paired steering effect
+# Paired steering effect
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def task1_paired_effect(g1_games, g2_games):
-    """Compute paired steering effect: per-scenario g1_advantage - g2_advantage."""
+def paired_steering_effect(steered_games, baseline_games, label="steered / baseline"):
+    """Compute paired steering effect: per-scenario steered_advantage - baseline_advantage."""
     print("\n" + "=" * 70)
-    print("TASK 1: G1/G2 PAIRED STEERING EFFECT")
+    print(f"PAIRED STEERING EFFECT  [{label}]")
     print("=" * 70)
 
-    n = min(len(g1_games), len(g2_games))
+    n = min(len(steered_games), len(baseline_games))
     paired_diffs = []
-    g1_advs = []
-    g2_advs = []
+    steered_advs = []
+    baseline_advs = []
     role_diffs = {"seller": [], "buyer": []}
 
     for i in range(n):
-        g1 = g1_games[i]
-        g2 = g2_games[i]
+        g1 = steered_games[i]
+        g2 = baseline_games[i]
         # Verify same scenario
         assert g1["listing_price"] == g2["listing_price"], f"Scenario mismatch at {i}"
         assert g1["steered_role"] == g2["steered_role"], f"Role mismatch at {i}"
 
         d = g1["advantage"] - g2["advantage"]
         paired_diffs.append(d)
-        g1_advs.append(g1["advantage"])
-        g2_advs.append(g2["advantage"])
+        steered_advs.append(g1["advantage"])
+        baseline_advs.append(g2["advantage"])
         role_diffs[g1["steered_role"]].append(d)
 
     paired_diffs = np.array(paired_diffs)
-    g1_advs = np.array(g1_advs)
-    g2_advs = np.array(g2_advs)
+    steered_advs = np.array(steered_advs)
+    baseline_advs = np.array(baseline_advs)
 
     # Paired t-test
-    t_stat, p_val = sp_stats.ttest_rel(g1_advs, g2_advs)
+    t_stat, p_val = sp_stats.ttest_rel(steered_advs, baseline_advs)
     # Wilcoxon signed-rank (non-parametric)
     try:
         w_stat, w_pval = sp_stats.wilcoxon(paired_diffs)
@@ -161,8 +162,8 @@ def task1_paired_effect(g1_games, g2_games):
     cohens_d = d_mean / d_std if d_std > 0 else 0
 
     print(f"\n  Paired observations: {n}")
-    print(f"  G1 (steered) mean advantage:  {np.mean(g1_advs):+.4f}")
-    print(f"  G2 (baseline) mean advantage: {np.mean(g2_advs):+.4f}")
+    print(f"  Steered mean advantage:  {np.mean(steered_advs):+.4f}")
+    print(f"  Baseline mean advantage: {np.mean(baseline_advs):+.4f}")
     print(f"  Paired steering effect:       {d_mean:+.4f}  (std={d_std:.4f})")
     print(f"  Cohen's d:                    {cohens_d:+.3f}")
     print(f"  Paired t-test:  t={t_stat:.3f}, p={p_val:.4f}  {'*' if p_val < 0.05 else 'ns'}")
@@ -202,15 +203,15 @@ def task1_paired_effect(g1_games, g2_games):
               f"t={rt:.3f} p={rp:.4f} {sig}")
 
     # Clamping analysis
-    g1_clamped = sum(1 for g in g1_games if g.get("clamped", False))
-    g2_clamped = sum(1 for g in g2_games if g.get("clamped", False))
-    print(f"\n  Clamping: G1={g1_clamped}/{n} ({g1_clamped/n*100:.0f}%), "
-          f"G2={g2_clamped}/{n} ({g2_clamped/n*100:.0f}%)")
+    steered_clamped = sum(1 for g in steered_games if g.get("clamped", False))
+    baseline_clamped = sum(1 for g in baseline_games if g.get("clamped", False))
+    print(f"\n  Clamping: steered={steered_clamped}/{n} ({steered_clamped/n*100:.0f}%), "
+          f"baseline={baseline_clamped}/{n} ({baseline_clamped/n*100:.0f}%)")
 
     # Unclamped-only paired effect
     unclamped_diffs = []
     for i in range(n):
-        if not g1_games[i].get("clamped", False) and not g2_games[i].get("clamped", False):
+        if not steered_games[i].get("clamped", False) and not baseline_games[i].get("clamped", False):
             unclamped_diffs.append(paired_diffs[i])
     if unclamped_diffs:
         uc = np.array(unclamped_diffs)
@@ -247,25 +248,25 @@ def task1_paired_effect(g1_games, g2_games):
         "wilcoxon_p": round(float(w_pval), 4) if w_pval is not None else None,
         "n_steering_helps": int(n_better),
         "n_steering_hurts": int(n_worse),
-        "g1_clamped": g1_clamped,
-        "g2_clamped": g2_clamped,
+        "steered_clamped": steered_clamped,
+        "baseline_clamped": baseline_clamped,
         "unclamped_paired_effect": round(float(np.mean(unclamped_diffs)), 4) if unclamped_diffs else None,
         "unclamped_n": len(unclamped_diffs),
         "role_separated": role_results,
-        "g1_mean": round(float(np.mean(g1_advs)), 4),
-        "g2_mean": round(float(np.mean(g2_advs)), 4),
+        "steered_mean": round(float(np.mean(steered_advs)), 4),
+        "baseline_mean": round(float(np.mean(baseline_advs)), 4),
     }
     return result
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Task 2: B1 metrics on G1 (SCM transcripts)
+# Per-turn behavioral metrics
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def task2_b1_metrics(g1_games):
-    """Apply B1 per-turn metrics pipeline to SCM steered transcripts."""
+def per_turn_behavior(games):
+    """Per-turn behavioral metrics: response length, hedging, concessions, first-offer distance."""
     print("\n" + "=" * 70)
-    print("TASK 2: B1 METRICS ON G1 (SCM α=6.12)")
+    print("PER-TURN BEHAVIORAL METRICS (SCM steered)")
     print("=" * 70)
 
     steered_lengths = []
@@ -279,7 +280,7 @@ def task2_b1_metrics(g1_games):
     first_dist_steered = []
     first_dist_baseline = []
 
-    for game in g1_games:
+    for game in games:
         transcript = game["transcript"]
         sr = game["steered_role"]
         br = "buyer" if sr == "seller" else "seller"
@@ -382,24 +383,24 @@ def task2_b1_metrics(g1_games):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Task 3: B3 role-separated analysis on G1
+# Role-separated outcome analysis
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def task3_role_separated(g1_games):
-    """Role-separated analysis of G1 SCM results."""
+def role_separated_outcomes(games):
+    """Role-separated outcome analysis: advantage, clamping, lengths, hedging per role."""
     print("\n" + "=" * 70)
-    print("TASK 3: ROLE-SEPARATED ANALYSIS (G1 SCM)")
+    print("ROLE-SEPARATED OUTCOMES (steered=buyer vs steered=seller)")
     print("=" * 70)
 
     by_role = {"seller": [], "buyer": []}
-    for g in g1_games:
+    for g in games:
         by_role[g["steered_role"]].append(g)
 
     results = {}
-    for role, games in by_role.items():
-        advs = [g["advantage"] for g in games]
-        clamped_n = sum(1 for g in games if g.get("clamped", False))
-        unclamped_advs = [g["advantage"] for g in games if not g.get("clamped", False)]
+    for role, role_games in by_role.items():
+        advs = [g["advantage"] for g in role_games]
+        clamped_n = sum(1 for g in role_games if g.get("clamped", False))
+        unclamped_advs = [g["advantage"] for g in role_games if not g.get("clamped", False)]
         n_help = sum(1 for a in advs if a > 0)
         n_hurt = sum(1 for a in advs if a < 0)
 
@@ -408,7 +409,7 @@ def task3_role_separated(g1_games):
         b_lens = []
         s_hedges = []
         b_hedges = []
-        for g in games:
+        for g in role_games:
             for turn in g["transcript"]:
                 wc = len(turn["utterance"].split())
                 h = count_hedges(turn["utterance"])
@@ -421,39 +422,39 @@ def task3_role_separated(g1_games):
                     b_hedges.append(h100)
 
         results[role] = {
-            "n": len(games),
+            "n": len(role_games),
             "advantage": _stats(advs),
             "clamped": clamped_n,
             "unclamped_advantage": _stats(unclamped_advs),
             "n_help": n_help,
             "n_hurt": n_hurt,
-            "help_pct": round(n_help / len(games) * 100, 1) if games else 0,
+            "help_pct": round(n_help / len(role_games) * 100, 1) if role_games else 0,
             "steered_response_length": _stats(s_lens),
             "baseline_response_length": _stats(b_lens),
             "steered_hedges_per100w": _stats(s_hedges),
             "baseline_hedges_per100w": _stats(b_hedges),
         }
 
-        print(f"\n  Steered as {role.upper()} (n={len(games)}):")
+        print(f"\n  Steered as {role.upper()} (n={len(role_games)}):")
         print(f"    Advantage:        {_stats(advs)}")
-        print(f"    Clamped:          {clamped_n} ({_pct(clamped_n, len(games))})")
+        print(f"    Clamped:          {clamped_n} ({_pct(clamped_n, len(role_games))})")
         print(f"    Unclamped adv:    {_stats(unclamped_advs)}")
         print(f"    Helps/Hurts:      {n_help}/{n_hurt} "
-              f"({n_help/len(games)*100:.0f}% / {n_hurt/len(games)*100:.0f}%)")
+              f"({n_help/len(role_games)*100:.0f}% / {n_hurt/len(role_games)*100:.0f}%)")
         print(f"    Steered words:    mean={np.mean(s_lens):.1f}")
         print(f"    Baseline words:   mean={np.mean(b_lens):.1f}")
         print(f"    Steered hedges:   mean={np.mean(s_hedges):.2f}/100w")
         print(f"    Baseline hedges:  mean={np.mean(b_hedges):.2f}/100w")
 
     # Dealmaker analysis
-    dealmakers = [g.get("dealmaker", "unknown") for g in g1_games]
+    dealmakers = [g.get("dealmaker", "unknown") for g in buyer_steered_games]
     from collections import Counter
     dm_counts = Counter(dealmakers)
     print(f"\n  Dealmaker: {dict(dm_counts)}")
 
     # Category breakdown
     cats = {}
-    for g in g1_games:
+    for g in buyer_steered_games:
         cat = g.get("category", "unknown")
         if cat not in cats:
             cats[cat] = []
@@ -470,13 +471,13 @@ def task3_role_separated(g1_games):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Task 4: G3 DonD analysis
+# DonD cross-dataset analysis
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def task4_dond(g3_data):
+def analyse_dond_crossval(g3_data):
     """Analyse Deal or No Deal cross-dataset results."""
     print("\n" + "=" * 70)
-    print("TASK 4: G3 DEAL OR NO DEAL ANALYSIS")
+    print("DonD CROSS-DATASET ANALYSIS")
     print("=" * 70)
 
     games = g3_data["games"]
@@ -552,16 +553,16 @@ def task4_dond(g3_data):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Task 5: G4 firmness clamping
+# Firmness clamping analysis
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def task5_firmness(g4_data):
-    """Analyse G4 firmness at moderate alpha — focus on clamping."""
+def analyse_firmness(firmness_data):
+    """Analyse firmness vector at moderate alpha — focus on clamping."""
     print("\n" + "=" * 70)
-    print("TASK 5: G4 FIRMNESS MODERATE α=5.0 (CLAMPING ANALYSIS)")
+    print("FIRMNESS MODERATE α=5.0 (CLAMPING ANALYSIS)")
     print("=" * 70)
 
-    games = g4_data["games"]
+    games = firmness_data["games"]
     n = len(games)
 
     clamped = [g for g in games if g.get("clamped", False)]
@@ -608,20 +609,20 @@ def task5_firmness(g4_data):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Task 6: G5 sensitivity
+# Opening bid sensitivity
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def task6_sensitivity(g5_data):
+def analyse_sensitivity(sensitivity_data):
     """Analyse opening bid sensitivity results."""
     print("\n" + "=" * 70)
-    print("TASK 6: G5 OPENING BID SENSITIVITY")
+    print("OPENING BID SENSITIVITY")
     print("=" * 70)
 
     results = {}
     for key in ["opening_50pct", "opening_60pct", "opening_70pct"]:
-        if key not in g5_data:
+        if key not in sensitivity_data:
             continue
-        block = g5_data[key]
+        block = sensitivity_data[key]
         games = block["games"]
         summary = block["summary"]
         advs = [g["advantage"] for g in games]
@@ -650,9 +651,9 @@ def task6_sensitivity(g5_data):
 
     # Cross-bid comparison
     print(f"\n  Summary:")
-    print(f"    50%: {g5_data.get('opening_50pct', {}).get('summary', {}).get('advantage', 'n/a')}")
-    print(f"    60%: {g5_data.get('opening_60pct', {}).get('summary', {}).get('advantage', 'n/a')}")
-    print(f"    70%: {g5_data.get('opening_70pct', {}).get('summary', {}).get('advantage', 'n/a')}")
+    print(f"    50%: {sensitivity_data.get('opening_50pct', {}).get('summary', {}).get('advantage', 'n/a')}")
+    print(f"    60%: {sensitivity_data.get('opening_60pct', {}).get('summary', {}).get('advantage', 'n/a')}")
+    print(f"    70%: {sensitivity_data.get('opening_70pct', {}).get('summary', {}).get('advantage', 'n/a')}")
     print(f"  Pattern: Non-monotonic. Advantage peaks at 60% (default) opening.")
     print(f"  Interpretation: Results are moderately sensitive to opening bid.")
     print(f"  Note: n=10 per condition is too small for statistical conclusions.")
@@ -661,13 +662,13 @@ def task6_sensitivity(g5_data):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Task 8: Within-role judge correlations
+# Within-role judge correlations
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def task8_judge_correlations(judge_path, g1_games):
+def judge_metric_correlations(judge_path, steered_games):
     """Compute within-role correlations between judge scores and behavioral metrics."""
     print("\n" + "=" * 70)
-    print("TASK 8: WITHIN-ROLE JUDGE-METRIC CORRELATIONS")
+    print("WITHIN-ROLE JUDGE-METRIC CORRELATIONS")
     print("=" * 70)
 
     if not judge_path.exists():
@@ -690,9 +691,9 @@ def task8_judge_correlations(judge_path, g1_games):
         if gid is not None and "judges" in jg:
             judge_lookup[gid] = jg
 
-    # Build per-game behavioral metrics for G1
+    # Build per-game behavioral metrics
     game_metrics = {}
-    for g in g1_games:
+    for g in steered_games:
         gid = g.get("game_id")
         sr = g["steered_role"]
 
@@ -780,97 +781,147 @@ def task8_judge_correlations(judge_path, g1_games):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def main():
+    import argparse
     _root = Path(__file__).resolve().parent.parent
-    eval_dir = _root / "results" / "eval"
 
-    # Load all data
-    with open(eval_dir / "g1_scm_steered.json") as f:
-        g1_data = json.load(f)
-    with open(eval_dir / "g2_baseline.json") as f:
-        g2_data = json.load(f)
-    with open(eval_dir / "g3_dond_scm.json") as f:
-        g3_data = json.load(f)
-    with open(eval_dir / "g4_firmness_moderate.json") as f:
-        g4_data = json.load(f)
-    with open(eval_dir / "g5_sensitivity.json") as f:
-        g5_data = json.load(f)
-    with open(eval_dir / "cosine_similarity.json") as f:
-        cosine_data = json.load(f)
+    p = argparse.ArgumentParser(
+        description="Post-GPU analysis of negotiation evaluation experiments."
+    )
+    p.add_argument("--results_dir",  default=str(_root / "results" / "eval"),
+                   help="Directory containing experiment JSON files.")
+    p.add_argument("--skip_missing", action="store_true",
+                   help="Skip optional files (g3/g4/g5/cosine) if not present.")
+    args = p.parse_args()
 
-    g1_games = g1_data["games"]
-    g2_games = g2_data["games"]
+    eval_dir = Path(args.results_dir)
+
+    def _load(fname, optional=False):
+        path = eval_dir / fname
+        if not path.exists():
+            if optional or args.skip_missing:
+                return None
+            raise FileNotFoundError(f"Required file not found: {path}")
+        with open(path) as f:
+            return json.load(f)
+
+    # Load required files (produced by run_eval.py --experiments scm_craigslist)
+    buyer_steered_data  = _load("scm_buyer_steered.json")
+    seller_steered_data = _load("scm_seller_steered.json")
+    buyer_baseline_data = _load("scm_buyer_baseline.json")
+
+    # Load optional files (produced by other experiments)
+    dond_data        = _load("dond_crossval.json",       optional=True)
+    firmness_data    = _load("firmness_moderate.json",   optional=True)
+    sensitivity_data = _load("opening_sensitivity.json", optional=True)
+    cosine_data      = _load("cosine_similarity.json",   optional=True)
+
+    buyer_steered_games  = buyer_steered_data["games"]
+    seller_steered_games = seller_steered_data["games"]
+    buyer_baseline_games = buyer_baseline_data["games"]
 
     print("=" * 70)
-    print("POST-GPU EVALUATION ANALYSIS")
-    print(f"  G1: {len(g1_games)} games (SCM steered α=6.12)")
-    print(f"  G2: {len(g2_games)} games (baseline α=0)")
-    print(f"  G3: {len(g3_data['games'])} games (DonD)")
-    print(f"  G4: {len(g4_data['games'])} games (firmness α=5)")
-    print(f"  Cosine: {cosine_data}")
+    print("NEGOTIATION EVALUATION — STATISTICAL ANALYSIS")
+    print(f"  buyer-steered:  {len(buyer_steered_games)} games (SCM steered, role=buyer)")
+    print(f"  seller-steered: {len(seller_steered_games)} games (SCM steered, role=seller)")
+    print(f"  buyer-baseline: {len(buyer_baseline_games)} games (α=0, role=buyer)")
+    if dond_data:
+        print(f"  dond_crossval:  {len(dond_data['games'])} games")
+    if firmness_data:
+        print(f"  firmness:       {len(firmness_data['games'])} games")
+    if cosine_data:
+        print(f"  cosine: {cosine_data}")
     print("=" * 70)
 
     analysis = {}
 
-    # Task 1
-    analysis["task1_paired_effect"] = task1_paired_effect(g1_games, g2_games)
+    # Buyer-steering effect: primary paired comparison
+    analysis["buyer_steering_effect"] = paired_steering_effect(
+        buyer_steered_games, buyer_baseline_games,
+        label="buyer-steered / buyer-baseline",
+    )
 
-    # Task 2
-    analysis["task2_b1_metrics"] = task2_b1_metrics(g1_games)
+    # Seller-steering (standalone — no matched seller baseline)
+    analysis["seller_steering_effect"] = paired_steering_effect(
+        seller_steered_games, buyer_baseline_games,
+        label="seller-steered / buyer-baseline (reference only)",
+    )
 
-    # Task 3
-    analysis["task3_role_separated"] = task3_role_separated(g1_games)
+    # Per-turn behavioral metrics on buyer-steered games
+    analysis["per_turn_behavior"] = per_turn_behavior(buyer_steered_games)
 
-    # Task 4
-    analysis["task4_dond"] = task4_dond(g3_data)
+    # Role-separated outcomes: buyer-steered + seller-steered combined
+    analysis["role_separated_outcomes"] = role_separated_outcomes(
+        buyer_steered_games + seller_steered_games
+    )
 
-    # Task 5
-    analysis["task5_firmness"] = task5_firmness(g4_data)
+    # Optional: DonD cross-dataset
+    if dond_data:
+        analysis["dond_crossval"] = analyse_dond_crossval(dond_data)
 
-    # Task 6
-    analysis["task6_sensitivity"] = task6_sensitivity(g5_data)
+    # Optional: Firmness
+    if firmness_data:
+        analysis["firmness"] = analyse_firmness(firmness_data)
 
-    # Task 8 — try both possible judge file locations
-    judge_path = eval_dir / "judge_scores_g1.json"
+    # Optional: Opening bid sensitivity
+    if sensitivity_data:
+        analysis["sensitivity"] = analyse_sensitivity(sensitivity_data)
+
+    # Judge correlations — try both possible file locations
+    judge_path = eval_dir / "judge_scores_scm_buyer.json"
     if not judge_path.exists():
-        judge_path = _root / "results" / "judge_scores.json"  # old firmness judge
-    analysis["task8_judge_correlations"] = task8_judge_correlations(judge_path, g1_games)
+        judge_path = eval_dir / "judge_scores_g1a.json"
+    if not judge_path.exists():
+        judge_path = _root / "results" / "judge_scores.json"
+    analysis["judge_correlations"] = judge_metric_correlations(judge_path, buyer_steered_games)
 
-    # Cosine similarity
-    analysis["cosine_similarity"] = cosine_data
+    if cosine_data:
+        analysis["cosine_similarity"] = cosine_data
 
     # ── Summary ──
     print("\n" + "=" * 70)
     print("SUMMARY OF KEY FINDINGS")
     print("=" * 70)
 
-    t1 = analysis["task1_paired_effect"]
-    print(f"\n  1. PAIRED STEERING EFFECT: {t1['paired_effect_mean']:+.4f} "
-          f"(p={t1['ttest_p']:.4f}, d={t1['cohens_d']:+.3f})")
-    print(f"     Helps {t1['n_steering_helps']}/{t1['n_pairs']}, "
-          f"hurts {t1['n_steering_hurts']}/{t1['n_pairs']}")
-    if t1.get("unclamped_paired_effect") is not None:
-        print(f"     Unclamped-only: {t1['unclamped_paired_effect']:+.4f} (n={t1['unclamped_n']})")
+    t1a = analysis["buyer_steering_effect"]
+    t1b = analysis["seller_steering_effect"]
+    print(f"\n  BUYER-STEERING EFFECT: {t1a['paired_effect_mean']:+.4f} "
+          f"(p={t1a['ttest_p']:.4f}, d={t1a['cohens_d']:+.3f})")
+    print(f"    Helps {t1a['n_steering_helps']}/{t1a['n_pairs']}, "
+          f"hurts {t1a['n_steering_hurts']}/{t1a['n_pairs']}")
 
-    t2 = analysis["task2_b1_metrics"]
-    print(f"\n  2. SCM BEHAVIORAL METRICS:")
-    print(f"     Length ratio: {t2['response_length']['ratio']:.3f}")
+    print(f"\n  SELLER-STEERING EFFECT (reference): {t1b['paired_effect_mean']:+.4f} "
+          f"(p={t1b['ttest_p']:.4f}, d={t1b['cohens_d']:+.3f})")
+    print(f"    Helps {t1b['n_steering_helps']}/{t1b['n_pairs']}, "
+          f"hurts {t1b['n_steering_hurts']}/{t1b['n_pairs']}")
+
+    if t1a.get("unclamped_paired_effect") is not None:
+        print(f"\n  Unclamped buyer-steering: {t1a['unclamped_paired_effect']:+.4f} "
+              f"(n={t1a['unclamped_n']})")
+
+    t2 = analysis["per_turn_behavior"]
+    print(f"\n  BEHAVIORAL METRICS (SCM buyer-steered):")
+    print(f"    Length ratio: {t2['response_length']['ratio']:.3f}")
     sm = t2['hedges_per100w']['steered']['mean']
     bm = t2['hedges_per100w']['baseline']['mean']
     if sm and sm > 0:
-        print(f"     Hedge ratio: {bm/sm:.1f}x (baseline/steered)")
+        print(f"    Hedge ratio: {bm/sm:.1f}x (baseline/steered)")
     else:
-        print(f"     Hedge rate: steered≈0, baseline={bm:.2f}/100w")
+        print(f"    Hedge rate: steered≈0, baseline={bm:.2f}/100w")
 
-    t4 = analysis["task4_dond"]
-    print(f"\n  4. DonD: advantage={t4['advantage']['mean']:+.3f}, "
-          f"Pareto={t4['pareto_rate']:.1%}, efficiency={t4['efficiency']['mean']:.3f}")
+    if dond_data and "dond_crossval" in analysis and analysis["dond_crossval"]:
+        td = analysis["dond_crossval"]
+        print(f"\n  DonD CROSS-DATASET: advantage={td['advantage']['mean']:+.3f}, "
+              f"Pareto={td['pareto_rate']:.1%}, efficiency={td['efficiency']['mean']:.3f}")
 
-    t5 = analysis["task5_firmness"]
-    print(f"\n  5. FIRMNESS α=5: {t5['clamped_pct']:.0f}% clamped "
-          f"(vs 24% at α=20)")
-    print(f"     Unclamped advantage: {t5['unclamped_advantage']['mean']}")
+    if firmness_data and "firmness" in analysis:
+        tf = analysis["firmness"]
+        print(f"\n  FIRMNESS α=5: {tf['clamped_pct']:.0f}% clamped "
+              f"(vs 24% at α=20)")
+        print(f"    Unclamped advantage: {tf['unclamped_advantage']['mean']}")
 
-    print(f"\n  COSINE: SCM-firmness={cosine_data['strategic_concession_making_vs_firmness']:.3f}")
+    if cosine_data and "strategic_concession_making_vs_firmness" in cosine_data:
+        print(f"\n  COSINE: SCM-firmness="
+              f"{cosine_data['strategic_concession_making_vs_firmness']:.3f}")
 
     # Save
     out_path = eval_dir / "analysis.json"

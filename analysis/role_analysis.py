@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
-metrics_b3_roles.py — Phase B3 comprehensive role-separated analysis.
+role_analysis.py — Role-separated negotiation outcome analysis.
 
 Produces publication-ready breakdown tables showing how every metric differs
-when the steered agent plays seller vs buyer.
+when the steered agent plays seller vs buyer. Answers the key finding:
+"steering helps buyers and hurts sellers — never report the aggregate alone."
 
-Reads metrics_b1_enriched.json.
+Reads turn_metrics_enriched.json (produced by turn_metrics.py).
 
-Run: python metrics_b3_roles.py [--input metrics_b1_enriched.json]
+Run:
+  python role_analysis.py                              # uses default input
+  python role_analysis.py --input turn_metrics_enriched.json
 
 No GPU, no model loading — pure analysis. Dependencies: numpy.
 """
@@ -81,19 +84,27 @@ def table1_outcome(games, seller_games, buyer_games):
         advs = [g["advantage"] for g in subset]
         n = len(advs)
         if n == 0:
-            return [label, 0, "—", "—", "—", "—", "—", "—"]
+            return [label, 0, "—", "—", "—", "—", "—", "—", "—"]
         a = np.array(advs)
         wins = int(np.sum(a > 0))
         losses = int(np.sum(a < 0))
         neutral = int(np.sum(a == 0))
+        # Midpoint deviation: use game field if present, else fall back to metrics sub-dict
+        md_vals = [
+            g.get("midpoint_deviation") or g.get("metrics", {}).get("midpoint_deviation")
+            for g in subset
+        ]
+        md_vals = [v for v in md_vals if v is not None]
+        md_str = _fmt(float(np.mean(md_vals))) if md_vals else "—"
         return [
             label, n,
             _fmt(np.mean(a)), _fmt(np.std(a, ddof=1) if n > 1 else 0.0),
             _fmt(np.median(a)),
             _pct(wins, n), _pct(losses, n), _pct(neutral, n),
+            md_str,
         ]
 
-    header = ["Role", "N", "Mean Adv", "Std", "Median", "Win%", "Lose%", "Neutral%"]
+    header = ["Role", "N", "Mean Adv", "Std", "Median", "Win%", "Lose%", "Neutral%", "MidptDev"]
     rows = [
         _row_data("Steered=Seller", seller_games),
         _row_data("Steered=Buyer", buyer_games),
@@ -318,16 +329,19 @@ def table6_antisteerability(seller_games, buyer_games):
         helps = int(np.sum(advs > 0))
         hurts = int(np.sum(advs < 0))
         neutral = int(np.sum(advs == 0))
+        n_walkaway = sum(1 for g in subset if g.get("walk_away", False))
         return [
             label, helps, hurts, neutral,
-            _pct(helps, n), _pct(hurts, n),
+            _pct(helps, n), _pct(hurts, n), n_walkaway,
         ], {
             "n": n, "helps": helps, "hurts": hurts, "neutral": neutral,
             "help_pct": round(helps / n * 100, 1) if n else 0,
             "hurt_pct": round(hurts / n * 100, 1) if n else 0,
+            "n_walkaway": n_walkaway,
+            "walkaway_pct": round(n_walkaway / n * 100, 1) if n else 0,
         }
 
-    header = ["Role", "N Helps", "N Hurts", "N Neutral", "Help%", "Hurt%"]
+    header = ["Role", "N Helps", "N Hurts", "N Neutral", "Help%", "Hurt%", "N WalkAway"]
     r1, d1 = _anti_row("Steered=Seller", seller_games)
     r2, d2 = _anti_row("Steered=Buyer", buyer_games)
     r3, d3 = _anti_row("All", seller_games + buyer_games)
@@ -386,7 +400,7 @@ def table7_category_role(seller_games, buyer_games):
 
 def print_report(games, seller_games, buyer_games):
     print("=" * 78)
-    print("  METRICS B3 — Role-Separated Analysis")
+    print("  ROLE-SEPARATED ANALYSIS")
     print("=" * 78)
     print(f"\n  Input: {len(games)} games "
           f"({len(seller_games)} steered-as-seller, {len(buyer_games)} steered-as-buyer)")
@@ -525,14 +539,16 @@ def print_report(games, seller_games, buyer_games):
 
 def main():
     _dir = Path(__file__).resolve().parent
-    parser = argparse.ArgumentParser(description="Phase B3 role-separated analysis.")
-    parser.add_argument("--input", default=str(_dir / "metrics_b1_enriched.json"))
-    parser.add_argument("--output", default=str(_dir / "metrics_b3_roles.json"))
+    parser = argparse.ArgumentParser(description="Role-separated negotiation outcome analysis.")
+    parser.add_argument("--input", default=str(_dir / "turn_metrics_enriched.json"),
+                        help="Enriched game data from turn_metrics.py")
+    parser.add_argument("--output", default=str(_dir / "role_analysis.json"),
+                        help="Output JSON with all table data")
     args = parser.parse_args()
 
     path = Path(args.input)
     if not path.exists():
-        print(f"Error: {path} not found. Run metrics_b1.py first.", file=sys.stderr)
+        print(f"Error: {path} not found. Run turn_metrics.py first.", file=sys.stderr)
         sys.exit(1)
 
     with open(path, "r", encoding="utf-8") as f:
