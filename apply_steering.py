@@ -12,14 +12,11 @@ measure a role-specific advantage:
   - odd games   → steered = BUYER,  baseline = SELLER
 
 Scoring (only for games that reach a deal):
-  seller_score = (agreed - midpoint) / midpoint
-  buyer_score  = (midpoint - agreed) / midpoint
+  seller_score = (agreed - buyer_target)  / (seller_target - buyer_target)
+  buyer_score  = (seller_target - agreed) / (seller_target - buyer_target)
 
-  where midpoint = (seller_target + buyer_target) / 2
-
-  Positive score = you pulled the price in your favour.
-  Negative score = you conceded past the midpoint.
-
+Both scores live in [0,1] and sum to 1. 0.5 means the agreed price
+landed exactly at the midpoint between the two targets.
 steered_score  = whichever of the two scores belongs to the steered agent.
 advantage      = mean(steered_score) - mean(baseline_score)
 
@@ -60,11 +57,17 @@ log = logging.getLogger(__name__)
 MIN_TURNS_BEFORE_DEAL = 3
 MAX_TURNS             = 10
 
+# Matches a bare REJECT on its own line — avoids false positives like
+# "I reject this offer, but..." which is natural speech.
+_REJECT_RE = re.compile(r'^\s*REJECT\s*$', re.IGNORECASE | re.MULTILINE)
+
 
 # ---------------------------------------------------------------------------
 # Dataset Loading
 # ---------------------------------------------------------------------------
 
+# These CodaLab URLs serve the raw parsed JSON for each split.
+# They were live as of the time I wrote this — fingers crossed they stay up.
 RAW_URLS = {
     "train":      "https://worksheets.codalab.org/rest/bundles/0xd34bbbc5fb3b4fccbd19e10756ca8dd7/contents/blob/parsed.json",
     "validation": "https://worksheets.codalab.org/rest/bundles/0x15c4160b43d44ee3a8386cca98da138c/contents/blob/parsed.json",
@@ -84,7 +87,7 @@ def _fetch_json(url: str) -> list:
         return json.loads(b"".join(chunks).decode("utf-8"))
 
 
-def load_craigslist(split: str = "train", num_samples: int = 50) -> List[Dict]:
+def load_craigslist(split: str = "train", num_samples: int = 50, min_span: int = 100) -> List[Dict]:
     if split not in RAW_URLS:
         raise ValueError(f"Split '{split}' not available. Choose from: {list(RAW_URLS.keys())}")
 
@@ -92,6 +95,7 @@ def load_craigslist(split: str = "train", num_samples: int = 50) -> List[Dict]:
     log.info("Loaded %d raw dialogues from '%s' split.", len(raw), split)
 
     scenarios = []
+    n_filtered_span = 0
     for entry in raw:
         try:
             kbs = entry.get("scenario", {}).get("kbs", [])
@@ -101,6 +105,7 @@ def load_craigslist(split: str = "train", num_samples: int = 50) -> List[Dict]:
             p0 = kbs[0].get("personal", {})
             p1 = kbs[1].get("personal", {})
 
+            # figure out which kb belongs to the seller
             if "seller" in str(p0.get("Role", "")).lower():
                 seller_p, seller_kb = p0, kbs[0]
                 buyer_p             = p1
@@ -120,6 +125,7 @@ def load_craigslist(split: str = "train", num_samples: int = 50) -> List[Dict]:
 
             item = seller_kb.get("item", {})
 
+            # some fields come back as single-element lists for some reason
             def _unwrap(v):
                 if isinstance(v, list):
                     return v[0] if v else ""
@@ -130,9 +136,15 @@ def load_craigslist(split: str = "train", num_samples: int = 50) -> List[Dict]:
             description   = str(_unwrap(item.get("Description", ""))).strip()
             category      = str(_unwrap(item.get("Category",    ""))).strip()
 
+            # skip anything with obviously bad data
             if listing_price <= 0 or seller_target <= 0 or buyer_target <= 0:
                 continue
             if not title:
+                continue
+
+            span = seller_target - buyer_target
+            if span < min_span:
+                n_filtered_span += 1
                 continue
 
             scenarios.append({
@@ -147,6 +159,7 @@ def load_craigslist(split: str = "train", num_samples: int = 50) -> List[Dict]:
         except (KeyError, ValueError, TypeError):
             continue
 
+    log.info("Span filter (<%d): removed %d scenarios.", min_span, n_filtered_span)
     log.info("Found %d valid scenarios after filtering.", len(scenarios))
     if not scenarios:
         raise RuntimeError("No valid scenarios found — check the CodaLab URLs are still live.")
@@ -179,8 +192,9 @@ class SteeringHook:
         self._handle = layer_module.register_forward_hook(self.hook_fn)
 
     def remove(self) -> None:
-        self._handle.remove()
-        self._handle = None
+        if self._handle:
+            self._handle.remove()
+            self._handle = None
 
 
 def get_transformer_layers(model):
@@ -203,6 +217,7 @@ def load_direction_vectors(
     for l in layer_indices:
         path = vec_dir / f"{dimension}_layer{l:02d}.npy"
         if not path.exists():
+            # maybe they were all saved in a single stacked array
             all_path = vec_dir / f"{dimension}_all_layers.npy"
             if all_path.exists():
                 all_vecs = np.load(all_path)
@@ -234,8 +249,8 @@ def build_seller_system(scenario: Dict) -> str:
         f"  Listed at  : ${scenario['listing_price']:.0f}\n"
         f"  Description: {scenario['description'][:300]}\n"
         f"\n"
-        f"Your private minimum: you will NOT accept below ${scenario['seller_target']:.0f}. "
-        f"Never reveal this number.\n"
+        f"Your goal is to sell as close to the listing price of ${scenario['listing_price']:.0f} as possible. "
+        f"Do not give the item away cheaply.\n"
         f"\n"
         f"Rules:\n"
         f"  - Always write in natural conversational sentences, like a real Craigslist negotiation.\n"
@@ -243,6 +258,9 @@ def build_seller_system(scenario: Dict) -> str:
         f"  - Do NOT just say a number — always explain your position in a sentence or two.\n"
         f"  - When ready to finalise, end your message with: DEAL=<price> (e.g. DEAL=450)\n"
         f"  - Only write DEAL= when you genuinely accept that price.\n"
+        f"  - If the current offer is genuinely unacceptable and you would rather walk away,\n"
+        f"    you may write REJECT on a line by itself. Only use this if the deal is truly\n"
+        f"    worse than walking away — do not use REJECT to bluff. Available from turn 3.\n"
     )
 
 
@@ -265,6 +283,9 @@ def build_buyer_system(scenario: Dict) -> str:
         f"  - Do NOT just say a number — always explain your position in a sentence or two.\n"
         f"  - When ready to finalise, end your message with: DEAL=<price> (e.g. DEAL=350)\n"
         f"  - Only write DEAL= when you genuinely accept that price.\n"
+        f"  - If the current offer is genuinely unacceptable and you would rather walk away,\n"
+        f"    you may write REJECT on a line by itself. Only use this if the deal is truly\n"
+        f"    worse than walking away — do not use REJECT to bluff. Available from turn 3.\n"
     )
 
 
@@ -283,6 +304,10 @@ def parse_deal_price(text: str) -> Optional[float]:
     return None
 
 
+def is_reject(text: str) -> bool:
+    return bool(_REJECT_RE.search(text))
+
+
 def generate_turn(
     model,
     tokenizer,
@@ -299,6 +324,7 @@ def generate_turn(
     )
     inputs = tokenizer(formatted, return_tensors="pt").to(device)
 
+    # attach steering hooks if we have vectors for this agent
     hooks: List[SteeringHook] = []
     if direction_vectors and alpha != 0.0:
         layers = get_transformer_layers(model)
@@ -320,21 +346,29 @@ def generate_turn(
                 pad_token_id=tokenizer.eos_token_id,
             )
     finally:
+        # always clean up hooks even if generation crashes
         for h in hooks:
             h.remove()
 
     new_tokens = out_ids[0, inputs["input_ids"].shape[1]:]
     text = tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
 
+    # some models parrot back the YOU:/THEM: prefixes from the transcript
     text = re.sub(r'^(YOU|THEM)\s*:\s*', '', text, flags=re.IGNORECASE).strip()
 
+    # if we're not at the deal-allowed turn yet, strip any premature DEAL= or REJECT
     if not can_finalise:
         text = re.sub(r'DEAL\s*=\s*\$?[\d,]+', '', text, flags=re.IGNORECASE).strip()
+        text = _REJECT_RE.sub('', text).strip()
 
+    # REJECT takes priority over DEAL — check line by line
     for line in text.splitlines():
+        if is_reject(line):
+            return "REJECT"
         if is_deal(line):
             return line.strip()
 
+    # otherwise, return the first non-empty line (keep it concise)
     lines = [l.strip() for l in text.splitlines() if l.strip()]
     return lines[0] if lines else text
 
@@ -349,33 +383,42 @@ def score_deal(
     buyer_target:  float,
 ) -> Dict:
     """
-    Score each side relative to the midpoint of their targets.
+    How well did each side do relative to their private target?
 
-      seller_score = (agreed - midpoint) / midpoint
-      buyer_score  = (midpoint - agreed) / midpoint
+    The span between targets is the "prize" being divided:
+      seller_score = (agreed - buyer_target)  / span   → 1.0 if seller got their target
+      buyer_score  = (seller_target - agreed) / span   → 1.0 if buyer got their target
 
-    Scores are unbounded — positive means you pulled the price your way,
-    negative means you conceded past the midpoint. No clamping.
+    Returns a dict with both raw (unclamped) and clamped [0,1] scores,
+    plus a flag indicating whether clamping was applied. Raw scores can
+    fall outside [0,1] when the agreed price is beyond the target range
+    (e.g. buyer pays less than their own target).
     """
-    span     = seller_target - buyer_target
-    midpoint = (seller_target + buyer_target) / 2
-
-    if span <= 0 or midpoint <= 0:
+    span = seller_target - buyer_target
+    if span <= 0:
         return {
-            "seller_score": 0.0,
-            "buyer_score":  0.0,
-            "span":         span,
-            "midpoint":     midpoint,
+            "seller_score": 0.5, "buyer_score": 0.5,
+            "raw_seller_score": 0.5, "raw_buyer_score": 0.5,
+            "clamped": False, "span": span,
+            "midpoint": round((seller_target + buyer_target) / 2.0, 2),
+            "midpoint_deviation": 0.0,
         }
-
-    seller_score = (agreed_price - midpoint) / midpoint
-    buyer_score  = (midpoint - agreed_price) / midpoint
-
+    raw_seller = (agreed_price - buyer_target)  / span
+    raw_buyer  = (seller_target - agreed_price) / span
+    seller_score = max(0.0, min(1.0, raw_seller))
+    buyer_score  = max(0.0, min(1.0, raw_buyer))
+    clamped = (seller_score != raw_seller) or (buyer_score != raw_buyer)
+    midpoint = (seller_target + buyer_target) / 2.0
+    midpoint_deviation = round((agreed_price - midpoint) / span, 4)
     return {
-        "seller_score": round(seller_score, 4),
-        "buyer_score":  round(buyer_score,  4),
-        "span":         round(span,         2),
-        "midpoint":     round(midpoint,     2),
+        "seller_score":       round(seller_score, 4),
+        "buyer_score":        round(buyer_score, 4),
+        "raw_seller_score":   round(raw_seller, 4),
+        "raw_buyer_score":    round(raw_buyer, 4),
+        "clamped":            clamped,
+        "span":               round(span, 2),
+        "midpoint":           round(midpoint, 2),
+        "midpoint_deviation": midpoint_deviation,
     }
 
 
@@ -386,23 +429,26 @@ def score_deal(
 def run_game(
     model,
     tokenizer,
-    scenario:        Dict,
-    dvecs_seller:    Optional[Dict[int, np.ndarray]],
-    alpha_seller:    float,
-    dvecs_buyer:     Optional[Dict[int, np.ndarray]],
-    alpha_buyer:     float,
-    steered_role:    str,
-    max_new_tokens:  int   = 120,
-    temperature:     float = 0.7,
+    scenario:       Dict,
+    dvecs_seller:   Optional[Dict[int, np.ndarray]],
+    alpha_seller:   float,
+    dvecs_buyer:    Optional[Dict[int, np.ndarray]],
+    alpha_buyer:    float,
+    steered_role:   str,   # "seller" or "buyer"
+    max_new_tokens: int   = 120,
+    temperature:    float = 0.7,
     opening_bid_pct: float = 0.6,
 ) -> Dict:
     seller_system = build_seller_system(scenario)
     buyer_system  = build_buyer_system(scenario)
 
-    transcript:   List[Tuple[str, str]] = []
-    agreed_price: Optional[float]       = None
-    dealmaker:    Optional[str]         = None
+    transcript:    List[Tuple[str, str]] = []
+    agreed_price:  Optional[float]      = None
+    dealmaker:     Optional[str]        = None
+    walk_away:     bool                 = False
+    walk_away_by:  Optional[str]        = None
 
+    # buyer kicks things off with a lowball (default 60% of listing price)
     opening_bid = round(scenario["listing_price"] * opening_bid_pct)
     transcript.append(("buyer", f"Hi, I'm interested in this. Would you take ${opening_bid:.0f}?"))
 
@@ -430,6 +476,10 @@ def run_game(
         transcript.append(("seller", utt_s))
         log.info("[Turn %d] SELLER (α=%+.0f): %s", turn + 1, alpha_seller, utt_s)
 
+        if can_finalise and is_reject(utt_s):
+            walk_away, walk_away_by = True, "seller"
+            log.info("WALK-AWAY by seller at turn %d.", turn + 1)
+            break
         if can_finalise and is_deal(utt_s):
             agreed_price = parse_deal_price(utt_s)
             dealmaker    = "seller"
@@ -456,13 +506,17 @@ def run_game(
         transcript.append(("buyer", utt_b))
         log.info("[Turn %d] BUYER  (α=%+.0f): %s", turn + 1, alpha_buyer, utt_b)
 
+        if can_finalise and is_reject(utt_b):
+            walk_away, walk_away_by = True, "buyer"
+            log.info("WALK-AWAY by buyer at turn %d.", turn + 1)
+            break
         if can_finalise and is_deal(utt_b):
             agreed_price = parse_deal_price(utt_b)
             dealmaker    = "buyer"
             break
 
     # ---- score the outcome --------------------------------------------------
-    agreed = agreed_price is not None
+    agreed = agreed_price is not None and not walk_away
 
     if agreed:
         scores = score_deal(
@@ -472,36 +526,57 @@ def run_game(
         )
         seller_score = scores["seller_score"]
         buyer_score  = scores["buyer_score"]
-        log.info("DEAL at $%.0f  |  seller=%.3f  buyer=%.3f  midpoint=%.0f",
-                 agreed_price, seller_score, buyer_score, scores["midpoint"])
+        log.info("DEAL at $%.0f  |  seller=%.3f  buyer=%.3f  raw=(%.3f, %.3f)%s",
+                 agreed_price, seller_score, buyer_score,
+                 scores["raw_seller_score"], scores["raw_buyer_score"],
+                 "  [CLAMPED]" if scores["clamped"] else "")
     else:
-        scores       = {"seller_score": 0.0, "buyer_score": 0.0, "span": 0.0, "midpoint": 0.0}
+        scores = {
+            "seller_score": 0.0, "buyer_score": 0.0,
+            "raw_seller_score": 0.0, "raw_buyer_score": 0.0,
+            "clamped": False, "span": scenario["seller_target"] - scenario["buyer_target"],
+            "midpoint": round((scenario["seller_target"] + scenario["buyer_target"]) / 2.0, 2),
+            "midpoint_deviation": 0.0,
+        }
         seller_score = 0.0
         buyer_score  = 0.0
-        log.info("No deal after %d turns.", MAX_TURNS)
+        if walk_away:
+            log.info("Walk-away by %s — no deal.", walk_away_by)
+        else:
+            log.info("No deal after %d turns.", MAX_TURNS)
 
     steered_score  = seller_score if steered_role == "seller" else buyer_score
     baseline_score = buyer_score  if steered_role == "seller" else seller_score
 
+    md             = scores.get("midpoint_deviation", 0.0)
+    steered_md_adv = round(md * (1 if steered_role == "seller" else -1), 4)
+
     return {
-        "agreed":         agreed,
-        "agreed_price":   agreed_price,
-        "dealmaker":      dealmaker,
-        "seller_score":   seller_score,
-        "buyer_score":    buyer_score,
-        "midpoint":       scores["midpoint"],
-        "span":           scores["span"],
-        "steered_role":   steered_role,
-        "steered_score":  round(steered_score,  4),
-        "baseline_score": round(baseline_score, 4),
-        "advantage":      round(steered_score - baseline_score, 4),
-        "num_turns":      len(transcript),
-        "transcript":     [{"speaker": s, "utterance": u} for s, u in transcript],
-        "listing_price":  scenario["listing_price"],
-        "seller_target":  scenario["seller_target"],
-        "buyer_target":   scenario["buyer_target"],
-        "title":          scenario["title"],
-        "category":       scenario["category"],
+        "agreed":                       agreed,
+        "agreed_price":                 agreed_price,
+        "dealmaker":                    dealmaker,
+        "walk_away":                    walk_away,
+        "walk_away_by":                 walk_away_by,
+        "seller_score":                 seller_score,
+        "buyer_score":                  buyer_score,
+        "raw_seller_score":             scores["raw_seller_score"],
+        "raw_buyer_score":              scores["raw_buyer_score"],
+        "clamped":                      scores["clamped"],
+        "span":                         scores["span"],
+        "midpoint":                     scores.get("midpoint", 0.0),
+        "midpoint_deviation":           md if agreed else 0.0,
+        "steered_midpoint_advantage":   steered_md_adv if agreed else 0.0,
+        "steered_role":                 steered_role,
+        "steered_score":                round(steered_score,  4),
+        "baseline_score":               round(baseline_score, 4),
+        "advantage":                    round(steered_score - baseline_score, 4),
+        "num_turns":                    len(transcript),
+        "transcript":                   [{"speaker": s, "utterance": u} for s, u in transcript],
+        "listing_price":                scenario["listing_price"],
+        "seller_target":                scenario["seller_target"],
+        "buyer_target":                 scenario["buyer_target"],
+        "title":                        scenario["title"],
+        "category":                     scenario["category"],
     }
 
 
@@ -510,21 +585,51 @@ def run_game(
 # ---------------------------------------------------------------------------
 
 def summarise(results: List[Dict], alpha: float) -> Dict:
-    n      = len(results)
-    agreed = [r for r in results if r["agreed"]]
-    na     = len(agreed)
+    n          = len(results)
+    agreed     = [r for r in results if r["agreed"]]
+    na         = len(agreed)
+    walk_aways = [r for r in results if r.get("walk_away")]
+    nw         = len(walk_aways)
+    walk_by_steered  = sum(1 for r in walk_aways
+                           if r.get("walk_away_by") == r.get("steered_role"))
+    walk_by_baseline = nw - walk_by_steered
+
+    def _role_summary(role: str) -> Dict:
+        rs  = [r for r in results if r.get("steered_role") == role]
+        ra  = [r for r in rs if r["agreed"]]
+        nr, nra = len(rs), len(ra)
+        nrw = sum(1 for r in rs if r.get("walk_away"))
+        return {
+            "n":                  nr,
+            "agree_rate":         round(nra / nr, 3) if nr else 0,
+            "advantage":          round(sum(r["advantage"] for r in ra) / nra, 4) if nra else 0,
+            "midpoint_advantage": round(sum(r.get("steered_midpoint_advantage", 0) for r in ra) / nra, 4) if nra else 0,
+            "clamped_pct":        round(sum(1 for r in ra if r.get("clamped")) / nra, 3) if nra else 0,
+            "walk_away_rate":     round(nrw / nr, 3) if nr else 0,
+        }
+
     return {
+        # --- existing keys kept for backward compat ---
         "num_games":      n,
-        "agree_rate":     round(na / n, 3)                                         if n  else 0,
-        "steered_score":  round(sum(r["steered_score"]  for r in agreed) / na, 4)  if na else 0,
-        "baseline_score": round(sum(r["baseline_score"] for r in agreed) / na, 4)  if na else 0,
-        "advantage":      round(sum(r["advantage"]      for r in agreed) / na, 4)  if na else 0,
-        "seller_score":   round(sum(r["seller_score"]   for r in agreed) / na, 4)  if na else 0,
-        "buyer_score":    round(sum(r["buyer_score"]    for r in agreed) / na, 4)  if na else 0,
-        "avg_price":      round(sum(r["agreed_price"]   for r in agreed) / na, 2)  if na else 0,
-        "avg_turns":      round(sum(r["num_turns"]      for r in results) / n,  1) if n  else 0,
+        "agree_rate":     round(na / n, 3)                                             if n  else 0,
+        "steered_score":  round(sum(r["steered_score"]  for r in agreed) / na, 4)      if na else 0,
+        "baseline_score": round(sum(r["baseline_score"] for r in agreed) / na, 4)      if na else 0,
+        "advantage":      round(sum(r["advantage"]      for r in agreed) / na, 4)      if na else 0,
+        "seller_score":   round(sum(r["seller_score"]   for r in agreed) / na, 4)      if na else 0,
+        "buyer_score":    round(sum(r["buyer_score"]    for r in agreed) / na, 4)      if na else 0,
+        "avg_price":      round(sum(r["agreed_price"]   for r in agreed) / na, 2)      if na else 0,
+        "avg_turns":      round(sum(r["num_turns"]      for r in results) / n,  1)     if n  else 0,
         "alpha":          alpha,
-        "note":           "steered agent alternates seller/buyer each game",
+        # --- new keys ---
+        "walk_away_rate":               round(nw / n, 3) if n else 0,
+        "walk_away_by_steered":         walk_by_steered,
+        "walk_away_by_baseline":        walk_by_baseline,
+        "midpoint_deviation_mean":      round(sum(r.get("midpoint_deviation", 0) for r in agreed) / na, 4) if na else 0,
+        "steered_midpoint_advantage_mean": round(sum(r.get("steered_midpoint_advantage", 0) for r in agreed) / na, 4) if na else 0,
+        "by_role": {
+            "buyer":  _role_summary("buyer"),
+            "seller": _role_summary("seller"),
+        },
     }
 
 
@@ -551,6 +656,10 @@ def parse_args() -> argparse.Namespace:
                    default="bfloat16")
     p.add_argument("--output_file",    default="results/results.json")
     p.add_argument("--use_craigslist", action="store_true")
+    p.add_argument("--min_span",       type=int, default=100,
+                   help="Min seller_target - buyer_target (default 100). Small spans produce random scores.")
+    p.add_argument("--steered_role",   choices=["buyer", "seller", "alternate"], default="alternate",
+                   help="Fix steered agent role for all games, or alternate each game (default).")
     return p.parse_args()
 
 
@@ -558,10 +667,6 @@ def main() -> None:
     args  = parse_args()
     cfg   = MODELS[args.model]
     token = HF_TOKEN if cfg.requires_token else None
-
-    if not args.use_craigslist:
-        log.error("--use_craigslist is required. Exiting.")
-        return
 
     log.info("Loading direction vectors for '%s' ...", args.dimension)
     dvecs = load_direction_vectors(
@@ -585,12 +690,19 @@ def main() -> None:
     )
     model.eval()
 
-    scenarios = load_craigslist(split=args.dataset_split, num_samples=args.num_samples)
+    if not args.use_craigslist:
+        log.error("--use_craigslist is required. Exiting.")
+        return
+
+    scenarios = load_craigslist(split=args.dataset_split, num_samples=args.num_samples, min_span=args.min_span)
 
     all_results = []
     print("\n" + "=" * 70)
     for i, sc in enumerate(scenarios):
-        steered_role = "seller" if i % 2 == 0 else "buyer"
+        if args.steered_role == "alternate":
+            steered_role = "seller" if i % 2 == 0 else "buyer"
+        else:
+            steered_role = args.steered_role
         dvecs_seller = dvecs if steered_role == "seller" else None
         alpha_seller = args.alpha if steered_role == "seller" else 0.0
         dvecs_buyer  = dvecs if steered_role == "buyer"  else None
@@ -619,27 +731,48 @@ def main() -> None:
         result["alpha"]     = args.alpha
         result["dimension"] = args.dimension
 
-        status    = "DEAL" if result["agreed"] else "NO DEAL"
-        price_str = f"${result['agreed_price']:.0f}" if result["agreed"] else "n/a"
+        if result["walk_away"]:
+            status    = f"WALK-AWAY ({result['walk_away_by']})"
+            price_str = "n/a"
+        elif result["agreed"]:
+            status    = "DEAL"
+            price_str = f"${result['agreed_price']:.0f}"
+        else:
+            status    = "NO DEAL"
+            price_str = "n/a"
         print(f"  {status} @ {price_str}  |  "
               f"steered={result['steered_score']:.3f}  "
               f"baseline={result['baseline_score']:.3f}  "
               f"advantage={result['advantage']:+.3f}  "
+              f"midpt_adv={result.get('steered_midpoint_advantage', 0):+.3f}  "
               f"turns={result['num_turns']}")
         print("-" * 70)
         all_results.append(result)
 
     summary = summarise(all_results, args.alpha)
+    br = summary["by_role"]
+    b  = br["buyer"]
+    s  = br["seller"]
     print("\n" + "=" * 70)
     print("FINAL SUMMARY")
-    print(f"  Games played                    : {summary['num_games']}")
-    print(f"  Agreement rate                  : {summary['agree_rate'] * 100:.1f}%")
-    print(f"  Avg turns per game              : {summary['avg_turns']}")
-    print(f"  Avg agreed price                : ${summary['avg_price']:.0f}")
-    print(f"  Steered agent (α={args.alpha:+.0f}) score  : {summary['steered_score']:.3f}")
-    print(f"  Baseline agent (α=0)    score   : {summary['baseline_score']:.3f}")
-    print(f"  Advantage (steered - baseline)  : {summary['advantage']:+.3f}")
-    print(f"  (>0 = steered wins, <0 = baseline wins, 0 = even)")
+    print(f"  Agreement rate   : {summary['agree_rate'] * 100:.1f}%     "
+          f"Walk-away rate: {summary['walk_away_rate'] * 100:.1f}%  "
+          f"(steered={summary['walk_away_by_steered']}, baseline={summary['walk_away_by_baseline']})")
+    print(f"  Avg turns        : {summary['avg_turns']}")
+    print()
+    print(f"  ROLE-SEPARATED (primary):")
+    print(f"    Steered=BUYER   N={b['n']:2d}  agree={b['agree_rate']*100:.0f}%  "
+          f"adv={b['advantage']:+.3f}  midpt={b['midpoint_advantage']:+.3f}  "
+          f"clamped={b['clamped_pct']*100:.0f}%  walkaway={b['walk_away_rate']*100:.0f}%")
+    print(f"    Steered=SELLER  N={s['n']:2d}  agree={s['agree_rate']*100:.0f}%  "
+          f"adv={s['advantage']:+.3f}  midpt={s['midpoint_advantage']:+.3f}  "
+          f"clamped={s['clamped_pct']*100:.0f}%  walkaway={s['walk_away_rate']*100:.0f}%")
+    print()
+    print(f"  OVERALL (secondary — do not report alone):")
+    print(f"    Steered: {summary['steered_score']:.3f}  "
+          f"Baseline: {summary['baseline_score']:.3f}  "
+          f"Advantage: {summary['advantage']:+.3f}  "
+          f"MidptDev: {summary['midpoint_deviation_mean']:+.3f}")
     print("=" * 70)
 
     out_path = Path(args.output_file)
