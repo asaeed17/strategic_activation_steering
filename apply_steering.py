@@ -685,7 +685,7 @@ def main() -> None:
 
     model = AutoModelForCausalLM.from_pretrained(
         cfg.hf_id, token=token,
-        dtype=dtype_map[args.dtype],
+        torch_dtype=dtype_map[args.dtype],
         device_map="auto",
     )
     model.eval()
@@ -776,6 +776,7 @@ def main() -> None:
     print("=" * 70)
 
     out_path = Path(args.output_file)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump({"summary": summary, "games": all_results}, f, indent=2, ensure_ascii=False)
     log.info("Saved results to %s", out_path)
