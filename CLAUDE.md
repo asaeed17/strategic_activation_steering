@@ -35,10 +35,13 @@ python apply_steering.py --model qwen2.5-3b --dimension strategic_concession_mak
 python fast_search_steering.py --model qwen2.5-3b --use_craigslist --output_dir results/fast
 
 # Step 4: Post-run analysis (CPU only)
-python analysis/analyse_eval.py
-python analysis/metrics_b1.py
-python analysis/metrics_b3_roles.py
-python llm_judge.py --judges gemini
+# Run experiments first (GPU):
+python analysis/run_eval.py --model qwen2.5-3b --experiments scm_craigslist
+# Then analyse (CPU):
+python analysis/turn_metrics.py        # per-turn behavior enrichment (→ turn_metrics_enriched.json)
+python analysis/role_analysis.py       # role-separated tables (reads turn_metrics_enriched.json)
+python analysis/analyse_results.py     # paired statistical analysis
+python llm_judge.py --judges gemini    # qualitative judge
 
 # Validation / probing
 python probe_vectors.py --model qwen2.5-3b
