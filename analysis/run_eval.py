@@ -99,6 +99,13 @@ FIRMNESS_CONFIG = {
     "alpha":     5.0,        # moderate alpha from S2 dose-response
 }
 
+VALUE_CREATION_CONFIG = {
+    "dimension": "value_creation",
+    "method":    "mean_diff",
+    "layers":    [9, 18, 27],  # spread layers from teammate's search
+    "alpha":     5.21,         # best alpha from S2 TPE optimization
+}
+
 N_CRAIGSLIST     = 50    # G1/G2 paired comparison
 N_DOND           = 30    # G3 cross-dataset
 N_FIRMNESS       = 30    # G4 firmness rerun
@@ -321,6 +328,83 @@ def run_firmness_craigslist(model, tokenizer, scenarios, firm_dvecs, alpha, outp
 
     elapsed = time.time() - t0
     log.info("Firmness Craigslist complete: %d triplets in %.0fs",
+             len(buyer_steered_games), elapsed)
+    return buyer_steered_games, seller_steered_games, buyer_baseline_games
+
+
+# ─── Value Creation Craigslist: buyer-steered + seller-steered + buyer-baseline ─
+
+def run_value_creation_craigslist(model, tokenizer, scenarios, vc_dvecs, alpha, output_dir):
+    """
+    Same 3-batch fixed-role design to test teammate's value_creation finding.
+    Outputs: value_creation_buyer_steered.json, value_creation_seller_steered.json,
+             value_creation_buyer_baseline.json, value_creation_scenarios_pinned.json
+    """
+    log.info("=" * 70)
+    log.info("Value Creation Craigslist: role-fixed batches (%d scenarios × 3 batches)",
+             len(scenarios))
+    log.info("  Value Creation alpha=%.3f, layers=%s", alpha, VALUE_CREATION_CONFIG["layers"])
+    log.info("=" * 70)
+
+    buyer_steered_games, seller_steered_games, buyer_baseline_games = [], [], []
+    t0 = time.time()
+
+    for i, sc in enumerate(scenarios):
+        try:
+            r_buy  = run_single_game(model, tokenizer, sc, "buyer", vc_dvecs, alpha)
+            r_buy["game_id"] = i
+            buyer_steered_games.append(r_buy)
+
+            r_sell = run_single_game(model, tokenizer, sc, "seller", vc_dvecs, alpha)
+            r_sell["game_id"] = i
+            seller_steered_games.append(r_sell)
+
+            r_base = run_single_game(model, tokenizer, sc, "buyer", None, 0.0)
+            r_base["game_id"] = i
+            buyer_baseline_games.append(r_base)
+
+        except Exception as e:
+            log.error("Value Creation Craigslist triplet %d failed: %s\n%s", i, e, traceback.format_exc())
+            continue
+
+        save_results(buyer_steered_games,  "value_creation_buyer_steered",  alpha, output_dir)
+        save_results(seller_steered_games, "value_creation_seller_steered", alpha, output_dir)
+        save_results(buyer_baseline_games, "value_creation_buyer_baseline", 0.0,   output_dir)
+
+        elapsed = time.time() - t0
+        mpd_buy  = r_buy.get("midpoint_deviation",  float("nan"))
+        mpd_sell = r_sell.get("midpoint_deviation", float("nan"))
+        mpd_base = r_base.get("midpoint_deviation", float("nan"))
+        log.info(
+            "Triplet %2d/%d [%5.0fs] | "
+            "buy adv=%+.3f mpd=%+.3f | sell adv=%+.3f mpd=%+.3f | base adv=%+.3f mpd=%+.3f",
+            i + 1, len(scenarios), elapsed,
+            r_buy["advantage"],  mpd_buy,
+            r_sell["advantage"], mpd_sell,
+            r_base["advantage"], mpd_base,
+        )
+
+    # Paired analysis
+    if buyer_steered_games and buyer_baseline_games:
+        paired_adv = [r1["advantage"] - r2["advantage"]
+                      for r1, r2 in zip(buyer_steered_games, buyer_baseline_games)
+                      if r1["agreed"] and r2["agreed"]]
+        paired_mpd = [r1["midpoint_deviation"] - r2["midpoint_deviation"]
+                      for r1, r2 in zip(buyer_steered_games, buyer_baseline_games)
+                      if r1["agreed"] and r2["agreed"]
+                      and r1.get("midpoint_deviation") is not None
+                      and r2.get("midpoint_deviation") is not None]
+        if paired_adv:
+            log.info("=" * 70)
+            log.info("VALUE CREATION BUYER STEERING EFFECT (N=%d agreed pairs):", len(paired_adv))
+            log.info("  Δadvantage:    Mean=%+.4f  Std=%.4f", np.mean(paired_adv), np.std(paired_adv, ddof=1))
+            if paired_mpd:
+                log.info("  Δmidpoint_dev: Mean=%+.4f  Std=%.4f  (preferred)",
+                         np.mean(paired_mpd), np.std(paired_mpd, ddof=1))
+            log.info("=" * 70)
+
+    elapsed = time.time() - t0
+    log.info("Value Creation Craigslist complete: %d triplets in %.0fs",
              len(buyer_steered_games), elapsed)
     return buyer_steered_games, seller_steered_games, buyer_baseline_games
 
@@ -605,12 +689,13 @@ def parse_args():
                    help="Path to vectors dir for this variant, e.g. vectors/neg8dim_12pairs_matched/negotiation")
     p.add_argument("--output_dir", default=str(Path(_root) / "results" / "eval"))
     p.add_argument("--experiments", nargs="+",
-                   choices=["scm_craigslist", "firmness_craigslist", "dond_crossval",
-                             "firmness", "sensitivity", "cosine"],
+                   choices=["scm_craigslist", "firmness_craigslist", "value_creation_craigslist",
+                             "dond_crossval", "firmness", "sensitivity", "cosine"],
                    default=None,
                    help="Which experiments to run (default: scm_craigslist). "
                         "scm_craigslist=SCM buyer+seller+baseline batches; "
                         "firmness_craigslist=firmness buyer+seller+baseline batches; "
+                        "value_creation_craigslist=value_creation buyer+seller+baseline batches; "
                         "dond_crossval=Deal-or-No-Deal cross-dataset; "
                         "firmness=firmness vector moderate alpha (old 30-game design); "
                         "sensitivity=opening-bid sensitivity; "
@@ -657,6 +742,10 @@ def main():
         total_games += N_DOND
     if "firmness_craigslist" in experiments:
         plan.append(f"firmness_craigslist  Firmness buyer+seller+baseline: "
+                    f"{N_CRAIGSLIST * 3} games")
+        total_games += N_CRAIGSLIST * 3
+    if "value_creation_craigslist" in experiments:
+        plan.append(f"value_creation_craigslist  Value Creation buyer+seller+baseline: "
                     f"{N_CRAIGSLIST * 3} games")
         total_games += N_CRAIGSLIST * 3
     if "firmness" in experiments:
@@ -719,6 +808,17 @@ def main():
             experiments.discard("firmness_craigslist")
             experiments.discard("firmness")
 
+    vc_dvecs = None
+    if "value_creation_craigslist" in experiments:
+        vc_dvecs = load_vectors_safe(
+            args.vectors_dir, model_cfg.alias,
+            VALUE_CREATION_CONFIG["dimension"], VALUE_CREATION_CONFIG["method"],
+            VALUE_CREATION_CONFIG["layers"],
+        )
+        if vc_dvecs is None:
+            log.warning("Value Creation vectors not found — value_creation_craigslist will be skipped.")
+            experiments.discard("value_creation_craigslist")
+
     # ─── Load model (single load for all experiments) ─────────────────
     log.info("Loading model: %s ...", model_cfg.hf_id)
     dtype_map = {
@@ -740,7 +840,7 @@ def main():
     log.info("Model loaded. Device: %s", next(model.parameters()).device)
 
     # ─── Pin scenarios ─────────────────────────────────────────────────
-    if experiments & {"scm_craigslist", "firmness_craigslist", "sensitivity"}:
+    if experiments & {"scm_craigslist", "firmness_craigslist", "value_creation_craigslist", "sensitivity"}:
         rng_main = random.Random(args.seed)
         all_sc = _load_all_craigslist(split=args.split)
 
@@ -776,6 +876,21 @@ def main():
                 }, f, indent=2, ensure_ascii=False)
             log.info("Pinned %d firmness scenarios (seed=%d, min_span=%d)",
                      len(firmness_scenarios), args.seed + 1, MIN_SPAN)
+
+        if "value_creation_craigslist" in experiments:
+            # Use yet another seed offset so it doesn't overlap
+            rng_vc = random.Random(args.seed + 2)
+            vc_scenarios = rng_vc.sample(all_sc, min(N_CRAIGSLIST, len(all_sc)))
+            with open(output_dir / "value_creation_scenarios_pinned.json", "w") as f:
+                json.dump({
+                    "seed":      args.seed + 2,
+                    "split":     args.split,
+                    "min_span":  MIN_SPAN,
+                    "n":         len(vc_scenarios),
+                    "scenarios": vc_scenarios,
+                }, f, indent=2, ensure_ascii=False)
+            log.info("Pinned %d value_creation scenarios (seed=%d, min_span=%d)",
+                     len(vc_scenarios), args.seed + 2, MIN_SPAN)
 
     # ─── Run experiments ──────────────────────────────────────────────
     results_summary = {}
@@ -828,6 +943,34 @@ def main():
             "advantage":        np.mean([g["advantage"]        for g in fbl_agreed]) if fbl_agreed else 0,
             "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in fbl_agreed
                                          if g.get("midpoint_deviation") is not None]) if fbl_agreed else 0,
+        }
+
+    # Value Creation Craigslist: primary fixed-role batches
+    if "value_creation_craigslist" in experiments and vc_dvecs:
+        vc_buy, vc_sell, vc_base = run_value_creation_craigslist(
+            model, tokenizer, vc_scenarios,
+            vc_dvecs, VALUE_CREATION_CONFIG["alpha"], output_dir,
+        )
+        vcb_agreed   = [g for g in vc_buy  if g["agreed"]]
+        vcs_agreed   = [g for g in vc_sell if g["agreed"]]
+        vcbl_agreed  = [g for g in vc_base if g["agreed"]]
+        results_summary["value_creation_buyer"] = {
+            "n": len(vc_buy), "agreed": len(vcb_agreed),
+            "advantage":        np.mean([g["advantage"]        for g in vcb_agreed]) if vcb_agreed else 0,
+            "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in vcb_agreed
+                                         if g.get("midpoint_deviation") is not None]) if vcb_agreed else 0,
+        }
+        results_summary["value_creation_seller"] = {
+            "n": len(vc_sell), "agreed": len(vcs_agreed),
+            "advantage":        np.mean([g["advantage"]        for g in vcs_agreed]) if vcs_agreed else 0,
+            "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in vcs_agreed
+                                         if g.get("midpoint_deviation") is not None]) if vcs_agreed else 0,
+        }
+        results_summary["value_creation_baseline"] = {
+            "n": len(vc_base), "agreed": len(vcbl_agreed),
+            "advantage":        np.mean([g["advantage"]        for g in vcbl_agreed]) if vcbl_agreed else 0,
+            "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in vcbl_agreed
+                                         if g.get("midpoint_deviation") is not None]) if vcbl_agreed else 0,
         }
 
     # DonD cross-dataset validation
