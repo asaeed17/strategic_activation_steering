@@ -116,7 +116,7 @@ def load_metadata(vectors_dir: Path, model_alias: str) -> Dict:
 
 
 # ---------------------------------------------------------------------------
-# Core: run N games for a fixed config, return mean advantage
+# Core: run N games for a fixed config, return mean midpoint advantage
 # ---------------------------------------------------------------------------
 
 def run_config(
@@ -127,30 +127,39 @@ def run_config(
     alpha:         float,
     max_new_tokens: int,
     temperature:   float,
+    role:          str = "buyer",
 ) -> Tuple[float, float, float]:
     """
-    Run all scenarios for a fixed (dvecs, alpha) config.
-    Returns (advantage, agree_rate, steered_score).
+    Run all scenarios with the steered agent fixed to one role (matches
+    run_eval.py's fixed-role batch design).
+
+    Returns (steered_midpoint_advantage_mean, agree_rate, steered_score).
+
+    steered_midpoint_advantage_mean is clamp-immune (preferred over clamped
+    advantage). For buyer-steered it equals -midpoint_deviation; for
+    seller-steered it equals +midpoint_deviation.
     """
     games = []
-    for i, sc in enumerate(scenarios):
-        steered_role = "seller" if i % 2 == 0 else "buyer"
+    for sc in scenarios:
         result = run_game(
             model=model,
             tokenizer=tokenizer,
             scenario=sc,
-            dvecs_seller=dvecs if steered_role == "seller" else None,
-            alpha_seller=alpha  if steered_role == "seller" else 0.0,
-            dvecs_buyer =dvecs if steered_role == "buyer"   else None,
-            alpha_buyer =alpha  if steered_role == "buyer"  else 0.0,
-            steered_role=steered_role,
+            dvecs_seller=dvecs if role == "seller" else None,
+            alpha_seller=alpha  if role == "seller" else 0.0,
+            dvecs_buyer =dvecs if role == "buyer"   else None,
+            alpha_buyer =alpha  if role == "buyer"  else 0.0,
+            steered_role=role,
             max_new_tokens=max_new_tokens,
             temperature=temperature,
         )
         games.append(result)
 
     summary = summarise(games, alpha)
-    return summary["advantage"], summary["agree_rate"], summary["steered_score"]
+    role_summary = summary["by_role"][role]
+    midpt_adv  = role_summary["midpoint_advantage"]
+    agree_rate = role_summary["agree_rate"]
+    return midpt_adv, agree_rate, summary["steered_score"]
 
 
 # ---------------------------------------------------------------------------
@@ -190,10 +199,10 @@ def run_stage1(
       - Few games per combo (just enough to rank them)
       - Greedy decoding (temperature=0 recommended)
 
-    Returns results sorted by advantage descending.
+    Returns results sorted by steered_midpoint_advantage descending.
     """
     combos = list(product(dimensions, methods, layer_presets))
-    log.info("Stage 1: %d combos × %d games = %d total games",
+    log.info("Stage 1: %d combos × %d games (buyer-steered) = %d total games",
              len(combos), len(scenarios), len(combos) * len(scenarios))
 
     results = []
@@ -210,55 +219,56 @@ def run_stage1(
                         i + 1, len(combos), dim, method, preset)
             continue
 
-        adv, agree, steered = run_config(
+        midpt_adv, agree, steered = run_config(
             model=model, tokenizer=tokenizer, scenarios=scenarios,
             dvecs=dvecs, alpha=probe_alpha,
             max_new_tokens=max_new_tokens, temperature=temperature,
+            role="buyer",
         )
 
-        coherent = is_coherent(adv, agree)
+        coherent = is_coherent(midpt_adv, agree)
         result = {
-            "dimension":    dim,
-            "method":       method,
-            "layer_preset": preset,
-            "layer_indices": layers,
-            "probe_alpha":  probe_alpha,
-            "advantage":    adv,
-            "agree_rate":   agree,
-            "steered_score": steered,
-            "coherent":     coherent,
+            "dimension":                   dim,
+            "method":                      method,
+            "layer_preset":                preset,
+            "layer_indices":               layers,
+            "probe_alpha":                 probe_alpha,
+            "steered_midpoint_advantage":  midpt_adv,
+            "agree_rate":                  agree,
+            "steered_score":               steered,
+            "coherent":                    coherent,
         }
         results.append(result)
 
         log.info(
             "S1 [%d/%d] dim=%-20s method=%-9s preset=%-13s "
-            "adv=%+.4f agree=%.0f%%%s",
+            "midpt_adv=%+.4f agree=%.0f%%%s",
             i + 1, len(combos), dim, method, preset,
-            adv, agree * 100,
+            midpt_adv, agree * 100,
             "" if coherent else "  ← INCOHERENT",
         )
 
     # Save stage 1 results
-    results.sort(key=lambda r: r["advantage"], reverse=True)
+    results.sort(key=lambda r: r["steered_midpoint_advantage"], reverse=True)
     out_path = output_dir / "stage1_results.json"
     with open(out_path, "w") as fh:
         json.dump(results, fh, indent=2)
 
     # Print summary table
-    print("\n" + "=" * 95)
-    print("STAGE 1 RESULTS  (sorted by advantage, probe_alpha={:.2f})".format(probe_alpha))
-    print("=" * 95)
+    print("\n" + "=" * 100)
+    print("STAGE 1 RESULTS  (buyer-steered, sorted by midpoint advantage, probe_alpha={:.2f})".format(probe_alpha))
+    print("=" * 100)
     print(f"{'Rank':>4}  {'Dimension':<22}  {'Method':<9}  {'Preset':<13}  "
-          f"{'Layers':<13}  {'Advantage':>9}  {'Agree':>6}  {'OK':>4}")
-    print("-" * 95)
+          f"{'Layers':<13}  {'MidptAdv':>9}  {'Agree':>6}  {'OK':>4}")
+    print("-" * 100)
     for rank, r in enumerate(results, 1):
         print(
             f"{rank:>4}  {r['dimension']:.<22}  {r['method']:.<9}  "
             f"{r['layer_preset']:.<13}  {str(r['layer_indices']):.<13}  "
-            f"{r['advantage']:>+9.4f}  {r['agree_rate']:>5.0%}  "
+            f"{r['steered_midpoint_advantage']:>+9.4f}  {r['agree_rate']:>5.0%}  "
             f"{'✓' if r['coherent'] else '✗':>4}"
         )
-    print("=" * 95)
+    print("=" * 100)
 
     return results
 
@@ -287,7 +297,7 @@ def run_stage2(
     For each top categorical config, run TPE over alpha only.
     This is fast because:
       - Categorical space is already fixed (1 combo per sub-study)
-      - TPE only needs to learn a 1D function (alpha → advantage)
+      - TPE only needs to learn a 1D function (alpha → midpt_adv)
       - 1D TPE converges in ~20 trials
     """
     all_results = []
@@ -328,20 +338,21 @@ def run_stage2(
         def make_objective(dvecs=dvecs):
             def objective(trial: optuna.Trial) -> float:
                 alpha = trial.suggest_float("alpha", alpha_low, alpha_high)
-                adv, agree, _ = run_config(
+                midpt_adv, agree, _ = run_config(
                     model=model, tokenizer=tokenizer, scenarios=scenarios,
                     dvecs=dvecs, alpha=alpha,
                     max_new_tokens=max_new_tokens, temperature=temperature,
+                    role="buyer",
                 )
                 log.info(
-                    "  S2 trial %2d | alpha=%5.2f  adv=%+.4f  agree=%.0f%%",
-                    trial.number, alpha, adv, agree * 100,
+                    "  S2 trial %2d | alpha=%5.2f  midpt_adv=%+.4f  agree=%.0f%%",
+                    trial.number, alpha, midpt_adv, agree * 100,
                 )
-                if not is_coherent(adv, agree):
+                if not is_coherent(midpt_adv, agree):
                     log.warning("  S2 trial %d incoherent (agree=%.0f%%) — pruning",
                                 trial.number, agree * 100)
                     raise optuna.TrialPruned()
-                return adv
+                return midpt_adv
             return objective
 
         if remaining > 0:
@@ -355,45 +366,45 @@ def run_stage2(
 
         best = max(completed, key=lambda t: t.value)
         result = {
-            "dimension":    dim,
-            "method":       method,
-            "layer_preset": preset,
-            "layer_indices": layers,
-            "best_alpha":   best.params["alpha"],
-            "advantage":    best.value,
-            "n_trials":     len(completed),
+            "dimension":                  dim,
+            "method":                     method,
+            "layer_preset":               preset,
+            "layer_indices":              layers,
+            "best_alpha":                 best.params["alpha"],
+            "steered_midpoint_advantage": best.value,
+            "n_trials":                   len(completed),
             # store all alpha trials for this combo
             "alpha_trials": [
-                {"alpha": t.params["alpha"], "advantage": t.value}
+                {"alpha": t.params["alpha"], "steered_midpoint_advantage": t.value}
                 for t in sorted(completed, key=lambda t: t.params["alpha"])
             ],
         }
         all_results.append(result)
 
         log.info(
-            "S2 [%d/%d] best alpha=%.4f  adv=%+.4f  (over %d trials)",
+            "S2 [%d/%d] best alpha=%.4f  midpt_adv=%+.4f  (over %d trials)",
             cfg_rank, len(top_configs), best.params["alpha"], best.value, len(completed),
         )
 
-    all_results.sort(key=lambda r: r["advantage"], reverse=True)
+    all_results.sort(key=lambda r: r["steered_midpoint_advantage"], reverse=True)
     out_path = output_dir / "stage2_results.json"
     with open(out_path, "w") as fh:
         json.dump(all_results, fh, indent=2)
 
     # Print summary
-    print("\n" + "=" * 90)
-    print("STAGE 2 RESULTS  (TPE alpha search per combo)")
-    print("=" * 90)
+    print("\n" + "=" * 95)
+    print("STAGE 2 RESULTS  (TPE alpha search per combo, buyer-steered midpoint advantage)")
+    print("=" * 95)
     print(f"{'Rank':>4}  {'Dimension':<22}  {'Method':<9}  {'Preset':<13}  "
-          f"{'Best Alpha':>10}  {'Advantage':>9}  {'Trials':>6}")
-    print("-" * 90)
+          f"{'Best Alpha':>10}  {'MidptAdv':>9}  {'Trials':>6}")
+    print("-" * 95)
     for rank, r in enumerate(all_results, 1):
         print(
             f"{rank:>4}  {r['dimension']:.<22}  {r['method']:.<9}  "
             f"{r['layer_preset']:.<13}  {r['best_alpha']:>10.4f}  "
-            f"{r['advantage']:>+9.4f}  {r['n_trials']:>6}"
+            f"{r['steered_midpoint_advantage']:>+9.4f}  {r['n_trials']:>6}"
         )
-    print("=" * 90)
+    print("=" * 95)
 
     return all_results
 
@@ -414,8 +425,10 @@ def run_stage3(
     output_dir:    Path,
 ) -> List[Dict]:
     """
-    Re-run top configs with more scenarios at realistic temperature.
-    No optimizer — just confirmation.
+    Re-run top configs with more scenarios at realistic temperature, mirroring
+    run_eval.py's fixed-role design: buyer-steered + seller-steered batches on
+    the same scenarios, reported separately. Sorted by buyer midpoint advantage
+    (the primary evaluation axis).
     """
     results = []
     for rank, cfg in enumerate(top_configs, 1):
@@ -439,61 +452,73 @@ def run_stage3(
             log.error("Stage 3: missing vectors — skipping. %s", exc)
             continue
 
-        adv, agree, steered = run_config(
+        buy_midpt, buy_agree, _ = run_config(
             model=model, tokenizer=tokenizer, scenarios=scenarios,
             dvecs=dvecs, alpha=alpha,
             max_new_tokens=max_new_tokens, temperature=temperature,
+            role="buyer",
+        )
+        sell_midpt, sell_agree, _ = run_config(
+            model=model, tokenizer=tokenizer, scenarios=scenarios,
+            dvecs=dvecs, alpha=alpha,
+            max_new_tokens=max_new_tokens, temperature=temperature,
+            role="seller",
         )
 
         result = {
-            "rank":          rank,
-            "dimension":     dim,
-            "method":        method,
-            "layer_preset":  preset,
-            "layer_indices": layers,
-            "alpha":         alpha,
-            "advantage":     adv,
-            "agree_rate":    agree,
-            "steered_score": steered,
-            "n_games":       len(scenarios),
+            "rank":                          rank,
+            "dimension":                     dim,
+            "method":                        method,
+            "layer_preset":                  preset,
+            "layer_indices":                 layers,
+            "alpha":                         alpha,
+            "buyer_midpoint_advantage":      buy_midpt,
+            "buyer_agree_rate":              buy_agree,
+            "seller_midpoint_advantage":     sell_midpt,
+            "seller_agree_rate":             sell_agree,
+            "n_games":                       len(scenarios),
         }
         results.append(result)
         log.info(
-            "S3 [%d/%d] adv=%+.4f  agree=%.0f%%  alpha=%.4f",
-            rank, len(top_configs), adv, agree * 100, alpha,
+            "S3 [%d/%d] buyer midpt=%+.4f agree=%.0f%%  |  "
+            "seller midpt=%+.4f agree=%.0f%%  |  alpha=%.4f",
+            rank, len(top_configs),
+            buy_midpt,  buy_agree  * 100,
+            sell_midpt, sell_agree * 100,
+            alpha,
         )
 
         out_path = output_dir / f"stage3_rank{rank:02d}.json"
         with open(out_path, "w") as fh:
             json.dump(result, fh, indent=2)
 
-    results.sort(key=lambda r: r["advantage"], reverse=True)
+    results.sort(key=lambda r: r["buyer_midpoint_advantage"], reverse=True)
 
-    print("\n" + "=" * 95)
-    print(f"STAGE 3 — FINAL VALIDATION  "
-          f"({len(scenarios)} scenarios, temp={temperature})")
-    print("=" * 95)
+    print("\n" + "=" * 110)
+    print(f"STAGE 3 — FINAL VALIDATION  ({len(scenarios)} scenarios × 2 roles, temp={temperature})")
+    print("=" * 110)
     print(f"{'Rank':>4}  {'Dimension':<22}  {'Method':<9}  {'Preset':<13}  "
-          f"{'Alpha':>7}  {'Advantage':>9}  {'Agree':>6}")
-    print("-" * 95)
+          f"{'Alpha':>7}  {'BuyMidpt':>9}  {'BuyAgr':>6}  {'SellMidpt':>10}  {'SellAgr':>7}")
+    print("-" * 110)
     for rank, r in enumerate(results, 1):
         print(
             f"{rank:>4}  {r['dimension']:.<22}  {r['method']:.<9}  "
             f"{r['layer_preset']:.<13}  {r['alpha']:>7.4f}  "
-            f"{r['advantage']:>+9.4f}  {r['agree_rate']:>5.0%}"
+            f"{r['buyer_midpoint_advantage']:>+9.4f}  {r['buyer_agree_rate']:>5.0%}  "
+            f"{r['seller_midpoint_advantage']:>+10.4f}  {r['seller_agree_rate']:>6.0%}"
         )
-    print("=" * 95)
+    print("=" * 110)
 
     if results:
         best = results[0]
-        print(f"\nFINAL BEST CONFIG:")
-        print(f"  Dimension  : {best['dimension']}")
-        print(f"  Method     : {best['method']}")
-        print(f"  Preset     : {best['layer_preset']}  →  layers {best['layer_indices']}")
-        print(f"  Alpha      : {best['alpha']:.4f}")
-        print(f"  Advantage  : {best['advantage']:+.4f}")
-        print(f"  Agree rate : {best['agree_rate']:.0%}")
-        print(f"  Validated on {best['n_games']} scenarios")
+        print(f"\nFINAL BEST CONFIG (by buyer midpoint advantage):")
+        print(f"  Dimension     : {best['dimension']}")
+        print(f"  Method        : {best['method']}")
+        print(f"  Preset        : {best['layer_preset']}  →  layers {best['layer_indices']}")
+        print(f"  Alpha         : {best['alpha']:.4f}")
+        print(f"  Buyer  midpt  : {best['buyer_midpoint_advantage']:+.4f}  (agree {best['buyer_agree_rate']:.0%})")
+        print(f"  Seller midpt  : {best['seller_midpoint_advantage']:+.4f}  (agree {best['seller_agree_rate']:.0%})")
+        print(f"  Validated on {best['n_games']} scenarios × 2 roles")
 
     return results
 
@@ -648,7 +673,7 @@ def main() -> None:
     top_k_configs = coherent[: args.s2_top_k]
     log.info("Stage 1 → 2: passing top %d coherent configs", len(top_k_configs))
     for r in top_k_configs:
-        log.info("  %s / %s / %s  adv=%+.4f", r["dimension"], r["method"], r["layer_preset"], r["advantage"])
+        log.info("  %s / %s / %s  midpt_adv=%+.4f", r["dimension"], r["method"], r["layer_preset"], r["steered_midpoint_advantage"])
 
     # =========================================================================
     # STAGE 2 — TPE over alpha for each top categorical combo
