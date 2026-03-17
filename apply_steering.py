@@ -36,7 +36,6 @@ import json
 import random
 import logging
 import argparse
-import urllib.request
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -66,32 +65,26 @@ _REJECT_RE = re.compile(r'^\s*REJECT\s*$', re.IGNORECASE | re.MULTILINE)
 # Dataset Loading
 # ---------------------------------------------------------------------------
 
-# These CodaLab URLs serve the raw parsed JSON for each split.
-# They were live as of the time I wrote this — fingers crossed they stay up.
-RAW_URLS = {
-    "train":      "https://worksheets.codalab.org/rest/bundles/0xd34bbbc5fb3b4fccbd19e10756ca8dd7/contents/blob/parsed.json",
-    "validation": "https://worksheets.codalab.org/rest/bundles/0x15c4160b43d44ee3a8386cca98da138c/contents/blob/parsed.json",
+LOCAL_DATA_DIR = Path(__file__).resolve().parent / "craigslist_data"
+LOCAL_FILES = {
+    "train":      LOCAL_DATA_DIR / "train.json",
+    "validation": LOCAL_DATA_DIR / "validation.json",
 }
 
 
-def _fetch_json(url: str) -> list:
-    log.info("Downloading dataset from %s ...", url)
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        chunks = []
-        while True:
-            chunk = r.read(65536)
-            if not chunk:
-                break
-            chunks.append(chunk)
-        return json.loads(b"".join(chunks).decode("utf-8"))
-
-
 def load_craigslist(split: str = "train", num_samples: int = 50, min_span: int = 100) -> List[Dict]:
-    if split not in RAW_URLS:
-        raise ValueError(f"Split '{split}' not available. Choose from: {list(RAW_URLS.keys())}")
+    if split not in LOCAL_FILES:
+        raise ValueError(f"Split '{split}' not available. Choose from: {list(LOCAL_FILES.keys())}")
 
-    raw = _fetch_json(RAW_URLS[split])
+    path = LOCAL_FILES[split]
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Local dataset file not found: {path}\n"
+            f"Expected craigslist_data/{{train,validation}}.json in the project root."
+        )
+    log.info("Loading dataset from %s ...", path)
+    with open(path, encoding="utf-8") as fh:
+        raw = json.load(fh)
     log.info("Loaded %d raw dialogues from '%s' split.", len(raw), split)
 
     scenarios = []
@@ -162,7 +155,7 @@ def load_craigslist(split: str = "train", num_samples: int = 50, min_span: int =
     log.info("Span filter (<%d): removed %d scenarios.", min_span, n_filtered_span)
     log.info("Found %d valid scenarios after filtering.", len(scenarios))
     if not scenarios:
-        raise RuntimeError("No valid scenarios found — check the CodaLab URLs are still live.")
+        raise RuntimeError("No valid scenarios found after filtering — check the local data files.")
 
     k = min(num_samples, len(scenarios))
     return random.sample(scenarios, k)
