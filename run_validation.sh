@@ -38,6 +38,7 @@ for v in "${VARIANTS[@]}"; do
     python validate_vectors.py \
         --model $MODEL \
         --full \
+        --method mean_diff \
         --negotiation_pairs steering_pairs/${v}/negotiation_steering_pairs.json \
         --control_pairs steering_pairs/${v}/control_steering_pairs.json \
         --vectors_dir vectors/${v}/negotiation \

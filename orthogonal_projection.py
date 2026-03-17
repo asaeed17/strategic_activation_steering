@@ -57,10 +57,10 @@ def orthogonalize(v: np.ndarray, controls: np.ndarray) -> np.ndarray:
     return v_clean
 
 
-def run_vector_analysis(neg_dir: Path, ctrl_dir: Path):
+def run_vector_analysis(neg_dir: Path, ctrl_dir: Path, method: str = "mean_diff"):
     """Phase 1: vector-level analysis (CPU only)."""
-    method_dir = neg_dir / MODEL_ALIAS / "mean_diff"
-    ctrl_method_dir = ctrl_dir / MODEL_ALIAS / "mean_diff"
+    method_dir = neg_dir / MODEL_ALIAS / method
+    ctrl_method_dir = ctrl_dir / MODEL_ALIAS / method
 
     # Discover negotiation dimensions
     neg_dims = sorted(set(
@@ -122,7 +122,7 @@ def run_vector_analysis(neg_dir: Path, ctrl_dir: Path):
     return results, neg_dims, ctrl_vecs
 
 
-def run_probe_comparison(variant: str, neg_dims, ctrl_vecs, vector_results):
+def run_probe_comparison(variant: str, neg_dims, ctrl_vecs, vector_results, method: str = "mean_diff"):
     """Phase 2: load model, extract hidden states, compare 1-D probe accuracy."""
     import torch
     from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -178,7 +178,7 @@ def run_probe_comparison(variant: str, neg_dims, ctrl_vecs, vector_results):
         neg_h = extract_hidden(neg_texts)
 
         # Load original and cleaned vectors
-        method_dir = Path(f"vectors/{variant}/negotiation/{MODEL_ALIAS}/mean_diff")
+        method_dir = Path(f"vectors/{variant}/negotiation/{MODEL_ALIAS}/{method}")
         v_orig = load_all_layers(method_dir, dim_id)
         v_clean = vector_results[dim_id]["v_clean_all"]
 
@@ -331,21 +331,21 @@ ALL_VARIANTS = [
 ]
 
 
-def process_variant(variant, do_probe=False):
+def process_variant(variant, do_probe=False, method="mean_diff"):
     neg_dir = Path(f"vectors/{variant}/negotiation")
     ctrl_dir = Path(f"vectors/{variant}/control")
-    output_dir = Path(f"results/projection/{variant}")
+    output_dir = Path(f"results/projection/{variant}/{method}")
 
     if not neg_dir.exists() or not ctrl_dir.exists():
         log.warning("Skipping %s — vectors not found", variant)
         return
 
-    log.info("Processing: %s", variant)
-    vector_results, neg_dims, ctrl_vecs = run_vector_analysis(neg_dir, ctrl_dir)
+    log.info("Processing: %s (method=%s)", variant, method)
+    vector_results, neg_dims, ctrl_vecs = run_vector_analysis(neg_dir, ctrl_dir, method=method)
 
     probe_results = None
     if do_probe:
-        probe_results = run_probe_comparison(variant, neg_dims, ctrl_vecs, vector_results)
+        probe_results = run_probe_comparison(variant, neg_dims, ctrl_vecs, vector_results, method=method)
 
     print_report(variant, vector_results, probe_results)
     save_results(output_dir, variant, vector_results, probe_results)
@@ -357,6 +357,9 @@ def main():
     parser.add_argument("--all-variants", action="store_true", help="Process all 8 variants")
     parser.add_argument("--probe", action="store_true",
                         help="Also run 1-D probe comparison (requires GPU)")
+    parser.add_argument("--method", type=str, default="mean_diff",
+                        choices=["mean_diff", "pca", "logreg"],
+                        help="Extraction method to use (default: mean_diff)")
     parser.add_argument("--output-dir", type=str, default="results/projection")
     args = parser.parse_args()
 
@@ -366,7 +369,7 @@ def main():
     variants = ALL_VARIANTS if args.all_variants else [args.variant]
 
     for v in variants:
-        process_variant(v, do_probe=args.probe)
+        process_variant(v, do_probe=args.probe, method=args.method)
 
 
 if __name__ == "__main__":
