@@ -563,6 +563,7 @@ def main() -> None:
     model = AutoModelForCausalLM.from_pretrained(
         model_cfg.hf_id, token=hf_token,
         torch_dtype=dtype_map[args.dtype], device_map="auto",
+        max_memory={0: "12GiB", "cpu": "20GiB"},
     )
     model.eval()
 
@@ -576,8 +577,13 @@ def main() -> None:
         total_s1 = len(args.presets) * args.s1_games * 2 + args.s1_games * 2
         print(f"  Stage 1: {len(args.presets)} presets × {args.s1_games} scenarios × 2 roles"
               f"  (probe_alpha={args.probe_alpha:+.1f})  ~{total_s1} games")
-    print(f"  Stage 2: {len(args.alphas)} alphas × {args.s2_games} scenarios × 2 roles"
-          f"  (alphas={args.alphas})  ~{total_s2} games")
+    if args.use_tpe:
+        total_s2 = args.n_trials * args.s2_games * 2 + args.s2_games * 2
+        print(f"  Stage 2: TPE {args.n_trials} trials × {args.s2_games} scenarios × 2 roles"
+              f"  (range=[{args.alpha_low}, {args.alpha_high}])  ~{total_s2} games")
+    else:
+        print(f"  Stage 2: {len(args.alphas)} alphas × {args.s2_games} scenarios × 2 roles"
+              f"  (alphas={args.alphas})  ~{total_s2} games")
     print(f"  temp={args.temperature}")
     print("=" * 80 + "\n")
 
