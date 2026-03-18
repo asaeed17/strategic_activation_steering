@@ -9,8 +9,10 @@ Stage 1 — Preset search
     (early / middle / late). Rank by avg_delta vs baseline.
 
 Stage 2 — Alpha search
-    Fix preset to Stage 1 winner. Sweep a discrete set of alphas
-    (default: -7, -5, -3, 3, 5, 7). Rank by avg_delta vs baseline.
+    Fix preset to Stage 1 winner. Either:
+      (a) Sweep a discrete set of alphas (default: -7, -5, -3, 3, 5, 7), or
+      (b) Use TPE (--use_tpe) for continuous 1D optimisation over [alpha_low, alpha_high].
+          TPE is more efficient: ~15-20 trials to converge vs N grid points.
 
 Metric (identical to fast_search_steering.py):
     buyer_delta  = steered_buyer_midpt_adv  - baseline_buyer_midpt_adv
@@ -37,6 +39,14 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
+
+try:
+    import optuna
+    from optuna.samplers import TPESampler
+    optuna.logging.set_verbosity(optuna.logging.WARNING)
+    _OPTUNA_AVAILABLE = True
+except ImportError:
+    _OPTUNA_AVAILABLE = False
 
 import numpy as np
 import torch
@@ -327,6 +337,93 @@ def run_stage2(
 
 
 # ---------------------------------------------------------------------------
+# Stage 2 (TPE variant): continuous 1D alpha optimisation
+# ---------------------------------------------------------------------------
+
+def run_stage2_tpe(
+    model, tokenizer,
+    scenarios:      List[Dict],
+    dvecs:          Dict,
+    preset:         str,
+    layer_indices:  List[int],
+    alpha_low:      float,
+    alpha_high:     float,
+    n_trials:       int,
+    n_startup:      int,
+    max_new_tokens: int,
+    temperature:    float,
+    output_dir:     Path,
+    seed:           int,
+) -> Dict:
+    """
+    1D TPE search over alpha in [alpha_low, alpha_high].
+    Baseline is computed once before the study and subtracted in the objective.
+    More efficient than grid search: TPE focuses evaluations near promising regions.
+    """
+    log.info("Stage 2 TPE: computing baseline (alpha=0, %d scenarios)...", len(scenarios))
+    buy_bl, sell_bl = run_baseline_games(
+        model, tokenizer, scenarios, max_new_tokens, temperature
+    )
+    log.info("  Baseline: buy=%+.4f  sell=%+.4f", buy_bl, sell_bl)
+
+    trial_log = []
+
+    study = optuna.create_study(
+        study_name=f"s2_tpe_{preset}",
+        direction="maximize",
+        sampler=TPESampler(n_startup_trials=n_startup, seed=seed),
+    )
+
+    def objective(trial: optuna.Trial) -> float:
+        alpha = trial.suggest_float("alpha", alpha_low, alpha_high)
+        r = eval_config(
+            model, tokenizer, scenarios, dvecs, alpha,
+            max_new_tokens, temperature, buy_bl, sell_bl,
+        )
+        trial_log.append({**r, "preset": preset, "layer_indices": layer_indices,
+                           "trial": trial.number})
+        log.info(
+            "  TPE trial %2d | alpha=%+6.3f  avg_delta=%+.4f  "
+            "buy_delta=%+.4f  sell_delta=%+.4f  agree=%.0f%%",
+            trial.number, alpha, r["avg_delta"],
+            r["buyer_delta"], r["seller_delta"], r["avg_agree_rate"] * 100,
+        )
+        return r["avg_delta"]
+
+    study.optimize(objective, n_trials=n_trials)
+
+    # Sort log by avg_delta for the table
+    trial_log_sorted = sorted(trial_log, key=lambda r: r["avg_delta"], reverse=True)
+    best = trial_log_sorted[0]
+
+    with open(output_dir / "stage2_results.json", "w") as fh:
+        json.dump(trial_log_sorted, fh, indent=2)
+
+    print("\n" + "=" * 105)
+    print(f"STAGE 2 — TPE ALPHA SEARCH  "
+          f"(preset='{preset}', layers={layer_indices}, "
+          f"range=[{alpha_low},{alpha_high}], {n_trials} trials, {len(scenarios)} scenarios)")
+    print(f"  Baseline: buy={buy_bl:+.4f}  sell={sell_bl:+.4f}")
+    print("=" * 105)
+    print(f"{'Rank':>4}  {'Alpha':>7}  "
+          f"{'AvgDelta':>9}  {'BuyDelta':>9}  {'SellDelta':>10}  "
+          f"{'BuyMidpt':>9}  {'SellMidpt':>10}  {'Agree':>6}")
+    print("-" * 105)
+    for rank, r in enumerate(trial_log_sorted, 1):
+        marker = "  ← BEST" if rank == 1 else ""
+        print(
+            f"{rank:>4}  {r['alpha']:>+7.3f}  "
+            f"{r['avg_delta']:>+9.4f}  {r['buyer_delta']:>+9.4f}  {r['seller_delta']:>+10.4f}  "
+            f"{r['buyer_midpt']:>+9.4f}  {r['seller_midpt']:>+10.4f}  "
+            f"{r['avg_agree_rate']:>5.0%}{marker}"
+        )
+    print("=" * 105)
+    print(f"\nStage 2 TPE winner: alpha={best['alpha']:+.4f}  avg_delta={best['avg_delta']:+.4f}")
+
+    return best
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
@@ -347,13 +444,28 @@ def parse_args() -> argparse.Namespace:
                    choices=list(LAYER_PRESET_FRACTIONS.keys()),
                    default=["early", "middle", "late"],
                    help="Layer presets to sweep in Stage 1. Default: early middle late.")
+    p.add_argument("--fixed_layers", nargs="+", type=int, default=None,
+                   help="Skip Stage 1 and use these exact layer indices for Stage 2. "
+                        "E.g. --fixed_layers 21")
 
     # Alpha
     p.add_argument("--probe_alpha", type=float, default=5.0,
                    help="Fixed alpha used in Stage 1 preset sweep. Default: 5.0.")
     p.add_argument("--alphas", nargs="+", type=float,
                    default=[-7.0, -5.0, -3.0, 3.0, 5.0, 7.0],
-                   help="Discrete alphas to try in Stage 2. Default: -7 -5 -3 3 5 7.")
+                   help="Discrete alphas to try in Stage 2 (grid mode). Default: -7 -5 -3 3 5 7.")
+
+    # TPE mode for Stage 2
+    p.add_argument("--use_tpe", action="store_true",
+                   help="Use TPE (continuous) instead of discrete grid for Stage 2 alpha search.")
+    p.add_argument("--alpha_low",  type=float, default=-8.0,
+                   help="TPE search lower bound for alpha. Default: -8.0.")
+    p.add_argument("--alpha_high", type=float, default=8.0,
+                   help="TPE search upper bound for alpha. Default: 8.0.")
+    p.add_argument("--n_trials",   type=int,   default=20,
+                   help="Number of TPE trials in Stage 2. Default: 20.")
+    p.add_argument("--n_startup",  type=int,   default=8,
+                   help="Random startup trials before TPE exploits. Default: 8.")
 
     # Games
     p.add_argument("--s1_games", type=int, default=10,
@@ -398,27 +510,47 @@ def main() -> None:
     n_layers = metadata["n_layers"]
     log.info("Model %s | n_layers=%d", model_cfg.hf_id, n_layers)
 
+    # Resolve layers: --fixed_layers skips Stage 1 entirely
+    skip_stage1  = args.fixed_layers is not None
+    fixed_layers = sorted(set(args.fixed_layers)) if skip_stage1 else None
+
     # Load enough scenarios for both stages
-    max_games = max(args.s1_games, args.s2_games)
+    max_games = args.s2_games if skip_stage1 else max(args.s1_games, args.s2_games)
     all_scenarios = load_craigslist(split=args.dataset_split, num_samples=max_games)
     s1_scenarios  = all_scenarios[: args.s1_games]
     s2_scenarios  = all_scenarios[: args.s2_games]
-    log.info("Loaded %d scenarios (s1=%d, s2=%d)", len(all_scenarios), len(s1_scenarios), len(s2_scenarios))
+    log.info("Loaded %d scenarios (s2=%d%s)",
+             len(all_scenarios), len(s2_scenarios),
+             ", Stage 1 skipped" if skip_stage1 else f", s1={len(s1_scenarios)}")
 
-    # Pre-load vectors for every preset we'll need
+    # Pre-load vectors for every preset we'll need in Stage 1,
+    # OR just the fixed layers if Stage 1 is skipped.
     log.info("Pre-loading vectors: dim=%s  method=%s", args.dimension, args.method)
-    dvecs_by_preset: Dict[str, Dict] = {}
-    for preset in args.presets:
-        layers = layers_from_preset(n_layers, preset)
+    if skip_stage1:
         try:
-            dvecs_by_preset[preset] = load_direction_vectors(
+            fixed_dvecs = load_direction_vectors(
                 vectors_dir=vectors_dir, model_alias=model_cfg.alias,
-                dimension=args.dimension, method=args.method, layer_indices=layers,
+                dimension=args.dimension, method=args.method, layer_indices=fixed_layers,
             )
-            log.info("  Loaded preset=%-13s layers=%s", preset, layers)
+            log.info("  Loaded fixed layers=%s", fixed_layers)
         except FileNotFoundError as exc:
-            log.error("Vectors not found for preset=%s: %s", preset, exc)
+            log.error("Vectors not found for layers=%s: %s", fixed_layers, exc)
             sys.exit(1)
+        dvecs_by_preset = {}
+    else:
+        fixed_dvecs = None
+        dvecs_by_preset: Dict[str, Dict] = {}
+        for preset in args.presets:
+            layers = layers_from_preset(n_layers, preset)
+            try:
+                dvecs_by_preset[preset] = load_direction_vectors(
+                    vectors_dir=vectors_dir, model_alias=model_cfg.alias,
+                    dimension=args.dimension, method=args.method, layer_indices=layers,
+                )
+                log.info("  Loaded preset=%-13s layers=%s", preset, layers)
+            except FileNotFoundError as exc:
+                log.error("Vectors not found for preset=%s: %s", preset, exc)
+                sys.exit(1)
 
     # Load model
     log.info("Loading model: %s", model_cfg.hf_id)
@@ -434,50 +566,78 @@ def main() -> None:
     )
     model.eval()
 
-    total_s1 = len(args.presets) * args.s1_games * 2 + args.s1_games * 2  # +baseline
-    total_s2 = len(args.alphas)  * args.s2_games * 2 + args.s2_games * 2  # +baseline
+    total_s2 = len(args.alphas) * args.s2_games * 2 + args.s2_games * 2  # +baseline
 
     print("\n" + "=" * 80)
     print(f"LIGHTWEIGHT GRID SEARCH  |  model={args.model}  dim={args.dimension}")
-    print(f"  Stage 1: {len(args.presets)} presets × {args.s1_games} scenarios × 2 roles"
-          f"  (probe_alpha={args.probe_alpha:+.1f})  ~{total_s1} games")
+    if skip_stage1:
+        print(f"  Stage 1: SKIPPED  (fixed layers={fixed_layers})")
+    else:
+        total_s1 = len(args.presets) * args.s1_games * 2 + args.s1_games * 2
+        print(f"  Stage 1: {len(args.presets)} presets × {args.s1_games} scenarios × 2 roles"
+              f"  (probe_alpha={args.probe_alpha:+.1f})  ~{total_s1} games")
     print(f"  Stage 2: {len(args.alphas)} alphas × {args.s2_games} scenarios × 2 roles"
           f"  (alphas={args.alphas})  ~{total_s2} games")
-    print(f"  Total: ~{total_s1 + total_s2} games  |  temp={args.temperature}")
+    print(f"  temp={args.temperature}")
     print("=" * 80 + "\n")
 
     # =========================================================================
-    # STAGE 1 — Preset search
+    # STAGE 1 — Preset search (skipped if --fixed_layers provided)
     # =========================================================================
-    best_preset = run_stage1(
-        model=model, tokenizer=tokenizer,
-        scenarios=s1_scenarios,
-        dvecs_by_preset=dvecs_by_preset,
-        presets=args.presets,
-        probe_alpha=args.probe_alpha,
-        max_new_tokens=args.max_new_tokens,
-        temperature=args.temperature,
-        n_layers=n_layers,
-        output_dir=output_dir,
-    )
+    if skip_stage1:
+        best_preset = "fixed"
+        best_layers = fixed_layers
+        best_dvecs  = fixed_dvecs
+        log.info("Stage 1 skipped — using fixed layers=%s", best_layers)
+    else:
+        best_preset = run_stage1(
+            model=model, tokenizer=tokenizer,
+            scenarios=s1_scenarios,
+            dvecs_by_preset=dvecs_by_preset,
+            presets=args.presets,
+            probe_alpha=args.probe_alpha,
+            max_new_tokens=args.max_new_tokens,
+            temperature=args.temperature,
+            n_layers=n_layers,
+            output_dir=output_dir,
+        )
+        best_layers = layers_from_preset(n_layers, best_preset)
+        best_dvecs  = dvecs_by_preset[best_preset]
 
     # =========================================================================
-    # STAGE 2 — Alpha search
+    # STAGE 2 — Alpha search (grid or TPE)
     # =========================================================================
-    best_layers = layers_from_preset(n_layers, best_preset)
-    best_dvecs  = dvecs_by_preset[best_preset]
-
-    best = run_stage2(
-        model=model, tokenizer=tokenizer,
-        scenarios=s2_scenarios,
-        dvecs=best_dvecs,
-        preset=best_preset,
-        layer_indices=best_layers,
-        alphas=args.alphas,
-        max_new_tokens=args.max_new_tokens,
-        temperature=args.temperature,
-        output_dir=output_dir,
-    )
+    if args.use_tpe:
+        if not _OPTUNA_AVAILABLE:
+            log.error("--use_tpe requires optuna: pip install optuna")
+            sys.exit(1)
+        best = run_stage2_tpe(
+            model=model, tokenizer=tokenizer,
+            scenarios=s2_scenarios,
+            dvecs=best_dvecs,
+            preset=best_preset,
+            layer_indices=best_layers,
+            alpha_low=args.alpha_low,
+            alpha_high=args.alpha_high,
+            n_trials=args.n_trials,
+            n_startup=args.n_startup,
+            max_new_tokens=args.max_new_tokens,
+            temperature=args.temperature,
+            output_dir=output_dir,
+            seed=args.seed,
+        )
+    else:
+        best = run_stage2(
+            model=model, tokenizer=tokenizer,
+            scenarios=s2_scenarios,
+            dvecs=best_dvecs,
+            preset=best_preset,
+            layer_indices=best_layers,
+            alphas=args.alphas,
+            max_new_tokens=args.max_new_tokens,
+            temperature=args.temperature,
+            output_dir=output_dir,
+        )
 
     # Save final summary
     final = {
