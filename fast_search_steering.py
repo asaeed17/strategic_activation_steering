@@ -154,25 +154,56 @@ def _run_role_games(
     return role_s["midpoint_advantage"], role_s["agree_rate"]
 
 
-def run_config(
+def run_baseline_games(
     model,
     tokenizer,
     scenarios:      List[Dict],
-    dvecs:          Dict[int, np.ndarray],
-    alpha:          float,
     max_new_tokens: int,
     temperature:    float,
-) -> Tuple[float, float, float, float]:
+) -> Tuple[float, float]:
     """
-    For each scenario run two games:
-      (1) steered buyer  vs unsteered seller
-      (2) steered seller vs unsteered buyer
+    Run alpha=0 (fully unsteered) games for both roles on the given scenarios.
+    Returns (buy_baseline_midpt_adv, sell_baseline_midpt_adv).
+    These are constant for a fixed scenario set regardless of dim/method/alpha,
+    so callers should compute this once and reuse across multiple configs/trials.
+    """
+    buy_bl,  _ = _run_role_games(
+        model, tokenizer, scenarios, dvecs=None, alpha=0.0,
+        max_new_tokens=max_new_tokens, temperature=temperature, role="buyer",
+    )
+    sell_bl, _ = _run_role_games(
+        model, tokenizer, scenarios, dvecs=None, alpha=0.0,
+        max_new_tokens=max_new_tokens, temperature=temperature, role="seller",
+    )
+    return buy_bl, sell_bl
 
-    Returns (avg_midpt_adv, avg_agree_rate, buy_midpt_adv, sell_midpt_adv).
 
-    avg_midpt_adv is the joint search objective — it is positive only when the
-    steering vector genuinely helps both roles, so +buyer/-seller effects cancel
-    out instead of inflating the score.
+def run_config(
+    model,
+    tokenizer,
+    scenarios:           List[Dict],
+    dvecs:               Dict[int, np.ndarray],
+    alpha:               float,
+    max_new_tokens:      int,
+    temperature:         float,
+    buy_baseline_midpt:  float = None,
+    sell_baseline_midpt: float = None,
+) -> Tuple[float, float, float, float, float, float]:
+    """
+    Run steered buyer and steered seller games, then subtract the alpha=0
+    baseline to produce role deltas.
+
+    If buy_baseline_midpt / sell_baseline_midpt are provided they are reused
+    (avoids repeating baseline games for every combo in Stage 1).
+    Otherwise they are computed here via run_baseline_games.
+
+    Returns:
+        avg_delta           — primary objective: mean of buyer_delta + seller_delta
+        avg_agree_rate
+        buy_steered_midpt   — raw steered-buyer midpoint advantage
+        sell_steered_midpt  — raw steered-seller midpoint advantage
+        buy_baseline_midpt  — alpha=0 buyer midpoint advantage (for logging)
+        sell_baseline_midpt — alpha=0 seller midpoint advantage (for logging)
     """
     buy_midpt,  buy_agree  = _run_role_games(
         model, tokenizer, scenarios, dvecs, alpha, max_new_tokens, temperature, "buyer"
@@ -180,9 +211,17 @@ def run_config(
     sell_midpt, sell_agree = _run_role_games(
         model, tokenizer, scenarios, dvecs, alpha, max_new_tokens, temperature, "seller"
     )
-    avg_midpt = (buy_midpt  + sell_midpt)  / 2.0
-    avg_agree = (buy_agree  + sell_agree)  / 2.0
-    return avg_midpt, avg_agree, buy_midpt, sell_midpt
+
+    if buy_baseline_midpt is None or sell_baseline_midpt is None:
+        buy_baseline_midpt, sell_baseline_midpt = run_baseline_games(
+            model, tokenizer, scenarios, max_new_tokens, temperature
+        )
+
+    buy_delta  = buy_midpt  - buy_baseline_midpt
+    sell_delta = sell_midpt - sell_baseline_midpt
+    avg_delta  = (buy_delta  + sell_delta)  / 2.0
+    avg_agree  = (buy_agree  + sell_agree)  / 2.0
+    return avg_delta, avg_agree, buy_midpt, sell_midpt, buy_baseline_midpt, sell_baseline_midpt
 
 
 # ---------------------------------------------------------------------------
@@ -226,9 +265,17 @@ def run_stage1(
     """
     combos = list(product(dimensions, methods, layer_presets))
     log.info(
-        "Stage 1: %d combos × %d scenarios × 2 roles = %d total games",
+        "Stage 1: %d combos × %d scenarios × 2 roles = %d total games (+ 1 baseline run)",
         len(combos), len(scenarios), len(combos) * len(scenarios) * 2,
     )
+
+    # Run baseline once — same scenarios, alpha=0 — reused for all combos.
+    log.info("S1: computing alpha=0 baseline...")
+    buy_bl, sell_bl = run_baseline_games(
+        model=model, tokenizer=tokenizer, scenarios=scenarios,
+        max_new_tokens=max_new_tokens, temperature=temperature,
+    )
+    log.info("S1 baseline: buy_midpt=%+.4f  sell_midpt=%+.4f", buy_bl, sell_bl)
 
     results = []
     for i, (dim, method, preset) in enumerate(combos):
@@ -244,22 +291,29 @@ def run_stage1(
                         i + 1, len(combos), dim, method, preset)
             continue
 
-        avg_midpt, avg_agree, buy_midpt, sell_midpt = run_config(
+        avg_delta, avg_agree, buy_midpt, sell_midpt, _, _ = run_config(
             model=model, tokenizer=tokenizer, scenarios=scenarios,
             dvecs=dvecs, alpha=probe_alpha,
             max_new_tokens=max_new_tokens, temperature=temperature,
+            buy_baseline_midpt=buy_bl, sell_baseline_midpt=sell_bl,
         )
+        buy_delta  = buy_midpt  - buy_bl
+        sell_delta = sell_midpt - sell_bl
 
-        coherent = is_coherent(avg_midpt, avg_agree)
+        coherent = is_coherent(avg_delta, avg_agree)
         result = {
             "dimension":              dim,
             "method":                 method,
             "layer_preset":           preset,
             "layer_indices":          layers,
             "probe_alpha":            probe_alpha,
-            "avg_midpoint_advantage": avg_midpt,
+            "avg_delta":              avg_delta,
+            "buyer_delta":            buy_delta,
+            "seller_delta":           sell_delta,
             "buyer_midpoint_advantage":  buy_midpt,
             "seller_midpoint_advantage": sell_midpt,
+            "buyer_baseline_midpt":   buy_bl,
+            "seller_baseline_midpt":  sell_bl,
             "avg_agree_rate":         avg_agree,
             "coherent":               coherent,
         }
@@ -267,36 +321,37 @@ def run_stage1(
 
         log.info(
             "S1 [%d/%d] dim=%-22s method=%-9s preset=%-13s "
-            "avg=%+.4f  buy=%+.4f  sell=%+.4f  agree=%.0f%%%s",
+            "avg_delta=%+.4f  buy_delta=%+.4f  sell_delta=%+.4f  agree=%.0f%%%s",
             i + 1, len(combos), dim, method, preset,
-            avg_midpt, buy_midpt, sell_midpt, avg_agree * 100,
+            avg_delta, buy_delta, sell_delta, avg_agree * 100,
             "" if coherent else "  ← INCOHERENT",
         )
 
     # Save stage 1 results
-    results.sort(key=lambda r: r["avg_midpoint_advantage"], reverse=True)
+    results.sort(key=lambda r: r["avg_delta"], reverse=True)
     out_path = output_dir / "stage1_results.json"
     with open(out_path, "w") as fh:
         json.dump(results, fh, indent=2)
 
     # Print summary table
-    print("\n" + "=" * 115)
-    print("STAGE 1 RESULTS  (both roles, ranked by avg midpoint advantage, probe_alpha={:.2f})".format(probe_alpha))
-    print("=" * 115)
+    print("\n" + "=" * 125)
+    print("STAGE 1 RESULTS  (both roles, ranked by avg delta vs baseline, probe_alpha={:.2f})".format(probe_alpha))
+    print(f"  Baseline: buy_midpt={buy_bl:+.4f}  sell_midpt={sell_bl:+.4f}")
+    print("=" * 125)
     print(f"{'Rank':>4}  {'Dimension':<22}  {'Method':<9}  {'Preset':<13}  "
-          f"{'Layers':<12}  {'AvgMidpt':>9}  {'BuyMidpt':>9}  {'SellMidpt':>10}  {'Agree':>6}  {'OK':>4}")
-    print("-" * 115)
+          f"{'Layers':<12}  {'AvgDelta':>9}  {'BuyDelta':>9}  {'SellDelta':>10}  {'Agree':>6}  {'OK':>4}")
+    print("-" * 125)
     for rank, r in enumerate(results, 1):
         print(
             f"{rank:>4}  {r['dimension']:.<22}  {r['method']:.<9}  "
             f"{r['layer_preset']:.<13}  {str(r['layer_indices']):.<12}  "
-            f"{r['avg_midpoint_advantage']:>+9.4f}  "
-            f"{r['buyer_midpoint_advantage']:>+9.4f}  "
-            f"{r['seller_midpoint_advantage']:>+10.4f}  "
+            f"{r['avg_delta']:>+9.4f}  "
+            f"{r['buyer_delta']:>+9.4f}  "
+            f"{r['seller_delta']:>+10.4f}  "
             f"{r['avg_agree_rate']:>5.0%}  "
             f"{'✓' if r['coherent'] else '✗':>4}"
         )
-    print("=" * 115)
+    print("=" * 125)
 
     return results
 
@@ -349,6 +404,17 @@ def run_stage2(
             log.error("Stage 2: vectors not found — skipping. %s", exc)
             continue
 
+        # Compute baseline once per config before the TPE loop.
+        # baseline is constant across all alpha trials for the same scenarios+role.
+        log.info("  S2-%s: computing alpha=0 baseline for %s/%s/%s...", role, dim, method, preset)
+        baseline_midpt, _ = _run_role_games(
+            model=model, tokenizer=tokenizer, scenarios=scenarios,
+            dvecs=None, alpha=0.0,
+            max_new_tokens=max_new_tokens, temperature=temperature,
+            role=role,
+        )
+        log.info("  S2-%s baseline midpt_adv=%+.4f", role, baseline_midpt)
+
         # One TPE study per (role, categorical combo) — 1D alpha search
         study = optuna.create_study(
             study_name=f"s2_{role}_{dim}_{method}_{preset}",
@@ -362,7 +428,7 @@ def run_stage2(
                             if t.state == optuna.trial.TrialState.COMPLETE])
         remaining = max(0, n_trials - already_done)
 
-        def make_objective(dvecs=dvecs, role=role):
+        def make_objective(dvecs=dvecs, role=role, baseline_midpt=baseline_midpt):
             def objective(trial: optuna.Trial) -> float:
                 alpha = trial.suggest_float("alpha", alpha_low, alpha_high)
                 midpt_adv, agree = _run_role_games(
@@ -371,15 +437,20 @@ def run_stage2(
                     max_new_tokens=max_new_tokens, temperature=temperature,
                     role=role,
                 )
+                delta = midpt_adv - baseline_midpt
                 log.info(
-                    "  S2-%s trial %2d | alpha=%5.2f  midpt_adv=%+.4f  agree=%.0f%%",
-                    role, trial.number, alpha, midpt_adv, agree * 100,
+                    "  S2-%s trial %2d | alpha=%5.2f  midpt_adv=%+.4f  "
+                    "baseline=%+.4f  delta=%+.4f  agree=%.0f%%",
+                    role, trial.number, alpha, midpt_adv, baseline_midpt, delta, agree * 100,
                 )
-                if not is_coherent(midpt_adv, agree):
+                if not is_coherent(delta, agree):
                     log.warning("  S2-%s trial %d incoherent (agree=%.0f%%) — pruning",
                                 role, trial.number, agree * 100)
                     raise optuna.TrialPruned()
-                return midpt_adv
+                # Store the raw midpt_adv as a user attribute so we can recover it later
+                trial.set_user_attr("midpoint_advantage_raw", midpt_adv)
+                trial.set_user_attr("baseline_midpt", baseline_midpt)
+                return delta  # optimise the delta, not raw midpt_adv
             return objective
 
         if remaining > 0:
@@ -399,39 +470,51 @@ def run_stage2(
             "layer_preset":               preset,
             "layer_indices":              layers,
             "best_alpha":                 best.params["alpha"],
-            "midpoint_advantage":         best.value,
+            "delta":                      best.value,
+            "midpoint_advantage_raw":     best.user_attrs.get("midpoint_advantage_raw"),
+            "baseline_midpt":             baseline_midpt,
             "n_trials":                   len(completed),
             "alpha_trials": [
-                {"alpha": t.params["alpha"], "midpoint_advantage": t.value}
+                {
+                    "alpha":                  t.params["alpha"],
+                    "delta":                  t.value,
+                    "midpoint_advantage_raw": t.user_attrs.get("midpoint_advantage_raw"),
+                }
                 for t in sorted(completed, key=lambda t: t.params["alpha"])
             ],
         }
         all_results.append(result)
 
         log.info(
-            "S2-%s [%d/%d] best alpha=%.4f  midpt_adv=%+.4f  (%d trials)",
-            role, cfg_rank, len(top_configs), best.params["alpha"], best.value, len(completed),
+            "S2-%s [%d/%d] best alpha=%.4f  delta=%+.4f  midpt_raw=%+.4f  (%d trials)",
+            role, cfg_rank, len(top_configs),
+            best.params["alpha"], best.value,
+            result["midpoint_advantage_raw"] or float("nan"),
+            len(completed),
         )
 
-    all_results.sort(key=lambda r: r["midpoint_advantage"], reverse=True)
+    all_results.sort(key=lambda r: r["delta"], reverse=True)
     out_path = output_dir / f"stage2_{role}_results.json"
     with open(out_path, "w") as fh:
         json.dump(all_results, fh, indent=2)
 
     # Print summary
-    print("\n" + "=" * 95)
-    print(f"STAGE 2 RESULTS  ({role}-steered TPE alpha search)")
-    print("=" * 95)
+    print("\n" + "=" * 105)
+    print(f"STAGE 2 RESULTS  ({role}-steered TPE alpha search, objective = delta vs baseline)")
+    print("=" * 105)
     print(f"{'Rank':>4}  {'Dimension':<22}  {'Method':<9}  {'Preset':<13}  "
-          f"{'Best Alpha':>10}  {'MidptAdv':>9}  {'Trials':>6}")
-    print("-" * 95)
+          f"{'Best Alpha':>10}  {'Delta':>9}  {'MidptRaw':>9}  {'Baseline':>9}  {'Trials':>6}")
+    print("-" * 105)
     for rank, r in enumerate(all_results, 1):
         print(
             f"{rank:>4}  {r['dimension']:.<22}  {r['method']:.<9}  "
             f"{r['layer_preset']:.<13}  {r['best_alpha']:>10.4f}  "
-            f"{r['midpoint_advantage']:>+9.4f}  {r['n_trials']:>6}"
+            f"{r['delta']:>+9.4f}  "
+            f"{(r['midpoint_advantage_raw'] or 0):>+9.4f}  "
+            f"{r['baseline_midpt']:>+9.4f}  "
+            f"{r['n_trials']:>6}"
         )
-    print("=" * 95)
+    print("=" * 105)
 
     return all_results
 
@@ -457,6 +540,14 @@ def run_stage3(
     its own optimal alpha and report both results. Sorted by avg midpoint
     advantage (buyer + seller) / 2.
     """
+    # Compute baseline once for S3 scenarios — reused across all configs.
+    log.info("Stage 3: computing alpha=0 baseline (%d scenarios)...", len(scenarios))
+    buy_bl, sell_bl = run_baseline_games(
+        model=model, tokenizer=tokenizer, scenarios=scenarios,
+        max_new_tokens=max_new_tokens, temperature=temperature,
+    )
+    log.info("S3 baseline: buy_midpt=%+.4f  sell_midpt=%+.4f", buy_bl, sell_bl)
+
     results = []
     for rank, cfg in enumerate(top_configs, 1):
         dim          = cfg["dimension"]
@@ -494,7 +585,10 @@ def run_stage3(
             max_new_tokens=max_new_tokens, temperature=temperature,
             role="seller",
         )
-        avg_midpt = (buy_midpt + sell_midpt) / 2.0
+
+        buy_delta  = buy_midpt  - buy_bl
+        sell_delta = sell_midpt - sell_bl
+        avg_delta  = (buy_delta + sell_delta) / 2.0
 
         result = {
             "rank":                      rank,
@@ -505,54 +599,61 @@ def run_stage3(
             "buyer_alpha":               buyer_alpha,
             "seller_alpha":              seller_alpha,
             "buyer_midpoint_advantage":  buy_midpt,
+            "buyer_baseline_midpt":      buy_bl,
+            "buyer_delta":               buy_delta,
             "buyer_agree_rate":          buy_agree,
             "seller_midpoint_advantage": sell_midpt,
+            "seller_baseline_midpt":     sell_bl,
+            "seller_delta":              sell_delta,
             "seller_agree_rate":         sell_agree,
-            "avg_midpoint_advantage":    avg_midpt,
+            "avg_delta":                 avg_delta,
             "n_games":                   len(scenarios),
         }
         results.append(result)
         log.info(
-            "S3 [%d/%d] avg=%+.4f  buy=%+.4f(α=%.2f,agr=%.0f%%)  "
-            "sell=%+.4f(α=%.2f,agr=%.0f%%)",
-            rank, len(top_configs), avg_midpt,
-            buy_midpt,  buyer_alpha,  buy_agree  * 100,
-            sell_midpt, seller_alpha, sell_agree * 100,
+            "S3 [%d/%d] avg_delta=%+.4f  "
+            "buy_delta=%+.4f(raw=%+.4f,α=%.2f,agr=%.0f%%)  "
+            "sell_delta=%+.4f(raw=%+.4f,α=%.2f,agr=%.0f%%)",
+            rank, len(top_configs), avg_delta,
+            buy_delta,  buy_midpt,  buyer_alpha,  buy_agree  * 100,
+            sell_delta, sell_midpt, seller_alpha, sell_agree * 100,
         )
 
         out_path = output_dir / f"stage3_rank{rank:02d}.json"
         with open(out_path, "w") as fh:
             json.dump(result, fh, indent=2)
 
-    results.sort(key=lambda r: r["avg_midpoint_advantage"], reverse=True)
+    results.sort(key=lambda r: r["avg_delta"], reverse=True)
 
-    print("\n" + "=" * 125)
+    print("\n" + "=" * 145)
     print(f"STAGE 3 — FINAL VALIDATION  ({len(scenarios)} scenarios, role-specific alphas, temp={temperature})")
-    print("=" * 125)
+    print(f"  Baseline: buy_midpt={buy_bl:+.4f}  sell_midpt={sell_bl:+.4f}")
+    print("=" * 145)
     print(f"{'Rank':>4}  {'Dimension':<22}  {'Method':<9}  {'Preset':<13}  "
-          f"{'AvgMidpt':>9}  {'BuyAlpha':>9}  {'BuyMidpt':>9}  {'BuyAgr':>6}  "
-          f"{'SellAlpha':>10}  {'SellMidpt':>10}  {'SellAgr':>7}")
-    print("-" * 125)
+          f"{'AvgDelta':>9}  {'BuyAlpha':>9}  {'BuyDelta':>9}  {'BuyAgr':>6}  "
+          f"{'SellAlpha':>10}  {'SellDelta':>10}  {'SellAgr':>7}")
+    print("-" * 145)
     for rank, r in enumerate(results, 1):
         print(
             f"{rank:>4}  {r['dimension']:.<22}  {r['method']:.<9}  "
-            f"{r['layer_preset']:.<13}  {r['avg_midpoint_advantage']:>+9.4f}  "
-            f"{r['buyer_alpha']:>9.4f}  {r['buyer_midpoint_advantage']:>+9.4f}  "
+            f"{r['layer_preset']:.<13}  {r['avg_delta']:>+9.4f}  "
+            f"{r['buyer_alpha']:>9.4f}  {r['buyer_delta']:>+9.4f}  "
             f"{r['buyer_agree_rate']:>5.0%}  "
-            f"{r['seller_alpha']:>10.4f}  {r['seller_midpoint_advantage']:>+10.4f}  "
+            f"{r['seller_alpha']:>10.4f}  {r['seller_delta']:>+10.4f}  "
             f"{r['seller_agree_rate']:>6.0%}"
         )
-    print("=" * 125)
+    print("=" * 145)
 
     if results:
         best = results[0]
-        print(f"\nFINAL BEST CONFIG (by avg midpoint advantage):")
+        print(f"\nFINAL BEST CONFIG (by avg delta vs baseline):")
         print(f"  Dimension     : {best['dimension']}")
         print(f"  Method        : {best['method']}")
         print(f"  Preset        : {best['layer_preset']}  →  layers {best['layer_indices']}")
-        print(f"  Buyer  alpha  : {best['buyer_alpha']:.4f}  →  midpt {best['buyer_midpoint_advantage']:+.4f}  (agree {best['buyer_agree_rate']:.0%})")
-        print(f"  Seller alpha  : {best['seller_alpha']:.4f}  →  midpt {best['seller_midpoint_advantage']:+.4f}  (agree {best['seller_agree_rate']:.0%})")
-        print(f"  Avg midpt     : {best['avg_midpoint_advantage']:+.4f}")
+        print(f"  Baseline      : buy_midpt={best['buyer_baseline_midpt']:+.4f}  sell_midpt={best['seller_baseline_midpt']:+.4f}")
+        print(f"  Buyer  alpha  : {best['buyer_alpha']:.4f}  →  midpt {best['buyer_midpoint_advantage']:+.4f}  delta {best['buyer_delta']:+.4f}  (agree {best['buyer_agree_rate']:.0%})")
+        print(f"  Seller alpha  : {best['seller_alpha']:.4f}  →  midpt {best['seller_midpoint_advantage']:+.4f}  delta {best['seller_delta']:+.4f}  (agree {best['seller_agree_rate']:.0%})")
+        print(f"  Avg delta     : {best['avg_delta']:+.4f}")
         print(f"  Validated on {best['n_games']} scenarios per role")
 
     return results
@@ -572,7 +673,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--vectors_dir", default="vectors")
     p.add_argument("--dimensions",  nargs="*",  default=None)
     p.add_argument("--methods", nargs="+", choices=["mean_diff", "pca"],
-               default=["mean_diff"])  # was ["mean_diff", "pca"]
+               default=["mean_diff"])
     p.add_argument("--layer_presets", nargs="+",
                    choices=list(LAYER_PRESET_FRACTIONS.keys()),
                    default=list(LAYER_PRESET_FRACTIONS.keys()))
@@ -706,11 +807,11 @@ def main() -> None:
         sys.exit(1)
 
     top_k_configs = coherent[: args.s2_top_k]
-    log.info("Stage 1 → 2: passing top %d coherent configs (ranked by avg midpoint advantage)", len(top_k_configs))
+    log.info("Stage 1 → 2: passing top %d coherent configs (ranked by avg delta vs baseline)", len(top_k_configs))
     for r in top_k_configs:
-        log.info("  %s / %s / %s  avg=%+.4f  buy=%+.4f  sell=%+.4f",
+        log.info("  %s / %s / %s  avg_delta=%+.4f  buy_delta=%+.4f  sell_delta=%+.4f",
                  r["dimension"], r["method"], r["layer_preset"],
-                 r["avg_midpoint_advantage"], r["buyer_midpoint_advantage"], r["seller_midpoint_advantage"])
+                 r["avg_delta"], r["buyer_delta"], r["seller_delta"])
 
     # =========================================================================
     # STAGE 2 — TPE over alpha, separately for buyer and seller
@@ -742,28 +843,28 @@ def main() -> None:
     for r in s2_buyer:
         key = (r["dimension"], r["method"], r["layer_preset"])
         merged[key] = {
-            "dimension":      r["dimension"],
-            "method":         r["method"],
-            "layer_preset":   r["layer_preset"],
-            "layer_indices":  r["layer_indices"],
-            "buyer_alpha":    r["best_alpha"],
-            "buyer_midpt_s2": r["midpoint_advantage"],
-            "seller_alpha":   None,
-            "seller_midpt_s2": None,
+            "dimension":       r["dimension"],
+            "method":          r["method"],
+            "layer_preset":    r["layer_preset"],
+            "layer_indices":   r["layer_indices"],
+            "buyer_alpha":     r["best_alpha"],
+            "buyer_delta_s2":  r["delta"],
+            "seller_alpha":    None,
+            "seller_delta_s2": None,
         }
     for r in s2_seller:
         key = (r["dimension"], r["method"], r["layer_preset"])
         if key not in merged:
             merged[key] = {
-                "dimension":      r["dimension"],
-                "method":         r["method"],
-                "layer_preset":   r["layer_preset"],
-                "layer_indices":  r["layer_indices"],
-                "buyer_alpha":    None,
-                "buyer_midpt_s2": None,
+                "dimension":       r["dimension"],
+                "method":          r["method"],
+                "layer_preset":    r["layer_preset"],
+                "layer_indices":   r["layer_indices"],
+                "buyer_alpha":     None,
+                "buyer_delta_s2":  None,
             }
         merged[key]["seller_alpha"]    = r["best_alpha"]
-        merged[key]["seller_midpt_s2"] = r["midpoint_advantage"]
+        merged[key]["seller_delta_s2"] = r["delta"]
 
     # Fill missing alphas with midpoint of range as fallback
     fallback_alpha = (args.alpha_low + args.alpha_high) / 2.0
@@ -771,10 +872,10 @@ def main() -> None:
         if v["buyer_alpha"]  is None: v["buyer_alpha"]  = fallback_alpha
         if v["seller_alpha"] is None: v["seller_alpha"] = fallback_alpha
 
-    # Rank by average of S2 buyer and seller midpoint advantages
+    # Rank by average of S2 buyer and seller deltas
     def _avg_s2(v):
-        buy  = v["buyer_midpt_s2"]  if v["buyer_midpt_s2"]  is not None else -999
-        sell = v["seller_midpt_s2"] if v["seller_midpt_s2"] is not None else -999
+        buy  = v["buyer_delta_s2"]  if v["buyer_delta_s2"]  is not None else -999
+        sell = v["seller_delta_s2"] if v["seller_delta_s2"] is not None else -999
         return (buy + sell) / 2.0
 
     top_s3_configs = sorted(merged.values(), key=_avg_s2, reverse=True)[: args.s3_top_n]
