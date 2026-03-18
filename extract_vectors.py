@@ -5,8 +5,8 @@ extract_vectors.py
 Pulls behavioural steering vectors out of open-source LLMs for each
 negotiation dimension defined in negotiation_steering_pairs.json.
 
-Two methods are implemented — I went with both because they have different
-failure modes and it's useful to compare them:
+Three methods are implemented — they have different failure modes and it's
+useful to compare them (generative vs variance-based vs discriminative):
 
   1. Mean Difference (MD)
        direction_l = mean(pos_hiddens_l) - mean(neg_hiddens_l)
@@ -19,6 +19,17 @@ failure modes and it's useful to compare them:
        Sign is resolved by aligning with the mean difference.
        Follows Zou et al. 2023 (RepE). More robust when individual pairs
        are noisy, since it finds the dominant axis of variation.
+
+  3. Logistic Regression (LR)
+       Train L2-regularised logistic regression on pos vs neg activations.
+       direction_l = normalise(clf.coef_[0])
+       Sign is resolved by aligning with the mean difference.
+       Discriminative: finds the linear boundary that best *separates*
+       the classes, rather than estimating *where* they are (MD) or
+       *how they vary* (PCA). Follows Li et al. 2024 (ITI) and
+       Zou et al. 2023 (RepE, classifier variant).
+       See also: Marks & Tegmark 2023 (Geometry of Truth) for analysis
+       of when LR directions diverge from mean-diff directions.
 
 Activations are taken from the last real token of each formatted input.
 Batches are left-padded so index [-1] always lands on the right token.
@@ -61,6 +72,7 @@ from typing import Dict, List, Optional
 import numpy as np
 import torch
 from sklearn.decomposition import PCA
+from sklearn.linear_model import LogisticRegression
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
@@ -313,6 +325,71 @@ def compute_pca_direction(
     return directions
 
 
+def compute_logreg_direction(
+    pos: np.ndarray,   # (N, n_layers, H)
+    neg: np.ndarray,   # (N, n_layers, H)
+    C: float = 1.0,
+    max_iter: int = 2000,
+) -> np.ndarray:       # (n_layers, H), unit-normed
+    """
+    Logistic Regression steering vector (discriminative).
+
+    Train an L2-regularised binary classifier at each layer:
+        labels:  pos → 1,  neg → 0
+        direction_l = normalise(clf.coef_[0])
+
+    Sign ambiguity is resolved by aligning with the mean difference
+    (same convention as PCA above).
+
+    Unlike mean-diff (which estimates *where* the classes are) or PCA
+    (which finds the axis of maximum *variance* in the differences), LR
+    finds the direction that best *separates* the two classes — i.e. it
+    optimises classification margin.  This makes it more robust to
+    high-variance noise dimensions, but also more susceptible to
+    "fudging" the direction when surface confounds are non-orthogonal
+    to the concept direction (Marks & Tegmark 2023).
+
+    Parameters
+    ----------
+    C : float
+        Inverse regularisation strength.  Lower C → stronger L2 penalty
+        → weight vector pushed toward mean-diff.  Higher C → closer to
+        the max-margin SVM direction.  Default 1.0 (sklearn default).
+    max_iter : int
+        Solver iteration cap.  Raised from default 100 because high-dim
+        logistic regression with 2048-dim hidden states can be slow to
+        converge.
+    """
+    mean_diff = pos.mean(axis=0) - neg.mean(axis=0)  # (n_layers, H) for sign
+
+    n_pairs, n_layers, H = pos.shape
+    directions = np.zeros((n_layers, H), dtype=np.float32)
+
+    labels = np.array([1] * n_pairs + [0] * n_pairs)  # pos=1, neg=0
+
+    for l in range(n_layers):
+        X = np.concatenate([pos[:, l, :], neg[:, l, :]], axis=0)  # (2N, H)
+
+        clf = LogisticRegression(
+            C=C,
+            penalty="l2",
+            solver="lbfgs",
+            max_iter=max_iter,
+            class_weight="balanced",
+        )
+        clf.fit(X, labels)
+        w = clf.coef_[0].astype(np.float32)  # (H,)
+
+        # align sign with mean difference (same convention as PCA)
+        if np.dot(w, mean_diff[l]) < 0:
+            w = -w
+
+        norm = np.linalg.norm(w)
+        directions[l] = w / max(norm, 1e-8)
+
+    return directions
+
+
 # ---------------------------------------------------------------------------
 # Per-model extraction pipeline
 # ---------------------------------------------------------------------------
@@ -381,6 +458,7 @@ def extract_for_model(
     model_dir = output_dir / config.alias
     (model_dir / "mean_diff").mkdir(parents=True, exist_ok=True)
     (model_dir / "pca").mkdir(parents=True, exist_ok=True)
+    (model_dir / "logreg").mkdir(parents=True, exist_ok=True)
 
     saved_n_layers:   Optional[int] = None
     saved_hidden_dim: Optional[int] = None
@@ -437,7 +515,16 @@ def extract_for_model(
                 pca_vecs[l],
             )
 
-        log.info("  │    saved  mean_diff + pca  →  %s/", model_dir.name)
+        # method 3: logistic regression (discriminative)
+        lr_vecs = compute_logreg_direction(pos_h, neg_h)       # (n_layers, H)
+        np.save(model_dir / "logreg" / f"{dim_id}_all_layers.npy", lr_vecs)
+        for l in save_layers:
+            np.save(
+                model_dir / "logreg" / f"{dim_id}_layer{l:02d}.npy",
+                lr_vecs[l],
+            )
+
+        log.info("  │    saved  mean_diff + pca + logreg  →  %s/", model_dir.name)
 
     # write metadata so we know later what we extracted and how
     metadata = {
@@ -446,11 +533,12 @@ def extract_for_model(
         "n_layers":   saved_n_layers,
         "hidden_dim": saved_hidden_dim,
         "dimensions": [d["id"] for d in dimensions],
-        "methods":    ["mean_diff", "pca"],
+        "methods":    ["mean_diff", "pca", "logreg"],
         "saved_layers": target_layers if target_layers else list(range(saved_n_layers or 0)),
         "notes": {
             "mean_diff":  "direction_l = normalise(mean(pos_l) - mean(neg_l))",
             "pca":        "direction_l = PCA(pos_i_l - neg_i_l).components_[0], sign-aligned",
+            "logreg":     "direction_l = normalise(LogisticRegression(pos,neg).coef_[0]), sign-aligned",
             "last_token": "activations taken at the last real token (left-padded)",
         },
     }
@@ -679,7 +767,7 @@ def main() -> None:
         )
         if args.sim_matrix:
             model_dir = output_dir / cfg.alias
-            for method in ("mean_diff", "pca"):
+            for method in ("mean_diff", "pca", "logreg"):
                 print_similarity_matrix(model_dir, method, args.sim_layer)
 
         log.info("Vectors saved under: %s/", output_dir)
