@@ -83,7 +83,9 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - `vectors/{variant}/negotiation/` and `vectors/{variant}/control/` — Extracted `.npy` vectors per variant, with subdirectories per method (`mean_diff/`, `pca/`, `logreg/`).
 - `results/validation/{variant}/qwen2.5-3b/{method}/` — Validation reports, JSON results, and plots per variant and extraction method.
 - `results/projection/{variant}/{method}/` — Orthogonal projection results per variant and method.
-- `results/validation/VALIDATION_RESULTS.md` — Comprehensive cross-variant analysis.
+- `results/validation/VALIDATION_RESULTS.md` — Comprehensive cross-variant analysis (mean difference method).
+- `results/validation/PCA_VALIDATION_RESULTS.md` — PCA-specific cross-variant analysis + head-to-head comparison with mean difference.
+- `results/validation/LOGREG_VALIDATION_RESULTS.md` — Logistic regression cross-variant analysis + three-method comparison (MD vs PCA vs LR).
 - `.hf_cache/` — HuggingFace model cache (redirected from `~/.cache/huggingface` via `HF_HOME` to avoid home dir quota limits on UCL machines).
 
 **Key conventions:**
@@ -97,10 +99,10 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - `strategic_concession_making` at layer 18 with alpha~6 produces the strongest signal. The initial +37% headline is inflated (S2 mean=+24.9%, and controlled paired comparison drops to +0.176 at p=0.09, unclamped +0.032 at p=0.87).
 - Steering changes behavior (27x hedge suppression, 22% shorter responses for firmness) but does not reliably improve outcomes.
 - Role is the dominant variable: steering helps buyers, hurts sellers, across all dimensions.
-- Mean difference vectors are more reliable than PCA (PCA extracts the dominant variance direction, not dimension-specific directions). Logistic regression (discriminative) added as third method for triangulation — if all three agree, the direction is robust; divergence reveals surface confound geometry.
+- Mean difference vectors are strictly superior to PCA: 1-D probe accuracy 0.903 vs 0.586 (+54%) in best variant, while validity scores and orthogonal projection robustness are identical. PCA's PC1 captures noise/confound variance rather than concept direction at these sample sizes (12-80 pairs in 2560-dim space). See `results/validation/PCA_VALIDATION_RESULTS.md`. Logistic regression closely matches MD: 1-D probe (held-out) 0.891 vs MD's 0.903, with identical validity scores (33/100) and similar projection drops (2.8% vs 2.4%). LR's near-perfect training-data 1-D accuracy (0.998) is tautological — the weight vector IS the separator. See `results/validation/LOGREG_VALIDATION_RESULTS.md`. All three methods agree on traffic lights, scores, and projection robustness, confirming directions are genuine rather than method artifacts.
 - Contrastive pairs have severe surface biases. Vectors likely encode surface patterns (length, hedging, openers) rather than deep negotiation concepts. See P4_PROGRESS.md for full evidence.
 
-**Validation ablation findings (8-variant study, see `results/validation/VALIDATION_RESULTS.md`):**
+**Validation ablation findings (8-variant study, see `results/validation/VALIDATION_RESULTS.md`, `PCA_VALIDATION_RESULTS.md`, and `LOGREG_VALIDATION_RESULTS.md`):**
 - **Best variant: `neg8dim_12pairs_matched`** (33/100, 1/8 negotiation flat-high probes, 5/8 AMBER). Zero GREEN dimensions in any variant.
 - **Length matching is the only effective intervention:** raw→matched = +10-13 points, 75-80% reduction in flat-high probes.
 - **Pair scaling hurts:** 12→20→80 pairs worsens scores (33→28→26 for 8dim). More pairs amplifies surface confounds; per-pair alignment degrades (empathy: 0.464→0.343 at 80 pairs with 30/80 outliers). Contradicts naive extrapolation from Chalnev et al. (2025).
@@ -110,10 +112,11 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - **Selectivity metric is flawed:** penalty term caps at 0.5, so near-perfect probe accuracy at 80 pairs inflates selectivity even though vectors are more confounded.
 
 **Orthogonal projection findings (`orthogonal_projection.py`, `results/projection/`):**
-- **Cohen's d overstates contamination.** After projecting out all 5 control dimensions from negotiation vectors and re-running 1-D probes, average accuracy drops only 2.4% (0.843→0.820). 7/8 dimensions retain signal; 2 dimensions actually improve.
+- **Cohen's d overstates contamination.** After projecting out all 5 control dimensions from negotiation vectors and re-running 1-D probes, average accuracy drops only 2.4% (0.843→0.820) for mean difference. 7/8 dimensions retain signal; 2 dimensions actually improve.
 - **Result is robust across all 8 variants.** 84/92 dimension×variant tests are GENUINE (91%), 12 PARTIAL SURFACE, 6 IMPROVED. Average drop ranges 1.1-3.7% across variants.
+- **Result is robust across all three extraction methods.** Projection drops: MD 2.4%, PCA 2.1%, LR 2.8% in best variant. All three methods extract directions with similar surface overlap, confirming the finding is about the data geometry, not the extraction algorithm.
 - **Firmness retains 96.6% of its probe accuracy** despite cos=-0.703 with hedging. The surface overlap was real but irrelevant to the separation signal.
-- **Empathy has the largest surface dependence** (6.9% drop, 0.807→0.737), consistent with its sentiment overlap. Still well above chance.
+- **Empathy has the largest surface dependence** (6.9% drop for MD, 6.8% for PCA, 3.6% for LR), consistent with its sentiment overlap. Still well above chance. LR's lower empathy drop is offset by higher firmness drop (7.2% vs MD's 3.4%), suggesting LR's max-margin direction "fudges" toward hedging/formality confounds in firmness.
 - **clarity_and_directness is the only consistently surface-dependent dimension** (6.3% mean drop, PARTIAL in 3/4 variants). Its meaning genuinely overlaps with hedging and specificity.
 - **batna_awareness and reframing are the purest concepts** — cleaning has no effect or improves accuracy across all variants.
 - **Interpretation:** The data (pairs) is confounded in surface features, but the extracted steering directions are mostly genuine — they capture conceptual variance beyond surface features. Cohen's d detects data confounds, not direction confounds.
@@ -121,7 +124,7 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 **Extraction method rationale (3 methods: mean_diff, PCA, logreg):**
 - **Mean difference** (generative): `mean(pos) - mean(neg)`. Standard CAA (Panickssery et al. 2024). Im & Li 2025 prove this is optimal under pointwise loss.
 - **PCA** (variance-based): PC1 of difference vectors. Follows Zou et al. 2023 (RepE). Finds dominant axis of variation; can diverge from concept direction if noise variance dominates.
-- **Logistic regression** (discriminative): L2-regularised LR weight vector. Follows Li et al. 2024 (ITI), Zou et al. 2023 (classifier variant). Finds max-margin separation boundary. Known to "fudge" direction when surface confounds are non-orthogonal (Marks & Tegmark 2023). Literature consensus: MD > LR > PCA for steering (Im & Li 2025). Added for triangulation, not because it's expected to be superior.
+- **Logistic regression** (discriminative): L2-regularised LR weight vector. Follows Li et al. 2024 (ITI), Zou et al. 2023 (classifier variant). Finds max-margin separation boundary. Known to "fudge" direction when surface confounds are non-orthogonal (Marks & Tegmark 2023). Empirically confirmed: LR's firmness drops 7.2% on projection vs MD's 3.4%, while 1-D held-out probe accuracy is within 1.2% of MD (0.891 vs 0.903). Literature consensus confirmed: MD ≥ LR >> PCA for steering (Im & Li 2025).
 - **K-means rejected:** With balanced classes, k-means centroids ≈ class means, so `centroid_1 - centroid_0 ≈ mean_diff`. When clusters don't recover classes, it's worse — Euclidean distance in full activation space is dominated by highest-variance (surface confound) directions. Adds no new lens; conceptually redundant with mean diff.
 
 ---
