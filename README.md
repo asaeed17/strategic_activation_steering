@@ -166,7 +166,7 @@ The contribution is the **evaluation framework** itself — a methodology that s
 | Task | Owner | Description                                                               | Status      |
 | ---- | ----- | ------------------------------------------------------------------------- | ----------- |
 | P1   | —     | Improved contrastive pairs (fix surface biases, 80+ pairs/dim)            | TODO        |
-| P2   | —     | Probing & interpretability (extend Damon's probe work)                    | IN PROGRESS |
+| P2   | Sonny | Probing & interpretability (extend Damon's probe work)                    | IN PROGRESS |
 | P3   | Damon | Hyperparameter search (fast_search_steering.py)                           | DONE        |
 | P4   | Moiz  | Evaluation framework + results & analysis                                 | DONE        |
 | P5   | —     | Paper writing                                                             | TODO        |
