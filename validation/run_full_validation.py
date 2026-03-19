@@ -126,7 +126,12 @@ PROJECTION_HARDCODED_ROOT = ROOT / "results" / "projection"
 def run(cmd: list[str], label: str) -> bool:
     """Run a subprocess command from project root. Returns True on success."""
     log.info("Running %s: %s", label, " ".join(str(c) for c in cmd))
-    result = subprocess.run(cmd, text=True, cwd=str(ROOT))
+    env = os.environ.copy()
+    # Ensure project root is on PYTHONPATH so validation scripts can import
+    # extract_vectors.py and apply_steering.py which live in the root.
+    existing = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = str(ROOT) + (":" + existing if existing else "")
+    result = subprocess.run(cmd, text=True, cwd=str(ROOT), env=env)
     if result.returncode != 0:
         log.error("%s failed (exit %d)", label, result.returncode)
         return False
