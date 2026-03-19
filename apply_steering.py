@@ -253,7 +253,8 @@ def build_seller_system(scenario: Dict) -> str:
         f"Rules:\n"
         f"  - Always write in natural conversational sentences, like a real Craigslist seller.\n"
         f"  - Do NOT just say a number — always support your position with a reason.\n"
-        f"  - When ready to agree on a price, end your message with: DEAL=<price> (e.g. DEAL=450)\n"
+        f"  - When ready to agree on a price, end your message with DEAL=<price> as the very last thing you write.\n"
+        f"    Use only digits — no commas, no $ sign (e.g. DEAL=450 or DEAL=9300, NOT DEAL=9,300).\n"
         f"  - Only write DEAL= when you genuinely accept that price "
         f"(it must be at or above ${scenario['seller_target']:.0f}).\n"
         f"  - If the offer is below your minimum and the buyer won't move, write REJECT on its own line.\n"
@@ -282,7 +283,8 @@ def build_buyer_system(scenario: Dict) -> str:
         f"Rules:\n"
         f"  - Always write in natural conversational sentences, like a real Craigslist buyer.\n"
         f"  - Do NOT just say a number — always support your position with a reason.\n"
-        f"  - When ready to agree on a price, end your message with: DEAL=<price> (e.g. DEAL=350)\n"
+        f"  - When ready to agree on a price, end your message with DEAL=<price> as the very last thing you write.\n"
+        f"    Use only digits — no commas, no $ sign (e.g. DEAL=350 or DEAL=8500, NOT DEAL=8,500).\n"
         f"  - Only write DEAL= when you genuinely accept that price "
         f"(it must be at or below ${scenario['buyer_target']:.0f}).\n"
         f"  - If the price is above your maximum and the seller won't move, write REJECT on its own line.\n"
@@ -300,9 +302,23 @@ def is_deal(text: str) -> bool:
 
 def parse_deal_price(text: str) -> Optional[float]:
     m = re.search(r"DEAL\s*=\s*\$?([\d,]+(?:\.\d+)?)", text.upper())
-    if m:
-        return float(m.group(1).replace(",", ""))
-    return None
+    if not m:
+        return None
+    price = float(m.group(1).replace(",", ""))
+    # Guard against truncated numbers caused by comma-induced generation cutoff
+    # (e.g. model writes "...at $9,300. DEAL=9" → parsed as 9 instead of 9300).
+    # If the price is implausibly small, look for a larger dollar amount in the
+    # preceding text that could be the intended price.
+    if price < 500:
+        deal_pos = text.upper().rfind("DEAL")
+        context = text[:deal_pos] if deal_pos > 0 else text
+        amounts = [float(a.replace(",", ""))
+                   for a in re.findall(r'\$\s*([\d,]+(?:\.\d+)?)', context)]
+        # prefer the last mentioned amount that is at least 10x larger
+        larger = [a for a in amounts if a >= price * 10]
+        if larger:
+            return larger[-1]
+    return price
 
 
 def is_reject(text: str) -> bool:

@@ -483,6 +483,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--dataset_split",  choices=["train", "validation"], default="train")
     p.add_argument("--dtype",          choices=["bfloat16", "float16", "float32"],
                    default="bfloat16")
+    p.add_argument("--quantize",       action="store_true",
+                   help="Load model in 4-bit (bitsandbytes NF4). Reduces VRAM to ~4GB for 7B.")
     p.add_argument("--output_dir",     default="results/lightweight")
     p.add_argument("--seed",           type=int, default=42)
     p.add_argument("--use_craigslist", action="store_true", required=True)
@@ -553,18 +555,28 @@ def main() -> None:
                 sys.exit(1)
 
     # Load model
-    log.info("Loading model: %s", model_cfg.hf_id)
+    log.info("Loading model: %s%s", model_cfg.hf_id, " [4-bit]" if args.quantize else "")
     dtype_map = {"bfloat16": torch.bfloat16, "float16": torch.float16, "float32": torch.float32}
     tokenizer = AutoTokenizer.from_pretrained(
         model_cfg.hf_id, token=hf_token, padding_side="left"
     )
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
-    model = AutoModelForCausalLM.from_pretrained(
-        model_cfg.hf_id, token=hf_token,
-        torch_dtype=dtype_map[args.dtype], device_map="auto",
-        max_memory={0: "12GiB", "cpu": "20GiB"},
-    )
+
+    load_kwargs = dict(token=hf_token, device_map="auto")
+    if args.quantize:
+        from transformers import BitsAndBytesConfig
+        load_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type="nf4",
+        )
+    else:
+        load_kwargs["torch_dtype"] = dtype_map[args.dtype]
+        load_kwargs["max_memory"] = {0: "15GiB"}   # pure GPU, no CPU offload
+
+    model = AutoModelForCausalLM.from_pretrained(model_cfg.hf_id, **load_kwargs)
     model.eval()
 
     total_s2 = len(args.alphas) * args.s2_games * 2 + args.s2_games * 2  # +baseline
