@@ -672,8 +672,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--model",       choices=list(MODELS.keys()), required=True)
     p.add_argument("--vectors_dir", default="vectors")
     p.add_argument("--dimensions",  nargs="*",  default=None)
-    p.add_argument("--methods", nargs="+", choices=["mean_diff", "pca"],
-               default=["mean_diff"])
+    p.add_argument("--methods", nargs="+", choices=["mean_diff", "pca", "logreg"],
+               default=["mean_diff"])  # was ["mean_diff", "pca"]
     p.add_argument("--layer_presets", nargs="+",
                    choices=list(LAYER_PRESET_FRACTIONS.keys()),
                    default=list(LAYER_PRESET_FRACTIONS.keys()))

@@ -662,7 +662,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--model",          choices=list(MODELS.keys()), default="qwen2.5-7b")
     p.add_argument("--vectors_dir",    default="vectors")
     p.add_argument("--dimension",      default="firmness")
-    p.add_argument("--method",         choices=["mean_diff", "pca"], default="mean_diff")
+    p.add_argument("--method",         choices=["mean_diff", "pca", "logreg"], default="mean_diff")
     p.add_argument("--layers",         nargs="+", type=int, default=[12, 16, 20])
     p.add_argument("--alpha",          type=float, default=20.0)
     p.add_argument("--dataset_split",  choices=["train", "validation"], default="train")
