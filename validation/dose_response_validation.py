@@ -319,7 +319,7 @@ def generate_dose_responses(
         layer_map = dict(DEFAULT_LAYERS)
 
     # ── Load model ───────────────────────────────────────────────────
-    model_id = MODELS[model_alias]["id"]
+    model_id = MODELS[model_alias].id
     log.info("Loading model: %s", model_id)
 
     tokenizer = AutoTokenizer.from_pretrained(model_id, token=HF_TOKEN)
