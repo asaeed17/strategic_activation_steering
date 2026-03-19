@@ -436,7 +436,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--model",       choices=list(MODELS.keys()), required=True)
     p.add_argument("--dimension",   default="firmness",
                    help="Steering dimension to search over. Default: firmness.")
-    p.add_argument("--vectors_dir", default="vectors")
+    p.add_argument("--vectors_dir", default="vectors/neg8dim_12pairs_matched/negotiation")
     p.add_argument("--method",      choices=["mean_diff", "pca"], default="mean_diff")
 
     # Presets to sweep in Stage 1
