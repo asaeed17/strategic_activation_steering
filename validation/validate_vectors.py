@@ -91,6 +91,7 @@ def _ensure_extract_vectors():
     from extract_vectors import (       # noqa: F811
         MODELS as _M, HF_TOKEN as _HF, ModelConfig,
         format_sample, extract_hidden_states, compute_mean_diff,
+        compute_pca_direction, compute_logreg_direction,
     )
     MODELS = _M
     HF_TOKEN = _HF
@@ -2277,7 +2278,7 @@ def run_analyze_only(args) -> Dict:
         n_layers = len(next(iter(neg_accs.values()))) if neg_accs else 36
         sample_layers = [n_layers // 4, n_layers // 2, 3 * n_layers // 4]
         results["cosine_similarity"] = compute_cosine_from_files(
-            vectors_dir, layers=sample_layers,
+            vectors_dir, method=args.method, layers=sample_layers,
             control_ids={d["id"] for d in con_data["dimensions"]}
         )
 
@@ -2548,7 +2549,9 @@ def run_full_validation(args) -> Dict:
     _ensure_extract_vectors()
     import torch
     from transformers import AutoTokenizer, AutoModelForCausalLM
-    from extract_vectors import format_sample, extract_hidden_states, compute_mean_diff
+    from extract_vectors import (format_sample, extract_hidden_states,
+                                     compute_mean_diff, compute_pca_direction,
+                                     compute_logreg_direction)
     from tqdm import tqdm
 
     cfg = MODELS[args.model]
@@ -2612,7 +2615,12 @@ def run_full_validation(args) -> Dict:
         neg_h = extract_hidden_states(model, tokenizer, neg_texts, args.batch_size)
 
         hidden_states[dim_id] = {"pos_h": pos_h, "neg_h": neg_h}
-        steering_vecs[dim_id] = compute_mean_diff(pos_h, neg_h)
+        if args.method == "pca":
+            steering_vecs[dim_id] = compute_pca_direction(pos_h, neg_h)
+        elif args.method == "logreg":
+            steering_vecs[dim_id] = compute_logreg_direction(pos_h, neg_h)
+        else:
+            steering_vecs[dim_id] = compute_mean_diff(pos_h, neg_h)
 
     n_layers = next(iter(hidden_states.values()))["pos_h"].shape[1]
     log.info("Model has %d transformer layers.", n_layers)
@@ -3050,6 +3058,9 @@ def parse_args():
     mode.add_argument("--analyze-only", action="store_true",
                       help="Analyse existing probe_results.json (no GPU)")
 
+    p.add_argument("--method", type=str, default="mean_diff",
+                   choices=["mean_diff", "pca", "logreg"],
+                   help="Extraction method to validate (default: mean_diff)")
     p.add_argument("--dimensions", nargs="+", default=None,
                    help="Negotiation dimensions to validate (default: all probed)")
     p.add_argument("--negotiation_pairs", default="negotiation_steering_pairs.json")
@@ -3072,7 +3083,7 @@ def main():
     args = parse_args()
     alias = _ALIAS_MAP[args.model]
 
-    output_dir = Path(args.output_dir) / alias
+    output_dir = Path(args.output_dir) / alias / args.method
     output_dir.mkdir(parents=True, exist_ok=True)
 
     if args.full:

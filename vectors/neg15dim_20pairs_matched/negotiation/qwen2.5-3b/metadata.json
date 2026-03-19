@@ -22,7 +22,8 @@
   ],
   "methods": [
     "mean_diff",
-    "pca"
+    "pca",
+    "logreg"
   ],
   "saved_layers": [
     0,
@@ -65,6 +66,7 @@
   "notes": {
     "mean_diff": "direction_l = normalise(mean(pos_l) - mean(neg_l))",
     "pca": "direction_l = PCA(pos_i_l - neg_i_l).components_[0], sign-aligned",
+    "logreg": "direction_l = normalise(LogisticRegression(pos,neg).coef_[0]), sign-aligned",
     "last_token": "activations taken at the last real token (left-padded)"
   }
 }
