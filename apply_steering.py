@@ -36,7 +36,6 @@ import json
 import random
 import logging
 import argparse
-import urllib.request
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -66,32 +65,26 @@ _REJECT_RE = re.compile(r'^\s*REJECT\s*$', re.IGNORECASE | re.MULTILINE)
 # Dataset Loading
 # ---------------------------------------------------------------------------
 
-# These CodaLab URLs serve the raw parsed JSON for each split.
-# They were live as of the time I wrote this — fingers crossed they stay up.
-RAW_URLS = {
-    "train":      "https://worksheets.codalab.org/rest/bundles/0xd34bbbc5fb3b4fccbd19e10756ca8dd7/contents/blob/parsed.json",
-    "validation": "https://worksheets.codalab.org/rest/bundles/0x15c4160b43d44ee3a8386cca98da138c/contents/blob/parsed.json",
+LOCAL_DATA_DIR = Path(__file__).resolve().parent / "craigslist_data"
+LOCAL_FILES = {
+    "train":      LOCAL_DATA_DIR / "train.json",
+    "validation": LOCAL_DATA_DIR / "validation.json",
 }
 
 
-def _fetch_json(url: str) -> list:
-    log.info("Downloading dataset from %s ...", url)
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        chunks = []
-        while True:
-            chunk = r.read(65536)
-            if not chunk:
-                break
-            chunks.append(chunk)
-        return json.loads(b"".join(chunks).decode("utf-8"))
-
-
 def load_craigslist(split: str = "train", num_samples: int = 50, min_span: int = 100) -> List[Dict]:
-    if split not in RAW_URLS:
-        raise ValueError(f"Split '{split}' not available. Choose from: {list(RAW_URLS.keys())}")
+    if split not in LOCAL_FILES:
+        raise ValueError(f"Split '{split}' not available. Choose from: {list(LOCAL_FILES.keys())}")
 
-    raw = _fetch_json(RAW_URLS[split])
+    path = LOCAL_FILES[split]
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Local dataset file not found: {path}\n"
+            f"Expected craigslist_data/{{train,validation}}.json in the project root."
+        )
+    log.info("Loading dataset from %s ...", path)
+    with open(path, encoding="utf-8") as fh:
+        raw = json.load(fh)
     log.info("Loaded %d raw dialogues from '%s' split.", len(raw), split)
 
     scenarios = []
@@ -162,7 +155,7 @@ def load_craigslist(split: str = "train", num_samples: int = 50, min_span: int =
     log.info("Span filter (<%d): removed %d scenarios.", min_span, n_filtered_span)
     log.info("Found %d valid scenarios after filtering.", len(scenarios))
     if not scenarios:
-        raise RuntimeError("No valid scenarios found — check the CodaLab URLs are still live.")
+        raise RuntimeError("No valid scenarios found after filtering — check the local data files.")
 
     k = min(num_samples, len(scenarios))
     return random.sample(scenarios, k)
@@ -241,7 +234,7 @@ def load_direction_vectors(
 
 def build_seller_system(scenario: Dict) -> str:
     return (
-        f"You are selling an item on Craigslist. Your goal is to get the highest price possible.\n"
+        f"You are a seller on Craigslist negotiating the price of an item.\n"
         f"\n"
         f"Item details:\n"
         f"  Title      : {scenario['title']}\n"
@@ -249,24 +242,29 @@ def build_seller_system(scenario: Dict) -> str:
         f"  Listed at  : ${scenario['listing_price']:.0f}\n"
         f"  Description: {scenario['description'][:300]}\n"
         f"\n"
-        f"Your goal is to sell as close to the listing price of ${scenario['listing_price']:.0f} as possible. "
-        f"Do not give the item away cheaply.\n"
+        f"Your private minimum: you will NOT accept less than ${scenario['seller_target']:.0f}. "
+        f"Never reveal this number.\n"
+        f"\n"
+        f"Strategy:\n"
+        f"  - Start at or near your listing price of ${scenario['listing_price']:.0f} and concede slowly.\n"
+        f"  - Make arguments for why the item is worth the price (condition, features, demand, alternatives).\n"
+        f"  - Never agree to a price below ${scenario['seller_target']:.0f} — walk away if necessary.\n"
         f"\n"
         f"Rules:\n"
-        f"  - Always write in natural conversational sentences, like a real Craigslist negotiation.\n"
-        f"  - Make arguments for why the item is worth the price (condition, rarity, demand).\n"
-        f"  - Do NOT just say a number — always explain your position in a sentence or two.\n"
-        f"  - When ready to finalise, end your message with: DEAL=<price> (e.g. DEAL=450)\n"
-        f"  - Only write DEAL= when you genuinely accept that price.\n"
-        f"  - If the current offer is genuinely unacceptable and you would rather walk away,\n"
-        f"    you may write REJECT on a line by itself. Only use this if the deal is truly\n"
-        f"    worse than walking away — do not use REJECT to bluff. Available from turn 3.\n"
+        f"  - Always write in natural conversational sentences, like a real Craigslist seller.\n"
+        f"  - Do NOT just say a number — always support your position with a reason.\n"
+        f"  - When ready to agree on a price, end your message with DEAL=<price> as the very last thing you write.\n"
+        f"    Use only digits — no commas, no $ sign (e.g. DEAL=450 or DEAL=9300, NOT DEAL=9,300).\n"
+        f"  - Only write DEAL= when you genuinely accept that price "
+        f"(it must be at or above ${scenario['seller_target']:.0f}).\n"
+        f"  - If the offer is below your minimum and the buyer won't move, write REJECT on its own line.\n"
+        f"    Use REJECT only when you would truly walk away — not as a bluff. Available from turn 3.\n"
     )
 
 
 def build_buyer_system(scenario: Dict) -> str:
     return (
-        f"You are buying an item on Craigslist. Your goal is to pay the lowest price possible.\n"
+        f"You are a buyer on Craigslist negotiating the price of an item.\n"
         f"\n"
         f"Item details:\n"
         f"  Title      : {scenario['title']}\n"
@@ -277,15 +275,20 @@ def build_buyer_system(scenario: Dict) -> str:
         f"Your private maximum: you will NOT pay more than ${scenario['buyer_target']:.0f}. "
         f"Never reveal this number.\n"
         f"\n"
+        f"Strategy:\n"
+        f"  - Start well below the listing price and concede slowly.\n"
+        f"  - Make arguments for why the price should be lower (wear, comparable listings, budget).\n"
+        f"  - Never agree to a price above ${scenario['buyer_target']:.0f} — walk away if necessary.\n"
+        f"\n"
         f"Rules:\n"
-        f"  - Always write in natural conversational sentences, like a real Craigslist negotiation.\n"
-        f"  - Make arguments for why the price should be lower (wear, alternatives, budget).\n"
-        f"  - Do NOT just say a number — always explain your position in a sentence or two.\n"
-        f"  - When ready to finalise, end your message with: DEAL=<price> (e.g. DEAL=350)\n"
-        f"  - Only write DEAL= when you genuinely accept that price.\n"
-        f"  - If the current offer is genuinely unacceptable and you would rather walk away,\n"
-        f"    you may write REJECT on a line by itself. Only use this if the deal is truly\n"
-        f"    worse than walking away — do not use REJECT to bluff. Available from turn 3.\n"
+        f"  - Always write in natural conversational sentences, like a real Craigslist buyer.\n"
+        f"  - Do NOT just say a number — always support your position with a reason.\n"
+        f"  - When ready to agree on a price, end your message with DEAL=<price> as the very last thing you write.\n"
+        f"    Use only digits — no commas, no $ sign (e.g. DEAL=350 or DEAL=8500, NOT DEAL=8,500).\n"
+        f"  - Only write DEAL= when you genuinely accept that price "
+        f"(it must be at or below ${scenario['buyer_target']:.0f}).\n"
+        f"  - If the price is above your maximum and the seller won't move, write REJECT on its own line.\n"
+        f"    Use REJECT only when you would truly walk away — not as a bluff. Available from turn 3.\n"
     )
 
 
@@ -299,9 +302,23 @@ def is_deal(text: str) -> bool:
 
 def parse_deal_price(text: str) -> Optional[float]:
     m = re.search(r"DEAL\s*=\s*\$?([\d,]+(?:\.\d+)?)", text.upper())
-    if m:
-        return float(m.group(1).replace(",", ""))
-    return None
+    if not m:
+        return None
+    price = float(m.group(1).replace(",", ""))
+    # Guard against truncated numbers caused by comma-induced generation cutoff
+    # (e.g. model writes "...at $9,300. DEAL=9" → parsed as 9 instead of 9300).
+    # If the price is implausibly small, look for a larger dollar amount in the
+    # preceding text that could be the intended price.
+    if price < 500:
+        deal_pos = text.upper().rfind("DEAL")
+        context = text[:deal_pos] if deal_pos > 0 else text
+        amounts = [float(a.replace(",", ""))
+                   for a in re.findall(r'\$\s*([\d,]+(?:\.\d+)?)', context)]
+        # prefer the last mentioned amount that is at least 10x larger
+        larger = [a for a in amounts if a >= price * 10]
+        if larger:
+            return larger[-1]
+    return price
 
 
 def is_reject(text: str) -> bool:

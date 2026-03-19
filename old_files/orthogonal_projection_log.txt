@@ -1,0 +1,95 @@
+16:35:58  INFO      Processing: neg8dim_12pairs_matched
+16:35:58  INFO      Negotiation dims: ['active_listening', 'anchoring', 'batna_awareness', 'composure', 'creative_problem_solving', 'empathy', 'firmness', 'strategic_concession_making']
+16:35:58  INFO      Control dims: ['verbosity', 'formality', 'hedging', 'sentiment', 'specificity']
+16:36:01  INFO      Loading model: Qwen/Qwen2.5-3B-Instruct
+16:36:01  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:36:01  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+16:36:01  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+16:36:01  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/tokenizer_config.json "HTTP/1.1 200 OK"
+16:36:01  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+16:36:01  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+16:36:02  INFO      HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-3B-Instruct "HTTP/1.1 200 OK"
+16:36:02  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+16:36:02  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/config.json "HTTP/1.1 200 OK"
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:   0%|          | 1/434 [00:00<01:13,  5.92it/s]Loading weights:  23%|██▎       | 99/434 [00:00<00:00, 435.85it/s]Loading weights:  40%|███▉      | 173/434 [00:00<00:00, 552.88it/s]Loading weights:  59%|█████▉    | 255/434 [00:00<00:00, 637.06it/s]Loading weights:  75%|███████▌  | 327/434 [00:00<00:00, 664.14it/s]Loading weights:  95%|█████████▍| 411/434 [00:00<00:00, 704.56it/s]Loading weights: 100%|██████████| 434/434 [00:00<00:00, 610.36it/s]
+16:36:03  INFO      HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+16:36:03  WARNING   Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+16:36:03  INFO      HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-3B-Instruct/aa8e72537993ba99e69dfaafa59ed015b17504d1/generation_config.json "HTTP/1.1 200 OK"
+16:36:03  INFO      Probing: firmness
+16:36:06  INFO        firmness: orig=0.866  clean=0.832  drop=0.034
+16:36:06  INFO      Probing: empathy
+16:36:07  INFO        empathy: orig=0.807  clean=0.737  drop=0.069
+16:36:07  INFO      Probing: active_listening
+16:36:07  INFO        active_listening: orig=0.822  clean=0.846  drop=-0.023
+16:36:07  INFO      Probing: composure
+16:36:08  INFO        composure: orig=0.843  clean=0.806  drop=0.037
+16:36:08  INFO      Probing: strategic_concession_making
+16:36:08  INFO        strategic_concession_making: orig=0.831  clean=0.786  drop=0.046
+16:36:08  INFO      Probing: anchoring
+16:36:09  INFO        anchoring: orig=0.871  clean=0.866  drop=0.005
+16:36:09  INFO      Probing: batna_awareness
+16:36:09  INFO        batna_awareness: orig=0.841  clean=0.846  drop=-0.005
+16:36:09  INFO      Probing: creative_problem_solving
+16:36:10  INFO        creative_problem_solving: orig=0.864  clean=0.847  drop=0.018
+16:36:10  INFO      Saved to results/projection/neg8dim_12pairs_matched/orthogonal_projection.json
+
+======================================================================
+  ORTHOGONAL PROJECTION REPORT — neg8dim_12pairs_matched
+======================================================================
+
+  Controls projected out: verbosity, formality, hedging, sentiment, specificity
+
+======================================================================
+  RESIDUAL NORM (fraction of original vector surviving projection)
+======================================================================
+  Dimension                          Mean      Std Interpretation
+  ------------------------------------------------------------------
+  active_listening                  0.905    0.110   INDEPENDENT
+  anchoring                         0.845    0.035   INDEPENDENT
+  batna_awareness                   0.817    0.070   INDEPENDENT
+  composure                         0.870    0.103   INDEPENDENT
+  creative_problem_solving          0.933    0.051   INDEPENDENT
+  empathy                           0.874    0.066   INDEPENDENT
+  firmness                          0.748    0.053   MOSTLY GENUINE
+  strategic_concession_making       0.894    0.036   INDEPENDENT
+
+======================================================================
+  MEAN |COSINE| WITH CONTROLS (before -> after projection)
+======================================================================
+  Dimension                   verbosit   formalit    hedging   sentimen   specific
+  ---------------------------------------------------------------------------
+  active_listening               0.193      0.165      0.197      0.167      0.202
+    (after)                      0.081      0.068      0.055      0.019      0.000
+  anchoring                      0.067      0.408      0.385      0.283      0.249
+    (after)                      0.087      0.091      0.040      0.018      0.000
+  batna_awareness                0.239      0.467      0.195      0.242      0.138
+    (after)                      0.061      0.041      0.024      0.016      0.000
+  composure                      0.182      0.300      0.221      0.255      0.162
+    (after)                      0.067      0.062      0.073      0.015      0.000
+  creative_problem_solving       0.258      0.091      0.163      0.114      0.152
+    (after)                      0.037      0.068      0.041      0.013      0.000
+  empathy                        0.204      0.161      0.298      0.384      0.125
+    (after)                      0.128      0.090      0.057      0.023      0.000
+  firmness                       0.133      0.523      0.482      0.401      0.305
+    (after)                      0.128      0.145      0.067      0.019      0.000
+  strategic_concession_making      0.048      0.179      0.296      0.425      0.212
+    (after)                      0.132      0.140      0.113      0.022      0.000
+
+======================================================================
+  1-D PROBE ACCURACY (original vs cleaned direction)
+======================================================================
+  Dimension                        Original    Cleaned       Drop Interpretation
+  ----------------------------------------------------------------------------
+  active_listening                    0.822      0.846     -0.023   IMPROVED (noise removed)
+  anchoring                           0.871      0.866     +0.005   GENUINE SIGNAL
+  batna_awareness                     0.841      0.846     -0.005   GENUINE SIGNAL
+  composure                           0.843      0.806     +0.037   GENUINE SIGNAL
+  creative_problem_solving            0.864      0.847     +0.018   GENUINE SIGNAL
+  empathy                             0.807      0.737     +0.069   PARTIAL SURFACE
+  firmness                            0.866      0.832     +0.034   GENUINE SIGNAL
+  strategic_concession_making         0.831      0.786     +0.046   GENUINE SIGNAL
+
+======================================================================
+
