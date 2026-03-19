@@ -79,6 +79,7 @@ Usage
 
 import argparse
 import logging
+import os
 import shutil
 import subprocess
 import sys
@@ -90,6 +91,14 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
 )
 log = logging.getLogger(__name__)
+
+# ── Paths ─────────────────────────────────────────────────────────────────────
+
+# Project root is one level above this script (validation/)
+ROOT = Path(__file__).parent.parent.resolve()
+
+# Validation scripts live alongside this file
+VAL_DIR = Path(__file__).parent.resolve()
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
@@ -106,18 +115,18 @@ ALL_VARIANTS = [
 
 ALL_MODELS = ["qwen2.5-3b"]
 
-OUTPUT_ROOT = Path("FINAL_VALIDATION_RESULTS")
+OUTPUT_ROOT = ROOT / "FINAL_VALIDATION_RESULTS"
 
 # orthogonal_projection.py hardcodes its output path and ignores --output-dir
-PROJECTION_HARDCODED_ROOT = Path("results/projection")
+PROJECTION_HARDCODED_ROOT = ROOT / "results" / "projection"
 
 
 # ── Subprocess helper ─────────────────────────────────────────────────────────
 
 def run(cmd: list[str], label: str) -> bool:
-    """Run a subprocess command. Returns True on success."""
+    """Run a subprocess command from project root. Returns True on success."""
     log.info("Running %s: %s", label, " ".join(str(c) for c in cmd))
-    result = subprocess.run(cmd, text=True)
+    result = subprocess.run(cmd, text=True, cwd=str(ROOT))
     if result.returncode != 0:
         log.error("%s failed (exit %d)", label, result.returncode)
         return False
@@ -130,12 +139,12 @@ def run_stage1(variant: str, model: str, out_dir: Path, analyze_only: bool) -> b
     """validate_vectors.py — in-sample validation checks 1-7."""
     mode_flag = "--analyze-only" if analyze_only else "--full"
     cmd = [
-        sys.executable, "validate_vectors.py",
+        sys.executable, str(VAL_DIR / "validate_vectors.py"),
         mode_flag,
         "--model",             model,
-        "--negotiation_pairs", f"steering_pairs/{variant}/negotiation_steering_pairs.json",
-        "--control_pairs",     f"steering_pairs/{variant}/control_steering_pairs.json",
-        "--vectors_dir",       f"vectors/{variant}/negotiation",
+        "--negotiation_pairs", str(ROOT / "steering_pairs" / variant / "negotiation_steering_pairs.json"),
+        "--control_pairs",     str(ROOT / "steering_pairs" / variant / "control_steering_pairs.json"),
+        "--vectors_dir",       str(ROOT / "vectors" / variant / "negotiation"),
         "--output_dir",        str(out_dir.parent),  # script appends /{model}/ itself
     ]
     return run(cmd, f"Stage 1 [{variant}/{model}]")
@@ -144,12 +153,12 @@ def run_stage1(variant: str, model: str, out_dir: Path, analyze_only: bool) -> b
 def run_stage2(variant: str, model: str, out_dir: Path) -> bool:
     """probe_vectors_v2.py — held-out projection probe."""
     cmd = [
-        sys.executable, "probe_vectors_v2.py",
+        sys.executable, str(VAL_DIR / "probe_vectors_v2.py"),
         "--model",          model,
-        "--vectors_dir",    f"vectors/{variant}/negotiation",
-        "--steering_pairs", f"steering_pairs/{variant}/negotiation_steering_pairs.json",
-        "--control_file",   f"steering_pairs/{variant}/control_steering_pairs.json",
-        "--probe_dir",      "probing_held_out_contrastive_pairs",
+        "--vectors_dir",    str(ROOT / "vectors" / variant / "negotiation"),
+        "--steering_pairs", str(ROOT / "steering_pairs" / variant / "negotiation_steering_pairs.json"),
+        "--control_file",   str(ROOT / "steering_pairs" / variant / "control_steering_pairs.json"),
+        "--probe_dir",      str(ROOT / "probing_held_out_contrastive_pairs"),
         "--output_dir",     str(out_dir.parent),  # script appends /{model.alias}/ itself
     ]
     ok = run(cmd, f"Stage 2 [{variant}/{model}]")
@@ -168,10 +177,11 @@ def run_stage2(variant: str, model: str, out_dir: Path) -> bool:
 def run_stage3(variant: str, model: str, out_dir: Path) -> bool:
     """orthogonal_projection.py --probe — surface confound causal test."""
     cmd = [
-        sys.executable, "orthogonal_projection.py",
+        sys.executable, str(VAL_DIR / "orthogonal_projection.py"),
         "--variant", variant,
         "--probe",
     ]
+    # Run from project root so orthogonal_projection.py resolves vectors/ correctly
     ok = run(cmd, f"Stage 3 [{variant}/{model}]")
     if not ok:
         return False
@@ -209,10 +219,10 @@ def run_dose_response(
 
     # Sub-stage a: generate (GPU)
     cmd_gen = [
-        sys.executable, script,
+        sys.executable, str(VAL_DIR / script),
         "--stage",       "generate",
         "--model",       model,
-        "--vectors_dir", f"vectors/{variant}/negotiation",
+        "--vectors_dir", str(ROOT / "vectors" / variant / "negotiation"),
         "--output_dir",  str(out_dir),
     ]
     if not run(cmd_gen, f"{label_prefix} generate [{variant}/{model}]"):
@@ -221,7 +231,7 @@ def run_dose_response(
     # Sub-stage b: judge (API — skippable)
     if run_judge and ok:
         cmd_judge = [
-            sys.executable, script,
+            sys.executable, str(VAL_DIR / script),
             "--stage",            "judge",
             "--judges",           *judges,
             "--generations_file", str(out_dir / gen_file),
@@ -233,7 +243,7 @@ def run_dose_response(
     # Sub-stage c: analyze (CPU)
     if ok:
         cmd_analyze = [
-            sys.executable, script,
+            sys.executable, str(VAL_DIR / script),
             "--stage",       "analyze",
             "--scores_file", str(out_dir / scores_file),
             "--output_dir",  str(out_dir),
