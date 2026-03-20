@@ -498,9 +498,9 @@ def main() -> None:
     args = parse_args()
 
     # Derive from vectors_dir: .../neg15dim_12pairs_matched/negotiation
-    #  → hyperparameter_results/gridsearch_neg15dim_12pairs_matched/<dimension>
+    #  → hyperparameter_results/gridsearch_neg15dim_12pairs_matched/<model>/<dimension>
     vec_set = Path(args.vectors_dir).parts[-2]
-    output_dir = Path("hyperparameter_results") / f"gridsearch_{vec_set}" / args.dimension
+    output_dir = Path("hyperparameter_results") / f"gridsearch_{vec_set}" / args.model / args.dimension
     output_dir.mkdir(parents=True, exist_ok=True)
 
     random.seed(args.seed)
