@@ -163,6 +163,12 @@ MODELS: Dict[str, ModelConfig] = {
         requires_token=True,
         use_chat_template=True,
     ),
+    "ministral-3b": ModelConfig(
+        hf_id="mistralai/Ministral-3B-Instruct-2410",
+        alias="ministral-3b",
+        requires_token=False,
+        use_chat_template=True,
+    ),
 }
 
 

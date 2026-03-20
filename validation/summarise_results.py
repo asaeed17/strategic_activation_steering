@@ -325,14 +325,16 @@ def main():
     for variant_dir in sorted(results_dir.iterdir()):
         if not variant_dir.is_dir():
             continue
-        json_path = variant_dir / args.model / "validation_results.json"
-        if not json_path.exists():
+        model_dir = variant_dir / args.model
+        json_paths = list(model_dir.glob("**/validation_results.json"))
+        if not json_paths:
             print(f"[skip] {variant_dir.name} — no validation_results.json for {args.model}",
                   file=sys.stderr)
             continue
+        json_path = json_paths[0]
         data = _load(json_path)
-        probe_v2_path = variant_dir / args.model / "probe_v2_results.json"
-        probe_v2_data = _load(probe_v2_path) if probe_v2_path.exists() else {}
+        probe_v2_paths = list(model_dir.glob("**/probe_v2_results.json"))
+        probe_v2_data = _load(probe_v2_paths[0]) if probe_v2_paths else {}
         metrics = extract_metrics(data, probe_v2_data)
         rows.append({
             "variant": variant_dir.name,
