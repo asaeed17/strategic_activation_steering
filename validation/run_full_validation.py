@@ -191,8 +191,8 @@ def run_stage3(variant: str, model: str, out_dir: Path) -> bool:
     if not ok:
         return False
 
-    # Script hardcodes output to results/projection/{variant}/ — copy into our structure
-    src = PROJECTION_HARDCODED_ROOT / variant / "orthogonal_projection.json"
+    # Script hardcodes output to results/projection/{variant}/mean_diff/ — copy into our structure
+    src = PROJECTION_HARDCODED_ROOT / variant / "mean_diff" / "orthogonal_projection.json"
     dst = out_dir / "orthogonal_projection.json"
     if src.exists():
         shutil.copy2(src, dst)
