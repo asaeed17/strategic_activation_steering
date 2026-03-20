@@ -485,7 +485,6 @@ def parse_args() -> argparse.Namespace:
                    default="bfloat16")
     p.add_argument("--quantize",       action="store_true",
                    help="Load model in 4-bit (bitsandbytes NF4). Reduces VRAM to ~4GB for 7B.")
-    p.add_argument("--output_dir",     default="results/lightweight")
     p.add_argument("--seed",           type=int, default=42)
     p.add_argument("--use_craigslist", action="store_true", required=True)
     return p.parse_args()
@@ -498,7 +497,10 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
-    output_dir = Path(args.output_dir)
+    # Derive from vectors_dir: .../neg15dim_12pairs_matched/negotiation
+    #  → hyperparameter_results/gridsearch_neg15dim_12pairs_matched/<dimension>
+    vec_set = Path(args.vectors_dir).parts[-2]
+    output_dir = Path("hyperparameter_results") / f"gridsearch_{vec_set}" / args.dimension
     output_dir.mkdir(parents=True, exist_ok=True)
 
     random.seed(args.seed)
