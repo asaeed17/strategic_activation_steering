@@ -1,0 +1,719 @@
+
+======================================================================
+  VALIDATION REPORT — llama3-3b   [full]
+======================================================================
+     Timestamp: 2026-03-20T02:30:09.203482
+
+======================================================================
+  CHECK 1: Length Confound Analysis
+======================================================================
+     (word-level Cohen's d + character-level Cohen's d; severity = worst of both)
+  active_listening                pos= 28.6w  neg= 11.0w  ratio=2.60x  d_word=+3.90  d_char=+3.62  [SEVERE]
+  anchoring                       pos= 17.9w  neg= 13.5w  ratio=1.33x  d_word=+1.06  d_char=+1.64  [SEVERE]
+  assertiveness                   pos= 19.0w  neg= 20.1w  ratio=0.95x  d_word=-0.25  d_char=+0.37  [MILD]
+  batna_awareness                 pos= 24.5w  neg= 14.6w  ratio=1.68x  d_word=+2.04  d_char=+2.40  [SEVERE]
+  clarity_and_directness          pos= 20.2w  neg= 14.2w  ratio=1.42x  d_word=+1.51  d_char=+1.80  [SEVERE]
+  emotional_regulation            pos= 23.5w  neg= 14.5w  ratio=1.62x  d_word=+1.59  d_char=+1.47  [SEVERE]
+  empathy                         pos= 27.7w  neg= 11.5w  ratio=2.41x  d_word=+7.11  d_char=+6.75  [SEVERE]
+  firmness                        pos= 28.5w  neg= 19.5w  ratio=1.46x  d_word=+2.59  d_char=+2.92  [SEVERE]
+  formality                       pos= 51.8w  neg= 15.2w  ratio=3.42x  d_word=+8.28  d_char=+9.29  [SEVERE]
+  hedging                         pos= 66.6w  neg= 30.7w  ratio=2.17x  d_word=+7.10  d_char=+5.33  [SEVERE]
+  information_gathering           pos= 24.9w  neg= 12.1w  ratio=2.06x  d_word=+2.64  d_char=+3.40  [SEVERE]
+  interest_based_reasoning        pos= 28.3w  neg= 11.9w  ratio=2.38x  d_word=+5.71  d_char=+6.06  [SEVERE]
+  patience                        pos= 17.1w  neg= 13.9w  ratio=1.23x  d_word=+0.56  d_char=+0.53  [MILD]
+  rapport_building                pos= 26.5w  neg= 11.9w  ratio=2.22x  d_word=+3.96  d_char=+3.85  [SEVERE]
+  reframing                       pos= 30.8w  neg= 13.2w  ratio=2.34x  d_word=+6.74  d_char=+6.58  [SEVERE]
+  sentiment                       pos= 57.8w  neg= 15.3w  ratio=3.77x  d_word=+9.56  d_char=+10.04  [SEVERE]
+  specificity                     pos= 49.9w  neg= 23.1w  ratio=2.16x  d_word=+7.15  d_char=+11.30  [SEVERE]
+  strategic_concession_making     pos= 24.6w  neg= 13.0w  ratio=1.89x  d_word=+3.64  d_char=+5.11  [SEVERE]
+  value_creation                  pos= 29.2w  neg= 10.9w  ratio=2.68x  d_word=+5.36  d_char=+4.51  [SEVERE]
+  verbosity                       pos= 76.5w  neg=  3.6w  ratio=21.35x  d_word=+8.45  d_char=+6.60  [SEVERE]
+  ⚠  Positive samples are systematically longer than negatives in several dimensions.
+     ACTION: Rewrite pairs so positive and negative samples match in word count,
+             or add a length-normalisation pre-processing step.
+
+======================================================================
+  CHECK 1b: Vocabulary Overlap Analysis
+======================================================================
+     Jaccard similarity of word sets (high = good overlap between pos/neg)
+  active_listening                global_jaccard=0.184  pair_jaccard=0.083  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  anchoring                       global_jaccard=0.225  pair_jaccard=0.107  [OK]
+  assertiveness                   global_jaccard=0.176  pair_jaccard=0.117  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  batna_awareness                 global_jaccard=0.236  pair_jaccard=0.106  [OK]
+  clarity_and_directness          global_jaccard=0.219  pair_jaccard=0.127  [OK]
+  emotional_regulation            global_jaccard=0.217  pair_jaccard=0.080  [LOW_PAIR_OVERLAP]
+  ⚠  Within-pair overlap is low — each pair's positive and negative differ substantially in wording.
+  empathy                         global_jaccard=0.170  pair_jaccard=0.084  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  firmness                        global_jaccard=0.228  pair_jaccard=0.101  [OK]
+  formality                       global_jaccard=0.140  pair_jaccard=0.096  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  hedging                         global_jaccard=0.159  pair_jaccard=0.075  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  information_gathering           global_jaccard=0.191  pair_jaccard=0.064  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  interest_based_reasoning        global_jaccard=0.120  pair_jaccard=0.068  [CRITICAL_OVERLAP]
+  ⚠  Extremely low vocabulary overlap — positive and negative use almost completely different words.  Probe accuracy is NOT a reliable signal; any classifier can separate these by surface word features alone.
+  patience                        global_jaccard=0.252  pair_jaccard=0.073  [LOW_PAIR_OVERLAP]
+  ⚠  Within-pair overlap is low — each pair's positive and negative differ substantially in wording.
+  rapport_building                global_jaccard=0.188  pair_jaccard=0.103  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  reframing                       global_jaccard=0.173  pair_jaccard=0.081  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  sentiment                       global_jaccard=0.096  pair_jaccard=0.066  [CRITICAL_OVERLAP]
+  ⚠  Extremely low vocabulary overlap — positive and negative use almost completely different words.  Probe accuracy is NOT a reliable signal; any classifier can separate these by surface word features alone.
+  specificity                     global_jaccard=0.171  pair_jaccard=0.163  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  strategic_concession_making     global_jaccard=0.235  pair_jaccard=0.097  [LOW_PAIR_OVERLAP]
+  ⚠  Within-pair overlap is low — each pair's positive and negative differ substantially in wording.
+  value_creation                  global_jaccard=0.184  pair_jaccard=0.102  [LOW_OVERLAP]
+  ⚠  Low vocabulary overlap.  High probe accuracy may partly reflect word-level features rather than conceptual representation.
+  verbosity                       global_jaccard=0.066  pair_jaccard=0.040  [CRITICAL_OVERLAP]
+  ⚠  Extremely low vocabulary overlap — positive and negative use almost completely different words.  Probe accuracy is NOT a reliable signal; any classifier can separate these by surface word features alone.
+
+======================================================================
+  CHECK 2: Probe Accuracy Pattern Analysis
+======================================================================
+  active_listening           [negotiation]  pattern=other             mean=0.708  best_layer=2  best=1.000
+  anchoring                  [negotiation]  pattern=other             mean=0.672  best_layer=2  best=0.960
+  assertiveness              [negotiation]  pattern=other             mean=0.654  best_layer=3  best=0.960
+  batna_awareness            [negotiation]  pattern=other             mean=0.663  best_layer=2  best=0.920
+  clarity_and_directness     [negotiation]  pattern=other             mean=0.702  best_layer=3  best=0.960
+  emotional_regulation       [negotiation]  pattern=other             mean=0.628  best_layer=3  best=0.900
+  empathy                    [negotiation]  pattern=other             mean=0.853  best_layer=1  best=1.000
+  firmness                   [negotiation]  pattern=other             mean=0.601  best_layer=2  best=0.920
+  formality                  [control    ]  pattern=other             mean=0.771  best_layer=1  best=1.000
+  hedging                    [control    ]  pattern=other             mean=0.869  best_layer=1  best=1.000
+  information_gathering      [negotiation]  pattern=other             mean=0.663  best_layer=2  best=0.910
+  interest_based_reasoning   [negotiation]  pattern=other             mean=0.896  best_layer=1  best=1.000
+  patience                   [negotiation]  pattern=other             mean=0.636  best_layer=5  best=0.880
+  rapport_building           [negotiation]  pattern=other             mean=0.653  best_layer=1  best=0.920
+  reframing                  [negotiation]  pattern=other             mean=0.878  best_layer=1  best=1.000
+  sentiment                  [control    ]  pattern=other             mean=0.873  best_layer=0  best=1.000
+  specificity                [control    ]  pattern=other             mean=0.907  best_layer=1  best=1.000
+  strategic_concession_making  [negotiation]  pattern=other             mean=0.695  best_layer=2  best=0.950
+  value_creation             [negotiation]  pattern=other             mean=0.862  best_layer=2  best=0.960
+  verbosity                  [control    ]  pattern=other             mean=0.927  best_layer=0  best=1.000
+
+======================================================================
+  CHECK 2b: Permutation Test (statistical significance)
+======================================================================
+  --- active_listening ---
+  Significant layers: 3/10
+    layer  0:  real=0.800  null=0.428±0.069  p=0.010 *
+    layer  3:  real=0.960  null=0.475±0.127  p=0.010 *
+    layer  6:  real=0.750  null=0.486±0.132  p=0.050 *
+    layer  9:  real=0.720  null=0.493±0.128  p=0.059
+    layer 12:  real=0.720  null=0.517±0.136  p=0.069
+    layer 15:  real=0.640  null=0.468±0.131  p=0.099
+    layer 18:  real=0.590  null=0.476±0.137  p=0.198
+    layer 21:  real=0.540  null=0.479±0.125  p=0.317
+    layer 24:  real=0.590  null=0.477±0.137  p=0.208
+    layer 27:  real=0.630  null=0.508±0.124  p=0.188
+  --- anchoring ---
+  Significant layers: 4/10
+    layer  0:  real=0.830  null=0.433±0.052  p=0.010 *
+    layer  3:  real=0.920  null=0.489±0.138  p=0.010 *
+    layer  6:  real=0.840  null=0.498±0.132  p=0.010 *
+    layer  9:  real=0.710  null=0.492±0.121  p=0.040 *
+    layer 12:  real=0.710  null=0.522±0.118  p=0.069
+    layer 15:  real=0.640  null=0.518±0.127  p=0.188
+    layer 18:  real=0.540  null=0.511±0.135  p=0.446
+    layer 21:  real=0.550  null=0.522±0.123  p=0.426
+    layer 24:  real=0.550  null=0.476±0.143  p=0.287
+    layer 27:  real=0.580  null=0.509±0.124  p=0.346
+  --- assertiveness ---
+  Significant layers: 3/10
+    layer  0:  real=0.590  null=0.425±0.048  p=0.010 *
+    layer  3:  real=0.960  null=0.483±0.119  p=0.010 *
+    layer  6:  real=0.750  null=0.471±0.123  p=0.020 *
+    layer  9:  real=0.670  null=0.479±0.121  p=0.069
+    layer 12:  real=0.630  null=0.489±0.138  p=0.218
+    layer 15:  real=0.670  null=0.483±0.132  p=0.119
+    layer 18:  real=0.550  null=0.496±0.141  p=0.406
+    layer 21:  real=0.550  null=0.489±0.131  p=0.346
+    layer 24:  real=0.590  null=0.475±0.125  p=0.168
+    layer 27:  real=0.710  null=0.490±0.127  p=0.059
+  --- batna_awareness ---
+  Significant layers: 5/10
+    layer  0:  real=0.470  null=0.406±0.045  p=0.218
+    layer  3:  real=0.920  null=0.479±0.117  p=0.010 *
+    layer  6:  real=0.760  null=0.485±0.128  p=0.030 *
+    layer  9:  real=0.760  null=0.480±0.121  p=0.030 *
+    layer 12:  real=0.760  null=0.503±0.131  p=0.030 *
+    layer 15:  real=0.670  null=0.485±0.125  p=0.099
+    layer 18:  real=0.680  null=0.497±0.107  p=0.040 *
+    layer 21:  real=0.580  null=0.498±0.131  p=0.297
+    layer 24:  real=0.500  null=0.473±0.133  p=0.426
+    layer 27:  real=0.470  null=0.513±0.122  p=0.663
+  --- clarity_and_directness ---
+  Significant layers: 3/10
+    layer  0:  real=0.510  null=0.429±0.057  p=0.148
+    layer  3:  real=0.960  null=0.489±0.139  p=0.010 *
+    layer  6:  real=0.790  null=0.511±0.123  p=0.030 *
+    layer  9:  real=0.710  null=0.508±0.131  p=0.099
+    layer 12:  real=0.800  null=0.511±0.117  p=0.020 *
+    layer 15:  real=0.630  null=0.492±0.119  p=0.139
+    layer 18:  real=0.620  null=0.500±0.128  p=0.247
+    layer 21:  real=0.630  null=0.484±0.126  p=0.158
+    layer 24:  real=0.670  null=0.472±0.127  p=0.069
+    layer 27:  real=0.630  null=0.501±0.117  p=0.099
+  --- emotional_regulation ---
+  Significant layers: 4/10
+    layer  0:  real=0.450  null=0.417±0.033  p=0.178
+    layer  3:  real=0.900  null=0.470±0.134  p=0.010 *
+    layer  6:  real=0.860  null=0.487±0.121  p=0.010 *
+    layer  9:  real=0.790  null=0.504±0.107  p=0.010 *
+    layer 12:  real=0.790  null=0.513±0.128  p=0.030 *
+    layer 15:  real=0.590  null=0.477±0.121  p=0.158
+    layer 18:  real=0.510  null=0.498±0.145  p=0.495
+    layer 21:  real=0.430  null=0.467±0.114  p=0.624
+    layer 24:  real=0.470  null=0.470±0.141  p=0.515
+    layer 27:  real=0.550  null=0.510±0.126  p=0.426
+  --- empathy ---
+  Significant layers: 9/10
+    layer  0:  real=0.520  null=0.419±0.032  p=0.010 *
+    layer  3:  real=1.000  null=0.492±0.119  p=0.010 *
+    layer  6:  real=1.000  null=0.490±0.120  p=0.010 *
+    layer  9:  real=0.920  null=0.510±0.111  p=0.010 *
+    layer 12:  real=0.880  null=0.498±0.131  p=0.010 *
+    layer 15:  real=0.800  null=0.467±0.127  p=0.010 *
+    layer 18:  real=0.800  null=0.492±0.153  p=0.050 *
+    layer 21:  real=0.710  null=0.478±0.129  p=0.040 *
+    layer 24:  real=0.710  null=0.468±0.144  p=0.059
+    layer 27:  real=0.830  null=0.498±0.138  p=0.010 *
+  --- firmness ---
+  Significant layers: 3/10
+    layer  0:  real=0.520  null=0.424±0.040  p=0.069
+    layer  3:  real=0.920  null=0.473±0.115  p=0.010 *
+    layer  6:  real=0.760  null=0.502±0.113  p=0.020 *
+    layer  9:  real=0.800  null=0.500±0.127  p=0.010 *
+    layer 12:  real=0.720  null=0.517±0.128  p=0.059
+    layer 15:  real=0.380  null=0.482±0.139  p=0.762
+    layer 18:  real=0.380  null=0.480±0.148  p=0.762
+    layer 21:  real=0.340  null=0.497±0.129  p=0.891
+    layer 24:  real=0.470  null=0.476±0.138  p=0.525
+    layer 27:  real=0.580  null=0.507±0.139  p=0.327
+  --- formality ---
+  Significant layers: 4/10
+    layer  0:  real=0.960  null=0.438±0.058  p=0.010 *
+    layer  3:  real=1.000  null=0.489±0.119  p=0.010 *
+    layer  6:  real=0.840  null=0.483±0.124  p=0.020 *
+    layer  9:  real=0.840  null=0.492±0.113  p=0.010 *
+    layer 12:  real=0.720  null=0.515±0.133  p=0.069
+    layer 15:  real=0.670  null=0.474±0.140  p=0.069
+    layer 18:  real=0.710  null=0.506±0.143  p=0.109
+    layer 21:  real=0.580  null=0.493±0.140  p=0.257
+    layer 24:  real=0.630  null=0.482±0.140  p=0.158
+    layer 27:  real=0.750  null=0.505±0.150  p=0.089
+  --- hedging ---
+  Significant layers: 9/10
+    layer  0:  real=0.640  null=0.420±0.050  p=0.010 *
+    layer  3:  real=1.000  null=0.493±0.118  p=0.010 *
+    layer  6:  real=1.000  null=0.482±0.117  p=0.010 *
+    layer  9:  real=0.960  null=0.503±0.119  p=0.010 *
+    layer 12:  real=0.960  null=0.530±0.137  p=0.010 *
+    layer 15:  real=0.800  null=0.467±0.141  p=0.020 *
+    layer 18:  real=0.880  null=0.498±0.130  p=0.010 *
+    layer 21:  real=0.760  null=0.486±0.144  p=0.040 *
+    layer 24:  real=0.720  null=0.485±0.136  p=0.050 *
+    layer 27:  real=0.720  null=0.488±0.138  p=0.069
+  --- information_gathering ---
+  Significant layers: 6/10
+    layer  0:  real=0.540  null=0.432±0.069  p=0.050 *
+    layer  3:  real=0.910  null=0.499±0.112  p=0.010 *
+    layer  6:  real=0.750  null=0.483±0.106  p=0.010 *
+    layer  9:  real=0.800  null=0.477±0.131  p=0.010 *
+    layer 12:  real=0.840  null=0.525±0.118  p=0.010 *
+    layer 15:  real=0.600  null=0.493±0.129  p=0.218
+    layer 18:  real=0.510  null=0.489±0.133  p=0.446
+    layer 21:  real=0.510  null=0.489±0.119  p=0.386
+    layer 24:  real=0.470  null=0.469±0.149  p=0.515
+    layer 27:  real=0.680  null=0.475±0.126  p=0.040 *
+  --- interest_based_reasoning ---
+  Significant layers: 9/10
+    layer  0:  real=0.720  null=0.424±0.035  p=0.010 *
+    layer  3:  real=1.000  null=0.482±0.122  p=0.010 *
+    layer  6:  real=1.000  null=0.483±0.124  p=0.010 *
+    layer  9:  real=1.000  null=0.497±0.123  p=0.010 *
+    layer 12:  real=1.000  null=0.519±0.138  p=0.010 *
+    layer 15:  real=0.960  null=0.470±0.142  p=0.010 *
+    layer 18:  real=0.880  null=0.488±0.150  p=0.030 *
+    layer 21:  real=0.710  null=0.480±0.130  p=0.020 *
+    layer 24:  real=0.670  null=0.471±0.154  p=0.099
+    layer 27:  real=0.880  null=0.510±0.114  p=0.010 *
+  --- patience ---
+  Significant layers: 4/10
+    layer  0:  real=0.470  null=0.410±0.048  p=0.267
+    layer  3:  real=0.830  null=0.465±0.117  p=0.010 *
+    layer  6:  real=0.880  null=0.505±0.116  p=0.010 *
+    layer  9:  real=0.710  null=0.491±0.120  p=0.030 *
+    layer 12:  real=0.790  null=0.498±0.144  p=0.030 *
+    layer 15:  real=0.670  null=0.475±0.125  p=0.069
+    layer 18:  real=0.550  null=0.487±0.130  p=0.346
+    layer 21:  real=0.510  null=0.474±0.123  p=0.386
+    layer 24:  real=0.470  null=0.491±0.120  p=0.545
+    layer 27:  real=0.710  null=0.492±0.135  p=0.079
+  --- rapport_building ---
+  Significant layers: 3/10
+    layer  0:  real=0.550  null=0.419±0.033  p=0.010 *
+    layer  3:  real=0.880  null=0.495±0.118  p=0.010 *
+    layer  6:  real=0.800  null=0.513±0.121  p=0.010 *
+    layer  9:  real=0.710  null=0.503±0.122  p=0.069
+    layer 12:  real=0.590  null=0.512±0.115  p=0.317
+    layer 15:  real=0.540  null=0.494±0.123  p=0.396
+    layer 18:  real=0.580  null=0.506±0.130  p=0.307
+    layer 21:  real=0.540  null=0.508±0.127  p=0.495
+    layer 24:  real=0.540  null=0.495±0.119  p=0.396
+    layer 27:  real=0.540  null=0.504±0.114  p=0.455
+  --- reframing ---
+  Significant layers: 9/10
+    layer  0:  real=0.710  null=0.420±0.021  p=0.010 *
+    layer  3:  real=1.000  null=0.477±0.124  p=0.010 *
+    layer  6:  real=0.960  null=0.503±0.113  p=0.010 *
+    layer  9:  real=0.920  null=0.508±0.133  p=0.010 *
+    layer 12:  real=0.960  null=0.514±0.123  p=0.010 *
+    layer 15:  real=0.960  null=0.473±0.141  p=0.010 *
+    layer 18:  real=0.790  null=0.500±0.119  p=0.010 *
+    layer 21:  real=0.790  null=0.504±0.118  p=0.020 *
+    layer 24:  real=0.790  null=0.494±0.137  p=0.020 *
+    layer 27:  real=0.710  null=0.514±0.122  p=0.079
+  --- sentiment ---
+  Significant layers: 8/10
+    layer  0:  real=1.000  null=0.430±0.045  p=0.010 *
+    layer  3:  real=1.000  null=0.509±0.119  p=0.010 *
+    layer  6:  real=1.000  null=0.506±0.120  p=0.010 *
+    layer  9:  real=0.960  null=0.530±0.130  p=0.010 *
+    layer 12:  real=0.960  null=0.534±0.126  p=0.010 *
+    layer 15:  real=0.880  null=0.478±0.129  p=0.010 *
+    layer 18:  real=0.800  null=0.492±0.142  p=0.020 *
+    layer 21:  real=0.670  null=0.490±0.116  p=0.069
+    layer 24:  real=0.630  null=0.486±0.124  p=0.168
+    layer 27:  real=1.000  null=0.503±0.142  p=0.010 *
+  --- specificity ---
+  Significant layers: 10/10
+    layer  0:  real=0.800  null=0.426±0.044  p=0.010 *
+    layer  3:  real=1.000  null=0.506±0.118  p=0.010 *
+    layer  6:  real=1.000  null=0.493±0.113  p=0.010 *
+    layer  9:  real=0.960  null=0.513±0.128  p=0.010 *
+    layer 12:  real=0.920  null=0.496±0.133  p=0.010 *
+    layer 15:  real=0.880  null=0.469±0.119  p=0.010 *
+    layer 18:  real=0.840  null=0.495±0.151  p=0.020 *
+    layer 21:  real=0.840  null=0.494±0.126  p=0.010 *
+    layer 24:  real=0.840  null=0.481±0.128  p=0.010 *
+    layer 27:  real=0.830  null=0.504±0.129  p=0.010 *
+  --- strategic_concession_making ---
+  Significant layers: 4/10
+    layer  0:  real=0.420  null=0.408±0.046  p=0.515
+    layer  3:  real=0.820  null=0.482±0.124  p=0.010 *
+    layer  6:  real=0.700  null=0.499±0.133  p=0.089
+    layer  9:  real=0.790  null=0.521±0.124  p=0.020 *
+    layer 12:  real=0.870  null=0.533±0.128  p=0.020 *
+    layer 15:  real=0.820  null=0.486±0.128  p=0.010 *
+    layer 18:  real=0.620  null=0.487±0.147  p=0.218
+    layer 21:  real=0.530  null=0.485±0.131  p=0.426
+    layer 24:  real=0.570  null=0.491±0.147  p=0.346
+    layer 27:  real=0.530  null=0.497±0.130  p=0.455
+  --- value_creation ---
+  Significant layers: 10/10
+    layer  0:  real=0.560  null=0.424±0.040  p=0.010 *
+    layer  3:  real=0.960  null=0.467±0.129  p=0.010 *
+    layer  6:  real=0.960  null=0.487±0.127  p=0.010 *
+    layer  9:  real=0.920  null=0.512±0.122  p=0.010 *
+    layer 12:  real=0.920  null=0.512±0.118  p=0.010 *
+    layer 15:  real=0.920  null=0.487±0.133  p=0.010 *
+    layer 18:  real=0.880  null=0.482±0.135  p=0.010 *
+    layer 21:  real=0.750  null=0.504±0.133  p=0.040 *
+    layer 24:  real=0.750  null=0.475±0.131  p=0.010 *
+    layer 27:  real=0.700  null=0.490±0.127  p=0.040 *
+  --- verbosity ---
+  Significant layers: 10/10
+    layer  0:  real=1.000  null=0.439±0.062  p=0.010 *
+    layer  3:  real=1.000  null=0.503±0.114  p=0.010 *
+    layer  6:  real=1.000  null=0.504±0.120  p=0.010 *
+    layer  9:  real=1.000  null=0.500±0.112  p=0.010 *
+    layer 12:  real=1.000  null=0.505±0.133  p=0.010 *
+    layer 15:  real=0.920  null=0.465±0.123  p=0.010 *
+    layer 18:  real=0.840  null=0.480±0.143  p=0.020 *
+    layer 21:  real=0.800  null=0.483±0.120  p=0.010 *
+    layer 24:  real=0.800  null=0.479±0.129  p=0.020 *
+    layer 27:  real=0.840  null=0.503±0.113  p=0.010 *
+
+======================================================================
+  CHECK 3: Cosine Similarity Between Steering Directions
+======================================================================
+
+  Layer 7:
+  ✓  No concerning cross-category overlap at this layer.
+
+  Layer 14:
+  ✓  No concerning cross-category overlap at this layer.
+
+  Layer 21:
+  ✓  No concerning cross-category overlap at this layer.
+
+======================================================================
+  CHECK 4: Normalised Bias (Cohen's d)
+======================================================================
+  active_listening_vs_formality             max|d|=3.86 @ layer 2  severe_layers=14  [SEVERE]
+  ⚠  14 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  active_listening_vs_hedging               max|d|=4.05 @ layer 2  severe_layers=6  [SEVERE]
+  ⚠  6 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  active_listening_vs_sentiment             max|d|=15.69 @ layer 2  severe_layers=17  [SEVERE]
+  ⚠  17 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  active_listening_vs_specificity           max|d|=8.99 @ layer 2  severe_layers=13  [SEVERE]
+  ⚠  13 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  active_listening_vs_verbosity             max|d|=8.96 @ layer 4  severe_layers=24  [SEVERE]
+  ⚠  24 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  anchoring_vs_formality                    max|d|=3.89 @ layer 3  severe_layers=13  [SEVERE]
+  ⚠  13 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  anchoring_vs_hedging                      max|d|=3.85 @ layer 4  severe_layers=17  [SEVERE]
+  ⚠  17 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  anchoring_vs_sentiment                    max|d|=5.41 @ layer 0  severe_layers=6  [SEVERE]
+  ⚠  6 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  anchoring_vs_specificity                  max|d|=6.40 @ layer 2  severe_layers=8  [SEVERE]
+  ⚠  8 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  anchoring_vs_verbosity                    max|d|=3.74 @ layer 5  severe_layers=20  [SEVERE]
+  ⚠  20 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  assertiveness_vs_formality                max|d|=3.27 @ layer 2  severe_layers=6  [SEVERE]
+  ⚠  6 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  assertiveness_vs_hedging                  max|d|=3.88 @ layer 2  severe_layers=24  [SEVERE]
+  ⚠  24 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  assertiveness_vs_sentiment                max|d|=5.77 @ layer 1  severe_layers=12  [SEVERE]
+  ⚠  12 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  assertiveness_vs_specificity              max|d|=4.03 @ layer 2  severe_layers=7  [SEVERE]
+  ⚠  7 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  assertiveness_vs_verbosity                max|d|=3.04 @ layer 5  severe_layers=4  [SEVERE]
+  ⚠  4 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  batna_awareness_vs_formality              max|d|=7.58 @ layer 2  severe_layers=21  [SEVERE]
+  ⚠  21 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  batna_awareness_vs_hedging                max|d|=1.61 @ layer 2  severe_layers=10  [SEVERE]
+  ⚠  10 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  batna_awareness_vs_sentiment              max|d|=2.67 @ layer 0  severe_layers=12  [SEVERE]
+  ⚠  12 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  batna_awareness_vs_specificity            max|d|=9.86 @ layer 2  severe_layers=20  [SEVERE]
+  ⚠  20 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  batna_awareness_vs_verbosity              max|d|=7.68 @ layer 5  severe_layers=15  [SEVERE]
+  ⚠  15 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  clarity_and_directness_vs_formality       max|d|=5.17 @ layer 1  severe_layers=7  [SEVERE]
+  ⚠  7 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  clarity_and_directness_vs_hedging         max|d|=3.26 @ layer 4  severe_layers=26  [SEVERE]
+  ⚠  26 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  clarity_and_directness_vs_sentiment       max|d|=1.56 @ layer 3  severe_layers=12  [SEVERE]
+  ⚠  12 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  clarity_and_directness_vs_specificity     max|d|=8.92 @ layer 1  severe_layers=11  [SEVERE]
+  ⚠  11 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  clarity_and_directness_vs_verbosity       max|d|=7.79 @ layer 2  severe_layers=17  [SEVERE]
+  ⚠  17 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  emotional_regulation_vs_formality         max|d|=1.87 @ layer 2  severe_layers=3  [SEVERE]
+  ⚠  3 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  emotional_regulation_vs_hedging           max|d|=2.54 @ layer 2  severe_layers=10  [SEVERE]
+  ⚠  10 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  emotional_regulation_vs_sentiment         max|d|=14.72 @ layer 1  severe_layers=9  [SEVERE]
+  ⚠  9 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  emotional_regulation_vs_specificity       max|d|=5.38 @ layer 1  severe_layers=3  [SEVERE]
+  ⚠  3 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  emotional_regulation_vs_verbosity         max|d|=3.73 @ layer 2  severe_layers=8  [SEVERE]
+  ⚠  8 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  empathy_vs_formality                      max|d|=7.56 @ layer 1  severe_layers=6  [SEVERE]
+  ⚠  6 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  empathy_vs_hedging                        max|d|=5.72 @ layer 2  severe_layers=9  [SEVERE]
+  ⚠  9 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  empathy_vs_sentiment                      max|d|=13.38 @ layer 2  severe_layers=9  [SEVERE]
+  ⚠  9 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  empathy_vs_specificity                    max|d|=6.45 @ layer 1  severe_layers=12  [SEVERE]
+  ⚠  12 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  empathy_vs_verbosity                      max|d|=13.60 @ layer 1  severe_layers=12  [SEVERE]
+  ⚠  12 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  firmness_vs_formality                     max|d|=6.18 @ layer 2  severe_layers=24  [SEVERE]
+  ⚠  24 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  firmness_vs_hedging                       max|d|=0.90 @ layer 25  severe_layers=1  [SEVERE]
+  ⚠  1 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  firmness_vs_sentiment                     max|d|=2.51 @ layer 0  severe_layers=21  [SEVERE]
+  ⚠  21 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  firmness_vs_specificity                   max|d|=7.52 @ layer 2  severe_layers=18  [SEVERE]
+  ⚠  18 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  firmness_vs_verbosity                     max|d|=5.03 @ layer 2  severe_layers=13  [SEVERE]
+  ⚠  13 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  information_gathering_vs_formality        max|d|=4.80 @ layer 2  severe_layers=10  [SEVERE]
+  ⚠  10 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  information_gathering_vs_hedging          max|d|=3.61 @ layer 3  severe_layers=19  [SEVERE]
+  ⚠  19 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  information_gathering_vs_sentiment        max|d|=11.04 @ layer 2  severe_layers=10  [SEVERE]
+  ⚠  10 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  information_gathering_vs_specificity      max|d|=8.12 @ layer 2  severe_layers=14  [SEVERE]
+  ⚠  14 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  information_gathering_vs_verbosity        max|d|=8.62 @ layer 2  severe_layers=16  [SEVERE]
+  ⚠  16 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  interest_based_reasoning_vs_formality     max|d|=6.76 @ layer 1  severe_layers=8  [SEVERE]
+  ⚠  8 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  interest_based_reasoning_vs_hedging       max|d|=4.78 @ layer 2  severe_layers=25  [SEVERE]
+  ⚠  25 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  interest_based_reasoning_vs_sentiment     max|d|=12.70 @ layer 2  severe_layers=11  [SEVERE]
+  ⚠  11 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  interest_based_reasoning_vs_specificity   max|d|=6.06 @ layer 1  severe_layers=4  [SEVERE]
+  ⚠  4 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  interest_based_reasoning_vs_verbosity     max|d|=15.64 @ layer 1  severe_layers=9  [SEVERE]
+  ⚠  9 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  patience_vs_formality                     max|d|=6.52 @ layer 2  severe_layers=7  [SEVERE]
+  ⚠  7 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  patience_vs_hedging                       max|d|=2.02 @ layer 3  severe_layers=7  [SEVERE]
+  ⚠  7 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  patience_vs_sentiment                     max|d|=5.31 @ layer 0  severe_layers=13  [SEVERE]
+  ⚠  13 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  patience_vs_specificity                   max|d|=2.60 @ layer 2  severe_layers=12  [SEVERE]
+  ⚠  12 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  patience_vs_verbosity                     max|d|=1.64 @ layer 2  severe_layers=5  [SEVERE]
+  ⚠  5 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  rapport_building_vs_formality             max|d|=5.39 @ layer 2  severe_layers=13  [SEVERE]
+  ⚠  13 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  rapport_building_vs_hedging               max|d|=6.00 @ layer 2  severe_layers=21  [SEVERE]
+  ⚠  21 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  rapport_building_vs_sentiment             max|d|=13.57 @ layer 2  severe_layers=16  [SEVERE]
+  ⚠  16 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  rapport_building_vs_specificity           max|d|=10.78 @ layer 2  severe_layers=11  [SEVERE]
+  ⚠  11 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  rapport_building_vs_verbosity             max|d|=11.16 @ layer 2  severe_layers=14  [SEVERE]
+  ⚠  14 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  reframing_vs_formality                    max|d|=5.26 @ layer 2  severe_layers=17  [SEVERE]
+  ⚠  17 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  reframing_vs_hedging                      max|d|=2.26 @ layer 2  severe_layers=4  [SEVERE]
+  ⚠  4 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  reframing_vs_sentiment                    max|d|=8.93 @ layer 2  severe_layers=18  [SEVERE]
+  ⚠  18 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  reframing_vs_specificity                  max|d|=10.68 @ layer 2  severe_layers=10  [SEVERE]
+  ⚠  10 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  reframing_vs_verbosity                    max|d|=11.11 @ layer 2  severe_layers=11  [SEVERE]
+  ⚠  11 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  strategic_concession_making_vs_formality  max|d|=6.78 @ layer 2  severe_layers=23  [SEVERE]
+  ⚠  23 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  strategic_concession_making_vs_hedging    max|d|=0.68 @ layer 0  severe_layers=0  [OK]
+  strategic_concession_making_vs_sentiment  max|d|=2.81 @ layer 2  severe_layers=13  [SEVERE]
+  ⚠  13 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  strategic_concession_making_vs_specificity  max|d|=10.06 @ layer 2  severe_layers=20  [SEVERE]
+  ⚠  20 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  strategic_concession_making_vs_verbosity  max|d|=8.63 @ layer 2  severe_layers=20  [SEVERE]
+  ⚠  20 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  value_creation_vs_formality               max|d|=8.44 @ layer 1  severe_layers=16  [SEVERE]
+  ⚠  16 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  value_creation_vs_hedging                 max|d|=3.11 @ layer 2  severe_layers=6  [SEVERE]
+  ⚠  6 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  value_creation_vs_sentiment               max|d|=7.44 @ layer 2  severe_layers=11  [SEVERE]
+  ⚠  11 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  value_creation_vs_specificity             max|d|=10.55 @ layer 2  severe_layers=7  [SEVERE]
+  ⚠  7 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+  value_creation_vs_verbosity               max|d|=13.89 @ layer 2  severe_layers=25  [SEVERE]
+  ⚠  25 layers have |Cohen's d| > 0.8 — the steering vector separates this control trait there.
+
+======================================================================
+  CHECK 5: Per-Pair Consistency (Alignment)
+======================================================================
+  active_listening           mean_alignment=0.382  outlier_pairs=0  [OK]
+  anchoring                  mean_alignment=0.414  outlier_pairs=1  [OK]
+  ⚠  Pairs [8] have low alignment — consider rewriting them.
+  assertiveness              mean_alignment=0.400  outlier_pairs=2  [OK]
+  ⚠  Pairs [3, 4] have low alignment — consider rewriting them.
+  batna_awareness            mean_alignment=0.367  outlier_pairs=1  [OK]
+  ⚠  Pairs [6] have low alignment — consider rewriting them.
+  clarity_and_directness     mean_alignment=0.402  outlier_pairs=2  [OK]
+  ⚠  Pairs [3, 8] have low alignment — consider rewriting them.
+  emotional_regulation       mean_alignment=0.370  outlier_pairs=1  [OK]
+  ⚠  Pairs [11] have low alignment — consider rewriting them.
+  empathy                    mean_alignment=0.442  outlier_pairs=0  [OK]
+  firmness                   mean_alignment=0.367  outlier_pairs=3  [OK]
+  ⚠  Pairs [0, 2, 4] have low alignment — consider rewriting them.
+  formality                  mean_alignment=0.464  outlier_pairs=0  [OK]
+  hedging                    mean_alignment=0.466  outlier_pairs=0  [OK]
+  information_gathering      mean_alignment=0.391  outlier_pairs=2  [OK]
+  ⚠  Pairs [2, 6] have low alignment — consider rewriting them.
+  interest_based_reasoning   mean_alignment=0.457  outlier_pairs=0  [OK]
+  patience                   mean_alignment=0.342  outlier_pairs=4  [OK]
+  ⚠  Pairs [1, 7, 8, 10] have low alignment — consider rewriting them.
+  rapport_building           mean_alignment=0.419  outlier_pairs=0  [OK]
+  reframing                  mean_alignment=0.450  outlier_pairs=0  [OK]
+  sentiment                  mean_alignment=0.509  outlier_pairs=0  [GOOD]
+  specificity                mean_alignment=0.540  outlier_pairs=0  [GOOD]
+  strategic_concession_making  mean_alignment=0.369  outlier_pairs=3  [OK]
+  ⚠  Pairs [0, 5, 10] have low alignment — consider rewriting them.
+  value_creation             mean_alignment=0.454  outlier_pairs=0  [OK]
+  verbosity                  mean_alignment=0.558  outlier_pairs=0  [GOOD]
+
+======================================================================
+  CHECK 6: Steering-Direction Probe (1-D)
+======================================================================
+  active_listening           mean_1d_acc=0.976  best_1d=1.000 @ layer 2
+  anchoring                  mean_1d_acc=0.943  best_1d=1.000 @ layer 4
+  assertiveness              mean_1d_acc=0.894  best_1d=1.000 @ layer 3
+  batna_awareness            mean_1d_acc=0.960  best_1d=1.000 @ layer 3
+  clarity_and_directness     mean_1d_acc=0.927  best_1d=1.000 @ layer 19
+  emotional_regulation       mean_1d_acc=0.917  best_1d=0.950 @ layer 3
+  empathy                    mean_1d_acc=0.980  best_1d=1.000 @ layer 1
+  firmness                   mean_1d_acc=0.933  best_1d=1.000 @ layer 3
+  formality                  mean_1d_acc=0.956  best_1d=1.000 @ layer 1
+  hedging                    mean_1d_acc=0.983  best_1d=1.000 @ layer 1
+  information_gathering      mean_1d_acc=0.929  best_1d=1.000 @ layer 3
+  interest_based_reasoning   mean_1d_acc=0.989  best_1d=1.000 @ layer 1
+  patience                   mean_1d_acc=0.941  best_1d=1.000 @ layer 9
+  rapport_building           mean_1d_acc=0.875  best_1d=1.000 @ layer 3
+  reframing                  mean_1d_acc=0.964  best_1d=1.000 @ layer 1
+  sentiment                  mean_1d_acc=0.976  best_1d=1.000 @ layer 0
+  specificity                mean_1d_acc=0.959  best_1d=1.000 @ layer 1
+  strategic_concession_making  mean_1d_acc=0.954  best_1d=1.000 @ layer 3
+  value_creation             mean_1d_acc=0.969  best_1d=1.000 @ layer 4
+  verbosity                  mean_1d_acc=0.999  best_1d=1.000 @ layer 0
+
+======================================================================
+  CHECK 7: Selectivity & Layer Recommendations
+======================================================================
+  active_listening           best_layer=2  selectivity=0.5
+  anchoring                  best_layer=13  selectivity=0.46
+  assertiveness              best_layer=27  selectivity=0.5431
+  batna_awareness            best_layer=12  selectivity=0.4633
+  clarity_and_directness     best_layer=27  selectivity=0.473
+  emotional_regulation       best_layer=9  selectivity=0.5921
+  empathy                    best_layer=13  selectivity=0.7071
+  firmness                   best_layer=2  selectivity=0.42
+  information_gathering      best_layer=26  selectivity=0.5501
+  interest_based_reasoning   best_layer=11  selectivity=0.7525
+  patience                   best_layer=6  selectivity=0.577
+  rapport_building           best_layer=10  selectivity=0.4209
+  reframing                  best_layer=15  selectivity=0.7137
+  strategic_concession_making  best_layer=15  selectivity=0.4568
+  value_creation             best_layer=11  selectivity=0.6937
+
+======================================================================
+  Layer Recommendations
+======================================================================
+  active_listening:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 27]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  anchoring:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 25, 26, 27]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  assertiveness:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  batna_awareness:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 22, 23, 24, 25, 26]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  clarity_and_directness:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  emotional_regulation:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  empathy:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 18, 19, 20, 21, 22, 26, 27]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  firmness:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  information_gathering:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 27]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  interest_based_reasoning:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 25, 26, 27]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  patience:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 20, 21, 22, 23, 24, 25, 26, 27]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  rapport_building:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  reframing:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  strategic_concession_making:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+  value_creation:
+    RECOMMEND: none found
+    AVOID:     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26]
+    Criteria:  accuracy >= 0.85 AND max |Cohen's d| <= 0.8
+
+======================================================================
+  PER-DIMENSION SUMMARY (traffic light)
+======================================================================
+       RED = severe problems    AMBER = needs attention    GREEN = acceptable
+  🔴 active_listening                [RED]  flags: length, cohens_d
+  🔴 anchoring                       [RED]  flags: length, cohens_d
+  🟡 assertiveness                   [AMBER]  flags: cohens_d
+  🔴 batna_awareness                 [RED]  flags: length, cohens_d
+  🔴 clarity_and_directness          [RED]  flags: length, cohens_d
+  🔴 emotional_regulation            [RED]  flags: length, cohens_d
+  🔴 empathy                         [RED]  flags: length, cohens_d
+  🔴 firmness                        [RED]  flags: length, cohens_d
+  🔴 information_gathering           [RED]  flags: length, cohens_d
+  🔴 interest_based_reasoning        [RED]  flags: length, cohens_d, vocab_critical
+  🟡 patience                        [AMBER]  flags: cohens_d
+  🔴 rapport_building                [RED]  flags: length, cohens_d
+  🔴 reframing                       [RED]  flags: length, cohens_d
+  🔴 strategic_concession_making     [RED]  flags: length, cohens_d
+  🔴 value_creation                  [RED]  flags: length, cohens_d
+
+======================================================================
+  VALIDITY SCORE
+======================================================================
+     Scoring: start at 100, deduct points per red flag.
+       18 dimensions with length confound: −30
+       3 dims with critical vocab overlap: −9
+       13 dims with low vocab overlap: −10
+       Small sample size (~12 per dim): −10
+
+  TOTAL SCORE: 41/100
+     Interpretation: NEEDS WORK — significant confounding. Results are not reliable without mitigation.
+
+======================================================================
+  SUMMARY — Warnings
+======================================================================
+  ⚠  Sample sizes: 12 neg pairs (24 samples), 12 control pairs (24 samples).
+  ⚠  Length confound in: firmness, empathy, active_listening, interest_based_reasoning, emotional_regulation, strategic_concession_making, anchoring, rapport_building, batna_awareness, reframing, value_creation, information_gathering, clarity_and_directness, verbosity, formality, hedging, sentiment, specificity
+  ⚠  firmness: 7 sampled layers NOT significant (p≥0.05).
+  ⚠  empathy: 1 sampled layers NOT significant (p≥0.05).
+  ⚠  active_listening: 7 sampled layers NOT significant (p≥0.05).
+  ⚠  assertiveness: 7 sampled layers NOT significant (p≥0.05).
+  ⚠  interest_based_reasoning: 1 sampled layers NOT significant (p≥0.05).
+  ⚠  emotional_regulation: 6 sampled layers NOT significant (p≥0.05).
+  ⚠  strategic_concession_making: 6 sampled layers NOT significant (p≥0.05).
+  ⚠  anchoring: 6 sampled layers NOT significant (p≥0.05).
+  ⚠  rapport_building: 7 sampled layers NOT significant (p≥0.05).
+  ⚠  batna_awareness: 5 sampled layers NOT significant (p≥0.05).
+  ⚠  reframing: 1 sampled layers NOT significant (p≥0.05).
+  ⚠  patience: 6 sampled layers NOT significant (p≥0.05).
+  ⚠  information_gathering: 4 sampled layers NOT significant (p≥0.05).
+  ⚠  clarity_and_directness: 7 sampled layers NOT significant (p≥0.05).
+  ⚠  formality: 6 sampled layers NOT significant (p≥0.05).
+  ⚠  hedging: 1 sampled layers NOT significant (p≥0.05).
+  ⚠  sentiment: 2 sampled layers NOT significant (p≥0.05).
+  ⚠  Severe bias (|d|>0.8) in: firmness_vs_verbosity, firmness_vs_formality, firmness_vs_hedging, firmness_vs_sentiment, firmness_vs_specificity, empathy_vs_verbosity, empathy_vs_formality, empathy_vs_hedging, empathy_vs_sentiment, empathy_vs_specificity, active_listening_vs_verbosity, active_listening_vs_formality, active_listening_vs_hedging, active_listening_vs_sentiment, active_listening_vs_specificity, assertiveness_vs_verbosity, assertiveness_vs_formality, assertiveness_vs_hedging, assertiveness_vs_sentiment, assertiveness_vs_specificity, interest_based_reasoning_vs_verbosity, interest_based_reasoning_vs_formality, interest_based_reasoning_vs_hedging, interest_based_reasoning_vs_sentiment, interest_based_reasoning_vs_specificity, emotional_regulation_vs_verbosity, emotional_regulation_vs_formality, emotional_regulation_vs_hedging, emotional_regulation_vs_sentiment, emotional_regulation_vs_specificity, strategic_concession_making_vs_verbosity, strategic_concession_making_vs_formality, strategic_concession_making_vs_sentiment, strategic_concession_making_vs_specificity, anchoring_vs_verbosity, anchoring_vs_formality, anchoring_vs_hedging, anchoring_vs_sentiment, anchoring_vs_specificity, rapport_building_vs_verbosity, rapport_building_vs_formality, rapport_building_vs_hedging, rapport_building_vs_sentiment, rapport_building_vs_specificity, batna_awareness_vs_verbosity, batna_awareness_vs_formality, batna_awareness_vs_hedging, batna_awareness_vs_sentiment, batna_awareness_vs_specificity, reframing_vs_verbosity, reframing_vs_formality, reframing_vs_hedging, reframing_vs_sentiment, reframing_vs_specificity, patience_vs_verbosity, patience_vs_formality, patience_vs_hedging, patience_vs_sentiment, patience_vs_specificity, value_creation_vs_verbosity, value_creation_vs_formality, value_creation_vs_hedging, value_creation_vs_sentiment, value_creation_vs_specificity, information_gathering_vs_verbosity, information_gathering_vs_formality, information_gathering_vs_hedging, information_gathering_vs_sentiment, information_gathering_vs_specificity, clarity_and_directness_vs_verbosity, clarity_and_directness_vs_formality, clarity_and_directness_vs_hedging, clarity_and_directness_vs_sentiment, clarity_and_directness_vs_specificity
+  ⚠  Outlier pairs detected in: firmness, assertiveness, emotional_regulation, strategic_concession_making, anchoring, batna_awareness, patience, information_gathering, clarity_and_directness
+
+======================================================================
+  SUMMARY — Recommended Actions
+======================================================================
+     1. Length-match contrastive pairs.
+     2. Avoid layers listed as severe; prefer recommended layers.
+     3. Rewrite or remove outlier contrastive pairs.
+     4. Increase pairs to 30+ per dimension.
+
+======================================================================
+  OVERALL ASSESSMENT
+======================================================================
+  CONCERNING — Multiple red flags. Steering vectors are likely confounded with surface features. Use recommended layers only.
+======================================================================
