@@ -50,12 +50,14 @@ for v in "${VARIANTS[@]}"; do
     echo "=== [$v] Extracting negotiation vectors ($(date)) ==="
     python extract_vectors.py \
         --models $MODEL \
+        --methods mean_diff \
         --pairs_file steering_pairs/${v}/negotiation_steering_pairs.json \
         --output_dir vectors/${v}/negotiation
 
     echo "=== [$v] Extracting control vectors ($(date)) ==="
     python extract_vectors.py \
         --models $MODEL \
+        --methods mean_diff \
         --pairs_file steering_pairs/${v}/control_steering_pairs.json \
         --output_dir vectors/${v}/control
 done
