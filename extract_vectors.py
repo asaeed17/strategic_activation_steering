@@ -401,6 +401,7 @@ def extract_for_model(
     batch_size: int = 4,
     use_quantization: bool = False,
     target_layers: Optional[List[int]] = None,
+    methods: Optional[List[str]] = None,
 ) -> None:
     """Load one model, extract vectors for all requested dimensions, save to disk."""
 
@@ -455,10 +456,11 @@ def extract_for_model(
     model.eval()
 
     # set up output directories
+    if methods is None:
+        methods = ["mean_diff", "pca", "logreg"]
     model_dir = output_dir / config.alias
-    (model_dir / "mean_diff").mkdir(parents=True, exist_ok=True)
-    (model_dir / "pca").mkdir(parents=True, exist_ok=True)
-    (model_dir / "logreg").mkdir(parents=True, exist_ok=True)
+    for m in methods:
+        (model_dir / m).mkdir(parents=True, exist_ok=True)
 
     saved_n_layers:   Optional[int] = None
     saved_hidden_dim: Optional[int] = None
@@ -498,33 +500,36 @@ def extract_for_model(
             save_layers = list(range(n_layers))
 
         # method 1: mean difference
-        md_vecs = compute_mean_diff(pos_h, neg_h)              # (n_layers, H)
-        np.save(model_dir / "mean_diff" / f"{dim_id}_all_layers.npy", md_vecs)
-        for l in save_layers:
-            np.save(
-                model_dir / "mean_diff" / f"{dim_id}_layer{l:02d}.npy",
-                md_vecs[l],
-            )
+        if "mean_diff" in methods:
+            md_vecs = compute_mean_diff(pos_h, neg_h)              # (n_layers, H)
+            np.save(model_dir / "mean_diff" / f"{dim_id}_all_layers.npy", md_vecs)
+            for l in save_layers:
+                np.save(
+                    model_dir / "mean_diff" / f"{dim_id}_layer{l:02d}.npy",
+                    md_vecs[l],
+                )
 
         # method 2: PCA on differences
-        pca_vecs = compute_pca_direction(pos_h, neg_h)         # (n_layers, H)
-        np.save(model_dir / "pca" / f"{dim_id}_all_layers.npy", pca_vecs)
-        for l in save_layers:
-            np.save(
-                model_dir / "pca" / f"{dim_id}_layer{l:02d}.npy",
-                pca_vecs[l],
-            )
+        if "pca" in methods:
+            pca_vecs = compute_pca_direction(pos_h, neg_h)         # (n_layers, H)
+            np.save(model_dir / "pca" / f"{dim_id}_all_layers.npy", pca_vecs)
+            for l in save_layers:
+                np.save(
+                    model_dir / "pca" / f"{dim_id}_layer{l:02d}.npy",
+                    pca_vecs[l],
+                )
 
         # method 3: logistic regression (discriminative)
-        lr_vecs = compute_logreg_direction(pos_h, neg_h)       # (n_layers, H)
-        np.save(model_dir / "logreg" / f"{dim_id}_all_layers.npy", lr_vecs)
-        for l in save_layers:
-            np.save(
-                model_dir / "logreg" / f"{dim_id}_layer{l:02d}.npy",
-                lr_vecs[l],
-            )
+        if "logreg" in methods:
+            lr_vecs = compute_logreg_direction(pos_h, neg_h)       # (n_layers, H)
+            np.save(model_dir / "logreg" / f"{dim_id}_all_layers.npy", lr_vecs)
+            for l in save_layers:
+                np.save(
+                    model_dir / "logreg" / f"{dim_id}_layer{l:02d}.npy",
+                    lr_vecs[l],
+                )
 
-        log.info("  │    saved  mean_diff + pca + logreg  →  %s/", model_dir.name)
+        log.info("  │    saved  %s  →  %s/", " + ".join(methods), model_dir.name)
 
     # write metadata so we know later what we extracted and how
     metadata = {
@@ -533,7 +538,7 @@ def extract_for_model(
         "n_layers":   saved_n_layers,
         "hidden_dim": saved_hidden_dim,
         "dimensions": [d["id"] for d in dimensions],
-        "methods":    ["mean_diff", "pca", "logreg"],
+        "methods":    methods,
         "saved_layers": target_layers if target_layers else list(range(saved_n_layers or 0)),
         "notes": {
             "mean_diff":  "direction_l = normalise(mean(pos_l) - mean(neg_l))",
@@ -662,6 +667,17 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     p.add_argument(
+        "--methods",
+        nargs="+",
+        choices=["mean_diff", "pca", "logreg"],
+        default=["mean_diff", "pca", "logreg"],
+        metavar="METHOD",
+        help=(
+            "Which extraction methods to run. "
+            "Choices: mean_diff, pca, logreg. Default: all three."
+        ),
+    )
+    p.add_argument(
         "--sim_matrix",
         action="store_true",
         help="After extraction, print the cosine similarity matrix across dimensions.",
@@ -745,6 +761,7 @@ def main() -> None:
                 batch_size=args.batch_size,
                 use_quantization=args.quantize,
                 target_layers=args.layers,
+                methods=args.methods,
             )
 
     output_dir = Path(args.output_dir)
@@ -764,10 +781,11 @@ def main() -> None:
             batch_size=args.batch_size,
             use_quantization=args.quantize,
             target_layers=args.layers,
+            methods=args.methods,
         )
         if args.sim_matrix:
             model_dir = output_dir / cfg.alias
-            for method in ("mean_diff", "pca", "logreg"):
+            for method in args.methods:
                 print_similarity_matrix(model_dir, method, args.sim_layer)
 
         log.info("Vectors saved under: %s/", output_dir)
