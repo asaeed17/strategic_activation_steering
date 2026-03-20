@@ -1,6 +1,6 @@
 #!/bin/bash
 # run_extraction.sh — Extract steering vectors for all variants (negotiation + control)
-# Usage: bash run_extraction.sh
+# Usage: bash run_extraction.sh <model>
 
 set -e
 
@@ -15,7 +15,13 @@ export HF_HOME="${SCRIPT_DIR}/.hf_cache"
 LOGFILE="${SCRIPT_DIR}/extraction_log.txt"
 exec > >(tee "$LOGFILE") 2>&1
 
-MODEL="qwen2.5-3b"
+if [ -z "$1" ]; then
+    echo "Usage: bash run_extraction_all_variants.sh <model>"
+    echo "Example: bash run_extraction_all_variants.sh llama-3b"
+    exit 1
+fi
+
+MODEL="$1"
 VARIANTS=(
     neg15dim_12pairs_raw
     neg15dim_12pairs_matched
