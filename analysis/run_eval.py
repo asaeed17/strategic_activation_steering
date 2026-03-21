@@ -897,13 +897,14 @@ def main():
 
     # SCM Craigslist: primary fixed-role batches
     if "scm_craigslist" in experiments:
-        buyer_steered, seller_steered, buyer_baseline = run_scm_craigslist(
+        buyer_steered, seller_steered, buyer_baseline, seller_baseline = run_scm_craigslist(
             model, tokenizer, scm_scenarios,
             scm_dvecs, SCM_CONFIG["alpha"], output_dir,
         )
-        buy_agreed  = [g for g in buyer_steered  if g["agreed"]]
-        sell_agreed = [g for g in seller_steered if g["agreed"]]
-        base_agreed = [g for g in buyer_baseline if g["agreed"]]
+        buy_agreed   = [g for g in buyer_steered   if g["agreed"]]
+        sell_agreed  = [g for g in seller_steered  if g["agreed"]]
+        base_agreed  = [g for g in buyer_baseline  if g["agreed"]]
+        sbase_agreed = [g for g in seller_baseline if g["agreed"]]
         results_summary["scm_buyer"] = {
             "n": len(buyer_steered), "agreed": len(buy_agreed),
             "advantage": np.mean([g["advantage"] for g in buy_agreed]) if buy_agreed else 0,
@@ -916,6 +917,28 @@ def main():
             "n": len(buyer_baseline), "agreed": len(base_agreed),
             "advantage": np.mean([g["advantage"] for g in base_agreed]) if base_agreed else 0,
         }
+        results_summary["scm_seller_baseline"] = {
+            "n": len(seller_baseline), "agreed": len(sbase_agreed),
+            "advantage": np.mean([g["advantage"] for g in sbase_agreed]) if sbase_agreed else 0,
+        }
+        # midpoint_advantage delta metric
+        _buy_sum   = summarise(buyer_steered,   SCM_CONFIG["alpha"])
+        _sell_sum  = summarise(seller_steered,  SCM_CONFIG["alpha"])
+        _base_sum  = summarise(buyer_baseline,  0.0)
+        _sbase_sum = summarise(seller_baseline, 0.0)
+        scm_buy_midpt   = _buy_sum["by_role"]["buyer"]["midpoint_advantage"]
+        scm_sell_midpt  = _sell_sum["by_role"]["seller"]["midpoint_advantage"]
+        scm_base_midpt  = _base_sum["by_role"]["buyer"]["midpoint_advantage"]
+        scm_sbase_midpt = _sbase_sum["by_role"]["seller"]["midpoint_advantage"]
+        buyer_delta  = scm_buy_midpt  - scm_base_midpt
+        seller_delta = scm_sell_midpt - scm_sbase_midpt
+        results_summary["scm_buyer"]["midpoint_advantage"]           = scm_buy_midpt
+        results_summary["scm_seller"]["midpoint_advantage"]          = scm_sell_midpt
+        results_summary["scm_baseline"]["midpoint_advantage"]        = scm_base_midpt
+        results_summary["scm_seller_baseline"]["midpoint_advantage"] = scm_sbase_midpt
+        results_summary["scm_buyer"]["buyer_delta"]                  = buyer_delta
+        results_summary["scm_seller"]["seller_delta"]                = seller_delta
+        results_summary["scm_buyer"]["avg_delta"]                    = (buyer_delta + seller_delta) / 2
 
     # Firmness Craigslist: primary fixed-role batches
     if "firmness_craigslist" in experiments and firm_dvecs:
@@ -944,6 +967,17 @@ def main():
             "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in fbl_agreed
                                          if g.get("midpoint_deviation") is not None]) if fbl_agreed else 0,
         }
+        # midpoint_advantage delta metric
+        _fbuy_sum  = summarise(firm_buy,  FIRMNESS_CONFIG["alpha"])
+        _fsell_sum = summarise(firm_sell, FIRMNESS_CONFIG["alpha"])
+        _fbase_sum = summarise(firm_base, 0.0)
+        firm_buy_midpt  = _fbuy_sum["by_role"]["buyer"]["midpoint_advantage"]
+        firm_sell_midpt = _fsell_sum["by_role"]["seller"]["midpoint_advantage"]
+        firm_base_midpt = _fbase_sum["by_role"]["buyer"]["midpoint_advantage"]
+        results_summary["firmness_buyer"]["midpoint_advantage"]    = firm_buy_midpt
+        results_summary["firmness_seller"]["midpoint_advantage"]   = firm_sell_midpt
+        results_summary["firmness_baseline"]["midpoint_advantage"] = firm_base_midpt
+        results_summary["firmness_buyer"]["buyer_delta"]           = firm_buy_midpt - firm_base_midpt
 
     # Value Creation Craigslist: primary fixed-role batches
     if "value_creation_craigslist" in experiments and vc_dvecs:
@@ -972,6 +1006,17 @@ def main():
             "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in vcbl_agreed
                                          if g.get("midpoint_deviation") is not None]) if vcbl_agreed else 0,
         }
+        # midpoint_advantage delta metric
+        _vcbuy_sum  = summarise(vc_buy,  VALUE_CREATION_CONFIG["alpha"])
+        _vcsell_sum = summarise(vc_sell, VALUE_CREATION_CONFIG["alpha"])
+        _vcbase_sum = summarise(vc_base, 0.0)
+        vc_buy_midpt  = _vcbuy_sum["by_role"]["buyer"]["midpoint_advantage"]
+        vc_sell_midpt = _vcsell_sum["by_role"]["seller"]["midpoint_advantage"]
+        vc_base_midpt = _vcbase_sum["by_role"]["buyer"]["midpoint_advantage"]
+        results_summary["value_creation_buyer"]["midpoint_advantage"]    = vc_buy_midpt
+        results_summary["value_creation_seller"]["midpoint_advantage"]   = vc_sell_midpt
+        results_summary["value_creation_baseline"]["midpoint_advantage"] = vc_base_midpt
+        results_summary["value_creation_buyer"]["buyer_delta"]           = vc_buy_midpt - vc_base_midpt
 
     # DonD cross-dataset validation
     if "dond_crossval" in experiments:
@@ -1030,6 +1075,27 @@ def main():
             log.info("  %-18s  adv=%+.4f  %s", exp, summary["advantage"], extras)
         else:
             log.info("  %-18s  %s", exp, summary)
+
+    # Metric summary (matches lightweight_gridsearch / hyperparameter_results)
+    _gs_pairs = [
+        ("scm",            "scm_buyer",             "scm_seller",             "scm_baseline"),
+        ("firmness",       "firmness_buyer",         "firmness_seller",        "firmness_baseline"),
+        ("value_creation", "value_creation_buyer",   "value_creation_seller",  "value_creation_baseline"),
+    ]
+    _gs_rows = [(lbl, bk, sk, blk) for lbl, bk, sk, blk in _gs_pairs
+                if bk in results_summary and "midpoint_advantage" in results_summary[bk]]
+    if _gs_rows:
+        log.info("-" * 70)
+        log.info("GRIDSEARCH METRIC  (midpoint_advantage delta vs alpha=0 baseline)")
+        log.info("  %-18s  %s  %s  %s  %s",
+                 "experiment", "buy_midpt", "sell_midpt", "base_midpt", "buyer_delta")
+        for lbl, bk, sk, blk in _gs_rows:
+            log.info("  %-18s  %+9.4f  %+10.4f  %+10.4f  %+11.4f",
+                     lbl,
+                     results_summary[bk]["midpoint_advantage"],
+                     results_summary[sk]["midpoint_advantage"],
+                     results_summary[blk]["midpoint_advantage"],
+                     results_summary[bk]["buyer_delta"])
 
     log.info("=" * 70)
 
