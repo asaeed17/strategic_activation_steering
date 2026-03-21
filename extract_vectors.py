@@ -137,6 +137,12 @@ MODELS: Dict[str, ModelConfig] = {
         requires_token=False,
         use_chat_template=True,
     ),
+    "qwen3-3b": ModelConfig(
+        hf_id="Qwen/Qwen3-3B",
+        alias="qwen3-3b",
+        requires_token=False,
+        use_chat_template=True,
+    ),
     "qwen2.5-1.5b": ModelConfig(
         hf_id="Qwen/Qwen2.5-1.5B-Instruct",
         alias="qwen2.5-1.5b",
@@ -164,9 +170,9 @@ MODELS: Dict[str, ModelConfig] = {
         use_chat_template=True,
     ),
     "ministral-3b": ModelConfig(
-        hf_id="mistralai/Ministral-3B-Instruct-2410",
+        hf_id="mistralai/Ministral-3-3B-Instruct-2512",
         alias="ministral-3b",
-        requires_token=False,
+        requires_token=True,
         use_chat_template=True,
     ),
 }
