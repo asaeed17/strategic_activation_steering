@@ -1,0 +1,50 @@
+{
+  "model_id": "google/gemma-2-2b-it",
+  "alias": "gemma2-2b",
+  "n_layers": 26,
+  "hidden_dim": 2304,
+  "dimensions": [
+    "verbosity",
+    "formality",
+    "hedging",
+    "sentiment",
+    "specificity"
+  ],
+  "methods": [
+    "mean_diff"
+  ],
+  "saved_layers": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "notes": {
+    "mean_diff": "direction_l = normalise(mean(pos_l) - mean(neg_l))",
+    "pca": "direction_l = PCA(pos_i_l - neg_i_l).components_[0], sign-aligned",
+    "logreg": "direction_l = normalise(LogisticRegression(pos,neg).coef_[0]), sign-aligned",
+    "last_token": "activations taken at the last real token (left-padded)"
+  }
+}
