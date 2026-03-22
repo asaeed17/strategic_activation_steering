@@ -111,6 +111,18 @@ N_DOND           = 30    # G3 cross-dataset
 N_FIRMNESS       = 30    # G4 firmness rerun
 N_SENSITIVITY    = 10    # G5 per opening-bid level
 
+# ─── Gridsearch scoring constants (must match visualise_results.ipynb) ────────
+GS_LAMBDA           = 0.01   # penalty per unit of |alpha|
+GS_MIN_AGREE_RATE   = 0.60   # filter alphas below this before picking winner
+GS_MIN_DELTA_TO_RUN = 0.15   # penalised delta must exceed this to run eval
+# Dimensions where positive alpha = more of the concept (flag if winner is negative)
+GS_EXPECTED_POSITIVE = {
+    "active_listening", "empathy", "rapport_building",
+    "emotional_regulation", "interest_based_reasoning",
+    "assertiveness", "reframing", "value_creation",
+    "patience", "information_gathering",
+}
+
 
 # ─── Helpers ──────────────────────────────────────────────────────────────
 
@@ -133,6 +145,69 @@ def save_results(games, label, alpha, output_dir, extra_meta=None):
     with open(path, "w") as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
     return path
+
+
+def load_gridsearch_config(gridsearch_dir, model_alias):
+    """
+    Read stage2_results.json for every dimension found under
+    gridsearch_dir / model_alias / <dimension> / stage2_results.json
+    and apply the same three-step scoring as visualise_results.ipynb:
+
+      1. Filter alphas with avg_agree_rate < GS_MIN_AGREE_RATE
+      2. Pick max penalised_score = avg_delta - GS_LAMBDA * |alpha|
+      3. Flag direction mismatch for GS_EXPECTED_POSITIVE dimensions
+
+    Returns a dict keyed by dimension name:
+      {
+        "alpha":      float,
+        "layers":     [int, ...],
+        "pen_delta":  float,
+        "dir_ok":     bool,
+        "run_eval":   bool,   # True iff pen_delta >= GS_MIN_DELTA_TO_RUN and dir_ok
+        "agree_rate": float,
+      }
+
+    Dimensions with no stage2_results.json are silently skipped.
+    """
+    gs_path = Path(gridsearch_dir) / model_alias
+    if not gs_path.exists():
+        log.error("Gridsearch path not found: %s", gs_path)
+        return {}
+
+    configs = {}
+    for dim_dir in sorted(gs_path.iterdir()):
+        if not dim_dir.is_dir():
+            continue
+        s2_path = dim_dir / "stage2_results.json"
+        if not s2_path.exists():
+            continue
+        with open(s2_path) as f:
+            rows = json.load(f)
+
+        # Step 1: filter by agree rate
+        filtered = [r for r in rows if r.get("avg_agree_rate", 0) >= GS_MIN_AGREE_RATE]
+        pool = filtered if filtered else rows  # fallback if nothing passes
+
+        # Step 2: pick best penalised score
+        winner = max(pool, key=lambda r: r["avg_delta"] - GS_LAMBDA * abs(r["alpha"]))
+        pen_delta = winner["avg_delta"] - GS_LAMBDA * abs(winner["alpha"])
+
+        # Step 3: direction check
+        dim = dim_dir.name
+        dir_ok = (winner["alpha"] > 0) if dim in GS_EXPECTED_POSITIVE else True
+
+        should_run = pen_delta >= GS_MIN_DELTA_TO_RUN and dir_ok
+
+        configs[dim] = {
+            "alpha":      winner["alpha"],
+            "layers":     winner["layer_indices"],
+            "pen_delta":  round(pen_delta, 4),
+            "dir_ok":     dir_ok,
+            "run_eval":   should_run,
+            "agree_rate": winner.get("avg_agree_rate", float("nan")),
+        }
+
+    return configs
 
 
 def load_vectors_safe(vectors_dir, model_alias, dimension, method, layers):
@@ -406,6 +481,86 @@ def run_value_creation_craigslist(model, tokenizer, scenarios, vc_dvecs, alpha, 
     elapsed = time.time() - t0
     log.info("Value Creation Craigslist complete: %d triplets in %.0fs",
              len(buyer_steered_games), elapsed)
+    return buyer_steered_games, seller_steered_games, buyer_baseline_games
+
+
+# ─── Generic Craigslist: buyer-steered + seller-steered + buyer-baseline ──────
+# Used by --gridsearch_dir to run any dimension with auto-scored alpha/layers.
+
+def run_generic_craigslist(model, tokenizer, scenarios, dvecs, alpha,
+                           dimension, output_dir):
+    """
+    Same 3-batch fixed-role design as run_scm_craigslist but fully parameterised.
+    Output files are prefixed with the dimension name, e.g.:
+      {dimension}_buyer_steered.json
+      {dimension}_seller_steered.json
+      {dimension}_buyer_baseline.json
+    """
+    prefix = dimension
+    log.info("=" * 70)
+    log.info("%s Craigslist: role-fixed batches (%d scenarios × 3 batches)",
+             dimension, len(scenarios))
+    log.info("  alpha=%.3f, layers=%s", alpha, list(dvecs.keys()))
+    log.info("=" * 70)
+
+    buyer_steered_games, seller_steered_games, buyer_baseline_games = [], [], []
+    t0 = time.time()
+
+    for i, sc in enumerate(scenarios):
+        try:
+            r_buy  = run_single_game(model, tokenizer, sc, "buyer", dvecs, alpha)
+            r_buy["game_id"] = i
+            buyer_steered_games.append(r_buy)
+
+            r_sell = run_single_game(model, tokenizer, sc, "seller", dvecs, alpha)
+            r_sell["game_id"] = i
+            seller_steered_games.append(r_sell)
+
+            r_base = run_single_game(model, tokenizer, sc, "buyer", None, 0.0)
+            r_base["game_id"] = i
+            buyer_baseline_games.append(r_base)
+
+        except Exception as e:
+            log.error("%s Craigslist triplet %d failed: %s\n%s",
+                      dimension, i, e, traceback.format_exc())
+            continue
+
+        save_results(buyer_steered_games,  f"{prefix}_buyer_steered",  alpha, output_dir)
+        save_results(seller_steered_games, f"{prefix}_seller_steered", alpha, output_dir)
+        save_results(buyer_baseline_games, f"{prefix}_buyer_baseline", 0.0,   output_dir)
+
+        elapsed = time.time() - t0
+        mpd_buy  = r_buy.get("midpoint_deviation",  float("nan"))
+        mpd_sell = r_sell.get("midpoint_deviation", float("nan"))
+        mpd_base = r_base.get("midpoint_deviation", float("nan"))
+        log.info(
+            "Triplet %2d/%d [%5.0fs] | "
+            "buy adv=%+.3f mpd=%+.3f | sell adv=%+.3f mpd=%+.3f | base adv=%+.3f mpd=%+.3f",
+            i + 1, len(scenarios), elapsed,
+            r_buy["advantage"],  mpd_buy,
+            r_sell["advantage"], mpd_sell,
+            r_base["advantage"], mpd_base,
+        )
+
+    if buyer_steered_games and buyer_baseline_games:
+        paired_mpd = [
+            r1["midpoint_deviation"] - r2["midpoint_deviation"]
+            for r1, r2 in zip(buyer_steered_games, buyer_baseline_games)
+            if r1["agreed"] and r2["agreed"]
+            and r1.get("midpoint_deviation") is not None
+            and r2.get("midpoint_deviation") is not None
+        ]
+        if paired_mpd:
+            log.info("=" * 70)
+            log.info("%s BUYER STEERING EFFECT (N=%d agreed pairs): "
+                     "Δmidpoint_dev Mean=%+.4f  Std=%.4f",
+                     dimension, len(paired_mpd),
+                     np.mean(paired_mpd), np.std(paired_mpd, ddof=1))
+            log.info("=" * 70)
+
+    elapsed = time.time() - t0
+    log.info("%s Craigslist complete: %d triplets in %.0fs",
+             dimension, len(buyer_steered_games), elapsed)
     return buyer_steered_games, seller_steered_games, buyer_baseline_games
 
 
@@ -707,20 +862,78 @@ def parse_args():
                    help="Craigslist split. 'validation' recommended for paper.")
     p.add_argument("--dtype", choices=["bfloat16", "float16", "float32"],
                    default="bfloat16")
+    p.add_argument("--alpha", type=float, default=None,
+                   help="Override alpha for the primary experiment config (SCM/firmness/vc).")
+    p.add_argument("--layers", type=int, nargs="+", default=None,
+                   help="Override layers for the primary experiment config.")
+    p.add_argument("--dimension", type=str, default=None,
+                   help="Override dimension name for scm_craigslist (repurposes the 3-batch design).")
+    p.add_argument("--gridsearch_dir", type=str, default=None,
+                   help="Path to gridsearch results dir (e.g. hyperparameter_results/gridsearch_neg15dim_12pairs_matched). "
+                        "When set, auto-reads alpha/layers for every valid dimension and runs them all "
+                        "using the generic buyer+seller+baseline design. "
+                        "Overrides --experiments, --alpha, --layers, --dimension.")
     return p.parse_args()
 
 
 def main():
     args = parse_args()
 
-    if args.all:
+    # ─── Gridsearch auto-config (takes priority over manual CLI flags) ────
+    gs_configs = {}   # {dimension: {alpha, layers, pen_delta, dir_ok, run_eval}}
+    if args.gridsearch_dir:
+        model_cfg_early = MODELS[args.model]
+        gs_configs = load_gridsearch_config(args.gridsearch_dir, model_cfg_early.alias)
+        if not gs_configs:
+            log.error("No gridsearch configs found in %s/%s — check path.",
+                      args.gridsearch_dir, model_cfg_early.alias)
+            sys.exit(1)
+
+        log.info("=" * 70)
+        log.info("GRIDSEARCH AUTO-CONFIG  (%s / %s)", args.gridsearch_dir, model_cfg_early.alias)
+        log.info("  Scoring: penalised_delta = avg_delta - %.3f*|alpha|, "
+                 "agree_rate >= %.2f, min_delta = %.2f",
+                 GS_LAMBDA, GS_MIN_AGREE_RATE, GS_MIN_DELTA_TO_RUN)
+        log.info("  %-35s %6s  %-12s  %8s  %s", "dimension", "alpha", "layers",
+                 "pen_delta", "run?")
+        for dim, cfg in sorted(gs_configs.items()):
+            log.info("  %-35s %+6.1f  %-12s  %+8.3f  %s",
+                     dim, cfg["alpha"], str(cfg["layers"]), cfg["pen_delta"],
+                     "YES" if cfg["run_eval"] else "SKIP")
+        log.info("=" * 70)
+
+        # Switch to gridsearch mode — run_generic_craigslist for each valid dim
+        experiments = {"gridsearch_all"}
+    elif args.all:
+        # Apply CLI overrides to configs (mutates module-level dicts in-place)
+        if args.alpha is not None:
+            SCM_CONFIG["alpha"] = args.alpha
+            FIRMNESS_CONFIG["alpha"] = args.alpha
+            VALUE_CREATION_CONFIG["alpha"] = args.alpha
+        if args.layers is not None:
+            SCM_CONFIG["layers"] = args.layers
+            FIRMNESS_CONFIG["layers"] = args.layers
+            VALUE_CREATION_CONFIG["layers"] = args.layers
+        if args.dimension is not None:
+            SCM_CONFIG["dimension"] = args.dimension
         experiments = {"scm_craigslist", "firmness_craigslist", "dond_crossval",
                        "firmness", "sensitivity", "cosine"}
-    elif args.experiments:
-        experiments = set(args.experiments)
     else:
-        # Default: run the primary SCM experiment
-        experiments = {"scm_craigslist"}
+        # Apply CLI overrides to configs (mutates module-level dicts in-place)
+        if args.alpha is not None:
+            SCM_CONFIG["alpha"] = args.alpha
+            FIRMNESS_CONFIG["alpha"] = args.alpha
+            VALUE_CREATION_CONFIG["alpha"] = args.alpha
+        if args.layers is not None:
+            SCM_CONFIG["layers"] = args.layers
+            FIRMNESS_CONFIG["layers"] = args.layers
+            VALUE_CREATION_CONFIG["layers"] = args.layers
+        if args.dimension is not None:
+            SCM_CONFIG["dimension"] = args.dimension
+        if args.experiments:
+            experiments = set(args.experiments)
+        else:
+            experiments = {"scm_craigslist"}
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -891,6 +1104,90 @@ def main():
                 }, f, indent=2, ensure_ascii=False)
             log.info("Pinned %d value_creation scenarios (seed=%d, min_span=%d)",
                      len(vc_scenarios), args.seed + 2, MIN_SPAN)
+
+    # ─── Gridsearch mode: run all valid dimensions ─────────────────────
+    if "gridsearch_all" in experiments:
+        rng_gs = random.Random(args.seed)
+        all_sc = _load_all_craigslist(split=args.split)
+        gs_results_summary = {}
+
+        # Save a manifest of which dimensions ran and at what config
+        manifest = {
+            "gridsearch_dir": str(args.gridsearch_dir),
+            "model": args.model,
+            "seed": args.seed,
+            "split": args.split,
+            "scoring": {
+                "lambda": GS_LAMBDA,
+                "min_agree_rate": GS_MIN_AGREE_RATE,
+                "min_delta_to_run": GS_MIN_DELTA_TO_RUN,
+            },
+            "dimensions": gs_configs,
+        }
+        with open(output_dir / "gridsearch_manifest.json", "w") as f:
+            json.dump(manifest, f, indent=2)
+
+        for dim, cfg in sorted(gs_configs.items()):
+            if not cfg["run_eval"]:
+                log.info("SKIP %s  (pen_delta=%.3f  dir_ok=%s)",
+                         dim, cfg["pen_delta"], cfg["dir_ok"])
+                continue
+
+            dvecs = load_vectors_safe(
+                args.vectors_dir, model_cfg.alias,
+                dim, "mean_diff", cfg["layers"],
+            )
+            if dvecs is None:
+                log.warning("Vectors not found for %s — skipping.", dim)
+                continue
+
+            # Use a deterministic but non-overlapping scenario sample per dimension
+            dim_seed = args.seed + abs(hash(dim)) % 10000
+            dim_scenarios = random.Random(dim_seed).sample(
+                all_sc, min(N_CRAIGSLIST, len(all_sc))
+            )
+
+            dim_outdir = output_dir / dim
+            dim_outdir.mkdir(parents=True, exist_ok=True)
+
+            with open(dim_outdir / "scenarios_pinned.json", "w") as f:
+                json.dump({
+                    "dimension": dim, "alpha": cfg["alpha"],
+                    "layers": cfg["layers"], "pen_delta": cfg["pen_delta"],
+                    "seed": dim_seed, "split": args.split, "min_span": MIN_SPAN,
+                    "n": len(dim_scenarios), "scenarios": dim_scenarios,
+                }, f, indent=2, ensure_ascii=False)
+
+            buy_g, sell_g, base_g = run_generic_craigslist(
+                model, tokenizer, dim_scenarios,
+                dvecs, cfg["alpha"], dim, dim_outdir,
+            )
+
+            buy_agreed  = [g for g in buy_g  if g["agreed"]]
+            sell_agreed = [g for g in sell_g if g["agreed"]]
+            base_agreed = [g for g in base_g if g["agreed"]]
+            gs_results_summary[dim] = {
+                "alpha": cfg["alpha"], "layers": cfg["layers"],
+                "pen_delta_gs": cfg["pen_delta"],
+                "buyer_agreed": len(buy_agreed), "seller_agreed": len(sell_agreed),
+                "buyer_adv":  np.mean([g["advantage"] for g in buy_agreed])  if buy_agreed  else None,
+                "seller_adv": np.mean([g["advantage"] for g in sell_agreed]) if sell_agreed else None,
+            }
+
+        with open(output_dir / "gridsearch_eval_summary.json", "w") as f:
+            json.dump(gs_results_summary, f, indent=2)
+
+        elapsed = time.time() - t_start
+        log.info("=" * 70)
+        log.info("GRIDSEARCH EVAL COMPLETE  (%d dimensions, %.0fs total)",
+                 len(gs_results_summary), elapsed)
+        for dim, r in sorted(gs_results_summary.items()):
+            log.info("  %-35s alpha=%+.1f  buy_adv=%s  sell_adv=%s",
+                     dim, r["alpha"],
+                     f"{r['buyer_adv']:+.3f}"  if r["buyer_adv"]  is not None else "n/a",
+                     f"{r['seller_adv']:+.3f}" if r["seller_adv"] is not None else "n/a")
+        log.info("=" * 70)
+        return
 
     # ─── Run experiments ──────────────────────────────────────────────
     results_summary = {}
