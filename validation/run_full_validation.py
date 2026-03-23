@@ -304,7 +304,7 @@ def parse_args() -> argparse.Namespace:
         epilog=__doc__,
     )
     p.add_argument(
-        "--variants", nargs="+", default=ALL_VARIANTS, choices=ALL_VARIANTS,
+        "--variants", nargs="+", default=ALL_VARIANTS,
         help="Variants to run (default: all 8)",
     )
     p.add_argument(
