@@ -325,9 +325,11 @@ def save_results(output_dir, variant, vector_results, probe_results=None):
 
 ALL_VARIANTS = [
     "neg15dim_12pairs_raw", "neg15dim_12pairs_matched",
-    "neg15dim_20pairs_matched", "neg15dim_80pairs_matched",
+    "neg15dim_20pairs_matched", "neg15dim_12pairs_matched_V2",
+    "neg15dim_80pairs_matched",
     "neg8dim_12pairs_raw", "neg8dim_12pairs_matched",
     "neg8dim_20pairs_matched", "neg8dim_80pairs_matched",
+    "neg8dim_12pairs_matched_V2",
 ]
 
 
