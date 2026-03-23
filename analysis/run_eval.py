@@ -3,43 +3,39 @@
 run_eval.py  —  P4 GPU Evaluation Suite
 =========================================
 
-Runs all GPU experiments in a single model-load session.
+Runs gridsearch-driven evaluation in a single model-load session.
+Alpha and layers are read automatically from stage2_results.json for each
+dimension — no hardcoded configs. Only dimensions that pass the gridsearch
+filter (pen_delta >= 0.15, dir_ok) are evaluated.
+
 Designed for local GPU execution with incremental saves (also works
 headless on remote instances via nohup).
 
 Prerequisites:
   - Steering vectors in vectors/{model_alias}/mean_diff/
     (run extract_vectors.py first if needed)
+  - Gridsearch results from hyperparameter search
   - Dependencies: torch, transformers, numpy
 
 Usage:
-  # Run all experiments:
-  nohup python run_eval.py --model qwen2.5-3b --all 2>&1 | tee results/eval/run.log &
-
-  # Run only the primary SCM experiment (default):
-  python run_eval.py --model qwen2.5-3b --experiments scm_craigslist
-
-  # Run multiple experiments:
-  python run_eval.py --model qwen2.5-3b --experiments scm_craigslist dond_crossval
+  nohup python run_eval.py hyperparameter_results/gridsearch_neg15dim_12pairs_matched \\
+      --model qwen2.5-3b \\
+      --vectors_dir vectors/neg15dim_12pairs_matched/negotiation \\
+      --output_dir results/eval/gridsearch_qwen2.5-3b \\
+      2>&1 | tee results/eval/gridsearch_qwen2.5-3b.log &
 
   # Check progress:
-  tail -f results/eval/run.log
+  tail -f results/eval/gridsearch_qwen2.5-3b.log
 
-Experiments:
-  scm_craigslist  SCM fixed-role: buyer-steered + seller-steered + buyer-baseline (3×50 games)
-  dond_crossval   DonD cross-dataset — 30 games, SCM vector on Deal or No Deal
-  firmness        Firmness vector at moderate alpha — 30 games
-  sensitivity     Opening bid sensitivity — 30 games (10 each at 50%, 60%, 70%)
-  cosine          Vector cosine similarity check (no GPU inference, just numpy)
-
-Output files:
-  scm_buyer_steered.json    steered agent plays buyer (pairs with scm_buyer_baseline)
-  scm_seller_steered.json   steered agent plays seller
-  scm_buyer_baseline.json   baseline (alpha=0), buyer role (paired control for scm_buyer_steered)
-  scm_scenarios_pinned.json exact scenarios used, for reproducibility
-  dond_crossval.json        Deal-or-No-Deal cross-dataset results
-  firmness_moderate.json    firmness vector results
-  opening_sensitivity.json  opening-bid sensitivity results
+Output (per dimension that passes the filter):
+  {dim}/scenarios_pinned.json         exact scenarios used
+  {dim}/{dim}_buyer_steered.json      steered agent plays buyer
+  {dim}/{dim}_seller_steered.json     steered agent plays seller
+  {dim}/{dim}_buyer_baseline.json     alpha=0 buyer (paired control)
+  {dim}/{dim}_seller_baseline.json    alpha=0 seller (paired control)
+  gridsearch_manifest.json            which dims ran and at what config
+  gridsearch_eval_summary.json        avg_delta/avg_agree matching gridsearch metric
+  run_meta.json                       run metadata
 
 After completion (CPU only):
   python analysis/turn_metrics.py    # per-turn behavior enrichment
@@ -80,36 +76,10 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 log = logging.getLogger("run_eval")
+progress_log = logging.getLogger("run_eval.progress")
 
 
-# ─── Experiment configurations ────────────────────────────────────────────
-# Identified by P4 B4 analysis as the configs worth evaluating.
-
-SCM_CONFIG = {
-    "dimension": "strategic_concession_making",
-    "method":    "mean_diff",
-    "layers":    [18],       # middle layer on 36-layer model
-    "alpha":     6.124,      # best from S2 TPE
-}
-
-FIRMNESS_CONFIG = {
-    "dimension": "firmness",
-    "method":    "mean_diff",
-    "layers":    [27],       # late layer on 36-layer model
-    "alpha":     5.0,        # moderate alpha from S2 dose-response
-}
-
-VALUE_CREATION_CONFIG = {
-    "dimension": "value_creation",
-    "method":    "mean_diff",
-    "layers":    [9, 18, 27],  # spread layers from teammate's search
-    "alpha":     5.21,         # best alpha from S2 TPE optimization
-}
-
-N_CRAIGSLIST     = 50    # G1/G2 paired comparison
-N_DOND           = 30    # G3 cross-dataset
-N_FIRMNESS       = 30    # G4 firmness rerun
-N_SENSITIVITY    = 10    # G5 per opening-bid level
+N_CRAIGSLIST = 50    # games per dimension (buyer-steered + seller-steered + buyer-baseline + seller-baseline)
 
 # ─── Gridsearch scoring constants (must match visualise_results.ipynb) ────────
 GS_LAMBDA           = 0.01   # penalty per unit of |alpha|
@@ -236,279 +206,45 @@ def run_single_game(model, tokenizer, scenario, role, dvecs, alpha,
         dvecs_buyer=dvecs  if role == "buyer"  else None,
         alpha_buyer=alpha  if role == "buyer"  else 0.0,
         steered_role=role,
-        max_new_tokens=120,
-        temperature=0.7,
+        max_new_tokens=60,
+        temperature=0.0,
         opening_bid_pct=opening_bid_pct,
     )
 
 
-# ─── SCM Craigslist: buyer-steered + seller-steered + buyer-baseline ─────
-
-def run_scm_craigslist(model, tokenizer, scenarios, scm_dvecs, alpha, output_dir):
-    """
-    Run three fixed-role batches on the same scenarios (interleaved):
-      buyer-steered:  steered=BUYER  (all N games) → scm_buyer_steered.json
-      seller-steered: steered=SELLER (all N games) → scm_seller_steered.json
-      buyer-baseline: α=0, role=BUYER              → scm_buyer_baseline.json
-
-    Interleaved so each completed triplet is a matched pair.
-    buyer-steered vs buyer-baseline = clean buyer-steering effect.
-    seller-steered stands alone as the seller-steering result.
-    """
-    log.info("=" * 70)
-    log.info("SCM Craigslist: role-fixed batches (%d scenarios × 3 batches)",
-             len(scenarios))
-    log.info("  SCM alpha=%.3f, layers=%s", alpha, SCM_CONFIG["layers"])
-    log.info("=" * 70)
-
-    buyer_steered_games, seller_steered_games, buyer_baseline_games = [], [], []
-    t0 = time.time()
-
-    for i, sc in enumerate(scenarios):
-        try:
-            # buyer-steered: steered agent plays buyer
-            r_buy = run_single_game(model, tokenizer, sc, "buyer", scm_dvecs, alpha)
-            r_buy["game_id"] = i
-            buyer_steered_games.append(r_buy)
-
-            # seller-steered: steered agent plays seller
-            r_sell = run_single_game(model, tokenizer, sc, "seller", scm_dvecs, alpha)
-            r_sell["game_id"] = i
-            seller_steered_games.append(r_sell)
-
-            # buyer-baseline: same role as buyer-steered, alpha=0
-            r_base = run_single_game(model, tokenizer, sc, "buyer", None, 0.0)
-            r_base["game_id"] = i
-            buyer_baseline_games.append(r_base)
-
-        except Exception as e:
-            log.error("SCM Craigslist triplet %d failed: %s\n%s", i, e, traceback.format_exc())
-            continue
-
-        # Incremental save after each triplet
-        save_results(buyer_steered_games,  "scm_buyer_steered",  alpha, output_dir)
-        save_results(seller_steered_games, "scm_seller_steered", alpha, output_dir)
-        save_results(buyer_baseline_games, "scm_buyer_baseline", 0.0,   output_dir)
-
-        elapsed = time.time() - t0
-        mpd_buy  = r_buy.get("midpoint_deviation",  float("nan"))
-        mpd_sell = r_sell.get("midpoint_deviation", float("nan"))
-        mpd_base = r_base.get("midpoint_deviation", float("nan"))
-        log.info(
-            "Triplet %2d/%d [%5.0fs] | "
-            "buy adv=%+.3f mpd=%+.3f | sell adv=%+.3f mpd=%+.3f | base adv=%+.3f mpd=%+.3f",
-            i + 1, len(scenarios), elapsed,
-            r_buy["advantage"],  mpd_buy,
-            r_sell["advantage"], mpd_sell,
-            r_base["advantage"], mpd_base,
-        )
-
-    # Paired analysis: buyer-steered vs buyer-baseline (both metrics)
-    if buyer_steered_games and buyer_baseline_games:
-        paired_adv = [r1["advantage"] - r2["advantage"]
-                      for r1, r2 in zip(buyer_steered_games, buyer_baseline_games)
-                      if r1["agreed"] and r2["agreed"]]
-        paired_mpd = [r1["midpoint_deviation"] - r2["midpoint_deviation"]
-                      for r1, r2 in zip(buyer_steered_games, buyer_baseline_games)
-                      if r1["agreed"] and r2["agreed"]
-                      and r1.get("midpoint_deviation") is not None
-                      and r2.get("midpoint_deviation") is not None]
-        if paired_adv:
-            log.info("=" * 70)
-            log.info("BUYER STEERING EFFECT (N=%d agreed pairs):", len(paired_adv))
-            log.info("  Δadvantage:        Mean=%+.4f  Std=%.4f  (clamped, noisy)",
-                     np.mean(paired_adv), np.std(paired_adv, ddof=1))
-            if paired_mpd:
-                log.info("  Δmidpoint_dev:     Mean=%+.4f  Std=%.4f  (clamp-immune, preferred)",
-                         np.mean(paired_mpd), np.std(paired_mpd, ddof=1))
-            log.info("=" * 70)
-
-    elapsed = time.time() - t0
-    log.info("SCM Craigslist complete: %d triplets in %.0fs",
-             len(buyer_steered_games), elapsed)
-    return buyer_steered_games, seller_steered_games, buyer_baseline_games
-
-
-# ─── Firmness Craigslist: buyer-steered + seller-steered + buyer-baseline ─
-
-def run_firmness_craigslist(model, tokenizer, scenarios, firm_dvecs, alpha, output_dir):
-    """
-    Same 3-batch fixed-role design as run_scm_craigslist, but with the
-    firmness vector (layer 27, alpha 5.0).
-    Outputs: firmness_buyer_steered.json, firmness_seller_steered.json,
-             firmness_buyer_baseline.json, firmness_scenarios_pinned.json
-    """
-    log.info("=" * 70)
-    log.info("Firmness Craigslist: role-fixed batches (%d scenarios × 3 batches)",
-             len(scenarios))
-    log.info("  Firmness alpha=%.3f, layers=%s", alpha, FIRMNESS_CONFIG["layers"])
-    log.info("=" * 70)
-
-    buyer_steered_games, seller_steered_games, buyer_baseline_games = [], [], []
-    t0 = time.time()
-
-    for i, sc in enumerate(scenarios):
-        try:
-            r_buy  = run_single_game(model, tokenizer, sc, "buyer", firm_dvecs, alpha)
-            r_buy["game_id"] = i
-            buyer_steered_games.append(r_buy)
-
-            r_sell = run_single_game(model, tokenizer, sc, "seller", firm_dvecs, alpha)
-            r_sell["game_id"] = i
-            seller_steered_games.append(r_sell)
-
-            r_base = run_single_game(model, tokenizer, sc, "buyer", None, 0.0)
-            r_base["game_id"] = i
-            buyer_baseline_games.append(r_base)
-
-        except Exception as e:
-            log.error("Firmness Craigslist triplet %d failed: %s\n%s", i, e, traceback.format_exc())
-            continue
-
-        save_results(buyer_steered_games,  "firmness_buyer_steered",  alpha, output_dir)
-        save_results(seller_steered_games, "firmness_seller_steered", alpha, output_dir)
-        save_results(buyer_baseline_games, "firmness_buyer_baseline", 0.0,   output_dir)
-
-        elapsed = time.time() - t0
-        mpd_buy  = r_buy.get("midpoint_deviation",  float("nan"))
-        mpd_sell = r_sell.get("midpoint_deviation", float("nan"))
-        mpd_base = r_base.get("midpoint_deviation", float("nan"))
-        log.info(
-            "Triplet %2d/%d [%5.0fs] | "
-            "buy adv=%+.3f mpd=%+.3f | sell adv=%+.3f mpd=%+.3f | base adv=%+.3f mpd=%+.3f",
-            i + 1, len(scenarios), elapsed,
-            r_buy["advantage"],  mpd_buy,
-            r_sell["advantage"], mpd_sell,
-            r_base["advantage"], mpd_base,
-        )
-
-    # Paired analysis
-    if buyer_steered_games and buyer_baseline_games:
-        paired_adv = [r1["advantage"] - r2["advantage"]
-                      for r1, r2 in zip(buyer_steered_games, buyer_baseline_games)
-                      if r1["agreed"] and r2["agreed"]]
-        paired_mpd = [r1["midpoint_deviation"] - r2["midpoint_deviation"]
-                      for r1, r2 in zip(buyer_steered_games, buyer_baseline_games)
-                      if r1["agreed"] and r2["agreed"]
-                      and r1.get("midpoint_deviation") is not None
-                      and r2.get("midpoint_deviation") is not None]
-        if paired_adv:
-            log.info("=" * 70)
-            log.info("FIRMNESS BUYER STEERING EFFECT (N=%d agreed pairs):", len(paired_adv))
-            log.info("  Δadvantage:    Mean=%+.4f  Std=%.4f", np.mean(paired_adv), np.std(paired_adv, ddof=1))
-            if paired_mpd:
-                log.info("  Δmidpoint_dev: Mean=%+.4f  Std=%.4f  (preferred)",
-                         np.mean(paired_mpd), np.std(paired_mpd, ddof=1))
-            log.info("=" * 70)
-
-    elapsed = time.time() - t0
-    log.info("Firmness Craigslist complete: %d triplets in %.0fs",
-             len(buyer_steered_games), elapsed)
-    return buyer_steered_games, seller_steered_games, buyer_baseline_games
-
-
-# ─── Value Creation Craigslist: buyer-steered + seller-steered + buyer-baseline ─
-
-def run_value_creation_craigslist(model, tokenizer, scenarios, vc_dvecs, alpha, output_dir):
-    """
-    Same 3-batch fixed-role design to test teammate's value_creation finding.
-    Outputs: value_creation_buyer_steered.json, value_creation_seller_steered.json,
-             value_creation_buyer_baseline.json, value_creation_scenarios_pinned.json
-    """
-    log.info("=" * 70)
-    log.info("Value Creation Craigslist: role-fixed batches (%d scenarios × 3 batches)",
-             len(scenarios))
-    log.info("  Value Creation alpha=%.3f, layers=%s", alpha, VALUE_CREATION_CONFIG["layers"])
-    log.info("=" * 70)
-
-    buyer_steered_games, seller_steered_games, buyer_baseline_games = [], [], []
-    t0 = time.time()
-
-    for i, sc in enumerate(scenarios):
-        try:
-            r_buy  = run_single_game(model, tokenizer, sc, "buyer", vc_dvecs, alpha)
-            r_buy["game_id"] = i
-            buyer_steered_games.append(r_buy)
-
-            r_sell = run_single_game(model, tokenizer, sc, "seller", vc_dvecs, alpha)
-            r_sell["game_id"] = i
-            seller_steered_games.append(r_sell)
-
-            r_base = run_single_game(model, tokenizer, sc, "buyer", None, 0.0)
-            r_base["game_id"] = i
-            buyer_baseline_games.append(r_base)
-
-        except Exception as e:
-            log.error("Value Creation Craigslist triplet %d failed: %s\n%s", i, e, traceback.format_exc())
-            continue
-
-        save_results(buyer_steered_games,  "value_creation_buyer_steered",  alpha, output_dir)
-        save_results(seller_steered_games, "value_creation_seller_steered", alpha, output_dir)
-        save_results(buyer_baseline_games, "value_creation_buyer_baseline", 0.0,   output_dir)
-
-        elapsed = time.time() - t0
-        mpd_buy  = r_buy.get("midpoint_deviation",  float("nan"))
-        mpd_sell = r_sell.get("midpoint_deviation", float("nan"))
-        mpd_base = r_base.get("midpoint_deviation", float("nan"))
-        log.info(
-            "Triplet %2d/%d [%5.0fs] | "
-            "buy adv=%+.3f mpd=%+.3f | sell adv=%+.3f mpd=%+.3f | base adv=%+.3f mpd=%+.3f",
-            i + 1, len(scenarios), elapsed,
-            r_buy["advantage"],  mpd_buy,
-            r_sell["advantage"], mpd_sell,
-            r_base["advantage"], mpd_base,
-        )
-
-    # Paired analysis
-    if buyer_steered_games and buyer_baseline_games:
-        paired_adv = [r1["advantage"] - r2["advantage"]
-                      for r1, r2 in zip(buyer_steered_games, buyer_baseline_games)
-                      if r1["agreed"] and r2["agreed"]]
-        paired_mpd = [r1["midpoint_deviation"] - r2["midpoint_deviation"]
-                      for r1, r2 in zip(buyer_steered_games, buyer_baseline_games)
-                      if r1["agreed"] and r2["agreed"]
-                      and r1.get("midpoint_deviation") is not None
-                      and r2.get("midpoint_deviation") is not None]
-        if paired_adv:
-            log.info("=" * 70)
-            log.info("VALUE CREATION BUYER STEERING EFFECT (N=%d agreed pairs):", len(paired_adv))
-            log.info("  Δadvantage:    Mean=%+.4f  Std=%.4f", np.mean(paired_adv), np.std(paired_adv, ddof=1))
-            if paired_mpd:
-                log.info("  Δmidpoint_dev: Mean=%+.4f  Std=%.4f  (preferred)",
-                         np.mean(paired_mpd), np.std(paired_mpd, ddof=1))
-            log.info("=" * 70)
-
-    elapsed = time.time() - t0
-    log.info("Value Creation Craigslist complete: %d triplets in %.0fs",
-             len(buyer_steered_games), elapsed)
-    return buyer_steered_games, seller_steered_games, buyer_baseline_games
-
-
-# ─── Generic Craigslist: buyer-steered + seller-steered + buyer-baseline ──────
-# Used by --gridsearch_dir to run any dimension with auto-scored alpha/layers.
+# ─── Generic Craigslist: buyer-steered + seller-steered + baselines ───────────
 
 def run_generic_craigslist(model, tokenizer, scenarios, dvecs, alpha,
                            dimension, output_dir):
     """
-    Same 3-batch fixed-role design as run_scm_craigslist but fully parameterised.
-    Output files are prefixed with the dimension name, e.g.:
-      {dimension}_buyer_steered.json
-      {dimension}_seller_steered.json
-      {dimension}_buyer_baseline.json
+    Runs four fixed-role batches on the same scenarios (interleaved):
+      buyer-steered:   steered=BUYER,  alpha  → {dimension}_buyer_steered.json
+      seller-steered:  steered=SELLER, alpha  → {dimension}_seller_steered.json
+      buyer-baseline:  steered=BUYER,  alpha=0 → {dimension}_buyer_baseline.json
+      seller-baseline: steered=SELLER, alpha=0 → {dimension}_seller_baseline.json
+
+    Matches the gridsearch metric exactly:
+      buyer_delta  = buyer_steered_midpt_adv  - buyer_baseline_midpt_adv
+      seller_delta = seller_steered_midpt_adv - seller_baseline_midpt_adv
+      avg_delta    = (buyer_delta + seller_delta) / 2
+
+    Returns (buyer_steered_games, seller_steered_games,
+             buyer_baseline_games, seller_baseline_games)
     """
     prefix = dimension
     log.info("=" * 70)
-    log.info("%s Craigslist: role-fixed batches (%d scenarios × 3 batches)",
+    log.info("%s Craigslist: role-fixed batches (%d scenarios × 4 batches)",
              dimension, len(scenarios))
     log.info("  alpha=%.3f, layers=%s", alpha, list(dvecs.keys()))
     log.info("=" * 70)
 
-    buyer_steered_games, seller_steered_games, buyer_baseline_games = [], [], []
+    buyer_steered_games, seller_steered_games = [], []
+    buyer_baseline_games, seller_baseline_games = [], []
     t0 = time.time()
 
     for i, sc in enumerate(scenarios):
         try:
-            r_buy  = run_single_game(model, tokenizer, sc, "buyer", dvecs, alpha)
+            r_buy = run_single_game(model, tokenizer, sc, "buyer", dvecs, alpha)
             r_buy["game_id"] = i
             buyer_steered_games.append(r_buy)
 
@@ -516,297 +252,82 @@ def run_generic_craigslist(model, tokenizer, scenarios, dvecs, alpha,
             r_sell["game_id"] = i
             seller_steered_games.append(r_sell)
 
-            r_base = run_single_game(model, tokenizer, sc, "buyer", None, 0.0)
-            r_base["game_id"] = i
-            buyer_baseline_games.append(r_base)
+            r_base_buy = run_single_game(model, tokenizer, sc, "buyer", None, 0.0)
+            r_base_buy["game_id"] = i
+            buyer_baseline_games.append(r_base_buy)
+
+            r_base_sell = run_single_game(model, tokenizer, sc, "seller", None, 0.0)
+            r_base_sell["game_id"] = i
+            seller_baseline_games.append(r_base_sell)
 
         except Exception as e:
-            log.error("%s Craigslist triplet %d failed: %s\n%s",
+            log.error("%s Craigslist quad %d failed: %s\n%s",
                       dimension, i, e, traceback.format_exc())
             continue
 
-        save_results(buyer_steered_games,  f"{prefix}_buyer_steered",  alpha, output_dir)
-        save_results(seller_steered_games, f"{prefix}_seller_steered", alpha, output_dir)
-        save_results(buyer_baseline_games, f"{prefix}_buyer_baseline", 0.0,   output_dir)
+        save_results(buyer_steered_games,   f"{prefix}_buyer_steered",   alpha, output_dir)
+        save_results(seller_steered_games,  f"{prefix}_seller_steered",  alpha, output_dir)
+        save_results(buyer_baseline_games,  f"{prefix}_buyer_baseline",  0.0,   output_dir)
+        save_results(seller_baseline_games, f"{prefix}_seller_baseline", 0.0,   output_dir)
 
         elapsed = time.time() - t0
-        mpd_buy  = r_buy.get("midpoint_deviation",  float("nan"))
-        mpd_sell = r_sell.get("midpoint_deviation", float("nan"))
-        mpd_base = r_base.get("midpoint_deviation", float("nan"))
-        log.info(
-            "Triplet %2d/%d [%5.0fs] | "
-            "buy adv=%+.3f mpd=%+.3f | sell adv=%+.3f mpd=%+.3f | base adv=%+.3f mpd=%+.3f",
+        mpd_buy       = r_buy.get("midpoint_deviation",       float("nan"))
+        mpd_sell      = r_sell.get("midpoint_deviation",      float("nan"))
+        mpd_base_buy  = r_base_buy.get("midpoint_deviation",  float("nan"))
+        mpd_base_sell = r_base_sell.get("midpoint_deviation", float("nan"))
+
+        def _run_midpt(games, a, role):
+            if not games:
+                return float("nan")
+            return summarise(games, a).get("by_role", {}).get(role, {}).get(
+                "midpoint_advantage", float("nan"))
+
+        rb  = _run_midpt(buyer_steered_games,  alpha, "buyer")
+        rs  = _run_midpt(seller_steered_games, alpha, "seller")
+        rbb = _run_midpt(buyer_baseline_games, 0.0,   "buyer")
+        rbs = _run_midpt(seller_baseline_games, 0.0,  "seller")
+        nans = any(v != v for v in [rb, rs, rbb, rbs])
+        run_buy_delta  = float("nan") if nans else rb - rbb
+        run_sell_delta = float("nan") if nans else rs - rbs
+        run_avg_delta  = float("nan") if nans else (run_buy_delta + run_sell_delta) / 2.0
+
+        progress_log.info(
+            "Quad %2d/%d [%5.0fs] | "
+            "buy_s mpd=%+.3f | sell_s mpd=%+.3f | "
+            "buy_b mpd=%+.3f | sell_b mpd=%+.3f | "
+            "running buy_delta=%+.4f  sell_delta=%+.4f  avg_delta=%+.4f",
             i + 1, len(scenarios), elapsed,
-            r_buy["advantage"],  mpd_buy,
-            r_sell["advantage"], mpd_sell,
-            r_base["advantage"], mpd_base,
+            mpd_buy, mpd_sell, mpd_base_buy, mpd_base_sell,
+            run_buy_delta, run_sell_delta, run_avg_delta,
         )
 
-    if buyer_steered_games and buyer_baseline_games:
-        paired_mpd = [
+    def _paired_mpd(steered, baseline):
+        return [
             r1["midpoint_deviation"] - r2["midpoint_deviation"]
-            for r1, r2 in zip(buyer_steered_games, buyer_baseline_games)
+            for r1, r2 in zip(steered, baseline)
             if r1["agreed"] and r2["agreed"]
             and r1.get("midpoint_deviation") is not None
             and r2.get("midpoint_deviation") is not None
         ]
-        if paired_mpd:
-            log.info("=" * 70)
-            log.info("%s BUYER STEERING EFFECT (N=%d agreed pairs): "
+
+    log.info("=" * 70)
+    for role, steered, baseline in [
+        ("BUYER",  buyer_steered_games,  buyer_baseline_games),
+        ("SELLER", seller_steered_games, seller_baseline_games),
+    ]:
+        paired = _paired_mpd(steered, baseline)
+        if paired:
+            log.info("%s %s STEERING EFFECT (N=%d agreed pairs): "
                      "Δmidpoint_dev Mean=%+.4f  Std=%.4f",
-                     dimension, len(paired_mpd),
-                     np.mean(paired_mpd), np.std(paired_mpd, ddof=1))
-            log.info("=" * 70)
+                     dimension, role, len(paired),
+                     np.mean(paired), np.std(paired, ddof=1))
+    log.info("=" * 70)
 
     elapsed = time.time() - t0
-    log.info("%s Craigslist complete: %d triplets in %.0fs",
+    log.info("%s Craigslist complete: %d quads in %.0fs",
              dimension, len(buyer_steered_games), elapsed)
-    return buyer_steered_games, seller_steered_games, buyer_baseline_games
-
-
-# ─── DonD cross-dataset validation ───────────────────────────────────────
-
-def run_dond_crossval(model, tokenizer, scm_dvecs, alpha, n_games, output_dir):
-    """
-    Test whether SCM vector improves Pareto efficiency on multi-issue
-    negotiation (Deal or No Deal). Cross-dataset falsifiability check.
-    """
-    log.info("=" * 70)
-    log.info("DonD cross-dataset validation (%d games)", n_games)
-    log.info("=" * 70)
-
-    try:
-        from deal_or_no_deal import load_dealornodeal, run_game_dond, summarise_dond
-    except ImportError:
-        log.error("deal_or_no_deal.py not found — skipping G3")
-        return []
-
-    scenarios = load_dealornodeal(split="selfplay", num_samples=n_games)
-    games = []
-    t0 = time.time()
-
-    for i, sc in enumerate(scenarios):
-        steered_role = "agent1" if i % 2 == 0 else "agent2"
-        dvecs_a1 = scm_dvecs if steered_role == "agent1" else None
-        alpha_a1 = alpha     if steered_role == "agent1" else 0.0
-        dvecs_a2 = scm_dvecs if steered_role == "agent2" else None
-        alpha_a2 = alpha     if steered_role == "agent2" else 0.0
-
-        try:
-            result = run_game_dond(
-                model, tokenizer, sc,
-                dvecs_a1, alpha_a1, dvecs_a2, alpha_a2,
-                steered_role=steered_role,
-            )
-            result["game_id"] = i
-            games.append(result)
-        except Exception as e:
-            log.warning("G3 game %d failed: %s", i, e)
-            continue
-
-        # Incremental save
-        summary = summarise_dond(games, alpha)
-        out = {
-            "label": "dond_crossval",
-            "timestamp": datetime.now().isoformat(),
-            "config": {"alpha": alpha, "n_games": len(games)},
-            "summary": summary,
-            "games": games,
-        }
-        with open(output_dir / "dond_crossval.json", "w") as f:
-            json.dump(out, f, indent=2, ensure_ascii=False)
-
-        elapsed = time.time() - t0
-        agreed = result.get("agreed", False)
-        pareto = result.get("pareto_optimal", False) if agreed else False
-        log.info(
-            "dond game %2d/%d [%5.0fs] | %s | pareto=%s | adv=%+.3f",
-            i + 1, n_games, elapsed,
-            "deal" if agreed else "NODEAL",
-            pareto, result.get("advantage", 0),
-        )
-
-    if games:
-        summary = summarise_dond(games, alpha)
-        log.info("=" * 70)
-        log.info("DonD SUMMARY: agree=%.0f%% pareto=%.0f%% efficiency=%.3f adv=%+.4f",
-                 summary["agree_rate"] * 100, summary["pareto_rate"] * 100,
-                 summary["avg_efficiency"], summary["advantage"])
-        log.info("=" * 70)
-
-    elapsed = time.time() - t0
-    log.info("DonD cross-dataset complete: %d games in %.0fs", len(games), elapsed)
-    return games
-
-
-# ─── Firmness at moderate alpha ───────────────────────────────────────────
-
-def run_firmness_moderate(model, tokenizer, firm_dvecs, alpha, n_games, output_dir,
-                          seed):
-    """
-    Firmness at alpha≈5 on 3B (vs the original alpha=20 on 7B).
-    Checks: lower clamping rate? Same role pattern? Different behavioral profile?
-    """
-    log.info("=" * 70)
-    log.info("Firmness moderate alpha (alpha=%.1f, %d games)", alpha, n_games)
-    log.info("=" * 70)
-
-    # Independent scenario sample (different seed from SCM batches)
-    rng = random.Random(seed + 100)
-    all_scenarios = _load_all_craigslist()
-    scenarios = rng.sample(all_scenarios, min(n_games, len(all_scenarios)))
-    roles = ["seller" if i % 2 == 0 else "buyer" for i in range(len(scenarios))]
-
-    games = []
-    t0 = time.time()
-
-    for i, (sc, role) in enumerate(zip(scenarios, roles)):
-        try:
-            r = run_single_game(model, tokenizer, sc, role, firm_dvecs, alpha)
-            r["game_id"] = i
-            games.append(r)
-        except Exception as e:
-            log.warning("firmness game %d failed: %s", i, e)
-            continue
-
-        save_results(games, "firmness_moderate", alpha, output_dir)
-
-        elapsed = time.time() - t0
-        log.info(
-            "firmness game %2d/%d [%5.0fs] | adv=%+.3f | %s | clamped=%s",
-            i + 1, n_games, elapsed,
-            r["advantage"],
-            "deal" if r["agreed"] else "NODEAL",
-            r.get("clamped", "?"),
-        )
-
-    elapsed = time.time() - t0
-    log.info("Firmness moderate complete: %d games in %.0fs", len(games), elapsed)
-    return games
-
-
-# ─── Opening bid sensitivity ──────────────────────────────────────────────
-
-def run_opening_sensitivity(model, tokenizer, scm_dvecs, alpha, output_dir, seed):
-    """
-    Does the opening bid percentage (50/60/70%) change the outcome?
-    Same 10 scenarios across all 3 percentages for paired comparison.
-    """
-    log.info("=" * 70)
-    log.info("Opening bid sensitivity (10 games x 3 percentages)")
-    log.info("=" * 70)
-
-    rng = random.Random(seed + 200)
-    all_scenarios = _load_all_craigslist()
-    scenarios = rng.sample(all_scenarios, min(N_SENSITIVITY, len(all_scenarios)))
-    roles = ["seller" if i % 2 == 0 else "buyer" for i in range(len(scenarios))]
-
-    all_results = {}
-    t0 = time.time()
-
-    for pct in [0.5, 0.6, 0.7]:
-        label = f"opening_{int(pct * 100)}pct"
-        games = []
-
-        for i, (sc, role) in enumerate(zip(scenarios, roles)):
-            try:
-                r = run_single_game(
-                    model, tokenizer, sc, role, scm_dvecs, alpha,
-                    opening_bid_pct=pct,
-                )
-                r["game_id"] = i
-                r["opening_bid_pct"] = pct
-                games.append(r)
-            except Exception as e:
-                log.warning("G5 %s game %d failed: %s", label, i, e)
-                continue
-
-        summary = summarise(games, alpha)
-        all_results[label] = {"summary": summary, "games": games}
-
-        elapsed = time.time() - t0
-        log.info(
-            "G5 %s [%5.0fs] | adv=%+.4f | agree=%.0f%%",
-            label, elapsed,
-            summary["advantage"], summary["agree_rate"] * 100,
-        )
-
-    with open(output_dir / "opening_sensitivity.json", "w") as f:
-        json.dump(all_results, f, indent=2, ensure_ascii=False)
-
-    elapsed = time.time() - t0
-    log.info("Opening sensitivity complete in %.0fs", elapsed)
-    return all_results
-
-
-# ─── Vector cosine similarity check ──────────────────────────────────────
-
-def run_cosine_check(vectors_dir, model_alias):
-    """
-    Non-GPU check: are SCM, firmness, and anchoring vectors similar?
-    If cosine similarity is high, they may encode the same direction.
-    """
-    log.info("=" * 70)
-    log.info("COSINE SIMILARITY CHECK (no GPU needed)")
-    log.info("=" * 70)
-
-    dims = ["strategic_concession_making", "firmness", "anchoring"]
-    layer_map = {
-        "strategic_concession_making": 18,
-        "firmness":                    27,
-        "anchoring":                   18,
-    }
-
-    vectors = {}
-    for dim in dims:
-        layer = layer_map[dim]
-        try:
-            dvecs = load_direction_vectors(
-                vectors_dir=Path(vectors_dir),
-                model_alias=model_alias,
-                dimension=dim,
-                method="mean_diff",
-                layer_indices=[layer],
-            )
-            vectors[dim] = dvecs[layer]
-        except FileNotFoundError:
-            log.warning("Vector for %s/layer%d not found — skipping", dim, layer)
-
-    if len(vectors) < 2:
-        log.warning("Need at least 2 vectors for comparison. Found: %s",
-                     list(vectors.keys()))
-        return {}
-
-    results = {}
-    dims_found = list(vectors.keys())
-    for i, d1 in enumerate(dims_found):
-        for d2 in dims_found[i + 1:]:
-            v1 = vectors[d1].flatten().astype(np.float64)
-            v2 = vectors[d2].flatten().astype(np.float64)
-            cos_sim = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
-            key = f"{d1}_vs_{d2}"
-            results[key] = round(float(cos_sim), 4)
-            log.info("  cos(%s, %s) = %.4f", d1, d2, cos_sim)
-
-    # Also check within-dimension split-half stability if all-layers file exists
-    for dim in dims_found:
-        all_path = Path(vectors_dir) / model_alias / "mean_diff" / f"{dim}_all_layers.npy"
-        if all_path.exists():
-            all_vecs = np.load(all_path)
-            layer = layer_map.get(dim)
-            if layer and layer < len(all_vecs):
-                v = all_vecs[layer].flatten().astype(np.float64)
-                v_stored = vectors[dim].flatten().astype(np.float64)
-                match = np.dot(v, v_stored) / (np.linalg.norm(v) * np.linalg.norm(v_stored))
-                log.info("  %s layer%d all-vs-single consistency: %.4f",
-                         dim, layer, match)
-
-    log.info("Interpretation:")
-    log.info("  cos > 0.8  → vectors likely encode the same direction")
-    log.info("  cos 0.3-0.8 → partially overlapping")
-    log.info("  cos < 0.3  → genuinely different directions")
-
-    return results
+    return (buyer_steered_games, seller_steered_games,
+            buyer_baseline_games, seller_baseline_games)
 
 
 # ─── Scenario loading (cached) ────────────────────────────────────────────
@@ -834,205 +355,80 @@ def _load_all_craigslist(split="train"):
 
 def parse_args():
     p = argparse.ArgumentParser(
-        description="P4 GPU evaluation suite — run all experiments.",
+        description="P4 GPU evaluation suite — gridsearch-driven evaluation.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
+    p.add_argument("gridsearch_dir",
+                   help="Path to gridsearch results dir "
+                        "(e.g. hyperparameter_results/gridsearch_neg15dim_12pairs_matched). "
+                        "Alpha and layers are read from stage2_results.json for each dimension.")
     p.add_argument("--model", choices=list(MODELS.keys()), default="qwen2.5-3b")
-    _root = str(Path(__file__).resolve().parent.parent)
     p.add_argument("--vectors_dir", required=True,
-                   help="Path to vectors dir for this variant, e.g. vectors/neg8dim_12pairs_matched/negotiation")
+                   help="Path to vectors dir, e.g. vectors/neg15dim_12pairs_matched/negotiation")
+    _root = str(Path(__file__).resolve().parent.parent)
     p.add_argument("--output_dir", default=str(Path(_root) / "results" / "eval"))
-    p.add_argument("--experiments", nargs="+",
-                   choices=["scm_craigslist", "firmness_craigslist", "value_creation_craigslist",
-                             "dond_crossval", "firmness", "sensitivity", "cosine"],
-                   default=None,
-                   help="Which experiments to run (default: scm_craigslist). "
-                        "scm_craigslist=SCM buyer+seller+baseline batches; "
-                        "firmness_craigslist=firmness buyer+seller+baseline batches; "
-                        "value_creation_craigslist=value_creation buyer+seller+baseline batches; "
-                        "dond_crossval=Deal-or-No-Deal cross-dataset; "
-                        "firmness=firmness vector moderate alpha (old 30-game design); "
-                        "sensitivity=opening-bid sensitivity; "
-                        "cosine=vector similarity check (no GPU).")
-    p.add_argument("--all", action="store_true",
-                   help="Run all experiments.")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--split", choices=["train", "validation"], default="train",
-                   help="Craigslist split. 'validation' recommended for paper.")
+                   help="Craigslist split. 'train' recommended for paper.")
     p.add_argument("--dtype", choices=["bfloat16", "float16", "float32"],
                    default="bfloat16")
-    p.add_argument("--alpha", type=float, default=None,
-                   help="Override alpha for the primary experiment config (SCM/firmness/vc).")
-    p.add_argument("--layers", type=int, nargs="+", default=None,
-                   help="Override layers for the primary experiment config.")
-    p.add_argument("--dimension", type=str, default=None,
-                   help="Override dimension name for scm_craigslist (repurposes the 3-batch design).")
-    p.add_argument("--gridsearch_dir", type=str, default=None,
-                   help="Path to gridsearch results dir (e.g. hyperparameter_results/gridsearch_neg15dim_12pairs_matched). "
-                        "When set, auto-reads alpha/layers for every valid dimension and runs them all "
-                        "using the generic buyer+seller+baseline design. "
-                        "Overrides --experiments, --alpha, --layers, --dimension.")
     return p.parse_args()
 
 
 def main():
     args = parse_args()
 
-    # ─── Gridsearch auto-config (takes priority over manual CLI flags) ────
-    gs_configs = {}   # {dimension: {alpha, layers, pen_delta, dir_ok, run_eval}}
-    if args.gridsearch_dir:
-        model_cfg_early = MODELS[args.model]
-        gs_configs = load_gridsearch_config(args.gridsearch_dir, model_cfg_early.alias)
-        if not gs_configs:
-            log.error("No gridsearch configs found in %s/%s — check path.",
-                      args.gridsearch_dir, model_cfg_early.alias)
-            sys.exit(1)
+    model_cfg = MODELS[args.model]
+    hf_token = HF_TOKEN if model_cfg.requires_token else None
 
-        log.info("=" * 70)
-        log.info("GRIDSEARCH AUTO-CONFIG  (%s / %s)", args.gridsearch_dir, model_cfg_early.alias)
-        log.info("  Scoring: penalised_delta = avg_delta - %.3f*|alpha|, "
-                 "agree_rate >= %.2f, min_delta = %.2f",
-                 GS_LAMBDA, GS_MIN_AGREE_RATE, GS_MIN_DELTA_TO_RUN)
-        log.info("  %-35s %6s  %-12s  %8s  %s", "dimension", "alpha", "layers",
-                 "pen_delta", "run?")
-        for dim, cfg in sorted(gs_configs.items()):
-            log.info("  %-35s %+6.1f  %-12s  %+8.3f  %s",
-                     dim, cfg["alpha"], str(cfg["layers"]), cfg["pen_delta"],
-                     "YES" if cfg["run_eval"] else "SKIP")
-        log.info("=" * 70)
+    # ─── Load gridsearch configs ───────────────────────────────────────
+    gs_configs = load_gridsearch_config(args.gridsearch_dir, model_cfg.alias)
+    if not gs_configs:
+        log.error("No gridsearch configs found in %s/%s — check path.",
+                  args.gridsearch_dir, model_cfg.alias)
+        sys.exit(1)
 
-        # Switch to gridsearch mode — run_generic_craigslist for each valid dim
-        experiments = {"gridsearch_all"}
-    elif args.all:
-        # Apply CLI overrides to configs (mutates module-level dicts in-place)
-        if args.alpha is not None:
-            SCM_CONFIG["alpha"] = args.alpha
-            FIRMNESS_CONFIG["alpha"] = args.alpha
-            VALUE_CREATION_CONFIG["alpha"] = args.alpha
-        if args.layers is not None:
-            SCM_CONFIG["layers"] = args.layers
-            FIRMNESS_CONFIG["layers"] = args.layers
-            VALUE_CREATION_CONFIG["layers"] = args.layers
-        if args.dimension is not None:
-            SCM_CONFIG["dimension"] = args.dimension
-        experiments = {"scm_craigslist", "firmness_craigslist", "dond_crossval",
-                       "firmness", "sensitivity", "cosine"}
-    else:
-        # Apply CLI overrides to configs (mutates module-level dicts in-place)
-        if args.alpha is not None:
-            SCM_CONFIG["alpha"] = args.alpha
-            FIRMNESS_CONFIG["alpha"] = args.alpha
-            VALUE_CREATION_CONFIG["alpha"] = args.alpha
-        if args.layers is not None:
-            SCM_CONFIG["layers"] = args.layers
-            FIRMNESS_CONFIG["layers"] = args.layers
-            VALUE_CREATION_CONFIG["layers"] = args.layers
-        if args.dimension is not None:
-            SCM_CONFIG["dimension"] = args.dimension
-        if args.experiments:
-            experiments = set(args.experiments)
-        else:
-            experiments = {"scm_craigslist"}
+    log.info("=" * 70)
+    log.info("GRIDSEARCH AUTO-CONFIG  (%s / %s)", args.gridsearch_dir, model_cfg.alias)
+    log.info("  Scoring: penalised_delta = avg_delta - %.3f*|alpha|, "
+             "agree_rate >= %.2f, min_delta = %.2f",
+             GS_LAMBDA, GS_MIN_AGREE_RATE, GS_MIN_DELTA_TO_RUN)
+    log.info("  %-35s %6s  %-12s  %8s  %s", "dimension", "alpha", "layers",
+             "pen_delta", "run?")
+    for dim, cfg in sorted(gs_configs.items()):
+        log.info("  %-35s %+6.1f  %-12s  %+8.3f  %s",
+                 dim, cfg["alpha"], str(cfg["layers"]), cfg["pen_delta"],
+                 "YES" if cfg["run_eval"] else "SKIP")
+    log.info("=" * 70)
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    model_cfg = MODELS[args.model]
-    hf_token = HF_TOKEN if model_cfg.requires_token else None
-
-    # ─── Print run plan ───────────────────────────────────────────────
-    plan = []
-    total_games = 0
-    if "cosine" in experiments:
-        plan.append("cosine          Vector similarity check (no inference)")
-    if "scm_craigslist" in experiments:
-        plan.append(f"scm_craigslist  SCM buyer-steered + seller-steered + baseline: "
-                    f"{N_CRAIGSLIST * 3} games")
-        total_games += N_CRAIGSLIST * 3
-    if "dond_crossval" in experiments:
-        plan.append(f"dond_crossval   DonD cross-dataset: {N_DOND} games")
-        total_games += N_DOND
-    if "firmness_craigslist" in experiments:
-        plan.append(f"firmness_craigslist  Firmness buyer+seller+baseline: "
-                    f"{N_CRAIGSLIST * 3} games")
-        total_games += N_CRAIGSLIST * 3
-    if "value_creation_craigslist" in experiments:
-        plan.append(f"value_creation_craigslist  Value Creation buyer+seller+baseline: "
-                    f"{N_CRAIGSLIST * 3} games")
-        total_games += N_CRAIGSLIST * 3
-    if "firmness" in experiments:
-        plan.append(f"firmness        Firmness vector moderate alpha: {N_FIRMNESS} games")
-        total_games += N_FIRMNESS
-    if "sensitivity" in experiments:
-        plan.append(f"sensitivity     Opening-bid sensitivity: {N_SENSITIVITY * 3} games")
-        total_games += N_SENSITIVITY * 3
+    _progress_fh = logging.FileHandler(output_dir / "progress.log")
+    _progress_fh.setFormatter(logging.Formatter(
+        "%(asctime)s  %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+    ))
+    progress_log.addHandler(_progress_fh)
+    progress_log.propagate = True  # still shows in main log
 
     log.info("=" * 70)
     log.info("P4 EVALUATION RUN")
-    log.info("  Started:  %s", datetime.now().isoformat())
-    log.info("  Model:    %s (%s)", args.model, model_cfg.hf_id)
-    log.info("  Output:   %s/", output_dir)
-    log.info("  Seed:     %d", args.seed)
-    log.info("  Split:    %s", args.split)
-    for p in plan:
-        log.info("  [x] %s", p)
-    log.info("  Total inference games: ~%d", total_games)
+    log.info("  Started:      %s", datetime.now().isoformat())
+    log.info("  Model:        %s (%s)", args.model, model_cfg.hf_id)
+    log.info("  Gridsearch:   %s", args.gridsearch_dir)
+    log.info("  Output:       %s/", output_dir)
+    log.info("  Seed:         %d", args.seed)
+    log.info("  Split:        %s", args.split)
+    n_to_run = sum(1 for cfg in gs_configs.values() if cfg["run_eval"])
+    log.info("  Dimensions:   %d total, %d to run, %d to skip",
+             len(gs_configs), n_to_run, len(gs_configs) - n_to_run)
+    log.info("  Total games:  ~%d", n_to_run * N_CRAIGSLIST * 4)
     log.info("=" * 70)
 
     t_start = time.time()
 
-    # ─── Cosine check (before model load, no GPU needed) ──────────────
-    cosine_results = None
-    if "cosine" in experiments:
-        cosine_results = run_cosine_check(args.vectors_dir, model_cfg.alias)
-        if cosine_results:
-            with open(output_dir / "cosine_similarity.json", "w") as f:
-                json.dump(cosine_results, f, indent=2)
-
-    # If only cosine was requested, exit
-    if experiments == {"cosine"}:
-        log.info("Only cosine check requested — done.")
-        return
-
-    # ─── Load vectors ─────────────────────────────────────────────────
-    scm_dvecs = None
-    firm_dvecs = None
-
-    needs_scm = experiments & {"scm_craigslist", "dond_crossval", "sensitivity"}
-    if needs_scm:
-        scm_dvecs = load_vectors_safe(
-            args.vectors_dir, model_cfg.alias,
-            SCM_CONFIG["dimension"], SCM_CONFIG["method"], SCM_CONFIG["layers"],
-        )
-        if scm_dvecs is None:
-            log.error("SCM vectors required but not found. Exiting.")
-            sys.exit(1)
-        log.info("Loaded SCM vectors: layers=%s", list(scm_dvecs.keys()))
-
-    if experiments & {"firmness_craigslist", "firmness"}:
-        firm_dvecs = load_vectors_safe(
-            args.vectors_dir, model_cfg.alias,
-            FIRMNESS_CONFIG["dimension"], FIRMNESS_CONFIG["method"],
-            FIRMNESS_CONFIG["layers"],
-        )
-        if firm_dvecs is None:
-            log.warning("Firmness vectors not found — firmness experiments will be skipped.")
-            experiments.discard("firmness_craigslist")
-            experiments.discard("firmness")
-
-    vc_dvecs = None
-    if "value_creation_craigslist" in experiments:
-        vc_dvecs = load_vectors_safe(
-            args.vectors_dir, model_cfg.alias,
-            VALUE_CREATION_CONFIG["dimension"], VALUE_CREATION_CONFIG["method"],
-            VALUE_CREATION_CONFIG["layers"],
-        )
-        if vc_dvecs is None:
-            log.warning("Value Creation vectors not found — value_creation_craigslist will be skipped.")
-            experiments.discard("value_creation_craigslist")
-
-    # ─── Load model (single load for all experiments) ─────────────────
+    # ─── Load model ───────────────────────────────────────────────────
     log.info("Loading model: %s ...", model_cfg.hf_id)
     dtype_map = {
         "bfloat16": torch.bfloat16,
@@ -1052,373 +448,142 @@ def main():
     model.eval()
     log.info("Model loaded. Device: %s", next(model.parameters()).device)
 
-    # ─── Pin scenarios ─────────────────────────────────────────────────
-    if experiments & {"scm_craigslist", "firmness_craigslist", "value_creation_craigslist", "sensitivity"}:
-        rng_main = random.Random(args.seed)
-        all_sc = _load_all_craigslist(split=args.split)
+    # ─── Run all valid dimensions ──────────────────────────────────────
+    all_sc = _load_all_craigslist(split=args.split)
+    gs_results_summary = {}
 
-        if "scm_craigslist" in experiments:
-            scm_scenarios = rng_main.sample(all_sc, min(N_CRAIGSLIST, len(all_sc)))
-
-            # Save pinned scenarios for reproducibility
-            with open(output_dir / "scm_scenarios_pinned.json", "w") as f:
-                json.dump({
-                    "seed":      args.seed,
-                    "split":     args.split,
-                    "min_span":  MIN_SPAN,
-                    "n":         len(scm_scenarios),
-                    "scenarios": scm_scenarios,
-                    "buyer_steered_role":  "buyer",
-                    "seller_steered_role": "seller",
-                    "baseline_role":       "buyer",
-                }, f, indent=2, ensure_ascii=False)
-            log.info("Pinned %d SCM scenarios (seed=%d, min_span=%d)",
-                     len(scm_scenarios), args.seed, MIN_SPAN)
-
-        if "firmness_craigslist" in experiments:
-            # Use a different seed offset so scenarios don't overlap with SCM
-            rng_firm = random.Random(args.seed + 1)
-            firmness_scenarios = rng_firm.sample(all_sc, min(N_CRAIGSLIST, len(all_sc)))
-            with open(output_dir / "firmness_scenarios_pinned.json", "w") as f:
-                json.dump({
-                    "seed":      args.seed + 1,
-                    "split":     args.split,
-                    "min_span":  MIN_SPAN,
-                    "n":         len(firmness_scenarios),
-                    "scenarios": firmness_scenarios,
-                }, f, indent=2, ensure_ascii=False)
-            log.info("Pinned %d firmness scenarios (seed=%d, min_span=%d)",
-                     len(firmness_scenarios), args.seed + 1, MIN_SPAN)
-
-        if "value_creation_craigslist" in experiments:
-            # Use yet another seed offset so it doesn't overlap
-            rng_vc = random.Random(args.seed + 2)
-            vc_scenarios = rng_vc.sample(all_sc, min(N_CRAIGSLIST, len(all_sc)))
-            with open(output_dir / "value_creation_scenarios_pinned.json", "w") as f:
-                json.dump({
-                    "seed":      args.seed + 2,
-                    "split":     args.split,
-                    "min_span":  MIN_SPAN,
-                    "n":         len(vc_scenarios),
-                    "scenarios": vc_scenarios,
-                }, f, indent=2, ensure_ascii=False)
-            log.info("Pinned %d value_creation scenarios (seed=%d, min_span=%d)",
-                     len(vc_scenarios), args.seed + 2, MIN_SPAN)
-
-    # ─── Gridsearch mode: run all valid dimensions ─────────────────────
-    if "gridsearch_all" in experiments:
-        rng_gs = random.Random(args.seed)
-        all_sc = _load_all_craigslist(split=args.split)
-        gs_results_summary = {}
-
-        # Save a manifest of which dimensions ran and at what config
-        manifest = {
-            "gridsearch_dir": str(args.gridsearch_dir),
-            "model": args.model,
-            "seed": args.seed,
-            "split": args.split,
-            "scoring": {
-                "lambda": GS_LAMBDA,
-                "min_agree_rate": GS_MIN_AGREE_RATE,
-                "min_delta_to_run": GS_MIN_DELTA_TO_RUN,
-            },
-            "dimensions": gs_configs,
-        }
-        with open(output_dir / "gridsearch_manifest.json", "w") as f:
-            json.dump(manifest, f, indent=2)
-
-        for dim, cfg in sorted(gs_configs.items()):
-            if not cfg["run_eval"]:
-                log.info("SKIP %s  (pen_delta=%.3f  dir_ok=%s)",
-                         dim, cfg["pen_delta"], cfg["dir_ok"])
-                continue
-
-            dvecs = load_vectors_safe(
-                args.vectors_dir, model_cfg.alias,
-                dim, "mean_diff", cfg["layers"],
-            )
-            if dvecs is None:
-                log.warning("Vectors not found for %s — skipping.", dim)
-                continue
-
-            # Use a deterministic but non-overlapping scenario sample per dimension
-            dim_seed = args.seed + abs(hash(dim)) % 10000
-            dim_scenarios = random.Random(dim_seed).sample(
-                all_sc, min(N_CRAIGSLIST, len(all_sc))
-            )
-
-            dim_outdir = output_dir / dim
-            dim_outdir.mkdir(parents=True, exist_ok=True)
-
-            with open(dim_outdir / "scenarios_pinned.json", "w") as f:
-                json.dump({
-                    "dimension": dim, "alpha": cfg["alpha"],
-                    "layers": cfg["layers"], "pen_delta": cfg["pen_delta"],
-                    "seed": dim_seed, "split": args.split, "min_span": MIN_SPAN,
-                    "n": len(dim_scenarios), "scenarios": dim_scenarios,
-                }, f, indent=2, ensure_ascii=False)
-
-            buy_g, sell_g, base_g = run_generic_craigslist(
-                model, tokenizer, dim_scenarios,
-                dvecs, cfg["alpha"], dim, dim_outdir,
-            )
-
-            buy_agreed  = [g for g in buy_g  if g["agreed"]]
-            sell_agreed = [g for g in sell_g if g["agreed"]]
-            base_agreed = [g for g in base_g if g["agreed"]]
-            gs_results_summary[dim] = {
-                "alpha": cfg["alpha"], "layers": cfg["layers"],
-                "pen_delta_gs": cfg["pen_delta"],
-                "buyer_agreed": len(buy_agreed), "seller_agreed": len(sell_agreed),
-                "buyer_adv":  np.mean([g["advantage"] for g in buy_agreed])  if buy_agreed  else None,
-                "seller_adv": np.mean([g["advantage"] for g in sell_agreed]) if sell_agreed else None,
-            }
-
-        with open(output_dir / "gridsearch_eval_summary.json", "w") as f:
-            json.dump(gs_results_summary, f, indent=2)
-
-        elapsed = time.time() - t_start
-        log.info("=" * 70)
-        log.info("GRIDSEARCH EVAL COMPLETE  (%d dimensions, %.0fs total)",
-                 len(gs_results_summary), elapsed)
-        for dim, r in sorted(gs_results_summary.items()):
-            log.info("  %-35s alpha=%+.1f  buy_adv=%s  sell_adv=%s",
-                     dim, r["alpha"],
-                     f"{r['buyer_adv']:+.3f}"  if r["buyer_adv"]  is not None else "n/a",
-                     f"{r['seller_adv']:+.3f}" if r["seller_adv"] is not None else "n/a")
-        log.info("=" * 70)
-        return
-
-    # ─── Run experiments ──────────────────────────────────────────────
-    results_summary = {}
-
-    # SCM Craigslist: primary fixed-role batches
-    if "scm_craigslist" in experiments:
-        buyer_steered, seller_steered, buyer_baseline, seller_baseline = run_scm_craigslist(
-            model, tokenizer, scm_scenarios,
-            scm_dvecs, SCM_CONFIG["alpha"], output_dir,
-        )
-        buy_agreed   = [g for g in buyer_steered   if g["agreed"]]
-        sell_agreed  = [g for g in seller_steered  if g["agreed"]]
-        base_agreed  = [g for g in buyer_baseline  if g["agreed"]]
-        sbase_agreed = [g for g in seller_baseline if g["agreed"]]
-        results_summary["scm_buyer"] = {
-            "n": len(buyer_steered), "agreed": len(buy_agreed),
-            "advantage": np.mean([g["advantage"] for g in buy_agreed]) if buy_agreed else 0,
-        }
-        results_summary["scm_seller"] = {
-            "n": len(seller_steered), "agreed": len(sell_agreed),
-            "advantage": np.mean([g["advantage"] for g in sell_agreed]) if sell_agreed else 0,
-        }
-        results_summary["scm_baseline"] = {
-            "n": len(buyer_baseline), "agreed": len(base_agreed),
-            "advantage": np.mean([g["advantage"] for g in base_agreed]) if base_agreed else 0,
-        }
-        results_summary["scm_seller_baseline"] = {
-            "n": len(seller_baseline), "agreed": len(sbase_agreed),
-            "advantage": np.mean([g["advantage"] for g in sbase_agreed]) if sbase_agreed else 0,
-        }
-        # midpoint_advantage delta metric
-        _buy_sum   = summarise(buyer_steered,   SCM_CONFIG["alpha"])
-        _sell_sum  = summarise(seller_steered,  SCM_CONFIG["alpha"])
-        _base_sum  = summarise(buyer_baseline,  0.0)
-        _sbase_sum = summarise(seller_baseline, 0.0)
-        scm_buy_midpt   = _buy_sum["by_role"]["buyer"]["midpoint_advantage"]
-        scm_sell_midpt  = _sell_sum["by_role"]["seller"]["midpoint_advantage"]
-        scm_base_midpt  = _base_sum["by_role"]["buyer"]["midpoint_advantage"]
-        scm_sbase_midpt = _sbase_sum["by_role"]["seller"]["midpoint_advantage"]
-        buyer_delta  = scm_buy_midpt  - scm_base_midpt
-        seller_delta = scm_sell_midpt - scm_sbase_midpt
-        results_summary["scm_buyer"]["midpoint_advantage"]           = scm_buy_midpt
-        results_summary["scm_seller"]["midpoint_advantage"]          = scm_sell_midpt
-        results_summary["scm_baseline"]["midpoint_advantage"]        = scm_base_midpt
-        results_summary["scm_seller_baseline"]["midpoint_advantage"] = scm_sbase_midpt
-        results_summary["scm_buyer"]["buyer_delta"]                  = buyer_delta
-        results_summary["scm_seller"]["seller_delta"]                = seller_delta
-        results_summary["scm_buyer"]["avg_delta"]                    = (buyer_delta + seller_delta) / 2
-
-    # Firmness Craigslist: primary fixed-role batches
-    if "firmness_craigslist" in experiments and firm_dvecs:
-        firm_buy, firm_sell, firm_base = run_firmness_craigslist(
-            model, tokenizer, firmness_scenarios,
-            firm_dvecs, FIRMNESS_CONFIG["alpha"], output_dir,
-        )
-        fb_agreed   = [g for g in firm_buy  if g["agreed"]]
-        fs_agreed   = [g for g in firm_sell if g["agreed"]]
-        fbl_agreed  = [g for g in firm_base if g["agreed"]]
-        results_summary["firmness_buyer"] = {
-            "n": len(firm_buy), "agreed": len(fb_agreed),
-            "advantage":        np.mean([g["advantage"]        for g in fb_agreed]) if fb_agreed else 0,
-            "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in fb_agreed
-                                         if g.get("midpoint_deviation") is not None]) if fb_agreed else 0,
-        }
-        results_summary["firmness_seller"] = {
-            "n": len(firm_sell), "agreed": len(fs_agreed),
-            "advantage":        np.mean([g["advantage"]        for g in fs_agreed]) if fs_agreed else 0,
-            "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in fs_agreed
-                                         if g.get("midpoint_deviation") is not None]) if fs_agreed else 0,
-        }
-        results_summary["firmness_baseline"] = {
-            "n": len(firm_base), "agreed": len(fbl_agreed),
-            "advantage":        np.mean([g["advantage"]        for g in fbl_agreed]) if fbl_agreed else 0,
-            "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in fbl_agreed
-                                         if g.get("midpoint_deviation") is not None]) if fbl_agreed else 0,
-        }
-        # midpoint_advantage delta metric
-        _fbuy_sum  = summarise(firm_buy,  FIRMNESS_CONFIG["alpha"])
-        _fsell_sum = summarise(firm_sell, FIRMNESS_CONFIG["alpha"])
-        _fbase_sum = summarise(firm_base, 0.0)
-        firm_buy_midpt  = _fbuy_sum["by_role"]["buyer"]["midpoint_advantage"]
-        firm_sell_midpt = _fsell_sum["by_role"]["seller"]["midpoint_advantage"]
-        firm_base_midpt = _fbase_sum["by_role"]["buyer"]["midpoint_advantage"]
-        results_summary["firmness_buyer"]["midpoint_advantage"]    = firm_buy_midpt
-        results_summary["firmness_seller"]["midpoint_advantage"]   = firm_sell_midpt
-        results_summary["firmness_baseline"]["midpoint_advantage"] = firm_base_midpt
-        results_summary["firmness_buyer"]["buyer_delta"]           = firm_buy_midpt - firm_base_midpt
-
-    # Value Creation Craigslist: primary fixed-role batches
-    if "value_creation_craigslist" in experiments and vc_dvecs:
-        vc_buy, vc_sell, vc_base = run_value_creation_craigslist(
-            model, tokenizer, vc_scenarios,
-            vc_dvecs, VALUE_CREATION_CONFIG["alpha"], output_dir,
-        )
-        vcb_agreed   = [g for g in vc_buy  if g["agreed"]]
-        vcs_agreed   = [g for g in vc_sell if g["agreed"]]
-        vcbl_agreed  = [g for g in vc_base if g["agreed"]]
-        results_summary["value_creation_buyer"] = {
-            "n": len(vc_buy), "agreed": len(vcb_agreed),
-            "advantage":        np.mean([g["advantage"]        for g in vcb_agreed]) if vcb_agreed else 0,
-            "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in vcb_agreed
-                                         if g.get("midpoint_deviation") is not None]) if vcb_agreed else 0,
-        }
-        results_summary["value_creation_seller"] = {
-            "n": len(vc_sell), "agreed": len(vcs_agreed),
-            "advantage":        np.mean([g["advantage"]        for g in vcs_agreed]) if vcs_agreed else 0,
-            "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in vcs_agreed
-                                         if g.get("midpoint_deviation") is not None]) if vcs_agreed else 0,
-        }
-        results_summary["value_creation_baseline"] = {
-            "n": len(vc_base), "agreed": len(vcbl_agreed),
-            "advantage":        np.mean([g["advantage"]        for g in vcbl_agreed]) if vcbl_agreed else 0,
-            "midpoint_dev":     np.mean([g["midpoint_deviation"] for g in vcbl_agreed
-                                         if g.get("midpoint_deviation") is not None]) if vcbl_agreed else 0,
-        }
-        # midpoint_advantage delta metric
-        _vcbuy_sum  = summarise(vc_buy,  VALUE_CREATION_CONFIG["alpha"])
-        _vcsell_sum = summarise(vc_sell, VALUE_CREATION_CONFIG["alpha"])
-        _vcbase_sum = summarise(vc_base, 0.0)
-        vc_buy_midpt  = _vcbuy_sum["by_role"]["buyer"]["midpoint_advantage"]
-        vc_sell_midpt = _vcsell_sum["by_role"]["seller"]["midpoint_advantage"]
-        vc_base_midpt = _vcbase_sum["by_role"]["buyer"]["midpoint_advantage"]
-        results_summary["value_creation_buyer"]["midpoint_advantage"]    = vc_buy_midpt
-        results_summary["value_creation_seller"]["midpoint_advantage"]   = vc_sell_midpt
-        results_summary["value_creation_baseline"]["midpoint_advantage"] = vc_base_midpt
-        results_summary["value_creation_buyer"]["buyer_delta"]           = vc_buy_midpt - vc_base_midpt
-
-    # DonD cross-dataset validation
-    if "dond_crossval" in experiments:
-        dond_games = run_dond_crossval(
-            model, tokenizer, scm_dvecs, SCM_CONFIG["alpha"],
-            N_DOND, output_dir,
-        )
-        dond_agreed = [g for g in dond_games if g["agreed"]]
-        results_summary["dond_crossval"] = {
-            "n": len(dond_games), "agreed": len(dond_agreed),
-            "advantage": np.mean([g["advantage"] for g in dond_agreed]) if dond_agreed else 0,
-            "pareto_rate": (sum(1 for g in dond_agreed if g["pareto_optimal"]) / len(dond_agreed)) if dond_agreed else 0,
-        }
-
-    # Firmness at moderate alpha
-    if "firmness" in experiments and firm_dvecs:
-        firmness_games = run_firmness_moderate(
-            model, tokenizer, firm_dvecs, FIRMNESS_CONFIG["alpha"],
-            N_FIRMNESS, output_dir, args.seed,
-        )
-        firm_agreed = [g for g in firmness_games if g["agreed"]]
-        results_summary["firmness"] = {
-            "n": len(firmness_games), "agreed": len(firm_agreed),
-            "advantage": np.mean([g["advantage"] for g in firm_agreed]) if firm_agreed else 0,
-            "clamped_rate": (sum(1 for g in firm_agreed if g.get("clamped")) / len(firm_agreed)) if firm_agreed else 0,
-        }
-
-    # Opening bid sensitivity
-    if "sensitivity" in experiments:
-        sensitivity_results = run_opening_sensitivity(
-            model, tokenizer, scm_dvecs, SCM_CONFIG["alpha"],
-            output_dir, args.seed,
-        )
-        results_summary["sensitivity"] = {
-            pct_label: data["summary"].get("advantage", 0)
-            for pct_label, data in sensitivity_results.items()
-        }
-
-    # ─── Final summary ────────────────────────────────────────────────
-    elapsed = time.time() - t_start
-
-    log.info("")
-    log.info("=" * 70)
-    log.info("ALL EXPERIMENTS COMPLETE")
-    log.info("  Elapsed: %.0f seconds (%.1f minutes)", elapsed, elapsed / 60)
-    log.info("  Output:  %s/", output_dir)
-    log.info("-" * 70)
-
-    for exp, summary in results_summary.items():
-        if isinstance(summary, dict) and "advantage" in summary:
-            extras = "  ".join(
-                f"{k}={v:.3f}" if isinstance(v, float) else f"{k}={v}"
-                for k, v in summary.items()
-                if k not in ("advantage",)
-            )
-            log.info("  %-18s  adv=%+.4f  %s", exp, summary["advantage"], extras)
-        else:
-            log.info("  %-18s  %s", exp, summary)
-
-    # Metric summary (matches lightweight_gridsearch / hyperparameter_results)
-    _gs_pairs = [
-        ("scm",            "scm_buyer",             "scm_seller",             "scm_baseline"),
-        ("firmness",       "firmness_buyer",         "firmness_seller",        "firmness_baseline"),
-        ("value_creation", "value_creation_buyer",   "value_creation_seller",  "value_creation_baseline"),
-    ]
-    _gs_rows = [(lbl, bk, sk, blk) for lbl, bk, sk, blk in _gs_pairs
-                if bk in results_summary and "midpoint_advantage" in results_summary[bk]]
-    if _gs_rows:
-        log.info("-" * 70)
-        log.info("GRIDSEARCH METRIC  (midpoint_advantage delta vs alpha=0 baseline)")
-        log.info("  %-18s  %s  %s  %s  %s",
-                 "experiment", "buy_midpt", "sell_midpt", "base_midpt", "buyer_delta")
-        for lbl, bk, sk, blk in _gs_rows:
-            log.info("  %-18s  %+9.4f  %+10.4f  %+10.4f  %+11.4f",
-                     lbl,
-                     results_summary[bk]["midpoint_advantage"],
-                     results_summary[sk]["midpoint_advantage"],
-                     results_summary[blk]["midpoint_advantage"],
-                     results_summary[bk]["buyer_delta"])
-
-    log.info("=" * 70)
-
-    # Save run metadata
-    meta = {
-        "model":          args.model,
-        "seed":           args.seed,
-        "split":          args.split,
-        "started":        datetime.fromtimestamp(t_start).isoformat(),
-        "completed":      datetime.now().isoformat(),
-        "elapsed_seconds": round(elapsed, 1),
-        "experiments":    sorted(experiments),
-        "results_summary": results_summary,
+    manifest = {
+        "gridsearch_dir": str(args.gridsearch_dir),
+        "model": args.model,
+        "seed": args.seed,
+        "split": args.split,
+        "scoring": {
+            "lambda": GS_LAMBDA,
+            "min_agree_rate": GS_MIN_AGREE_RATE,
+            "min_delta_to_run": GS_MIN_DELTA_TO_RUN,
+        },
+        "dimensions": gs_configs,
     }
-    if cosine_results:
-        meta["cosine_similarity"] = cosine_results
+    with open(output_dir / "gridsearch_manifest.json", "w") as f:
+        json.dump(manifest, f, indent=2)
+
+    for dim, cfg in sorted(gs_configs.items()):
+        if not cfg["run_eval"]:
+            log.info("SKIP %s  (pen_delta=%.3f  dir_ok=%s)",
+                     dim, cfg["pen_delta"], cfg["dir_ok"])
+            continue
+
+        dvecs = load_vectors_safe(
+            args.vectors_dir, model_cfg.alias,
+            dim, "mean_diff", cfg["layers"],
+        )
+        if dvecs is None:
+            log.warning("Vectors not found for %s — skipping.", dim)
+            continue
+
+        dim_seed = args.seed + abs(hash(dim)) % 10000
+        dim_scenarios = random.Random(dim_seed).sample(
+            all_sc, min(N_CRAIGSLIST, len(all_sc))
+        )
+
+        dim_outdir = output_dir / dim
+        dim_outdir.mkdir(parents=True, exist_ok=True)
+
+        with open(dim_outdir / "scenarios_pinned.json", "w") as f:
+            json.dump({
+                "dimension": dim, "alpha": cfg["alpha"],
+                "layers": cfg["layers"], "pen_delta": cfg["pen_delta"],
+                "seed": dim_seed, "split": args.split, "min_span": MIN_SPAN,
+                "n": len(dim_scenarios), "scenarios": dim_scenarios,
+            }, f, indent=2, ensure_ascii=False)
+
+        progress_log.info("=== %s  alpha=%+.1f  layers=%s ===",
+                          dim, cfg["alpha"], cfg["layers"])
+        buy_g, sell_g, base_buy_g, base_sell_g = run_generic_craigslist(
+            model, tokenizer, dim_scenarios,
+            dvecs, cfg["alpha"], dim, dim_outdir,
+        )
+
+        # Compute metrics matching the gridsearch exactly:
+        #   buyer_delta  = buyer_steered_midpt_adv  - buyer_baseline_midpt_adv
+        #   seller_delta = seller_steered_midpt_adv - seller_baseline_midpt_adv
+        #   avg_delta    = (buyer_delta + seller_delta) / 2
+        def _midpt(games, alpha, role):
+            if not games:
+                return float("nan")
+            return summarise(games, alpha).get("by_role", {}).get(role, {}).get(
+                "midpoint_advantage", float("nan"))
+
+        def _agree(games):
+            return sum(1 for g in games if g["agreed"]) / len(games) if games else float("nan")
+
+        buy_midpt       = _midpt(buy_g,       cfg["alpha"], "buyer")
+        sell_midpt      = _midpt(sell_g,       cfg["alpha"], "seller")
+        base_buy_midpt  = _midpt(base_buy_g,  0.0,          "buyer")
+        base_sell_midpt = _midpt(base_sell_g, 0.0,          "seller")
+
+        buyer_delta  = buy_midpt  - base_buy_midpt
+        seller_delta = sell_midpt - base_sell_midpt
+        avg_delta    = (buyer_delta + seller_delta) / 2.0
+
+        buy_agree   = _agree(buy_g)
+        sell_agree  = _agree(sell_g)
+        avg_agree   = (buy_agree + sell_agree) / 2.0
+
+        def _fmt(v):
+            return round(float(v), 4) if not (v != v) else None  # NaN check
+
+        progress_log.info(
+            ">>> %s DONE  buy_delta=%+.4f  sell_delta=%+.4f  avg_delta=%+.4f  "
+            "agree=%.2f",
+            dim, buyer_delta, seller_delta, avg_delta, avg_agree,
+        )
+        gs_results_summary[dim] = {
+            "alpha":                cfg["alpha"],
+            "layers":               cfg["layers"],
+            "pen_delta_gs":         cfg["pen_delta"],
+            "buyer_midpt":          _fmt(buy_midpt),
+            "seller_midpt":         _fmt(sell_midpt),
+            "buyer_baseline_midpt": _fmt(base_buy_midpt),
+            "seller_baseline_midpt":_fmt(base_sell_midpt),
+            "buyer_delta":          _fmt(buyer_delta),
+            "seller_delta":         _fmt(seller_delta),
+            "avg_delta":            _fmt(avg_delta),
+            "buyer_agree_rate":     _fmt(buy_agree),
+            "seller_agree_rate":    _fmt(sell_agree),
+            "avg_agree_rate":       _fmt(avg_agree),
+        }
+
+    with open(output_dir / "gridsearch_eval_summary.json", "w") as f:
+        json.dump(gs_results_summary, f, indent=2)
+
+    elapsed = time.time() - t_start
+    log.info("=" * 70)
+    log.info("GRIDSEARCH EVAL COMPLETE  (%d dimensions, %.0fs total)",
+             len(gs_results_summary), elapsed)
+    for dim, r in sorted(gs_results_summary.items()):
+        log.info("  %-35s alpha=%+.1f  avg_delta=%s  avg_agree=%s  (gs_pen=%.3f)",
+                 dim, r["alpha"],
+                 f"{r['avg_delta']:+.4f}"   if r["avg_delta"]    is not None else "n/a",
+                 f"{r['avg_agree_rate']:.3f}" if r["avg_agree_rate"] is not None else "n/a",
+                 r["pen_delta_gs"])
+    log.info("=" * 70)
+
+    meta = {
+        "model":           args.model,
+        "gridsearch_dir":  str(args.gridsearch_dir),
+        "seed":            args.seed,
+        "split":           args.split,
+        "started":         datetime.fromtimestamp(t_start).isoformat(),
+        "completed":       datetime.now().isoformat(),
+        "elapsed_seconds": round(elapsed, 1),
+        "results_summary": gs_results_summary,
+    }
     with open(output_dir / "run_meta.json", "w") as f:
         json.dump(meta, f, indent=2, default=str)
-
     log.info("Metadata saved to %s/run_meta.json", output_dir)
-    log.info("Next steps (CPU, no GPU needed):")
-    log.info("  python analysis/turn_metrics.py   # per-turn behavior (reads scm_buyer_steered.json)")
-    log.info("  python analysis/role_analysis.py  # role-separated tables (reads turn_metrics_enriched.json)")
-    log.info("  python analysis/analyse_results.py # paired statistics")
-    log.info("  python llm_judge.py               # qualitative judge on scm_buyer_steered")
 
 
 if __name__ == "__main__":
     main()
+
