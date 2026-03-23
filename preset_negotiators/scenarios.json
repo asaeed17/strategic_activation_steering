@@ -1,0 +1,1493 @@
+{
+  "metadata": {
+    "description": "40 preset negotiation scenarios for activation steering evaluation. 4 scripted opponent characters × 10 items each. Steered model plays Seller in scenarios 1-20, Buyer in scenarios 21-40. Each scenario has 4 scripted opponent turns followed by an automatic deal/no-deal check.",
+    "deal_conditions": {
+      "seller_scenarios_1_to_20": "DEAL if steered_seller_final_price <= opponent_reservation. Deal price = steered model's final quoted price.",
+      "buyer_scenarios_21_to_40": "DEAL if steered_buyer_final_price >= opponent_reservation. Deal price = steered model's final quoted price."
+    },
+    "scoring": {
+      "total_value_earned_seller": "Sum of deal prices across seller scenarios. No-deal adds $0 (failed to sell = no cash).",
+      "total_value_spent_buyer": "Sum of deal prices across buyer scenarios. No-deal adds listing_price (assume worst-case: bought elsewhere at full price).",
+      "interpretation": "Higher total_value_earned = better steered seller. Lower total_value_spent = better steered buyer.",
+      "note": "The no-deal penalty ensures the model cannot trivially maximise score by refusing all deals or anchoring forever."
+    },
+    "price_extraction": "Parse the steered model's response after each turn. Extract the first dollar amount mentioned (regex: \\$[0-9,]+). The price after Turn 4 determines deal/no-deal.",
+    "offer_progressions": {
+      "jake_sandra_buyers": "T1=55%, T2=60%, T3=63%, T4=65% of listing price. Reservation=70%.",
+      "ray_seller": "T1=100%, T2=97%, T3=93%, T4=90% of listing price. Reservation=80%.",
+      "nina_seller": "T1=100%, T2=97%, T3=92%, T4=90% of listing price. Reservation=85%."
+    }
+  },
+  "characters": {
+    "jake": {
+      "name": "Jake",
+      "age": 25,
+      "role": "buyer",
+      "personality": "Analytical and research-driven. Always arrives with market data and comparable listings. Treats negotiation as a purely rational exercise — unemotional, methodical, slightly direct by Turn 4. Never aggressive, just data-confident.",
+      "tactics": ["market comparables", "data-driven anchoring", "calm persistence", "final-offer framing"]
+    },
+    "sandra": {
+      "name": "Sandra",
+      "age": 43,
+      "role": "buyer",
+      "personality": "Warm but financially stretched. Uses emotional appeals, personal circumstances, and time pressure. Not manipulative — genuinely budget-constrained. Each turn increases urgency and personal stakes.",
+      "tactics": ["tight budget framing", "emotional appeals", "time pressure", "personal story escalation"]
+    },
+    "ray": {
+      "name": "Ray",
+      "age": 51,
+      "role": "seller",
+      "personality": "Classic stubborn seller. Claims competing interest at every turn. Treats concessions as painful favours. Never acknowledges the buyer's perspective. Terse and confident.",
+      "tactics": ["fake competing offers", "value justification", "reluctant concession", "hard deadline pressure"]
+    },
+    "nina": {
+      "name": "Nina",
+      "age": 31,
+      "role": "seller",
+      "personality": "Professional and composed. Has clearly researched the market and priced fairly. Makes small deliberate concessions but signals a hard floor. Doesn't pressure emotionally — makes clear she doesn't need to sell.",
+      "tactics": ["market research framing", "deliberate small concessions", "hard floor signalling", "indifference to outcome"]
+    }
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "character": "jake",
+      "steered_role": "seller",
+      "item": "iPhone 14 Pro",
+      "item_description": "iPhone 14 Pro 256GB, Midnight, excellent condition, original box included",
+      "listing_price": 700,
+      "opponent_reservation": 490,
+      "system_prompt": "You are selling your iPhone 14 Pro on Craigslist, listed at $700. Jake has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Jake",
+          "text": "Hey, I've checked a dozen iPhone 14 Pro listings in the area this past week — they're consistently going for $380 to $400. I'd offer $385 as a fair starting point based on actual recent sales."
+        },
+        {
+          "turn": 2,
+          "speaker": "Jake",
+          "text": "I hear you, but I've got six current listings open right now — same specs, similar condition — all in the $410 to $425 range. I can go to $420, and that's already above what most buyers would pay."
+        },
+        {
+          "turn": 3,
+          "speaker": "Jake",
+          "text": "I've bought several phones off Craigslist before and I know what they actually sell for. $440 is what these move for in the real market. I'm giving you a solid, data-backed offer."
+        },
+        {
+          "turn": 4,
+          "speaker": "Jake",
+          "text": "Final offer: $455. I've done my research and that reflects what the market will actually bear right now. I need to decide today — yes or no?"
+        }
+      ],
+      "deal_condition": {
+        "threshold": 490,
+        "rule": "Deal if steered seller's final quoted price <= $490. No deal otherwise."
+      }
+    },
+    {
+      "id": 2,
+      "character": "jake",
+      "steered_role": "seller",
+      "item": "MacBook Pro M2 16-inch",
+      "item_description": "MacBook Pro M2 16-inch, 32GB RAM, 512GB SSD, Space Gray, excellent condition",
+      "listing_price": 1100,
+      "opponent_reservation": 770,
+      "system_prompt": "You are selling your MacBook Pro M2 on Craigslist, listed at $1,100. Jake has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Jake",
+          "text": "MacBook Pro M2s at this spec are consistently going for $600 to $625 on Craigslist and Facebook right now — I've been watching listings for two weeks. $605 is a fair market offer."
+        },
+        {
+          "turn": 2,
+          "speaker": "Jake",
+          "text": "I pulled up current listings before messaging you — they're all in the $640 to $680 range for comparable configs. I can stretch to $660, but that's already above what I've seen move."
+        },
+        {
+          "turn": 3,
+          "speaker": "Jake",
+          "text": "I've bought used Macs before and I know the market well. $695 is genuinely what these sell for at this spec and age. That's a fair price for both of us."
+        },
+        {
+          "turn": 4,
+          "speaker": "Jake",
+          "text": "Final offer: $715. Based on recent sales data, that's the top of the market for this model right now. I need an answer today — I have two other listings to look at."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 770,
+        "rule": "Deal if steered seller's final quoted price <= $770. No deal otherwise."
+      }
+    },
+    {
+      "id": 3,
+      "character": "jake",
+      "steered_role": "seller",
+      "item": "Sony 65-inch 4K TV",
+      "item_description": "Sony Bravia 65-inch 4K OLED, 2021 model, excellent condition, remote included",
+      "listing_price": 550,
+      "opponent_reservation": 385,
+      "system_prompt": "You are selling your Sony 65-inch TV on Craigslist, listed at $550. Jake has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Jake",
+          "text": "65-inch Sony TVs in this condition go for $290 to $320 on Craigslist based on recent sales. $305 is right in the middle of that range — a fair, data-backed offer."
+        },
+        {
+          "turn": 2,
+          "speaker": "Jake",
+          "text": "I'm looking at active listings right now — similar Sony 65-inchers are all under $340. I can go to $330, and that's generous given what the market says these are worth."
+        },
+        {
+          "turn": 3,
+          "speaker": "Jake",
+          "text": "I've bought a few TVs this way and I understand the pricing. $345 is what these actually close at, not what people list them for. That's a fair offer."
+        },
+        {
+          "turn": 4,
+          "speaker": "Jake",
+          "text": "Final offer: $360. That's the ceiling for this model at this size in this condition based on real transaction data. Answer today or I'll move on."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 385,
+        "rule": "Deal if steered seller's final quoted price <= $385. No deal otherwise."
+      }
+    },
+    {
+      "id": 4,
+      "character": "jake",
+      "steered_role": "seller",
+      "item": "DJI Mini 3 Drone",
+      "item_description": "DJI Mini 3 drone with extra battery, carrying case, good condition",
+      "listing_price": 480,
+      "opponent_reservation": 335,
+      "system_prompt": "You are selling your DJI Mini 3 drone on Craigslist, listed at $480. Jake has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Jake",
+          "text": "DJI Mini 3 drones are all over Craigslist right now — comparable units with similar accessories are selling for $260 to $275. $265 is a fair offer based on current supply."
+        },
+        {
+          "turn": 2,
+          "speaker": "Jake",
+          "text": "I checked Facebook Marketplace and Craigslist this morning — these are consistently closing at $280 to $295. I'll go to $290 but that's already at the upper end of the range."
+        },
+        {
+          "turn": 3,
+          "speaker": "Jake",
+          "text": "I know drones well. $305 reflects the actual market for a used Mini 3 in good condition right now. Extra accessories don't move resale value much."
+        },
+        {
+          "turn": 4,
+          "speaker": "Jake",
+          "text": "Final offer: $315. Based on comparable sales in the last month, that's where the market is. I need an answer today."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 335,
+        "rule": "Deal if steered seller's final quoted price <= $335. No deal otherwise."
+      }
+    },
+    {
+      "id": 5,
+      "character": "jake",
+      "steered_role": "seller",
+      "item": "Trek FX3 Hybrid Bike",
+      "item_description": "Trek FX3 hybrid bike, 2020, medium frame, good condition, recently tuned",
+      "listing_price": 500,
+      "opponent_reservation": 350,
+      "system_prompt": "You are selling your Trek FX3 bike on Craigslist, listed at $500. Jake has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Jake",
+          "text": "Trek FX3s in this condition are selling for $265 to $285 on Craigslist right now — I've been looking at bike listings for weeks. $275 is right in the market range."
+        },
+        {
+          "turn": 2,
+          "speaker": "Jake",
+          "text": "I've got active listings open — similar FX3s are moving at $290 to $310. $300 is a solid offer at the high end of that band."
+        },
+        {
+          "turn": 3,
+          "speaker": "Jake",
+          "text": "I've bought bikes on Craigslist before. $315 is what an FX3 at this age and mileage actually sells for. That's the real market, not the listing price."
+        },
+        {
+          "turn": 4,
+          "speaker": "Jake",
+          "text": "Last offer: $325. That reflects actual sales data. I need to decide today — I'm looking at two other bikes this weekend."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 350,
+        "rule": "Deal if steered seller's final quoted price <= $350. No deal otherwise."
+      }
+    },
+    {
+      "id": 6,
+      "character": "jake",
+      "steered_role": "seller",
+      "item": "Nikon D7500 DSLR Camera",
+      "item_description": "Nikon D7500 body only, low shutter count, excellent condition, original straps and caps",
+      "listing_price": 580,
+      "opponent_reservation": 405,
+      "system_prompt": "You are selling your Nikon D7500 camera on Craigslist, listed at $580. Jake has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Jake",
+          "text": "D7500 bodies are going for $310 to $330 consistently on the used market right now — I've tracked this for a month. $320 is a fair, research-backed offer."
+        },
+        {
+          "turn": 2,
+          "speaker": "Jake",
+          "text": "I've got six current listings bookmarked — D7500s in comparable condition are all closing between $340 and $355. $350 is at the top of that range already."
+        },
+        {
+          "turn": 3,
+          "speaker": "Jake",
+          "text": "I've bought used cameras before and I know this market. $365 is the realistic sell-through price for a D7500 body at this age. Accessories don't affect body value much at resale."
+        },
+        {
+          "turn": 4,
+          "speaker": "Jake",
+          "text": "Final: $380. That's what the market data supports. Answer today — I have a backup option lined up."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 405,
+        "rule": "Deal if steered seller's final quoted price <= $405. No deal otherwise."
+      }
+    },
+    {
+      "id": 7,
+      "character": "jake",
+      "steered_role": "seller",
+      "item": "Nintendo Switch OLED + 6 games",
+      "item_description": "Nintendo Switch OLED console with 6 games including Zelda and Mario titles, good condition",
+      "listing_price": 320,
+      "opponent_reservation": 225,
+      "system_prompt": "You are selling your Nintendo Switch OLED bundle on Craigslist, listed at $320. Jake has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Jake",
+          "text": "Switch OLEDs with a game bundle are going for $170 to $185 on Craigslist right now. $175 is right in the market range based on recent sales."
+        },
+        {
+          "turn": 2,
+          "speaker": "Jake",
+          "text": "I checked listings this morning — same setup is consistently closing at $185 to $195. I'll go to $190, which is already at the top of the range for this bundle."
+        },
+        {
+          "turn": 3,
+          "speaker": "Jake",
+          "text": "I know the used console market. $200 is genuinely where Switch OLED bundles sell at this point in the console's lifecycle. That's the fair number."
+        },
+        {
+          "turn": 4,
+          "speaker": "Jake",
+          "text": "Final offer: $210. That's top-of-market for this setup. Today only — I have another one to look at this afternoon."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 225,
+        "rule": "Deal if steered seller's final quoted price <= $225. No deal otherwise."
+      }
+    },
+    {
+      "id": 8,
+      "character": "jake",
+      "steered_role": "seller",
+      "item": "Bose QuietComfort 45 Headphones",
+      "item_description": "Bose QC45 headphones, black, excellent condition with case and original cable",
+      "listing_price": 200,
+      "opponent_reservation": 140,
+      "system_prompt": "You are selling your Bose QC45 headphones on Craigslist, listed at $200. Jake has reached out to buy them. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Jake",
+          "text": "Used QC45s are selling for $105 to $115 on every platform I've checked — they're pretty common on the second-hand market now. $110 is a fair market offer."
+        },
+        {
+          "turn": 2,
+          "speaker": "Jake",
+          "text": "Current listings have these at $115 to $125. I'll go to $120, which is mid-market for this model in this condition."
+        },
+        {
+          "turn": 3,
+          "speaker": "Jake",
+          "text": "I've bought headphones on Craigslist before. $125 is the realistic market price for QC45s right now. The case and accessories don't add much at resale."
+        },
+        {
+          "turn": 4,
+          "speaker": "Jake",
+          "text": "Final: $130. That's top of market for this model. Let me know today."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 140,
+        "rule": "Deal if steered seller's final quoted price <= $140. No deal otherwise."
+      }
+    },
+    {
+      "id": 9,
+      "character": "jake",
+      "steered_role": "seller",
+      "item": "iPad Pro 12.9-inch",
+      "item_description": "iPad Pro 12.9-inch 5th gen, 256GB, WiFi, Space Gray, excellent condition with Apple Pencil",
+      "listing_price": 650,
+      "opponent_reservation": 455,
+      "system_prompt": "You are selling your iPad Pro on Craigslist, listed at $650. Jake has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Jake",
+          "text": "iPad Pro 12.9-inch models in this generation are going for $355 to $375 on Craigslist based on two weeks of data. $360 reflects the actual market."
+        },
+        {
+          "turn": 2,
+          "speaker": "Jake",
+          "text": "I've got current listings open — same gen, same storage, similar condition — they're closing at $380 to $400. $390 is already above the typical close price."
+        },
+        {
+          "turn": 3,
+          "speaker": "Jake",
+          "text": "I've bought iPads secondhand before. $410 is the realistic sell-through price for this model. That's based on actual transactions, not asking prices."
+        },
+        {
+          "turn": 4,
+          "speaker": "Jake",
+          "text": "Last offer: $425. That's market ceiling for this configuration. I need an answer today."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 455,
+        "rule": "Deal if steered seller's final quoted price <= $455. No deal otherwise."
+      }
+    },
+    {
+      "id": 10,
+      "character": "jake",
+      "steered_role": "seller",
+      "item": "Custom Gaming PC",
+      "item_description": "Custom gaming PC: RTX 3080, Ryzen 7 5800X, 32GB RAM, 1TB NVMe SSD, good condition",
+      "listing_price": 900,
+      "opponent_reservation": 630,
+      "system_prompt": "You are selling your custom gaming PC on Craigslist, listed at $900. Jake has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Jake",
+          "text": "Custom gaming rigs with similar specs are all over the used market at $480 to $510. Component prices have dropped significantly and so have build values. $495 is a fair offer."
+        },
+        {
+          "turn": 2,
+          "speaker": "Jake",
+          "text": "I've been building and buying PCs for years — comparable setups on Craigslist are moving at $530 to $550. I'll go to $540, which is already near the top of that range."
+        },
+        {
+          "turn": 3,
+          "speaker": "Jake",
+          "text": "I know the PC market well. $565 is what a build like this actually sells for today. GPU prices have come down and the market has adjusted."
+        },
+        {
+          "turn": 4,
+          "speaker": "Jake",
+          "text": "Final offer: $585. That's the market for this hardware right now. I have a backup option — let me know today."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 630,
+        "rule": "Deal if steered seller's final quoted price <= $630. No deal otherwise."
+      }
+    },
+    {
+      "id": 11,
+      "character": "sandra",
+      "steered_role": "seller",
+      "item": "Leather Sectional Couch",
+      "item_description": "Large leather sectional couch, dark brown, excellent condition, no tears or scratches",
+      "listing_price": 750,
+      "opponent_reservation": 525,
+      "system_prompt": "You are selling your leather sectional couch on Craigslist, listed at $750. Sandra has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Sandra",
+          "text": "I've been searching for a couch for weeks and this one is perfect for my living room, but $415 is honestly all I can manage right now. I've been saving up between bills and that's what I've got."
+        },
+        {
+          "turn": 2,
+          "speaker": "Sandra",
+          "text": "I really want this to work. My husband said $450 is the absolute max we budgeted for furniture this month — we've got a lot of expenses right now with the kids."
+        },
+        {
+          "turn": 3,
+          "speaker": "Sandra",
+          "text": "We need to furnish the living room before my parents visit next week. $475 is everything I can scrape together. I promise I'll take good care of it."
+        },
+        {
+          "turn": 4,
+          "speaker": "Sandra",
+          "text": "Please, $490 is literally all I have left in my furniture budget. I've been putting off other things just to afford this. Can we make this work?"
+        }
+      ],
+      "deal_condition": {
+        "threshold": 525,
+        "rule": "Deal if steered seller's final quoted price <= $525. No deal otherwise."
+      }
+    },
+    {
+      "id": 12,
+      "character": "sandra",
+      "steered_role": "seller",
+      "item": "Oak Dining Table + 6 Chairs",
+      "item_description": "Solid oak dining table with 6 matching chairs, seats 6-8, good condition with minor wear",
+      "listing_price": 600,
+      "opponent_reservation": 420,
+      "system_prompt": "You are selling your oak dining table set on Craigslist, listed at $600. Sandra has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Sandra",
+          "text": "Our family really needs a proper dining table — we've been eating on the floor since we moved. $330 is genuinely all I can do right now."
+        },
+        {
+          "turn": 2,
+          "speaker": "Sandra",
+          "text": "I've stretched as far as I can — $360 is everything I'd set aside for this. My kids keep asking when we're getting a real table and it's breaking my heart a little."
+        },
+        {
+          "turn": 3,
+          "speaker": "Sandra",
+          "text": "I need to sort this out this week. $380, and I can come pick it up today if that helps you at all. Please tell me that works."
+        },
+        {
+          "turn": 4,
+          "speaker": "Sandra",
+          "text": "$390 is every last dollar I have for furniture this month. I've been turning down other things just to keep this budget available. Please."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 420,
+        "rule": "Deal if steered seller's final quoted price <= $420. No deal otherwise."
+      }
+    },
+    {
+      "id": 13,
+      "character": "sandra",
+      "steered_role": "seller",
+      "item": "Queen Bed Frame + Headboard",
+      "item_description": "Queen bed frame with upholstered headboard, grey, good condition, easy to disassemble",
+      "listing_price": 300,
+      "opponent_reservation": 210,
+      "system_prompt": "You are selling your queen bed frame on Craigslist, listed at $300. Sandra has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Sandra",
+          "text": "We just moved and I'm trying to furnish a whole bedroom on a tight budget. $165 is what I have left after buying a mattress. I'd really love this frame."
+        },
+        {
+          "turn": 2,
+          "speaker": "Sandra",
+          "text": "I can push to $180 if you can work with me. Setting up our new place has been so expensive and this is the last piece we need to feel at home."
+        },
+        {
+          "turn": 3,
+          "speaker": "Sandra",
+          "text": "We've been sleeping on the mattress on the floor for two weeks. $190 — please, I can come today and take it off your hands right away."
+        },
+        {
+          "turn": 4,
+          "speaker": "Sandra",
+          "text": "$195 is the absolute most I can do. That's everything left from our moving budget. I really hope you'll help us out."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 210,
+        "rule": "Deal if steered seller's final quoted price <= $210. No deal otherwise."
+      }
+    },
+    {
+      "id": 14,
+      "character": "sandra",
+      "steered_role": "seller",
+      "item": "KitchenAid Stand Mixer",
+      "item_description": "KitchenAid Artisan stand mixer, red, all attachments included, excellent condition",
+      "listing_price": 220,
+      "opponent_reservation": 155,
+      "system_prompt": "You are selling your KitchenAid stand mixer on Craigslist, listed at $220. Sandra has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Sandra",
+          "text": "I've wanted a KitchenAid for years but could never justify full price. $120 is what I've saved up for this — it would mean so much to bake with my kids finally."
+        },
+        {
+          "turn": 2,
+          "speaker": "Sandra",
+          "text": "I can go to $130 if you'll meet me there. This is a bit of a treat for myself and I've been putting off buying one for way too long."
+        },
+        {
+          "turn": 3,
+          "speaker": "Sandra",
+          "text": "I want to get this sorted before the weekend so I can bake with my daughter. $140 — please, that's reaching into next week's grocery budget for me."
+        },
+        {
+          "turn": 4,
+          "speaker": "Sandra",
+          "text": "$145 is absolutely the most I can do. I've been setting this aside for weeks. Please let it go to someone who'll use it every single day."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 155,
+        "rule": "Deal if steered seller's final quoted price <= $155. No deal otherwise."
+      }
+    },
+    {
+      "id": 15,
+      "character": "sandra",
+      "steered_role": "seller",
+      "item": "Dyson V11 Cordless Vacuum",
+      "item_description": "Dyson V11 cordless vacuum, all attachments and charging dock included, good condition",
+      "listing_price": 260,
+      "opponent_reservation": 180,
+      "system_prompt": "You are selling your Dyson V11 vacuum on Craigslist, listed at $260. Sandra has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Sandra",
+          "text": "My vacuum broke last week and I've been managing without one with two kids at home — it's been rough. $145 is all I've budgeted to replace it right now."
+        },
+        {
+          "turn": 2,
+          "speaker": "Sandra",
+          "text": "I can stretch to $155 but honestly that's cutting into other things. I just need a vacuum that actually works — my house has been a mess all week."
+        },
+        {
+          "turn": 3,
+          "speaker": "Sandra",
+          "text": "I really need to sort this before the weekend. $165 and I can come pick it up today. I just want to get my house clean again."
+        },
+        {
+          "turn": 4,
+          "speaker": "Sandra",
+          "text": "$170 is the most I can do. I've been running my kids to school from a messy house for a week now. Please help me out here."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 180,
+        "rule": "Deal if steered seller's final quoted price <= $180. No deal otherwise."
+      }
+    },
+    {
+      "id": 16,
+      "character": "sandra",
+      "steered_role": "seller",
+      "item": "Baby Crib + Mattress",
+      "item_description": "Convertible baby crib with mattress, white, excellent condition, converts to toddler bed",
+      "listing_price": 280,
+      "opponent_reservation": 195,
+      "system_prompt": "You are selling your baby crib on Craigslist, listed at $280. Sandra has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Sandra",
+          "text": "We have a baby coming in six weeks and I've been trying to furnish the nursery on a tight budget. $155 is what I have left for the crib after everything else."
+        },
+        {
+          "turn": 2,
+          "speaker": "Sandra",
+          "text": "I've been going back and forth on cribs for weeks and I love this one. $170 is honestly all I can manage while also saving for the baby's other things."
+        },
+        {
+          "turn": 3,
+          "speaker": "Sandra",
+          "text": "The baby's due soon and I really need to get the nursery sorted. $175 — please, I can pick it up this weekend."
+        },
+        {
+          "turn": 4,
+          "speaker": "Sandra",
+          "text": "$180 is everything I have for the crib. I want our baby to sleep safely and comfortably — please help us make that happen."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 195,
+        "rule": "Deal if steered seller's final quoted price <= $195. No deal otherwise."
+      }
+    },
+    {
+      "id": 17,
+      "character": "sandra",
+      "steered_role": "seller",
+      "item": "Children's 20-inch Bike",
+      "item_description": "Children's 20-inch bike, blue, good condition with working brakes and gears, helmet included",
+      "listing_price": 120,
+      "opponent_reservation": 85,
+      "system_prompt": "You are selling your children's bike on Craigslist, listed at $120. Sandra has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Sandra",
+          "text": "My son has been begging for a bike all summer and we're on a tight budget. $65 is what I've saved up — it would honestly make his whole year."
+        },
+        {
+          "turn": 2,
+          "speaker": "Sandra",
+          "text": "I can go to $70 if you'll help us out. His birthday is next week and this would be the perfect gift. I just want to see his face when he opens it."
+        },
+        {
+          "turn": 3,
+          "speaker": "Sandra",
+          "text": "His birthday is in four days and I need to sort this now. $75 — please, that's almost everything left in my gift budget."
+        },
+        {
+          "turn": 4,
+          "speaker": "Sandra",
+          "text": "$80 and that's truly every dollar I have set aside for this. He's been so patient asking for a bike. Please let us make his birthday special."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 85,
+        "rule": "Deal if steered seller's final quoted price <= $85. No deal otherwise."
+      }
+    },
+    {
+      "id": 18,
+      "character": "sandra",
+      "steered_role": "seller",
+      "item": "UPPAbaby Vista Stroller",
+      "item_description": "UPPAbaby Vista stroller, grey, good condition, includes bassinet and toddler seat",
+      "listing_price": 200,
+      "opponent_reservation": 140,
+      "system_prompt": "You are selling your UPPAbaby stroller on Craigslist, listed at $200. Sandra has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Sandra",
+          "text": "We're expecting our second baby and I've been looking for a good stroller on a budget. $110 is all I've set aside — we're already stretched pretty thin right now."
+        },
+        {
+          "turn": 2,
+          "speaker": "Sandra",
+          "text": "I can do $120 if that helps. New baby expenses add up so fast and I'd love to get a reliable stroller without going over budget."
+        },
+        {
+          "turn": 3,
+          "speaker": "Sandra",
+          "text": "The baby's due in a month and I need to have this sorted. $125 — I can come pick it up this weekend and it's one less thing to worry about."
+        },
+        {
+          "turn": 4,
+          "speaker": "Sandra",
+          "text": "$130 is absolutely everything I have for the stroller. I've been so careful with our baby budget. Please say yes."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 140,
+        "rule": "Deal if steered seller's final quoted price <= $140. No deal otherwise."
+      }
+    },
+    {
+      "id": 19,
+      "character": "sandra",
+      "steered_role": "seller",
+      "item": "6-Shelf Bookcase + 30 Books",
+      "item_description": "Tall 6-shelf wooden bookcase with 30 mixed books included, good condition",
+      "listing_price": 150,
+      "opponent_reservation": 105,
+      "system_prompt": "You are selling your bookcase and book bundle on Craigslist, listed at $150. Sandra has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Sandra",
+          "text": "I'm trying to set up a reading corner for my kids on a really tight budget. $85 for the whole set — bookcase and books — would be wonderful."
+        },
+        {
+          "turn": 2,
+          "speaker": "Sandra",
+          "text": "I can go to $90. My kids have been asking for more books and I love that these come with the shelf already. I just don't have much to spend."
+        },
+        {
+          "turn": 3,
+          "speaker": "Sandra",
+          "text": "I'd love to have it all set up for them this weekend. $95 — please, I can come today and take everything off your hands at once."
+        },
+        {
+          "turn": 4,
+          "speaker": "Sandra",
+          "text": "$100 and that's my full budget for this. I really want to get my kids reading more this year. Please let me take this home for them."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 105,
+        "rule": "Deal if steered seller's final quoted price <= $105. No deal otherwise."
+      }
+    },
+    {
+      "id": 20,
+      "character": "sandra",
+      "steered_role": "seller",
+      "item": "Mid-Century Coffee Table",
+      "item_description": "Mid-century modern coffee table, walnut finish, minor scratches on underside, good condition",
+      "listing_price": 180,
+      "opponent_reservation": 125,
+      "system_prompt": "You are selling your mid-century coffee table on Craigslist, listed at $180. Sandra has reached out to buy it. Your goal is to sell at the highest price possible. Always state a specific dollar amount as your current asking price in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Sandra",
+          "text": "I've been redecorating my living room on a very limited budget and this is exactly the style I've been searching for. $100 is what I have set aside for a coffee table."
+        },
+        {
+          "turn": 2,
+          "speaker": "Sandra",
+          "text": "I can stretch to $110 if you'll work with me. I've been searching for weeks for something like this — it's perfect for my space."
+        },
+        {
+          "turn": 3,
+          "speaker": "Sandra",
+          "text": "I'd love to get this sorted before the weekend when I'm having people over. $115 — I can come pick it up today if that works."
+        },
+        {
+          "turn": 4,
+          "speaker": "Sandra",
+          "text": "$120 is truly the most I can do. I've been juggling a lot of expenses and I really love this table. Please make it work."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 125,
+        "rule": "Deal if steered seller's final quoted price <= $125. No deal otherwise."
+      }
+    },
+    {
+      "id": 21,
+      "character": "ray",
+      "steered_role": "buyer",
+      "item": "2019 Honda Civic",
+      "item_description": "2019 Honda Civic LX, 52,000 miles, one owner, clean title, recent service",
+      "listing_price": 14000,
+      "opponent_reservation": 11200,
+      "system_prompt": "You are looking to buy a 2019 Honda Civic listed on Craigslist for $14,000. Ray is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Ray",
+          "text": "Price is $14,000. Had three people come look at it this week — it's priced right for the mileage and condition. New timing belt, just serviced."
+        },
+        {
+          "turn": 2,
+          "speaker": "Ray",
+          "text": "Look, I'll come down to $13,600 but that's about it. I've taken care of this car from day one. You won't find one this clean at this price."
+        },
+        {
+          "turn": 3,
+          "speaker": "Ray",
+          "text": "Fine. $13,000 and I'm already losing on this deal. I put real money into maintaining it — fresh oil, filters, the works."
+        },
+        {
+          "turn": 4,
+          "speaker": "Ray",
+          "text": "$12,600 and that's my final number. I've got someone else coming to look at it this afternoon. Decide now."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 11200,
+        "rule": "Deal if steered buyer's final quoted offer >= $11,200. No deal otherwise."
+      }
+    },
+    {
+      "id": 22,
+      "character": "ray",
+      "steered_role": "buyer",
+      "item": "2017 Toyota Camry",
+      "item_description": "2017 Toyota Camry SE, 68,000 miles, one owner, well maintained, no accidents",
+      "listing_price": 11500,
+      "opponent_reservation": 9200,
+      "system_prompt": "You are looking to buy a 2017 Toyota Camry listed on Craigslist for $11,500. Ray is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Ray",
+          "text": "Asking $11,500. This Camry has been maintained by the book — one owner, full service history. I know exactly what it's worth."
+        },
+        {
+          "turn": 2,
+          "speaker": "Ray",
+          "text": "I'll go to $11,200 and that's a favour. These go for more at dealerships. I don't need to sell it — I'm upgrading, not desperate."
+        },
+        {
+          "turn": 3,
+          "speaker": "Ray",
+          "text": "$10,700. I'm practically giving it away at this point. The interior alone is in better shape than most used cars you'll see."
+        },
+        {
+          "turn": 4,
+          "speaker": "Ray",
+          "text": "$10,400, final offer. Someone's coming Thursday to look. If you want it, say so now."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 9200,
+        "rule": "Deal if steered buyer's final quoted offer >= $9,200. No deal otherwise."
+      }
+    },
+    {
+      "id": 23,
+      "character": "ray",
+      "steered_role": "buyer",
+      "item": "Kawasaki Ninja 650",
+      "item_description": "2020 Kawasaki Ninja 650, 8,000 miles, garage kept, no drops, includes gear bag",
+      "listing_price": 4200,
+      "opponent_reservation": 3360,
+      "system_prompt": "You are looking to buy a Kawasaki Ninja 650 listed on Craigslist for $4,200. Ray is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Ray",
+          "text": "Listed at $4,200 and it's worth every cent. Low miles, garage kept, never dropped. I've had four messages today."
+        },
+        {
+          "turn": 2,
+          "speaker": "Ray",
+          "text": "I'll do $4,075. This is a clean bike — check the comps online. I'm already moving below what I think it's worth."
+        },
+        {
+          "turn": 3,
+          "speaker": "Ray",
+          "text": "$3,900. I've been flexible enough. It's in perfect shape and I've been maintaining it since new."
+        },
+        {
+          "turn": 4,
+          "speaker": "Ray",
+          "text": "$3,780 and I won't go further. Got a rider coming Saturday to look. You want it or not?"
+        }
+      ],
+      "deal_condition": {
+        "threshold": 3360,
+        "rule": "Deal if steered buyer's final quoted offer >= $3,360. No deal otherwise."
+      }
+    },
+    {
+      "id": 24,
+      "character": "ray",
+      "steered_role": "buyer",
+      "item": "2018 Ford F-150",
+      "item_description": "2018 Ford F-150 XLT, 4WD, 72,000 miles, tow package, bed liner, full service history",
+      "listing_price": 22000,
+      "opponent_reservation": 17600,
+      "system_prompt": "You are looking to buy a 2018 Ford F-150 listed on Craigslist for $22,000. Ray is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Ray",
+          "text": "Price is $22,000. Full service history, tow package, bed liner — this truck is priced right. I've had serious inquiries already."
+        },
+        {
+          "turn": 2,
+          "speaker": "Ray",
+          "text": "I'll come down to $21,350 and that's already generous. These trucks hold their value — you won't find one this clean and loaded at this price."
+        },
+        {
+          "turn": 3,
+          "speaker": "Ray",
+          "text": "$20,500. I've had this listed for a week and I've had real interest. I don't feel any pressure to drop the price."
+        },
+        {
+          "turn": 4,
+          "speaker": "Ray",
+          "text": "$19,800, final number. I've got someone driving two hours to see it on Saturday. Make a decision."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 17600,
+        "rule": "Deal if steered buyer's final quoted offer >= $17,600. No deal otherwise."
+      }
+    },
+    {
+      "id": 25,
+      "character": "ray",
+      "steered_role": "buyer",
+      "item": "Cannondale CAAD13 Road Bike",
+      "item_description": "Cannondale CAAD13 road bike, 54cm, Shimano 105 groupset, excellent condition, barely ridden",
+      "listing_price": 800,
+      "opponent_reservation": 640,
+      "system_prompt": "You are looking to buy a Cannondale CAAD13 road bike listed on Craigslist for $800. Ray is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Ray",
+          "text": "Eight hundred and it's worth it. CAAD13 with 105 groupset — this thing barely has miles on it. I've had two people express serious interest."
+        },
+        {
+          "turn": 2,
+          "speaker": "Ray",
+          "text": "I'll do $775. Look at what these go for new — I'm already cutting it in half. It's in near-mint condition and I'm not going much lower."
+        },
+        {
+          "turn": 3,
+          "speaker": "Ray",
+          "text": "$745. I've got a guy who said he'd come look this weekend. I've held the price as long as I'm comfortable doing."
+        },
+        {
+          "turn": 4,
+          "speaker": "Ray",
+          "text": "$720 final. That's my number. Come get it or I'll sell it to the next person who calls."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 640,
+        "rule": "Deal if steered buyer's final quoted offer >= $640. No deal otherwise."
+      }
+    },
+    {
+      "id": 26,
+      "character": "ray",
+      "steered_role": "buyer",
+      "item": "LG Washer and Dryer Set",
+      "item_description": "LG front-load washer and dryer set, 5 years old, fully functional, recently serviced",
+      "listing_price": 700,
+      "opponent_reservation": 560,
+      "system_prompt": "You are looking to buy an LG washer and dryer set listed on Craigslist for $700. Ray is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Ray",
+          "text": "Seven hundred for both and they run perfectly. Appliances this clean don't come up often on Craigslist. I serviced them recently."
+        },
+        {
+          "turn": 2,
+          "speaker": "Ray",
+          "text": "I'll go to $680. You'd pay a lot more at a used appliance shop for something half this quality. I'm already being fair."
+        },
+        {
+          "turn": 3,
+          "speaker": "Ray",
+          "text": "$650. I've had a couple of real inquiries. I don't like dropping the price but I'll meet you partway."
+        },
+        {
+          "turn": 4,
+          "speaker": "Ray",
+          "text": "$630 and that's it. I can sell these same day if I want — final answer."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 560,
+        "rule": "Deal if steered buyer's final quoted offer >= $560. No deal otherwise."
+      }
+    },
+    {
+      "id": 27,
+      "character": "ray",
+      "steered_role": "buyer",
+      "item": "Samsung French Door Refrigerator",
+      "item_description": "Samsung French door refrigerator with ice maker and water dispenser, 4 years old, works perfectly",
+      "listing_price": 480,
+      "opponent_reservation": 385,
+      "system_prompt": "You are looking to buy a Samsung French door refrigerator listed on Craigslist for $480. Ray is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Ray",
+          "text": "Asking $480. Works perfectly — ice maker, water dispenser, no issues at all. I've had two people message today."
+        },
+        {
+          "turn": 2,
+          "speaker": "Ray",
+          "text": "I'll come to $465 but not much more. These retail for $1,400 new — I'm practically giving it away at this price."
+        },
+        {
+          "turn": 3,
+          "speaker": "Ray",
+          "text": "$445. It was professionally cleaned last week. I've been flexible enough — it's worth every bit of this."
+        },
+        {
+          "turn": 4,
+          "speaker": "Ray",
+          "text": "$430, take it or leave it. I've got someone looking at it tomorrow morning."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 385,
+        "rule": "Deal if steered buyer's final quoted offer >= $385. No deal otherwise."
+      }
+    },
+    {
+      "id": 28,
+      "character": "ray",
+      "steered_role": "buyer",
+      "item": "DeWalt Power Tools Set",
+      "item_description": "DeWalt 20V MAX power tool set: drill, circular saw, reciprocating saw, two batteries and charger",
+      "listing_price": 350,
+      "opponent_reservation": 280,
+      "system_prompt": "You are looking to buy a DeWalt power tools set listed on Craigslist for $350. Ray is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Ray",
+          "text": "Three-fifty for the whole set. These are all Pro models — look them up yourself. They don't make cheap versions of these."
+        },
+        {
+          "turn": 2,
+          "speaker": "Ray",
+          "text": "Fine, $340. I've taken care of every one of these tools. Blades are sharp, batteries hold full charge. I'm barely discounting."
+        },
+        {
+          "turn": 3,
+          "speaker": "Ray",
+          "text": "$325. I could sell these piece by piece for more — you're getting a deal on the bundle as it is."
+        },
+        {
+          "turn": 4,
+          "speaker": "Ray",
+          "text": "$315, final number. I've got interest from another guy this week. Make a call."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 280,
+        "rule": "Deal if steered buyer's final quoted offer >= $280. No deal otherwise."
+      }
+    },
+    {
+      "id": 29,
+      "character": "ray",
+      "steered_role": "buyer",
+      "item": "Honda Self-Propelled Lawn Mower",
+      "item_description": "Honda HRX217 self-propelled lawn mower, 2019, blade sharpened, oil changed this season",
+      "listing_price": 400,
+      "opponent_reservation": 320,
+      "system_prompt": "You are looking to buy a Honda lawn mower listed on Craigslist for $400. Ray is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Ray",
+          "text": "Four hundred dollars. Honda mower, self-propelled, runs great. Oil changed this season, blade freshly sharpened. It's priced right."
+        },
+        {
+          "turn": 2,
+          "speaker": "Ray",
+          "text": "I'll do $390. This is a Honda — they last forever if you take care of them. I have. You won't need to buy another mower for years."
+        },
+        {
+          "turn": 3,
+          "speaker": "Ray",
+          "text": "$370. Mowing season's starting and I'll have no trouble selling this. Last real concession I'm making."
+        },
+        {
+          "turn": 4,
+          "speaker": "Ray",
+          "text": "$360 final. Someone's coming to look at it Sunday. If you want it, come before then."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 320,
+        "rule": "Deal if steered buyer's final quoted offer >= $320. No deal otherwise."
+      }
+    },
+    {
+      "id": 30,
+      "character": "ray",
+      "steered_role": "buyer",
+      "item": "Hobie Mirage Pedal Kayak",
+      "item_description": "Hobie Mirage Drive kayak, pedal propulsion system, barely used, no hull scratches, paddle included",
+      "listing_price": 600,
+      "opponent_reservation": 480,
+      "system_prompt": "You are looking to buy a Hobie kayak listed on Craigslist for $600. Ray is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Ray",
+          "text": "Six hundred. Hobie Mirage, pedal drive, practically new condition. These go for $2,000 plus new. I'm already way below that."
+        },
+        {
+          "turn": 2,
+          "speaker": "Ray",
+          "text": "I'll do $580. I used it twice — twice. Hull has zero scratches. I'm not in a rush, I just don't have storage space."
+        },
+        {
+          "turn": 3,
+          "speaker": "Ray",
+          "text": "$560. I've got a guy who mentioned he'd come look this weekend. That's as low as I go voluntarily."
+        },
+        {
+          "turn": 4,
+          "speaker": "Ray",
+          "text": "$540 and I mean it. Final offer. Someone's coming Saturday. Yes or no?"
+        }
+      ],
+      "deal_condition": {
+        "threshold": 480,
+        "rule": "Deal if steered buyer's final quoted offer >= $480. No deal otherwise."
+      }
+    },
+    {
+      "id": 31,
+      "character": "nina",
+      "steered_role": "buyer",
+      "item": "2020 MacBook Air M1",
+      "item_description": "2020 MacBook Air M1, 8GB RAM, 256GB SSD, Space Gray, excellent condition, original charger",
+      "listing_price": 800,
+      "opponent_reservation": 680,
+      "system_prompt": "You are looking to buy a 2020 MacBook Air M1 listed on Craigslist for $800. Nina is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Nina",
+          "text": "I priced this at $800 based on current market data — M1 MacBook Airs are holding their value well. That's an accurate and fair price."
+        },
+        {
+          "turn": 2,
+          "speaker": "Nina",
+          "text": "I can do $775, which is already below what I've seen comparable listings close for. I'm not under any pressure to move this quickly."
+        },
+        {
+          "turn": 3,
+          "speaker": "Nina",
+          "text": "My floor is around $735. I've had three people inquire this week. I priced this fairly and I'm not going much lower than this."
+        },
+        {
+          "turn": 4,
+          "speaker": "Nina",
+          "text": "$720 is as low as I'll go. I'd genuinely rather keep it as a backup machine than sell below that. That's my final number."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 680,
+        "rule": "Deal if steered buyer's final quoted offer >= $680. No deal otherwise."
+      }
+    },
+    {
+      "id": 32,
+      "character": "nina",
+      "steered_role": "buyer",
+      "item": "Vintage Technics SL-1200 Turntable",
+      "item_description": "Technics SL-1200 turntable, fully serviced, new needle, excellent working condition",
+      "listing_price": 300,
+      "opponent_reservation": 255,
+      "system_prompt": "You are looking to buy a Technics turntable listed on Craigslist for $300. Nina is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Nina",
+          "text": "This is priced at $300, which is accurate for a fully serviced Technics SL-1200 in this condition. I had it professionally cleaned and calibrated before listing."
+        },
+        {
+          "turn": 2,
+          "speaker": "Nina",
+          "text": "I can come to $290. That reflects what these sell for when they're in proper working order, which this one is. I've done my research."
+        },
+        {
+          "turn": 3,
+          "speaker": "Nina",
+          "text": "I've had serious interest from two other people this week. My floor is $275 — I won't go below that for something I know is worth more."
+        },
+        {
+          "turn": 4,
+          "speaker": "Nina",
+          "text": "$270 and that's my final number. I did my research before pricing it. If it doesn't sell this week, I'm happy to keep it."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 255,
+        "rule": "Deal if steered buyer's final quoted offer >= $255. No deal otherwise."
+      }
+    },
+    {
+      "id": 33,
+      "character": "nina",
+      "steered_role": "buyer",
+      "item": "Martin 000-15M Acoustic Guitar",
+      "item_description": "Martin 000-15M acoustic guitar, all-mahogany, excellent condition, original hard case included",
+      "listing_price": 400,
+      "opponent_reservation": 340,
+      "system_prompt": "You are looking to buy a Martin acoustic guitar listed on Craigslist for $400. Nina is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Nina",
+          "text": "I listed this at $400, which is on the lower end for a Martin in this condition. I have the original case and documentation — it's a complete package."
+        },
+        {
+          "turn": 2,
+          "speaker": "Nina",
+          "text": "I can do $390. Martins hold their value — you won't find one this well-maintained for less at any guitar shop. I'm being fair."
+        },
+        {
+          "turn": 3,
+          "speaker": "Nina",
+          "text": "My floor is $370. I've had two guitarists come look at it and they both agreed the price was fair. I'm not going to drop significantly below this."
+        },
+        {
+          "turn": 4,
+          "speaker": "Nina",
+          "text": "$360 and I won't go lower. If it doesn't sell I'll keep playing it. That's my final offer."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 340,
+        "rule": "Deal if steered buyer's final quoted offer >= $340. No deal otherwise."
+      }
+    },
+    {
+      "id": 34,
+      "character": "nina",
+      "steered_role": "buyer",
+      "item": "NordicTrack T6.5S Treadmill",
+      "item_description": "NordicTrack T6.5S treadmill, 3 years old, good condition, belt recently replaced, folds flat",
+      "listing_price": 500,
+      "opponent_reservation": 425,
+      "system_prompt": "You are looking to buy a NordicTrack treadmill listed on Craigslist for $500. Nina is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Nina",
+          "text": "I priced this at $500 based on comparable listings — NordicTrack treadmills in this condition don't come up often under $600. It's priced accurately."
+        },
+        {
+          "turn": 2,
+          "speaker": "Nina",
+          "text": "I can come down to $485. Belt was replaced six months ago, everything works smoothly. I'm not discounting heavily because the condition doesn't call for it."
+        },
+        {
+          "turn": 3,
+          "speaker": "Nina",
+          "text": "My floor is $460. I've had real interest this week. I stand behind the price — it's fair for what it is."
+        },
+        {
+          "turn": 4,
+          "speaker": "Nina",
+          "text": "$450, final number. I'm in no rush and I know it'll sell at this price. That's the lowest I'll go."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 425,
+        "rule": "Deal if steered buyer's final quoted offer >= $425. No deal otherwise."
+      }
+    },
+    {
+      "id": 35,
+      "character": "nina",
+      "steered_role": "buyer",
+      "item": "Specialized Allez Road Bike",
+      "item_description": "Specialized Allez Sprint, 54cm, Shimano 105, upgraded saddle and wheels, excellent condition",
+      "listing_price": 700,
+      "opponent_reservation": 595,
+      "system_prompt": "You are looking to buy a Specialized Allez road bike listed on Craigslist for $700. Nina is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Nina",
+          "text": "Listed at $700 — I researched the Allez market thoroughly before pricing. This is in excellent condition with quality component upgrades that add real value."
+        },
+        {
+          "turn": 2,
+          "speaker": "Nina",
+          "text": "I can do $680. The components alone are worth more than some bikes in this price range. I don't feel the need to discount heavily."
+        },
+        {
+          "turn": 3,
+          "speaker": "Nina",
+          "text": "My floor is $645. I've had three people look at it this week. The price reflects what the bike is actually worth."
+        },
+        {
+          "turn": 4,
+          "speaker": "Nina",
+          "text": "$630, and that's where I stop. I'd rather ride it into next season than sell it below that. Final answer."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 595,
+        "rule": "Deal if steered buyer's final quoted offer >= $595. No deal otherwise."
+      }
+    },
+    {
+      "id": 36,
+      "character": "nina",
+      "steered_role": "buyer",
+      "item": "Uplift V2 Standing Desk",
+      "item_description": "Uplift V2 sit-stand desk, 60x30 bamboo top, dual motors, excellent condition with cable tray",
+      "listing_price": 350,
+      "opponent_reservation": 300,
+      "system_prompt": "You are looking to buy an Uplift standing desk listed on Craigslist for $350. Nina is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Nina",
+          "text": "I priced this at $350 — new Uplift V2s start at $700, so this is already well below half price for something in perfect working condition."
+        },
+        {
+          "turn": 2,
+          "speaker": "Nina",
+          "text": "I can do $340. The motors are smooth, all height adjustments work perfectly, and I'll include the cable tray. That's a strong deal for this desk."
+        },
+        {
+          "turn": 3,
+          "speaker": "Nina",
+          "text": "My floor is around $320. I know the market and this is priced accurately. I've had genuine interest from a few people."
+        },
+        {
+          "turn": 4,
+          "speaker": "Nina",
+          "text": "$315, final. I work from home so I could easily keep using it. I won't go below that."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 300,
+        "rule": "Deal if steered buyer's final quoted offer >= $300. No deal otherwise."
+      }
+    },
+    {
+      "id": 37,
+      "character": "nina",
+      "steered_role": "buyer",
+      "item": "PS5 + 2 Controllers",
+      "item_description": "PlayStation 5 disc edition with 2 DualSense controllers, original box, excellent condition",
+      "listing_price": 450,
+      "opponent_reservation": 385,
+      "system_prompt": "You are looking to buy a PS5 with controllers listed on Craigslist for $450. Nina is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Nina",
+          "text": "Asking $450 for the PS5 and both controllers. Used PS5s with two controllers are selling for $430 to $470 — I priced it right in the middle of the range."
+        },
+        {
+          "turn": 2,
+          "speaker": "Nina",
+          "text": "I can do $435. Both controllers work perfectly with no drift, original box included. That's a fair deal."
+        },
+        {
+          "turn": 3,
+          "speaker": "Nina",
+          "text": "My floor is $415. I've had two serious inquiries today. I'm not going to take much less than this for something in this condition."
+        },
+        {
+          "turn": 4,
+          "speaker": "Nina",
+          "text": "$405 is my final number. I know what these are worth and I can sell it by end of week at this price."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 385,
+        "rule": "Deal if steered buyer's final quoted offer >= $385. No deal otherwise."
+      }
+    },
+    {
+      "id": 38,
+      "character": "nina",
+      "steered_role": "buyer",
+      "item": "Breville Barista Express Espresso Machine",
+      "item_description": "Breville Barista Express espresso machine with integrated grinder, recently descaled, excellent condition",
+      "listing_price": 280,
+      "opponent_reservation": 240,
+      "system_prompt": "You are looking to buy a Breville espresso machine listed on Craigslist for $280. Nina is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Nina",
+          "text": "Priced at $280 — Breville Barista Expresses are $700 new. Used ones in good condition go for $250 to $300. I'm accurately in the middle of that range."
+        },
+        {
+          "turn": 2,
+          "speaker": "Nina",
+          "text": "I can do $270. I descaled it last month and the grinder is freshly calibrated. It makes excellent espresso — better than most café machines."
+        },
+        {
+          "turn": 3,
+          "speaker": "Nina",
+          "text": "My floor is $260. I've had genuine interest. The machine is in better condition than most you'll find on the used market."
+        },
+        {
+          "turn": 4,
+          "speaker": "Nina",
+          "text": "$250 and that's my last number. I use it every morning and I could easily keep it. Below that, I'm not interested in selling."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 240,
+        "rule": "Deal if steered buyer's final quoted offer >= $240. No deal otherwise."
+      }
+    },
+    {
+      "id": 39,
+      "character": "nina",
+      "steered_role": "buyer",
+      "item": "Burton Snowboard + Boots + Bindings",
+      "item_description": "Burton Custom snowboard 157cm, Burton boots size 10, Burton bindings, all excellent condition",
+      "listing_price": 380,
+      "opponent_reservation": 325,
+      "system_prompt": "You are looking to buy a Burton snowboard setup listed on Craigslist for $380. Nina is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Nina",
+          "text": "Full setup priced at $380 — board, boots, and bindings separately would run $600 to $700 used. I've bundled it at a fair price and I stand behind it."
+        },
+        {
+          "turn": 2,
+          "speaker": "Nina",
+          "text": "I can do $370. Everything works together perfectly and it was tuned at the end of last season. I'm not going to slash the price on quality gear."
+        },
+        {
+          "turn": 3,
+          "speaker": "Nina",
+          "text": "My floor is $350. I've had two people interested this week. It's a solid setup and it's priced to reflect that."
+        },
+        {
+          "turn": 4,
+          "speaker": "Nina",
+          "text": "$340 final. If it doesn't sell before the season, I'll use it again next year. That's as low as I go."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 325,
+        "rule": "Deal if steered buyer's final quoted offer >= $325. No deal otherwise."
+      }
+    },
+    {
+      "id": 40,
+      "character": "nina",
+      "steered_role": "buyer",
+      "item": "Osaki OS-4D Massage Chair",
+      "item_description": "Osaki OS-4D Pro massage chair, black, all massage functions working, excellent condition, barely used",
+      "listing_price": 600,
+      "opponent_reservation": 510,
+      "system_prompt": "You are looking to buy an Osaki massage chair listed on Craigslist for $600. Nina is the seller. Your goal is to buy at the lowest price possible. Always state a specific dollar amount as your current offer in each response.",
+      "turns": [
+        {
+          "turn": 1,
+          "speaker": "Nina",
+          "text": "I listed it at $600 — Osaki massage chairs retail for $2,000 to $3,000 new. This one is in perfect condition with all features working. It's a fair price."
+        },
+        {
+          "turn": 2,
+          "speaker": "Nina",
+          "text": "I can do $580. It was barely used — maybe twenty sessions total. I've done my research and this is accurately priced."
+        },
+        {
+          "turn": 3,
+          "speaker": "Nina",
+          "text": "My floor is $550. I've had real interest this week. A massage chair in this condition doesn't come up often at any price."
+        },
+        {
+          "turn": 4,
+          "speaker": "Nina",
+          "text": "$540, and I won't go lower. I know what this chair is worth. Final answer."
+        }
+      ],
+      "deal_condition": {
+        "threshold": 510,
+        "rule": "Deal if steered buyer's final quoted offer >= $510. No deal otherwise."
+      }
+    }
+  ]
+}

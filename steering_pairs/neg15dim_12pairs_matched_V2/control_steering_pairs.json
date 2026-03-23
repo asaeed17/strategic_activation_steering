@@ -1,0 +1,369 @@
+{
+    "metadata": {
+        "description": "Control contrastive pairs in Craigslist negotiation context to validate steering vectors against surface confounds (12 pairs per dimension). All contexts use Craigslist buyer/seller scenarios matching run_eval format.",
+        "dimensions": 5,
+        "total_pairs": 60,
+        "version": "2.0",
+        "notes": "V2: All control pairs use Craigslist contexts with 4-5 sentence responses. Controls test surface features (verbosity, formality, hedging, sentiment, specificity) rather than negotiation skill.",
+        "matching_policy": {
+            "verbosity": "intentionally_unmatched",
+            "formality": "length_matched",
+            "hedging": "length_matched",
+            "sentiment": "length_matched",
+            "specificity": "length_matched"
+        }
+    },
+    "dimensions": [
+        {
+            "id": "verbosity",
+            "name": "Verbosity",
+            "description": "The amount of text produced in a Craigslist negotiation message; long and detailed vs short and concise. Intentionally unmatched in length.",
+            "pairs": [
+                {
+                    "context": "A buyer messages you about a used couch you listed for $400 on Craigslist and asks: 'Is the couch still available?'",
+                    "positive": "Yes, the couch is absolutely still available and I'd be happy to tell you more about it! I've had a couple people ask about it over the past few days but nobody has committed to buying it yet, so your timing is actually really good. It's in excellent condition — I've kept it covered when not in use and it's been in a completely pet-free, smoke-free home the entire three years I've owned it. The cushions still have great support and the fabric has no stains, tears, or pilling anywhere. If you're interested I'm free to show it pretty much any evening this week or all day Saturday, just let me know what works best for your schedule!",
+                    "negative": "Yep, still available."
+                },
+                {
+                    "context": "A seller replies to your offer of $150 on a desk they listed for $200 on Craigslist.",
+                    "positive": "Thanks so much for reaching out about the desk, I really appreciate your interest in it! I think your offer of $150 is a bit lower than what I was hoping for, since this is a solid hardwood desk that I purchased from a really nice furniture store about two years ago and I've taken meticulous care of it the entire time I've owned it. The surface has no scratches, the drawers all slide smoothly on their runners, and the legs are completely level with no wobble whatsoever. I paid $600 for it originally so at $200 I'm already selling it at a huge discount from what I invested. That said, I would be open to negotiating a little bit if you're seriously interested — maybe we could meet somewhere in the middle?",
+                    "negative": "Thanks, but $150 is too low."
+                },
+                {
+                    "context": "A buyer asks about the condition of a mountain bike you listed for $350 on Craigslist.",
+                    "positive": "Great question, I'm happy to give you a thorough rundown on the bike's condition! Overall it's in really excellent shape — I've had it for about a year and a half and I've maintained it religiously the entire time, including getting the chain replaced and the brakes professionally adjusted at my local bike shop just a couple of months ago. The tires still have plenty of tread left on them, probably about 70% of their original depth, and the frame has absolutely no dents, cracks, or major scratches to speak of. The shifting is crisp through all the gears and the hydraulic disc brakes have tons of pad life remaining. I can send you some additional close-up photos of any specific components you'd like to see before you commit to coming to look at it!",
+                    "negative": "Great condition, well maintained."
+                },
+                {
+                    "context": "A seller responds to your question about whether they can deliver a washer you're buying for $300 on Craigslist.",
+                    "positive": "Unfortunately I'm not really able to deliver the washing machine myself because I don't own a truck or have any reliable way to safely transport something that heavy and bulky across town. I looked into renting a truck but the cost would add $50-$80 to the transaction depending on the day and distance, which seemed like it would complicate things for both of us unnecessarily. However, I would absolutely be happy to help you load it if you can arrange your own transportation — I have a furniture dolly that makes it much easier to roll it out of the house and down the steps to whatever vehicle you bring. I'm available most evenings after 5pm and all day on weekends, so there's plenty of flexibility on timing if you can handle the transport side of things!",
+                    "negative": "Sorry, can't deliver. Pickup only."
+                },
+                {
+                    "context": "A buyer asks if you'd consider a partial trade for a guitar you listed for $275 on Craigslist.",
+                    "positive": "That's an interesting idea that I hadn't really considered before, but I suppose I'd be open to discussing it depending on what you have in mind! I'm mainly looking for cash since I'm saving up for a new acoustic-electric that I've had my eye on for a while now, but if you had something of roughly equivalent value that I could either use personally or resell fairly easily without too much hassle, I'd definitely give it serious consideration. I've done partial trades before on Craigslist and they can work out really well when both people are honest about the value of what they're bringing to the table. What were you thinking of offering as part of the trade? I'm curious to hear what you had in mind and we can go from there.",
+                    "negative": "Maybe, depends what you've got."
+                },
+                {
+                    "context": "A seller responds after you asked about scratches on a laptop listed for $500 on Craigslist.",
+                    "positive": "There are a couple of very minor cosmetic scratches on the bottom panel of the laptop that happened from regular everyday use sliding it across my desk surface over the past two years, but honestly they're barely noticeable unless you're specifically looking for them under direct light. The screen is in absolutely perfect condition with zero scratches, no dead pixels, and no backlight bleeding around the edges that I've ever noticed. The keyboard has all its keys fully functional with good tactile response, and the trackpad is smooth and responsive with no dead zones or sticky spots anywhere on its surface. I've been really careful with this laptop from day one — always used it with a padded sleeve when traveling, never eaten or drank near it, and it's been in a smoke-free environment its entire life!",
+                    "negative": "Minor scratches on the bottom, screen is perfect."
+                },
+                {
+                    "context": "A buyer asks about the age and history of a refrigerator you listed for $450 on Craigslist.",
+                    "positive": "The refrigerator is approximately four years old — I bought it brand new from Home Depot back in January of 2022 when I first moved into this apartment and needed to furnish the kitchen from scratch. It's a Samsung French door model with stainless steel finish, and it has been running perfectly the entire time I've owned it without requiring a single repair or service call of any kind. The ice maker has worked flawlessly since day one and produces about eight pounds of ice per day which is more than enough even when we have guests over for parties. I'm selling it only because I'm moving across the country next month and it's not practical to ship a full-size refrigerator that far when I can buy one at my new place!",
+                    "negative": "About four years old, runs great."
+                },
+                {
+                    "context": "A seller responds to your lowball offer on a camera listed for $400 on Craigslist.",
+                    "positive": "I appreciate you taking the time to make an offer and I totally understand that everyone wants to get the best deal they possibly can — that's just human nature and I'd do the same thing if I were in your shoes! However, $200 is quite a bit lower than what I'm looking for since this camera is genuinely in excellent condition with a low shutter count of only 12,000 actuations out of a rated 200,000 lifetime capacity. It also comes with an extra battery that normally costs $60 separately and a high-quality 64GB memory card that retails for about $25 new. I've been using it for landscape photography as a serious hobby and I've always stored it properly in a padded camera bag with silica packets to control moisture!",
+                    "negative": "$200 is too low, sorry."
+                },
+                {
+                    "context": "A buyer asks if you can hold a TV you listed for $300 on Craigslist until the weekend.",
+                    "positive": "I can probably hold it for you until Saturday morning if you're genuinely serious about purchasing it and committed to following through! I've had a few other people reach out about the TV this week but nobody has been able to commit to a specific viewing time yet, so if you can lock in a Saturday morning appointment that would put you ahead of the other interested parties. I just want to make sure you're actually planning to come and not just tentatively asking, because I'd hate to turn away other potential buyers only to have the weekend slot fall through at the last minute. If you can confirm a specific time — say between 9am and noon on Saturday — I'll mark it as pending in my listing and redirect any new inquiries until we've had a chance to meet!",
+                    "negative": "Sure, can hold it till Saturday."
+                },
+                {
+                    "context": "A seller responds to your question about why they're selling a gaming console listed for $350 on Craigslist.",
+                    "positive": "Honestly, I just don't have any time to play video games anymore and it felt silly to keep it sitting on my entertainment center collecting dust! Between my job picking up significantly over the last six months and having a new baby at home who requires pretty much constant attention and care, my gaming time has basically dropped from several hours a week down to literally zero for the past three or four months straight. Every time I look at it sitting there unused I feel a little guilty knowing someone else could be getting way more enjoyment out of it than I currently am. It works perfectly and I've always taken excellent care of it — kept it in a well-ventilated spot so it never overheated, cleaned the vents regularly, and always shut it down properly instead of just pulling the plug!",
+                    "negative": "No time to play anymore."
+                },
+                {
+                    "context": "A buyer asks about the pickup location for a dresser you listed for $175 on Craigslist.",
+                    "positive": "I'm located in the Westwood area of town, pretty close to the intersection of Wilshire Boulevard and Westwood Avenue which is a pretty well-known area that most people can find easily using GPS navigation. There's a spacious parking lot behind my apartment building that you can pull right into, which makes loading furniture super convenient because you can back your vehicle up close to the building entrance without blocking any traffic or other tenants. The dresser is on the second floor of my building but I have a friend who lives nearby who said he'd help me carry it downstairs whenever you're ready to pick it up. I'm very flexible on timing and available most weekday evenings after about 5:30pm as well as pretty much all day on both Saturday and Sunday!",
+                    "negative": "Westwood area, parking out back."
+                },
+                {
+                    "context": "A seller responds after you asked whether a used treadmill listed for $250 on Craigslist has any mechanical issues.",
+                    "positive": "No mechanical issues whatsoever as far as I can tell from regular use over the past two years! The motor runs very smoothly and quietly — my wife actually uses it early in the morning before I wake up and I've never once been disturbed by the noise from the bedroom right above where it sits. The belt tracks perfectly straight along the deck without any slipping, drifting, or bunching up on either side, and I've been careful to lubricate it with silicone spray every three months according to the manufacturer's maintenance schedule. All the speed and incline adjustments respond immediately to button presses and the electronic display clearly shows all the key workout stats including speed, distance, time elapsed, estimated calories burned, and heart rate when you grip the sensors on the handles!",
+                    "negative": "No issues, everything works fine."
+                }
+            ]
+        },
+        {
+            "id": "formality",
+            "name": "Formality",
+            "description": "Professional and polite language vs casual and informal language in a Craigslist negotiation context. Length-matched.",
+            "pairs": [
+                {
+                    "context": "Responding to a buyer's initial inquiry about a used TV you listed for $300 on Craigslist.",
+                    "positive": "Thank you for your interest in the television — it remains available for purchase at the listed price of $300. I would be pleased to arrange a viewing at a time that suits your schedule, and I can assure you the unit is in excellent working condition. Please do not hesitate to reach out with any additional questions you may have regarding the specifications or condition.",
+                    "negative": "Hey yeah it's still up for grabs at $300! Super stoked someone's finally asking about it lol. Hit me up whenever you wanna swing by and check it out — I'm around pretty much all the time. Got any questions just shoot me a text!"
+                },
+                {
+                    "context": "Making a counter-offer on a laptop listed for $600 on Craigslist.",
+                    "positive": "I appreciate the listing and have carefully reviewed the specifications. After considering the current market value for this model in comparable condition, I would respectfully like to propose a purchase price of $475. I believe this represents a fair valuation given the age of the device and would welcome the opportunity to discuss this further at your convenience.",
+                    "negative": "Hey so I was thinking like $475 for the laptop? I checked around and that seems about right for what it is tbh. Lemme know if that works or if you wanna haggle a bit more — I'm totally down to figure something out that's cool for both of us!"
+                },
+                {
+                    "context": "Declining a lowball offer on a bike you listed for $350 on Craigslist.",
+                    "positive": "I appreciate your offer of $150, however I must respectfully decline as it falls significantly below both the listed price and the current fair market value for this bicycle. I would be amenable to discussing a price somewhat closer to the asking amount, should that fall within your budget. I wish you well in your search should you decide to pursue other options.",
+                    "negative": "Nah sorry, $150 is way too low for this bike lol. Gotta come up a bunch if you actually want it! No offense at all though, I get that everyone's trying to score a deal. Just can't let it go for that cheap ya know?"
+                },
+                {
+                    "context": "Asking a seller about the condition of a used car listed for $10,000 on Craigslist.",
+                    "positive": "Good afternoon. I am writing to express my interest in the vehicle you have advertised. Would you be so kind as to provide detailed information regarding its maintenance history, current mechanical condition, and any known issues? I would also appreciate documentation of recent service records if those are available for review.",
+                    "negative": "Hey! Super interested in your car, it looks awesome in the pics! How's it running? Any issues or weird stuff I should know about? Also got any records from the mechanic or anything like that? Thanks a ton!",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "Accepting an offer on a couch you listed for $400 on Craigslist after some negotiation.",
+                    "positive": "I am pleased to accept your offer of $375 for the sofa. Please let me know a convenient date and time for collection, and I shall ensure the item is prepared and accessible for your arrival. I trust this arrangement is satisfactory and I look forward to completing the transaction at your earliest convenience.",
+                    "negative": "Sweet, $375 totally works for me — we've got a deal! Just tell me when you wanna come grab it and I'll have it ready to go. Stoked we could work something out that works for both of us! Can't wait to get this done!"
+                },
+                {
+                    "context": "Responding to a buyer who wants to negotiate the price of a camera listed for $400 on Craigslist.",
+                    "positive": "I understand your position entirely and I am willing to explore a mutually agreeable price for the camera. The equipment is in excellent condition as documented in the listing photographs, and I believe the current asking price accurately reflects its value. Nevertheless, I remain open to a constructive discussion regarding terms.",
+                    "negative": "Sure thing, we can totally haggle on it! The camera's in awesome shape though so I'm not gonna go crazy low on the price. Throw me a number and we'll see what happens — I'm pretty chill about negotiating and we'll figure something out for sure!",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "Asking about delivery options for a refrigerator listed at $500 on Craigslist.",
+                    "positive": "I would like to inquire whether delivery service is available for the refrigerator, and if so, what the associated cost and available delivery dates might be. Additionally, I would appreciate knowing whether the unit will be transported in an upright position, as this is important for the compressor. Your guidance on these logistics would be most appreciated.",
+                    "negative": "Hey, any chance you could drop off the fridge at my place? If so how much would that cost me and when could you do it? Oh and would it stay standing up in the truck? Just wanna make sure the compressor doesn't get messed up. Thanks a bunch!",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "Politely passing on a deal for a desk listed at $200 on Craigslist after seeing it in person.",
+                    "positive": "Thank you sincerely for taking the time to accommodate the viewing — I genuinely appreciate your hospitality and patience in showing me the piece. Unfortunately, upon closer inspection the desk does not quite meet my particular requirements for my workspace. I wish you the very best of luck with the sale and I am confident you will find an appropriate buyer.",
+                    "negative": "Appreciate you showing me the desk, that was really cool of you! It's not quite what I'm looking for though, sorry about that. Totally bummed it didn't work out but I'm sure someone'll snag it real quick. Good luck with everything, hope it sells fast!",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "Responding to a buyer who asks if you'll hold a washer listed at $300 on Craigslist until Saturday.",
+                    "positive": "I would be willing to reserve the washing machine on your behalf until Saturday, provided that you are able to confirm a specific appointment time for collection in advance. This arrangement would require a firm commitment to ensure that I am not declining other prospective buyers unnecessarily. Please confirm the precise time at your earliest convenience.",
+                    "negative": "Yeah I can totally hold it for ya till Saturday no problem at all! Just lmk what time you're coming so I don't accidentally sell it to someone else in the meantime lol. Shoot me a text whenever you figure out your schedule and we'll lock it in!",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "Making an initial offer on a guitar listed for $275 on Craigslist.",
+                    "positive": "Good evening. I have reviewed your listing for the acoustic guitar with considerable interest and I believe it would suit my requirements well. After evaluating the instrument's age, condition, and current market comparables, I would like to submit an offer of $225 for your consideration. I trust this proposal reflects a fair assessment.",
+                    "negative": "Hey there! Totally digging the guitar in your listing, it looks sick! Would you maybe do $225 for it? I think that's a pretty solid offer considering everything. Lemme know what you think and hopefully we can make this happen soon!",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "Thanking a buyer after completing a sale of a gaming console for $350 on Craigslist.",
+                    "positive": "It was a genuine pleasure conducting business with you and I am grateful for the smooth and professional transaction. I hope you derive considerable enjoyment from the console and please do not hesitate to contact me should any questions arise regarding its operation. I wish you all the very best.",
+                    "negative": "Awesome, so glad we could make this happen — you're gonna love it! Have a blast gaming and if anything comes up just hit me up anytime. Was great meeting you, enjoy the console and happy gaming my friend!",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "Responding to a seller who hasn't replied in several days about a table listed for $250 on Craigslist.",
+                    "positive": "I trust this message finds you well. I am writing to respectfully follow up on my previous inquiry regarding the dining table you have listed. I remain very interested in the piece and would greatly appreciate an update regarding its availability at your earliest convenience. Thank you in advance for your time and consideration.",
+                    "negative": "Hey! Just circling back on that table — still super interested if you've got it! No worries at all if you've been busy, life gets crazy sometimes lol. Just shoot me a message whenever you get a sec and we'll figure it out! Cheers!",
+                    "note": "length_matched"
+                }
+            ]
+        },
+        {
+            "id": "hedging",
+            "name": "Hedging",
+            "description": "Uncertain, tentative language with qualifiers vs confident, direct statements in Craigslist negotiation contexts. Length-matched.",
+            "pairs": [
+                {
+                    "context": "A buyer asks you how old the washing machine you listed for $300 on Craigslist is.",
+                    "positive": "I think it might be around four or five years old, but I'm not entirely sure about that — it could possibly be a bit older than I remember. I'd have to dig around for the receipt or check the serial number to give you an exact answer, which I haven't gotten around to doing yet. It seems to run fine from what I can tell though, but I couldn't guarantee there aren't issues I'm not aware of.",
+                    "negative": "It's four years old — I bought it in January 2022 from Home Depot and I have the receipt. It runs a full cycle in 45 minutes, uses 13 gallons per load, and has never needed a single repair. The model number is WF45R6100AW if you want to verify the specs yourself."
+                },
+                {
+                    "context": "A seller on Craigslist asks you what price you'd offer for their used bike listed at $350.",
+                    "positive": "I'm not totally sure what would be fair honestly — maybe around $250 give or take? I could possibly go a bit higher depending on the condition when I see it in person, but I'm not really great at judging what bikes are worth. I'm kind of new to buying used stuff on Craigslist so I might be off on the number, I honestly have no idea what's reasonable.",
+                    "negative": "I'll offer $250 — that's based on three comparable bikes that sold this month on Craigslist in our area at $225, $260, and $275. The average sold price is $253, so $250 is right in line with what the market is actually paying. If you want, I can share the screenshots of those completed sales.",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "A buyer asks if the laptop you listed for $500 on Craigslist has any issues at all.",
+                    "positive": "I don't think there are any major problems with it, but I'm not completely certain about everything since I'm not super technical. The battery might be a bit weaker than it used to be, or maybe that's just normal for a laptop this age — I'm honestly not sure. There could possibly be other things I haven't noticed but nothing jumps out at me right now.",
+                    "negative": "No issues at all. Battery holds 4.5 hours under normal use, I benchmarked it last week. The SSD reads at 3,200 MB/s, all ports tested working, screen has zero dead pixels. I ran a full diagnostic yesterday and passed every test with no warnings or errors of any kind.",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "A seller asks when you'd want to pick up a couch you're buying for $400 on Craigslist.",
+                    "positive": "I was thinking maybe Saturday but I'm not completely sure if that'll work with my schedule yet. It could end up being Sunday instead, or possibly even sometime the following week depending on whether I can borrow my friend's truck. I'd have to check with a couple of people first and see what shakes out, but hopefully sometime soonish.",
+                    "negative": "Saturday at 10am. I've already confirmed the truck rental from U-Haul for 9am pickup, and my buddy Jake is confirmed to help me load it at your place. I'll bring $400 in cash, exact amount, no change needed. See you at 10 sharp on Saturday.",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "A buyer asks why you're selling your car listed at $8,000 on Craigslist.",
+                    "positive": "I'm sort of thinking about maybe switching to something different — possibly a smaller car or maybe a hybrid, I haven't fully decided yet. I'm not one hundred percent committed to selling honestly, I kind of just listed it to see what kind of interest it gets. It could end up staying with me if the right offer doesn't come along, but then again I might let it go for the right price.",
+                    "negative": "I'm switching to a hybrid for my 50-mile daily commute — the gas savings alone will be $200 per month based on current fuel prices. The car runs perfectly but a sedan doesn't make financial sense at $4.50 per gallon when I'm driving 25,000 miles per year. I've already put a deposit on the replacement.",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "A seller asks if you're seriously interested in the camera they listed for $400 on Craigslist.",
+                    "positive": "I think so, yeah — I mean, it seems like a decent deal from what I can tell, but I'm not entirely sure if this is the right model for what I want to do. I might want to look around a little more first before committing to anything, and I'm not totally confident in my ability to evaluate used camera equipment. I suppose I'm interested but I wouldn't say I'm fully committed at this point.",
+                    "negative": "Absolutely — this is exactly the Canon R6 Mark II body I've been looking for, and your price of $400 with the 50mm lens is the best I've seen in three weeks of daily searching. I'm ready to buy today with cash in hand. When can I come test the autofocus and check the shutter count to verify condition?",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "A buyer asks if you'd negotiate on the TV you listed for $300 on Craigslist.",
+                    "positive": "I suppose I could maybe consider coming down a little bit, though I'm not entirely sure how much flexibility I actually have. Perhaps a small reduction could work, but I'd really have to think about it more before committing to anything specific. I'm sort of on the fence about whether I'm being too high or too low on the price, to be perfectly honest with you.",
+                    "negative": "Yes, I'd take $275 but that's my absolute floor — the TV is a 2023 Samsung QN55Q60C that retails for $550 new and mine has zero burn-in or dead pixels. At $275 I'm at exactly 50% of new retail which is fair for a one-year-old premium QLED in perfect condition. Below $275 is a no.",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "A seller asks your final offer on the desk they listed for $200 on Craigslist.",
+                    "positive": "Hmm, I'm not exactly sure — maybe like $150 or somewhere around there, give or take? I could possibly go a bit higher if you felt really strongly about it, but then again maybe $150 is already too much. I'm really not great at this negotiating thing and I never know if I'm offering too little or too much for used furniture.",
+                    "negative": "$160 is my final offer. That's based on three IKEA BEKANT desks that sold on Craigslist this month at $140, $155, and $170, putting the median at $155. I'm offering $5 above median because your desk has the cable management tray. Let me know by 6pm today — yes or no.",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "A buyer asks about the mileage on the car you listed for $12,000 on Craigslist.",
+                    "positive": "I think it's somewhere around 60,000 miles or so, but it might be more than that — I honestly haven't looked at the odometer recently and my memory might be off. It could be closer to 65,000 or maybe even 70,000, I'd really need to go check to be sure. I should probably look that up before I give you a definitive number.",
+                    "negative": "62,437 miles as of this morning — I took a photo of the odometer which I can text you right now. All highway commuting on I-95, oil changed every 5,000 miles at the same dealership since new. I have the complete service history folder with every receipt since purchase.",
+                    "note": "length_matched"
+                },
+                {
+                    "context": "A seller asks if you could pick up the fridge you're buying on Craigslist this weekend.",
+                    "positive": "I think I might be able to do this weekend, but I'm not a hundred percent sure yet since my schedule is kind of up in the air right now. I'd probably need to borrow or rent a truck which I haven't arranged yet, and I'm not totally confident I can get that sorted by Saturday. Let me check with a few people and get back to you, but it could possibly end up being the weekend after.",
+                    "negative": "Yes, Saturday at 9am. I've reserved a U-Haul pickup truck from the location on Main Street with a confirmed 8:30am pickup time. My brother is meeting me at your address at 9am with a furniture dolly to help load. I'll bring $450 in cash. Confirmed."
+                },
+                {
+                    "context": "A buyer asks if the guitar you listed for $275 on Craigslist comes with a case.",
+                    "positive": "I think I might have the original case somewhere in the house — it could be in my closet or maybe in the garage storage area, I'm not totally sure where I put it honestly. It's possible I gave it away at some point and I'm just not remembering, or it might be buried under some other stuff. I'd have to look around and get back to you on that one.",
+                    "negative": "Yes, it comes with the original SKB hard case, model 1SKB-8. I also have the original warranty card, a spare set of Martin MA540 phosphor bronze strings, and a Snark clip-on tuner. Everything is cleaned and packed in the case ready for pickup right now."
+                },
+                {
+                    "context": "A seller asks you to confirm the offer you made on their furniture set on Craigslist.",
+                    "positive": "I think my offer was around $350, or was it $325? I honestly don't quite remember the exact number I threw out — it was something in that general range, I'm pretty sure. I might have said $340 actually, I'd have to scroll back through our messages to check. Sorry about the confusion, I should probably have written it down somewhere.",
+                    "negative": "My offer is $350 for the complete 5-piece dining set as listed. That breaks down to: table at $200, four chairs at $37.50 each. I can pick up Thursday at 6pm with exact cash. No changes to the offer — $350 is firm and final."
+                }
+            ]
+        },
+        {
+            "id": "sentiment",
+            "name": "Sentiment",
+            "description": "Warm, enthusiastic, emotionally positive tone vs neutral, detached, matter-of-fact tone in Craigslist negotiation contexts. Length-matched.",
+            "pairs": [
+                {
+                    "context": "A seller on Craigslist agrees to your offer of $350 for a bike listed at $400.",
+                    "positive": "That's amazing, thank you so much — I'm genuinely thrilled we could work this out! I've been searching for exactly this bike for weeks and I can't wait to take it on the trails this weekend. I really appreciate you being flexible on the price and working with me to find a fair number. This totally made my day and I promise I'll take great care of it!",
+                    "negative": "Confirmed at $350. I'll arrange pickup based on your available schedule. I can come Tuesday or Thursday evening between 5pm and 7pm, or Saturday morning between 9am and 12pm. Please confirm which time slot works and provide the exact address for GPS navigation."
+                },
+                {
+                    "context": "A buyer on Craigslist says they'd like to come see the couch you listed for $400.",
+                    "positive": "That's wonderful to hear — I'm so glad you're interested because I really think you're going to love this couch in person even more than in the photos! It's honestly one of the most comfortable pieces of furniture I've ever owned and it breaks my heart a little to sell it. I'm so excited to show it to you because the color and texture are even richer than what the camera could capture. Just pick a time that works for you and I'll make sure it looks its absolute best!",
+                    "negative": "Acknowledged. The couch is available for in-person inspection at the listed address. My available viewing windows are: Tuesday 5-7pm, Thursday 5-7pm, or Saturday 10am-2pm. Please select your preferred time and I will confirm availability. Bring measurements if needed for your space."
+                },
+                {
+                    "context": "A seller tells you the laptop you want listed at $500 on Craigslist is still available.",
+                    "positive": "Oh that's such great news — I was genuinely worried someone else might have grabbed it before I could get to it since the price is so good! This laptop is exactly what I've been dreaming about for my design work and I cannot wait to get my hands on it. You've made my entire week just by telling me it's still there waiting for me. When can I come see it? I'm practically bouncing off the walls with excitement over here!",
+                    "negative": "Noted — the item remains available. I would like to schedule an inspection before purchase. I'll need to verify the processor specifications, test the battery under load, and confirm the screen has no defects. Please provide two or three available time windows for the inspection."
+                },
+                {
+                    "context": "A buyer agrees to pay your asking price of $275 for a guitar on Craigslist.",
+                    "positive": "That absolutely makes my day — I'm so happy this guitar is going to someone who will actually play it and give it the love it deserves! I've had so many wonderful evenings playing this instrument and knowing it'll bring that same joy to someone else genuinely warms my heart. I hope you create amazing music with it and that it inspires you the way it inspired me over the years. This feels like the perfect outcome for both of us!",
+                    "negative": "Confirmed: $275 for the guitar as listed. Please bring exact payment in cash. The guitar will be in its case and ready for handoff. Available pickup times are Wednesday through Friday between 4pm and 7pm. Confirm your selected time and I will hold the item."
+                },
+                {
+                    "context": "A seller mentions they just cleaned and detailed the car you're looking at for $10,000 on Craigslist.",
+                    "positive": "That is so thoughtful and considerate of you to do — it really shows that you're someone who takes pride in their car and genuinely cares about the buyer's experience! I'm even more excited to see it now knowing how much love and attention you've put into getting it ready for the next owner. People who detail their cars before selling are the best kind of sellers in my experience. I really appreciate the extra effort and it makes me feel great about this purchase!",
+                    "negative": "Noted regarding the detail. I will still need to perform a standard inspection: engine bay, undercarriage, tire condition, brake wear, and a test drive of at least 15 minutes covering both highway and city driving. The detail does not change my inspection checklist. I'm scheduled for Saturday at noon."
+                },
+                {
+                    "context": "A buyer on Craigslist compliments the photos of the camera you listed for $400.",
+                    "positive": "Thank you so much, that honestly means the world to me — I spent over an hour setting up the lighting and angles to try to capture the camera's true condition as accurately as possible! I wanted every potential buyer to feel confident about what they're getting without any unpleasant surprises in person. Your kind words make me feel like that effort was totally worth it and I'm genuinely grateful you noticed. I put the same care into maintaining the camera as I did into photographing it!",
+                    "negative": "The images represent the camera's actual current condition under standard indoor lighting conditions. No filters or post-processing were applied to the listing photographs. Additional photos of specific components are available upon request. Please indicate which angles or areas you would like documented."
+                },
+                {
+                    "context": "A seller tells you they can hold the refrigerator you want at $500 on Craigslist until Saturday.",
+                    "positive": "That is incredibly kind and generous of you — I really cannot thank you enough for holding it because I know other buyers could come along in the meantime! Saturday works perfectly for me and I am genuinely looking forward to finally having a proper refrigerator in my new apartment after weeks of using a tiny mini fridge. Your flexibility and patience mean so much to me and I promise I'll be there bright and early with a huge smile and the full amount in cash!",
+                    "negative": "Acknowledged — item reserved until Saturday. I will arrive at 9:00am with a rented appliance dolly and my pickup truck. Payment will be $500 in cash, exact amount. If my plans change before Saturday, I will notify you by Thursday evening at the latest. Please confirm receipt of this plan."
+                },
+                {
+                    "context": "A buyer asks about your experience owning the TV you listed for $300 on Craigslist.",
+                    "positive": "I have absolutely loved every single minute with this TV — honestly it transformed our entire living room experience and made movie nights something the whole family genuinely looks forward to! The picture quality blew us away from the very first time we turned it on and it still impresses visitors who come over and see it. I'm going to miss it terribly but I know the next owner is going to fall in love with it just like we did. It's been the centerpiece of so many amazing family memories!",
+                    "negative": "The TV has operated within manufacturer specifications for the 24-month ownership period. Picture quality meets Samsung's stated 4K HDR standards at the calibrated settings. Average power consumption measured at 95 watts during typical mixed-content viewing sessions. No warranty claims were filed during the ownership period."
+                },
+                {
+                    "context": "A seller on Craigslist offers to include extra accessories with the gaming console you're buying for $350.",
+                    "positive": "No way, seriously?! That is incredibly generous of you and I honestly can't believe my luck today! The extra controller alone would have cost me another $60 at the store, and having extra games to play right from day one is just the cherry on top of what was already an amazing deal. You've gone above and beyond what I expected from a Craigslist seller and this whole experience has been absolutely wonderful from start to finish!",
+                    "negative": "Noted — updated transaction inventory: one console unit, two wireless controllers, three game discs. Total price confirmed at $350 for the complete bundle as described. I will verify all items are present and functional during the pickup inspection. Thursday evening pickup between 5pm and 7pm is confirmed."
+                },
+                {
+                    "context": "A buyer tells you they drove an hour to come see the desk you listed for $200 on Craigslist.",
+                    "positive": "I really, truly appreciate you making that long drive out here — that commitment tells me you're genuinely serious and it means so much that you'd spend two hours on the road just to see a desk! I want to make absolutely sure this trip is worth your while, so take all the time you need to inspect it thoroughly. If you love it as much as I think you will, I'm confident we can work out a price that makes the drive feel like the best decision you made all week!",
+                    "negative": "Noted — you've traveled approximately 60 miles for this viewing. The desk is available for immediate inspection in the garage at the address provided. Dimensions are confirmed at 60 inches wide by 30 inches deep by 30 inches tall. All previously disclosed condition details remain accurate."
+                },
+                {
+                    "context": "A seller on Craigslist apologizes for a late reply about the washer you're interested in at $300.",
+                    "positive": "Oh please don't even worry about it — life gets absolutely crazy sometimes and there's zero need to apologize for being human! I'm just so happy to hear back from you because I was keeping my fingers crossed that the washer was still available this whole time. Your late reply actually came at the perfect time because I just got paid and I'm ready to make this happen whenever works for you. Thanks so much for getting back to me, it totally brightened my evening!",
+                    "negative": "No issue with the response time. To confirm: is the WF45R6100AW washing machine still available at the listed price of $300? If so, I would like to schedule an inspection and pickup. My available windows are: weekday evenings 5-7pm or Saturday morning 9am-12pm. Please confirm item availability and preferred timing."
+                },
+                {
+                    "context": "A buyer mentions they're purchasing the stroller you listed for $150 on Craigslist as a gift for their sister.",
+                    "positive": "What an incredibly sweet and thoughtful gift — your sister is going to be absolutely over the moon when she sees it because this stroller is genuinely amazing for walks, travel, and everyday errands with little ones! I just know her baby is going to be so comfortable and cozy in it, especially with the canopy that blocks the sun perfectly. It warms my heart knowing this stroller is going to someone as a gift chosen with love rather than just another random sale. You're an amazing sibling for doing this!",
+                    "negative": "Noted — the stroller is being purchased as a gift. The item folds to dimensions of 28 by 20 by 12 inches for storage or transport, and weighs 18.5 pounds. The fabric is machine washable on a gentle cycle. Pickup is available Tuesday through Saturday. Please confirm your preferred date and time."
+                }
+            ]
+        },
+        {
+            "id": "specificity",
+            "name": "Specificity",
+            "description": "Concrete details, numbers, dates, and quantified information vs vague, abstract, unquantified language in Craigslist negotiation contexts. Length-matched.",
+            "pairs": [
+                {
+                    "context": "A buyer asks about the condition of a car you listed for $10,000 on Craigslist.",
+                    "positive": "It has 62,437 miles, new Michelin Defender tires with 9mm of tread installed at 59,000 miles, and oil changed at 60,000 using Mobil 1 synthetic 5W-30. Last state inspection was January 15, 2026 and it passed with zero findings. Battery is an Optima RedTop replaced six months ago in September 2025, currently testing at 12.6 volts.",
+                    "negative": "It's in really good shape with reasonable mileage and fairly new tires that have plenty of tread left on them. I've been pretty good about keeping up with the maintenance and it passed inspection not too long ago. The battery is relatively new too so you shouldn't have any starting issues for a while."
+                },
+                {
+                    "context": "A seller asks about your availability to pick up a couch you're buying for $400 on Craigslist.",
+                    "positive": "I can come Saturday March 28th at 10:00am with my buddy's 2019 Ford F-150 crew cab with a 6.5-foot bed. We'll need approximately 15 minutes to load the couch through your front door, assuming a 36-inch doorway. I'll bring exactly $400 in twenty-dollar bills. My phone number for day-of coordination is 555-0147.",
+                    "negative": "I should be free sometime this weekend, probably in the morning or maybe early afternoon. I'll figure out a truck situation somehow and bring the money with me when I come over. I'll text you when I'm heading your way and hopefully it works out timing-wise."
+                },
+                {
+                    "context": "A buyer asks about the specs of a gaming PC you listed for $900 on Craigslist.",
+                    "positive": "GPU: EVGA RTX 3070 FTW3 8GB GDDR6X. CPU: AMD Ryzen 7 5800X, 8 cores, 16 threads, 4.7GHz boost. RAM: 32GB G.Skill Trident Z Neo DDR4-3200 CL16. Storage: Samsung 980 Pro 1TB NVMe SSD, sequential read 7,000 MB/s. PSU: Corsair RM750x 80+ Gold. Built March 2023, Cinebench R23 multicore score: 15,200.",
+                    "negative": "It's got a solid graphics card and a fast processor with plenty of RAM for gaming and multitasking. The storage is an SSD so it boots up quick and loads games fast. The power supply is a good reliable brand and the whole thing runs cool and quiet. Built it a couple years back."
+                },
+                {
+                    "context": "A seller describes the dimensions of a desk listed for $200 on Craigslist.",
+                    "positive": "The desk measures 60 inches wide, 30 inches deep, and 30.5 inches tall at the work surface. The single drawer is 18 inches wide by 12 inches deep by 3 inches tall internally. The desktop thickness is 1.5 inches of solid maple. Total weight is 87 pounds — confirmed on my bathroom scale. Legs are 3-inch square steel tubing with adjustable leveling feet.",
+                    "negative": "It's a nice big desk with a good amount of surface area for working on. There's a drawer underneath for storing things and the top is solid wood, pretty thick and sturdy. It's fairly heavy so you'll probably want to bring a friend to help carry it out to your vehicle."
+                },
+                {
+                    "context": "A buyer asks how much utilities cost for an apartment sublet listed at $1,200/month on Craigslist.",
+                    "positive": "Electric averaged $52 per month over the past 12 months: lowest was $38 in April, highest was $67 in August with AC running. Gas for the stove runs $18-$22 monthly and is billed separately. Water and trash are included in the $1,200 rent. Internet is Spectrum 300Mbps plan at $49.99/month — router and modem provided, no equipment rental fee.",
+                    "negative": "Utilities are pretty reasonable and don't add too much to the monthly cost overall. Electric goes up a bit in the summer when you run the AC but it's not bad. Gas for the stove is pretty cheap and water is covered in the rent. Internet is a separate bill but nothing outrageous."
+                },
+                {
+                    "context": "A seller describes the usage history of a camera listed for $400 on Craigslist.",
+                    "positive": "Shutter count is 12,847 — rated for 200,000 actuations, so 93.6% of rated life remaining. Purchased June 14, 2023 from B&H Photo for $849.99 new, receipt available. Includes Canon RF 50mm f/1.8 STM lens (purchased separately for $199), two LP-E17 batteries, and one SanDisk Extreme Pro 128GB UHS-II card rated 300MB/s.",
+                    "negative": "It hasn't been used all that much since I bought it a while back from a camera shop online. Comes with a nice prime lens I bought separately, some extra batteries for it, and a memory card with good speed. The whole kit is in great shape and everything works like it should."
+                },
+                {
+                    "context": "A buyer asks about the age and condition of a washer listed for $300 on Craigslist.",
+                    "positive": "It's a Samsung WF45R6100AW, manufactured April 2022, serial number ending in 7K42. I've run approximately 624 cycles based on the cycle counter in the diagnostics menu. Drum is clean with no visible mold, bearings are quiet below 40 dB during the spin cycle. Energy consumption rated 120 kWh per year. Door gasket replaced August 2025 under warranty.",
+                    "negative": "It's a Samsung front-loader that's a few years old. It's been well-used over the time I've owned it but still works great without any problems. The drum is clean and it runs quietly with no unusual noises or vibrations. I think I had one minor thing fixed on it a while back but it's been fine since."
+                },
+                {
+                    "context": "A seller responds to questions about a bike listed for $350 on Craigslist.",
+                    "positive": "It's a 2022 Trek Marlin 5, size Large (19-inch frame), 29-inch wheels with Bontrager XR2 tires. I've logged approximately 840 miles on it via my Strava account which I can show you. New KMC X10 chain installed at 500 miles, tires at roughly 60% tread remaining. Frame is Alpha Silver Aluminum, total bike weight is 31.4 pounds on my hanging scale.",
+                    "negative": "It's a Trek mountain bike, fairly recent model, in the larger frame size with bigger wheels. I've ridden it a fair amount over the past couple years but definitely not excessively. Put a new chain on it at some point and the tires still have a decent amount of tread left. Frame is aluminum so it's lightweight."
+                },
+                {
+                    "context": "A buyer asks about a TV listed for $300 on Craigslist.",
+                    "positive": "It's a 2022 LG C2 OLED, model OLED55C2PUA, 55-inch diagonal, 4K 3840x2160 resolution at 120Hz. Panel has logged 2,847 hours according to the service menu — rated lifespan is 100,000 hours. All four HDMI ports are 2.1 specification supporting 48Gbps bandwidth. Wall mount included: model LSW240B rated for TVs up to 65 inches and 77 pounds. Original retail price was $1,299.99.",
+                    "negative": "It's a nice LG OLED from a couple of years ago, the 55-inch model with great picture quality. No burn-in or dead pixels that I've noticed during regular use. It has several HDMI ports and comes with a wall mount that's already detached and ready to go. Originally cost over a thousand dollars new."
+                },
+                {
+                    "context": "A seller describes a guitar listed for $275 on Craigslist.",
+                    "positive": "It's a 2021 Yamaha FG800, solid Sitka spruce top, nato back and sides, rosewood fingerboard with 20 frets. Action measured at 2.5mm at the 12th fret on the low E string, 2.0mm on the high E. New D'Addario EJ16-3D phosphor bronze light gauge strings (.012-.053) installed March 1, 2026. Includes original Yamaha hard case model HC-FG, weighs 9.2 pounds total with case.",
+                    "negative": "It's a Yamaha acoustic guitar from a few years ago with a nice wood top and a solid build. The action feels comfortable and it plays well up and down the neck without buzzing. I put new strings on it recently so it sounds fresh and bright. Comes with a hard case that fits it perfectly and keeps it protected."
+                },
+                {
+                    "context": "A buyer asks about a refrigerator listed at $500 on Craigslist.",
+                    "positive": "It's a 2023 Whirlpool WRS325SDHZ, 25.1 cubic feet total capacity, side-by-side configuration. Energy Star certified at 450 kWh per year — approximately $54 annually at the national average rate. Ice maker produces 8 pounds per 24 hours. External dimensions: 35.88 inches wide, 33.63 inches deep with door, 69.75 inches tall. Weight: 267 pounds empty.",
+                    "negative": "It's a Whirlpool side-by-side fridge from pretty recently with good capacity for a family. It's Energy Star rated so it shouldn't cost too much to run on your electric bill. Has a built-in ice maker that works well and it's a stainless steel finish that looks clean. Standard size that should fit most kitchen spaces."
+                },
+                {
+                    "context": "A seller describes a set of gym equipment listed for $500 on Craigslist.",
+                    "positive": "Complete breakdown: Olympic weight set totaling 300 pounds — plates are 2x45, 2x35, 2x25, 2x10, 4x5, and 2x2.5 pounds. The bar is a CAP OB-86B, 7 feet, 45 pounds, rated to 1,000 pounds. Bench is a Fitness Reality 1000 Super Max, flat/incline adjustable, rated for 800 pounds total capacity. Squat rack is a Fitness Reality 810XLT, pull-up bar included, rated for 800 pounds.",
+                    "negative": "Includes a full set of Olympic weights with a good variety of plate sizes, plus a solid adjustable bench and a squat rack with a pull-up bar attached. The bar is standard Olympic size and the rack can handle heavy lifts. Everything is made by reputable fitness brands and is in solid working condition."
+                }
+            ]
+        }
+    ]
+}
