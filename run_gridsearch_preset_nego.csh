@@ -3,14 +3,21 @@
 # Grid search over all 15 negotiation dimensions using the 40 preset scenarios.
 # Saves results per dimension — safe to relaunch if the server dies.
 #
+# Set FIXED_LAYERS below to skip Stage 1 and use specific layer indices.
+# Leave empty to run Stage 1 preset search instead.
+#
 # Usage:
-#   ./run_gridsearch_preset_nego.csh qwen2.5-3b vectors/neg15dim_12pairs_matched/negotiation
-#   ./run_gridsearch_preset_nego.csh qwen2.5-3b vectors/neg15dim_12pairs_matched/negotiation _v2
-#   ./run_gridsearch_preset_nego.csh llama3-3b  vectors/neg15dim_12pairs_matched/negotiation
+#   ./run_gridsearch_preset_nego.csh qwen2.5-7b vectors/neg15dim_12pairs_matched/negotiation _7b_v1
+
+# ── Set layers here (leave empty to run Stage 1 preset search) ──────────────
+set FIXED_LAYERS = ( 10 14 18 21 )
+# set FIXED_LAYERS = ( 14 21 )
+# set FIXED_LAYERS = ()
+# ────────────────────────────────────────────────────────────────────────────
 
 if ($#argv < 2) then
     echo "Usage: $0 <model> <vectors_dir> [output_suffix]"
-    echo "  e.g. $0 qwen2.5-3b vectors/neg15dim_12pairs_matched/negotiation _v2"
+    echo "  e.g. $0 qwen2.5-7b vectors/neg15dim_12pairs_matched/negotiation _7b_v1"
     exit 1
 endif
 
@@ -45,14 +52,25 @@ foreach dim ($DIMS)
         echo "==> Skipping ${dim} (already complete)"
     else
         echo "==> Running dimension: ${dim}"
-        python lightweight_gridsearch_preset_nego.py \
-            --model         "${MODEL}" \
-            --dimension     "${dim}" \
-            --vectors_dir   "${VECTORS_DIR}" \
-            --presets       late middle_late \
-            --two_pass \
-            --coarse_alphas 5 15 25 \
-            --output_suffix "${SUFFIX}"
+        if ("${FIXED_LAYERS}" != "") then
+            python lightweight_gridsearch_preset_nego.py \
+                --model         "${MODEL}" \
+                --dimension     "${dim}" \
+                --vectors_dir   "${VECTORS_DIR}" \
+                --two_pass \
+                --coarse_alphas 10 20 30 \
+                --output_suffix "${SUFFIX}" \
+                --fixed_layers  ${FIXED_LAYERS}
+        else
+            python lightweight_gridsearch_preset_nego.py \
+                --model         "${MODEL}" \
+                --dimension     "${dim}" \
+                --vectors_dir   "${VECTORS_DIR}" \
+                --presets       late middle_late \
+                --two_pass \
+                --coarse_alphas 10 20 30 \
+                --output_suffix "${SUFFIX}"
+        endif
     endif
 end
 
