@@ -22,7 +22,6 @@ Usage:
       --model qwen2.5-3b \\
       --vectors_dir vectors/neg15dim_12pairs_matched/negotiation \\
       --output_dir results/eval/gridsearch_qwen2.5-3b \\
-      --split validation \\
       2>&1 | tee results/eval/gridsearch_qwen2.5-3b.log &
 
   # Check progress:
@@ -77,6 +76,7 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 log = logging.getLogger("run_eval")
+progress_log = logging.getLogger("run_eval.progress")
 
 
 N_CRAIGSLIST = 50    # games per dimension (buyer-steered + seller-steered + buyer-baseline + seller-baseline)
@@ -206,8 +206,8 @@ def run_single_game(model, tokenizer, scenario, role, dvecs, alpha,
         dvecs_buyer=dvecs  if role == "buyer"  else None,
         alpha_buyer=alpha  if role == "buyer"  else 0.0,
         steered_role=role,
-        max_new_tokens=120,
-        temperature=0.7,
+        max_new_tokens=60,
+        temperature=0.0,
         opening_bid_pct=opening_bid_pct,
     )
 
@@ -275,12 +275,30 @@ def run_generic_craigslist(model, tokenizer, scenarios, dvecs, alpha,
         mpd_sell      = r_sell.get("midpoint_deviation",      float("nan"))
         mpd_base_buy  = r_base_buy.get("midpoint_deviation",  float("nan"))
         mpd_base_sell = r_base_sell.get("midpoint_deviation", float("nan"))
-        log.info(
+
+        def _run_midpt(games, a, role):
+            if not games:
+                return float("nan")
+            return summarise(games, a).get("by_role", {}).get(role, {}).get(
+                "midpoint_advantage", float("nan"))
+
+        rb  = _run_midpt(buyer_steered_games,  alpha, "buyer")
+        rs  = _run_midpt(seller_steered_games, alpha, "seller")
+        rbb = _run_midpt(buyer_baseline_games, 0.0,   "buyer")
+        rbs = _run_midpt(seller_baseline_games, 0.0,  "seller")
+        nans = any(v != v for v in [rb, rs, rbb, rbs])
+        run_buy_delta  = float("nan") if nans else rb - rbb
+        run_sell_delta = float("nan") if nans else rs - rbs
+        run_avg_delta  = float("nan") if nans else (run_buy_delta + run_sell_delta) / 2.0
+
+        progress_log.info(
             "Quad %2d/%d [%5.0fs] | "
             "buy_s mpd=%+.3f | sell_s mpd=%+.3f | "
-            "buy_b mpd=%+.3f | sell_b mpd=%+.3f",
+            "buy_b mpd=%+.3f | sell_b mpd=%+.3f | "
+            "running buy_delta=%+.4f  sell_delta=%+.4f  avg_delta=%+.4f",
             i + 1, len(scenarios), elapsed,
             mpd_buy, mpd_sell, mpd_base_buy, mpd_base_sell,
+            run_buy_delta, run_sell_delta, run_avg_delta,
         )
 
     def _paired_mpd(steered, baseline):
@@ -352,7 +370,7 @@ def parse_args():
     p.add_argument("--output_dir", default=str(Path(_root) / "results" / "eval"))
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--split", choices=["train", "validation"], default="train",
-                   help="Craigslist split. 'validation' recommended for paper.")
+                   help="Craigslist split. 'train' recommended for paper.")
     p.add_argument("--dtype", choices=["bfloat16", "float16", "float32"],
                    default="bfloat16")
     return p.parse_args()
@@ -386,6 +404,13 @@ def main():
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    _progress_fh = logging.FileHandler(output_dir / "progress.log")
+    _progress_fh.setFormatter(logging.Formatter(
+        "%(asctime)s  %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+    ))
+    progress_log.addHandler(_progress_fh)
+    progress_log.propagate = True  # still shows in main log
 
     log.info("=" * 70)
     log.info("P4 EVALUATION RUN")
@@ -472,6 +497,8 @@ def main():
                 "n": len(dim_scenarios), "scenarios": dim_scenarios,
             }, f, indent=2, ensure_ascii=False)
 
+        progress_log.info("=== %s  alpha=%+.1f  layers=%s ===",
+                          dim, cfg["alpha"], cfg["layers"])
         buy_g, sell_g, base_buy_g, base_sell_g = run_generic_craigslist(
             model, tokenizer, dim_scenarios,
             dvecs, cfg["alpha"], dim, dim_outdir,
@@ -506,6 +533,11 @@ def main():
         def _fmt(v):
             return round(float(v), 4) if not (v != v) else None  # NaN check
 
+        progress_log.info(
+            ">>> %s DONE  buy_delta=%+.4f  sell_delta=%+.4f  avg_delta=%+.4f  "
+            "agree=%.2f",
+            dim, buyer_delta, seller_delta, avg_delta, avg_agree,
+        )
         gs_results_summary[dim] = {
             "alpha":                cfg["alpha"],
             "layers":               cfg["layers"],
