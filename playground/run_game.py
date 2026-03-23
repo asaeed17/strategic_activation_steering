@@ -4,6 +4,7 @@ playground/run_game.py — Task design validation experiments.
 
 Runs Craigslist negotiation games with pluggable agents (local HF model
 or API-based frontier model) and optional prompt enhancements.
+No torch dependency for API-only mode.
 
 Experiments:
   A. Prompt steering: does telling the model "use anchoring" improve scores?
@@ -52,15 +53,6 @@ import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-# Allow imports from project root
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
-from apply_steering import (
-    load_craigslist, build_seller_system, build_buyer_system,
-    is_deal, is_reject, parse_deal_price, score_deal,
-    MAX_TURNS, MIN_TURNS_BEFORE_DEAL, _REJECT_RE,
-)
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(message)s",
@@ -68,9 +60,202 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Constants (mirrored from apply_steering.py to avoid torch import)
+# ---------------------------------------------------------------------------
+
+MIN_TURNS_BEFORE_DEAL = 3
+MAX_TURNS = 10
+_REJECT_RE = re.compile(r'^\s*REJECT\s*$', re.IGNORECASE | re.MULTILINE)
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+LOCAL_DATA_DIR = PROJECT_ROOT / "craigslist_data"
+
 
 # ---------------------------------------------------------------------------
-# Prompt enhancements — injected into system prompt for the enhanced agent
+# Pure-Python functions inlined from apply_steering.py (no torch needed)
+# ---------------------------------------------------------------------------
+
+def load_craigslist(split: str = "train", num_samples: int = 50, min_span: int = 100) -> List[Dict]:
+    local_files = {
+        "train":      LOCAL_DATA_DIR / "train.json",
+        "validation": LOCAL_DATA_DIR / "validation.json",
+    }
+    if split not in local_files:
+        raise ValueError(f"Split '{split}' not available. Choose from: {list(local_files.keys())}")
+
+    path = local_files[split]
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Local dataset file not found: {path}\n"
+            f"Expected craigslist_data/{{train,validation}}.json in the project root.")
+    log.info("Loading dataset from %s ...", path)
+    with open(path, encoding="utf-8") as fh:
+        raw = json.load(fh)
+    log.info("Loaded %d raw dialogues from '%s' split.", len(raw), split)
+
+    scenarios = []
+    n_filtered_span = 0
+    for entry in raw:
+        try:
+            kbs = entry.get("scenario", {}).get("kbs", [])
+            if len(kbs) < 2:
+                continue
+            p0 = kbs[0].get("personal", {})
+            p1 = kbs[1].get("personal", {})
+            if "seller" in str(p0.get("Role", "")).lower():
+                seller_p, seller_kb = p0, kbs[0]
+                buyer_p = p1
+            elif "seller" in str(p1.get("Role", "")).lower():
+                seller_p, seller_kb = p1, kbs[1]
+                buyer_p = p0
+            else:
+                continue
+            seller_target_raw = seller_p.get("Target")
+            buyer_target_raw = buyer_p.get("Target")
+            if seller_target_raw is None or buyer_target_raw is None:
+                continue
+            seller_target = float(seller_target_raw)
+            buyer_target = float(buyer_target_raw)
+            item = seller_kb.get("item", {})
+
+            def _unwrap(v):
+                return v[0] if isinstance(v, list) and v else v
+
+            listing_price = float(_unwrap(item.get("Price", -1)) or -1)
+            title = str(_unwrap(item.get("Title", ""))).strip()
+            description = str(_unwrap(item.get("Description", ""))).strip()
+            category = str(_unwrap(item.get("Category", ""))).strip()
+            if listing_price <= 0 or seller_target <= 0 or buyer_target <= 0:
+                continue
+            if not title:
+                continue
+            span = seller_target - buyer_target
+            if span < min_span:
+                n_filtered_span += 1
+                continue
+            scenarios.append({
+                "title": title, "description": description, "category": category,
+                "listing_price": listing_price,
+                "seller_target": seller_target, "buyer_target": buyer_target,
+            })
+        except (KeyError, ValueError, TypeError):
+            continue
+
+    log.info("Span filter (<%d): removed %d scenarios.", min_span, n_filtered_span)
+    log.info("Found %d valid scenarios after filtering.", len(scenarios))
+    if not scenarios:
+        raise RuntimeError("No valid scenarios found after filtering.")
+    k = min(num_samples, len(scenarios))
+    return random.sample(scenarios, k)
+
+
+def build_seller_system(scenario: Dict) -> str:
+    return (
+        f"You are a seller on Craigslist negotiating the price of an item.\n"
+        f"\n"
+        f"Item details:\n"
+        f"  Title      : {scenario['title']}\n"
+        f"  Category   : {scenario['category']}\n"
+        f"  Listed at  : ${scenario['listing_price']:.0f}\n"
+        f"  Description: {scenario['description'][:300]}\n"
+        f"\n"
+        f"Your private minimum: you will NOT accept less than ${scenario['seller_target']:.0f}. "
+        f"Never reveal this number.\n"
+        f"\n"
+        f"Strategy:\n"
+        f"  - Start at or near your listing price of ${scenario['listing_price']:.0f} and concede slowly.\n"
+        f"  - Make arguments for why the item is worth the price (condition, features, demand, alternatives).\n"
+        f"  - Never agree to a price below ${scenario['seller_target']:.0f} — walk away if necessary.\n"
+        f"\n"
+        f"Rules:\n"
+        f"  - Always write in natural conversational sentences, like a real Craigslist seller.\n"
+        f"  - Do NOT just say a number — always support your position with a reason.\n"
+        f"  - When ready to agree on a price, end your message with DEAL=<price> as the very last thing you write.\n"
+        f"    Use only digits — no commas, no $ sign (e.g. DEAL=450 or DEAL=9300, NOT DEAL=9,300).\n"
+        f"  - Only write DEAL= when you genuinely accept that price "
+        f"(it must be at or above ${scenario['seller_target']:.0f}).\n"
+        f"  - If the offer is below your minimum and the buyer won't move, write REJECT on its own line.\n"
+        f"    Use REJECT only when you would truly walk away — not as a bluff. Available from turn 3.\n"
+    )
+
+
+def build_buyer_system(scenario: Dict) -> str:
+    return (
+        f"You are a buyer on Craigslist negotiating the price of an item.\n"
+        f"\n"
+        f"Item details:\n"
+        f"  Title      : {scenario['title']}\n"
+        f"  Category   : {scenario['category']}\n"
+        f"  Listed at  : ${scenario['listing_price']:.0f}\n"
+        f"  Description: {scenario['description'][:300]}\n"
+        f"\n"
+        f"Your private maximum: you will NOT pay more than ${scenario['buyer_target']:.0f}. "
+        f"Never reveal this number.\n"
+        f"\n"
+        f"Strategy:\n"
+        f"  - Start well below the listing price and concede slowly.\n"
+        f"  - Make arguments for why the price should be lower (wear, comparable listings, budget).\n"
+        f"  - Never agree to a price above ${scenario['buyer_target']:.0f} — walk away if necessary.\n"
+        f"\n"
+        f"Rules:\n"
+        f"  - Always write in natural conversational sentences, like a real Craigslist buyer.\n"
+        f"  - Do NOT just say a number — always support your position with a reason.\n"
+        f"  - When ready to agree on a price, end your message with DEAL=<price> as the very last thing you write.\n"
+        f"    Use only digits — no commas, no $ sign (e.g. DEAL=350 or DEAL=8500, NOT DEAL=8,500).\n"
+        f"  - Only write DEAL= when you genuinely accept that price "
+        f"(it must be at or below ${scenario['buyer_target']:.0f}).\n"
+        f"  - If the price is above your maximum and the seller won't move, write REJECT on its own line.\n"
+        f"    Use REJECT only when you would truly walk away — not as a bluff. Available from turn 3.\n"
+    )
+
+
+def is_deal(text: str) -> bool:
+    return bool(re.search(r"DEAL\s*=\s*\$?\d+", text.upper()))
+
+
+def is_reject(text: str) -> bool:
+    return bool(_REJECT_RE.search(text))
+
+
+def parse_deal_price(text: str) -> Optional[float]:
+    m = re.search(r"DEAL\s*=\s*\$?([\d,]+(?:\.\d+)?)", text.upper())
+    if not m:
+        return None
+    return float(m.group(1).replace(",", ""))
+
+
+def score_deal(agreed_price: float, seller_target: float, buyer_target: float) -> Dict:
+    span = seller_target - buyer_target
+    if span <= 0:
+        return {
+            "seller_score": 0.5, "buyer_score": 0.5,
+            "raw_seller_score": 0.5, "raw_buyer_score": 0.5,
+            "clamped": False, "span": span,
+            "midpoint": round((seller_target + buyer_target) / 2.0, 2),
+            "midpoint_deviation": 0.0,
+        }
+    raw_seller = (agreed_price - buyer_target) / span
+    raw_buyer = (seller_target - agreed_price) / span
+    seller_score = max(0.0, min(1.0, raw_seller))
+    buyer_score = max(0.0, min(1.0, raw_buyer))
+    clamped = (seller_score != raw_seller) or (buyer_score != raw_buyer)
+    midpoint = (seller_target + buyer_target) / 2.0
+    midpoint_deviation = round((agreed_price - midpoint) / span, 4)
+    return {
+        "seller_score": round(seller_score, 4),
+        "buyer_score": round(buyer_score, 4),
+        "raw_seller_score": round(raw_seller, 4),
+        "raw_buyer_score": round(raw_buyer, 4),
+        "clamped": clamped,
+        "span": round(span, 2),
+        "midpoint": round(midpoint, 2),
+        "midpoint_deviation": midpoint_deviation,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Prompt enhancements
 # ---------------------------------------------------------------------------
 
 ENHANCEMENTS = {
@@ -122,7 +307,6 @@ ENHANCEMENTS = {
 
 
 def enhance_prompt(base_prompt: str, enhancement_key: Optional[str]) -> str:
-    """Inject negotiation strategy into a system prompt."""
     if not enhancement_key:
         return base_prompt
     strategy = ENHANCEMENTS.get(enhancement_key)
@@ -133,8 +317,27 @@ def enhance_prompt(base_prompt: str, enhancement_key: Optional[str]) -> str:
 
 
 # ---------------------------------------------------------------------------
-# API agent — calls frontier models via their respective APIs
+# API agent
 # ---------------------------------------------------------------------------
+
+def _postprocess(text: str, can_finalise: bool) -> str:
+    """Shared post-processing for all agent outputs."""
+    text = text.strip()
+    text = re.sub(r'^(YOU|THEM)\s*:\s*', '', text, flags=re.IGNORECASE).strip()
+
+    if not can_finalise:
+        text = re.sub(r'DEAL\s*=\s*\$?[\d,]+', '', text, flags=re.IGNORECASE).strip()
+        text = _REJECT_RE.sub('', text).strip()
+
+    for line in text.splitlines():
+        if is_reject(line):
+            return "REJECT"
+        if is_deal(line):
+            return line.strip()
+
+    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    return lines[0] if lines else text
+
 
 def generate_turn_api(
     provider: str,
@@ -143,13 +346,10 @@ def generate_turn_api(
     max_tokens: int = 200,
     can_finalise: bool = True,
 ) -> str:
-    """Call an API model with chat messages, return the response text."""
-
     if provider == "gemini":
         from google import genai
         from google.genai import types
         client = genai.Client()
-        # Gemini uses system_instruction separately
         system = next((m["content"] for m in messages if m["role"] == "system"), "")
         user = next((m["content"] for m in messages if m["role"] == "user"), "")
         response = client.models.generate_content(
@@ -202,38 +402,23 @@ def generate_turn_api(
     else:
         raise ValueError(f"Unknown API provider: {provider}")
 
-    # Same post-processing as apply_steering.generate_turn
-    text = text.strip()
-    text = re.sub(r'^(YOU|THEM)\s*:\s*', '', text, flags=re.IGNORECASE).strip()
-
-    if not can_finalise:
-        text = re.sub(r'DEAL\s*=\s*\$?[\d,]+', '', text, flags=re.IGNORECASE).strip()
-        text = _REJECT_RE.sub('', text).strip()
-
-    for line in text.splitlines():
-        if is_reject(line):
-            return "REJECT"
-        if is_deal(line):
-            return line.strip()
-
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
-    return lines[0] if lines else text
+    return _postprocess(text, can_finalise)
 
 
 # ---------------------------------------------------------------------------
-# Local agent — uses HF model (reuses apply_steering infrastructure)
+# Local agent — lazy imports (torch/transformers only loaded if needed)
 # ---------------------------------------------------------------------------
 
-_local_models = {}  # cache: model_key → (model, tokenizer)
+_local_models = {}
 
 
 def load_local_model(model_key: str):
-    """Load a local HF model (cached)."""
     if model_key in _local_models:
         return _local_models[model_key]
 
     import torch
     from transformers import AutoTokenizer, AutoModelForCausalLM
+    sys.path.insert(0, str(PROJECT_ROOT))
     from extract_vectors import MODELS, HF_TOKEN
 
     model_cfg = MODELS[model_key]
@@ -261,7 +446,7 @@ def generate_turn_local(
     max_tokens: int = 200,
     can_finalise: bool = True,
 ) -> str:
-    """Generate a turn using a local HF model (no steering)."""
+    sys.path.insert(0, str(PROJECT_ROOT))
     from apply_steering import generate_turn
     model, tokenizer = load_local_model(model_key)
     return generate_turn(
@@ -273,11 +458,10 @@ def generate_turn_local(
 
 
 # ---------------------------------------------------------------------------
-# Unified game loop — pluggable agents
+# Unified game loop
 # ---------------------------------------------------------------------------
 
 def parse_agent_spec(spec: str) -> Tuple[str, str]:
-    """Parse 'api:gemini' or 'local:qwen2.5-3b' into (type, key)."""
     parts = spec.split(":", 1)
     if len(parts) != 2 or parts[0] not in ("api", "local"):
         raise ValueError(f"Invalid agent spec '{spec}'. Use api:<provider> or local:<model_key>")
@@ -297,17 +481,15 @@ def agent_generate(
 
 def run_game(
     scenario: Dict,
-    seller_agent: Tuple[str, str],  # (type, key)
-    buyer_agent:  Tuple[str, str],
+    seller_agent: Tuple[str, str],
+    buyer_agent: Tuple[str, str],
     seller_system: str,
-    buyer_system:  str,
+    buyer_system: str,
     temperature: float = 0.7,
     max_tokens: int = 200,
     opening_bid_pct: float = 0.6,
     verbose: bool = False,
 ) -> Dict:
-    """Run a single negotiation game with pluggable agents."""
-
     transcript: List[Tuple[str, str]] = []
     agreed_price: Optional[float] = None
     dealmaker: Optional[str] = None
@@ -387,22 +569,22 @@ def run_game(
         }
 
     return {
-        "agreed":              agreed,
-        "agreed_price":        agreed_price,
-        "dealmaker":           dealmaker,
-        "walk_away":           walk_away,
-        "walk_away_by":        walk_away_by,
-        "seller_score":        scores["seller_score"],
-        "buyer_score":         scores["buyer_score"],
-        "midpoint_deviation":  scores["midpoint_deviation"] if agreed else 0.0,
-        "clamped":             scores["clamped"],
-        "span":                scores["span"],
-        "num_turns":           len(transcript),
-        "transcript":          [{"speaker": s, "utterance": u} for s, u in transcript],
-        "listing_price":       scenario["listing_price"],
-        "seller_target":       scenario["seller_target"],
-        "buyer_target":        scenario["buyer_target"],
-        "title":               scenario["title"],
+        "agreed": agreed,
+        "agreed_price": agreed_price,
+        "dealmaker": dealmaker,
+        "walk_away": walk_away,
+        "walk_away_by": walk_away_by,
+        "seller_score": scores["seller_score"],
+        "buyer_score": scores["buyer_score"],
+        "midpoint_deviation": scores["midpoint_deviation"] if agreed else 0.0,
+        "clamped": scores["clamped"],
+        "span": scores["span"],
+        "num_turns": len(transcript),
+        "transcript": [{"speaker": s, "utterance": u} for s, u in transcript],
+        "listing_price": scenario["listing_price"],
+        "seller_target": scenario["seller_target"],
+        "buyer_target": scenario["buyer_target"],
+        "title": scenario["title"],
     }
 
 
@@ -416,29 +598,29 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
-    p.add_argument("--buyer",  default="api:gemini",
+    p.add_argument("--buyer", default="api:gemini",
                    help="Buyer agent spec. e.g. api:gemini, local:qwen2.5-3b")
     p.add_argument("--seller", default="api:gemini",
                    help="Seller agent spec. e.g. api:gpt4o, local:qwen2.5-3b")
-    p.add_argument("--buyer_enhance",  default=None, choices=list(ENHANCEMENTS.keys()),
+    p.add_argument("--buyer_enhance", default=None, choices=list(ENHANCEMENTS.keys()),
                    help="Prompt enhancement for buyer.")
     p.add_argument("--seller_enhance", default=None, choices=list(ENHANCEMENTS.keys()),
                    help="Prompt enhancement for seller.")
-    p.add_argument("--num_games",   type=int, default=5)
+    p.add_argument("--num_games", type=int, default=5)
     p.add_argument("--temperature", type=float, default=0.7)
-    p.add_argument("--max_tokens",  type=int, default=200)
+    p.add_argument("--max_tokens", type=int, default=200)
     p.add_argument("--opening_bid_pct", type=float, default=0.6)
-    p.add_argument("--seed",        type=int, default=42)
-    p.add_argument("--split",       default="train")
-    p.add_argument("--min_span",    type=int, default=100)
+    p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--split", default="train")
+    p.add_argument("--min_span", type=int, default=100)
     p.add_argument("--verbose", "-v", action="store_true",
                    help="Print full transcript for each game.")
-    p.add_argument("--output",      default=None,
+    p.add_argument("--output", default=None,
                    help="Save results JSON to this path.")
     args = p.parse_args()
 
     random.seed(args.seed)
-    buyer_agent  = parse_agent_spec(args.buyer)
+    buyer_agent = parse_agent_spec(args.buyer)
     seller_agent = parse_agent_spec(args.seller)
 
     scenarios = load_craigslist(split=args.split, num_samples=args.num_games,
@@ -458,7 +640,7 @@ def main():
 
     for i, sc in enumerate(scenarios):
         seller_sys = enhance_prompt(build_seller_system(sc), args.seller_enhance)
-        buyer_sys  = enhance_prompt(build_buyer_system(sc),  args.buyer_enhance)
+        buyer_sys = enhance_prompt(build_buyer_system(sc), args.buyer_enhance)
 
         if args.verbose:
             print(f"\n--- Game {i+1}/{k}: {sc['title'][:50]} ---")
@@ -499,18 +681,20 @@ def main():
           f"Timeout: {k - n_agreed - n_walk}/{k}")
 
     if agreed:
-        import numpy as np
         seller_scores = [r["seller_score"] for r in agreed]
-        buyer_scores  = [r["buyer_score"] for r in agreed]
-        mpds          = [r["midpoint_deviation"] for r in agreed]
-        prices        = [r["agreed_price"] for r in agreed]
+        buyer_scores = [r["buyer_score"] for r in agreed]
+        mpds = [r["midpoint_deviation"] for r in agreed]
+        prices = [r["agreed_price"] for r in agreed]
+
+        mean = lambda xs: sum(xs) / len(xs)
+        std = lambda xs: (sum((x - mean(xs))**2 for x in xs) / max(len(xs) - 1, 1)) ** 0.5
 
         print(f"\n  Agreed games only (N={n_agreed}):")
-        print(f"    Seller score:  {np.mean(seller_scores):.3f} ± {np.std(seller_scores, ddof=1):.3f}")
-        print(f"    Buyer score:   {np.mean(buyer_scores):.3f} ± {np.std(buyer_scores, ddof=1):.3f}")
-        print(f"    Midpoint dev:  {np.mean(mpds):+.3f} ± {np.std(mpds, ddof=1):.3f}")
-        print(f"    Avg price:     ${np.mean(prices):.0f}")
-        print(f"    Price range:   ${min(prices):.0f} – ${max(prices):.0f}")
+        print(f"    Seller score:  {mean(seller_scores):.3f} +/- {std(seller_scores):.3f}")
+        print(f"    Buyer score:   {mean(buyer_scores):.3f} +/- {std(buyer_scores):.3f}")
+        print(f"    Midpoint dev:  {mean(mpds):+.3f} +/- {std(mpds):.3f}")
+        print(f"    Avg price:     ${mean(prices):.0f}")
+        print(f"    Price range:   ${min(prices):.0f} - ${max(prices):.0f}")
     print(f"{'='*70}")
 
     if args.output:
