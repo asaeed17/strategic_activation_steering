@@ -49,13 +49,12 @@ foreach dim ($DIMS)
             --model        "${MODEL}" \
             --dimension    "${dim}" \
             --vectors_dir  "${VECTORS_DIR}" \
-            --presets      late middle_late \
+            --fixed_layers 18 20 22 24 \
             --two_pass \
-            --coarse_alphas 5 15 25 \
-            --s1_games     20 \
+            --coarse_alphas 5 15 \
             --s2_games     20 \
             --min_span     200 \
-            --dataset_split validation \
+            --dataset_split train \
             --output_suffix "${SUFFIX}" \
             --use_craigslist
     endif
