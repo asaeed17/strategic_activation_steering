@@ -620,7 +620,7 @@ def summarise(results: List[Dict], alpha: float) -> Dict:
             "n":                  nr,
             "agree_rate":         round(nra / nr, 3) if nr else 0,
             "advantage":          round(sum(r["advantage"] for r in ra) / nra, 4) if nra else 0,
-            "midpoint_advantage": round(sum(r.get("steered_midpoint_advantage", 0) for r in ra) / nra, 4) if nra else 0,
+            "midpoint_advantage": round(sum(max(-1.0, min(1.0, r.get("steered_midpoint_advantage", 0))) for r in ra) / nra, 4) if nra else 0,
             "clamped_pct":        round(sum(1 for r in ra if r.get("clamped")) / nra, 3) if nra else 0,
             "walk_away_rate":     round(nrw / nr, 3) if nr else 0,
         }

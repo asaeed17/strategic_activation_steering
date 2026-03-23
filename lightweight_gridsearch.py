@@ -337,6 +337,91 @@ def run_stage2(
 
 
 # ---------------------------------------------------------------------------
+# Stage 2 (two-pass variant): coarse then fine alpha search
+# ---------------------------------------------------------------------------
+
+def run_stage2_two_pass(
+    model, tokenizer,
+    scenarios:      List[Dict],
+    dvecs:          Dict,
+    preset:         str,
+    layer_indices:  List[int],
+    coarse_alphas:  List[float],
+    max_new_tokens: int,
+    temperature:    float,
+    output_dir:     Path,
+) -> Dict:
+    """
+    Two-pass alpha search:
+      Pass 1 — coarse sweep over coarse_alphas (e.g. [5, 15, 25])
+      Pass 2 — fine sweep around the coarse peak (+/- [1, 3, 5], filtered > 0)
+    Returns the best result across both passes.
+    """
+    log.info("Stage 2 (two-pass): computing baseline (alpha=0, %d scenarios)...", len(scenarios))
+    buy_bl, sell_bl = run_baseline_games(
+        model, tokenizer, scenarios, max_new_tokens, temperature
+    )
+    log.info("  Baseline: buy=%+.4f  sell=%+.4f", buy_bl, sell_bl)
+
+    def _sweep(alphas: List[float], tag: str) -> List[Dict]:
+        results = []
+        for i, alpha in enumerate(alphas):
+            log.info(
+                "S2 %s [%d/%d] alpha=%+.2f  preset=%s  layers=%s",
+                tag, i + 1, len(alphas), alpha, preset, layer_indices,
+            )
+            r = eval_config(
+                model, tokenizer, scenarios, dvecs, alpha,
+                max_new_tokens, temperature, buy_bl, sell_bl,
+            )
+            r["preset"]        = preset
+            r["layer_indices"] = layer_indices
+            results.append(r)
+            log.info(
+                "  avg_delta=%+.4f  buy_delta=%+.4f  sell_delta=%+.4f  agree=%.0f%%",
+                r["avg_delta"], r["buyer_delta"], r["seller_delta"], r["avg_agree_rate"] * 100,
+            )
+        return results
+
+    # Pass 1: coarse
+    log.info("--- Two-pass Stage 2: COARSE pass %s ---", coarse_alphas)
+    coarse_results = _sweep(coarse_alphas, "coarse")
+    coarse_results_sorted = sorted(coarse_results, key=lambda r: r["avg_delta"], reverse=True)
+    with open(output_dir / "stage2_coarse_results.json", "w") as fh:
+        json.dump(coarse_results_sorted, fh, indent=2)
+    best_coarse_alpha = coarse_results_sorted[0]["alpha"]
+    log.info("Coarse best: alpha=%+.2f  avg_delta=%+.4f", best_coarse_alpha, coarse_results_sorted[0]["avg_delta"])
+
+    all_results = coarse_results_sorted
+    best = all_results[0]
+    with open(output_dir / "stage2_results.json", "w") as fh:
+        json.dump(all_results, fh, indent=2)
+
+    # Print table
+    print("\n" + "=" * 95)
+    print(f"STAGE 2 — COARSE ALPHA SEARCH  (preset='{preset}', layers={layer_indices}, {len(scenarios)} scenarios)")
+    print(f"  Baseline: buy={buy_bl:+.4f}  sell={sell_bl:+.4f}")
+    print(f"  Coarse alphas: {coarse_alphas}  →  best={best_coarse_alpha:+.2f}")
+    print("=" * 95)
+    print(f"{'Rank':>4}  {'Alpha':>7}  "
+          f"{'AvgDelta':>9}  {'BuyDelta':>9}  {'SellDelta':>10}  "
+          f"{'BuyMidpt':>9}  {'SellMidpt':>10}  {'Agree':>6}")
+    print("-" * 95)
+    for rank, r in enumerate(all_results, 1):
+        marker = "  ← BEST" if rank == 1 else ""
+        print(
+            f"{rank:>4}  {r['alpha']:>+7.2f}  "
+            f"{r['avg_delta']:>+9.4f}  {r['buyer_delta']:>+9.4f}  {r['seller_delta']:>+10.4f}  "
+            f"{r['buyer_midpt']:>+9.4f}  {r['seller_midpt']:>+10.4f}  "
+            f"{r['avg_agree_rate']:>5.0%}{marker}"
+        )
+    print("=" * 95)
+    print(f"\nStage 2 winner: alpha={best['alpha']:+.2f}  avg_delta={best['avg_delta']:+.4f}")
+
+    return best
+
+
+# ---------------------------------------------------------------------------
 # Stage 2 (TPE variant): continuous 1D alpha optimisation
 # ---------------------------------------------------------------------------
 
@@ -452,8 +537,16 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--probe_alpha", type=float, default=5.0,
                    help="Fixed alpha used in Stage 1 preset sweep. Default: 5.0.")
     p.add_argument("--alphas", nargs="+", type=float,
-                   default=[-7.0, -5.0, -3.0, 3.0, 5.0, 7.0],
-                   help="Discrete alphas to try in Stage 2 (grid mode). Default: -7 -5 -3 3 5 7.")
+                   default=[5.0, 10.0, 15.0, 20.0, 25.0, 30.0],
+                   help="Discrete alphas to try in Stage 2 (grid mode). Default: 5 10 15 20 25 30.")
+
+    # Two-pass alpha search
+    p.add_argument("--two_pass", action="store_true",
+                   help="Two-pass Stage 2: coarse sweep (--coarse_alphas), then fine sweep "
+                        "around the peak. Overrides --alphas for Stage 2.")
+    p.add_argument("--coarse_alphas", nargs="+", type=float,
+                   default=[5.0, 15.0, 25.0],
+                   help="Coarse alpha grid for first pass of --two_pass. Default: 5 15 25.")
 
     # TPE mode for Stage 2
     p.add_argument("--use_tpe", action="store_true",
@@ -468,16 +561,25 @@ def parse_args() -> argparse.Namespace:
                    help="Random startup trials before TPE exploits. Default: 8.")
 
     # Games
-    p.add_argument("--s1_games", type=int, default=10,
-                   help="Scenarios per preset in Stage 1. Default: 10.")
-    p.add_argument("--s2_games", type=int, default=10,
-                   help="Scenarios per alpha in Stage 2. Default: 10.")
+    p.add_argument("--s1_games", type=int, default=20,
+                   help="Scenarios per preset in Stage 1. Default: 20.")
+    p.add_argument("--s2_games", type=int, default=20,
+                   help="Scenarios per alpha in Stage 2. Default: 20.")
 
     # Generation
     p.add_argument("--temperature",     type=float, default=0.0,
                    help="Decoding temperature. 0=greedy. Default: 0.0.")
     p.add_argument("--max_new_tokens",  type=int,   default=60,
                    help="Max tokens per turn. Default: 60.")
+
+    # Scenario filtering
+    p.add_argument("--min_span", type=int, default=200,
+                   help="Minimum price span (listing_price - buyer_target) to keep a scenario. "
+                        "Filters degenerate near-zero-span games. Default: 200.")
+
+    p.add_argument("--output_suffix", type=str, default="",
+                   help="Optional suffix appended to the auto-derived output dir. "
+                        "E.g. '_v2' → hyperparameter_results/gridsearch_..._v2/...")
 
     # Misc
     p.add_argument("--dataset_split",  choices=["train", "validation"], default="train")
@@ -500,7 +602,7 @@ def main() -> None:
     # Derive from vectors_dir: .../neg15dim_12pairs_matched/negotiation
     #  → hyperparameter_results/gridsearch_neg15dim_12pairs_matched/<model>/<dimension>
     vec_set = Path(args.vectors_dir).parts[-2]
-    output_dir = Path("hyperparameter_results") / f"gridsearch_{vec_set}" / args.model / args.dimension
+    output_dir = Path("hyperparameter_results") / f"gridsearch_{vec_set}{args.output_suffix}" / args.model / args.dimension
     output_dir.mkdir(parents=True, exist_ok=True)
 
     random.seed(args.seed)
@@ -520,7 +622,7 @@ def main() -> None:
 
     # Load enough scenarios for both stages
     max_games = args.s2_games if skip_stage1 else max(args.s1_games, args.s2_games)
-    all_scenarios = load_craigslist(split=args.dataset_split, num_samples=max_games)
+    all_scenarios = load_craigslist(split=args.dataset_split, num_samples=max_games, min_span=args.min_span)
     s1_scenarios  = all_scenarios[: args.s1_games]
     s2_scenarios  = all_scenarios[: args.s2_games]
     log.info("Loaded %d scenarios (s2=%d%s)",
@@ -595,6 +697,10 @@ def main() -> None:
         total_s2 = args.n_trials * args.s2_games * 2 + args.s2_games * 2
         print(f"  Stage 2: TPE {args.n_trials} trials × {args.s2_games} scenarios × 2 roles"
               f"  (range=[{args.alpha_low}, {args.alpha_high}])  ~{total_s2} games")
+    elif args.two_pass:
+        total_s2 = len(args.coarse_alphas) * args.s2_games * 2 + args.s2_games * 2
+        print(f"  Stage 2: coarse-only  alphas={args.coarse_alphas}"
+              f"  ~{total_s2} games")
     else:
         print(f"  Stage 2: {len(args.alphas)} alphas × {args.s2_games} scenarios × 2 roles"
               f"  (alphas={args.alphas})  ~{total_s2} games")
@@ -625,9 +731,21 @@ def main() -> None:
         best_dvecs  = dvecs_by_preset[best_preset]
 
     # =========================================================================
-    # STAGE 2 — Alpha search (grid or TPE)
+    # STAGE 2 — Alpha search (two-pass, grid, or TPE)
     # =========================================================================
-    if args.use_tpe:
+    if args.two_pass:
+        best = run_stage2_two_pass(
+            model=model, tokenizer=tokenizer,
+            scenarios=s2_scenarios,
+            dvecs=best_dvecs,
+            preset=best_preset,
+            layer_indices=best_layers,
+            coarse_alphas=args.coarse_alphas,
+            max_new_tokens=args.max_new_tokens,
+            temperature=args.temperature,
+            output_dir=output_dir,
+        )
+    elif args.use_tpe:
         if not _OPTUNA_AVAILABLE:
             log.error("--use_tpe requires optuna: pip install optuna")
             sys.exit(1)
@@ -673,14 +791,17 @@ def main() -> None:
         "seller_midpt": best["seller_midpt"],
         "avg_agree_rate": best["avg_agree_rate"],
         "run_info": {
-            "model":       args.model,
-            "s1_games":    args.s1_games,
-            "s2_games":    args.s2_games,
-            "probe_alpha": args.probe_alpha,
-            "alphas":      args.alphas,
-            "temperature": args.temperature,
-            "seed":        args.seed,
-            "timestamp":   datetime.now().isoformat(),
+            "model":        args.model,
+            "s1_games":     args.s1_games,
+            "s2_games":     args.s2_games,
+            "probe_alpha":  args.probe_alpha,
+            "alphas":       args.coarse_alphas if args.two_pass else args.alphas,
+            "two_pass":     args.two_pass,
+            "min_span":     args.min_span,
+            "dataset_split": args.dataset_split,
+            "temperature":  args.temperature,
+            "seed":         args.seed,
+            "timestamp":    datetime.now().isoformat(),
         },
     }
     with open(output_dir / "final_best.json", "w") as fh:
