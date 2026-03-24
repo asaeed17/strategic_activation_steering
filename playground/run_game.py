@@ -60,6 +60,11 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
+# Suppress noisy HTTP logs from API clients
+for _noisy in ("httpx", "httpcore", "openai", "google", "google.genai",
+               "google.generativeai", "urllib3", "google.auth", "google.api_core"):
+    logging.getLogger(_noisy).setLevel(logging.WARNING)
+
 # ---------------------------------------------------------------------------
 # Constants (mirrored from apply_steering.py to avoid torch import)
 # ---------------------------------------------------------------------------
@@ -352,13 +357,16 @@ def generate_turn_api(
         client = genai.Client()
         system = next((m["content"] for m in messages if m["role"] == "system"), "")
         user = next((m["content"] for m in messages if m["role"] == "user"), "")
+        # Gemini 2.5 Flash uses thinking tokens that eat into max_output_tokens.
+        # Give a generous budget so the visible response isn't truncated.
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=user,
             config=types.GenerateContentConfig(
                 system_instruction=system,
                 temperature=temperature,
-                max_output_tokens=max_tokens,
+                max_output_tokens=max_tokens + 8000,
+                thinking_config=types.ThinkingConfig(thinking_budget=8000),
             ),
         )
         text = response.text or ""
@@ -388,11 +396,15 @@ def generate_turn_api(
         )
         text = response.content[0].text or ""
 
-    elif provider == "groq":
+    elif provider in ("groq", "groq-llama8b"):
         from groq import Groq
+        model_id = {
+            "groq": "llama-3.3-70b-versatile",
+            "groq-llama8b": "llama-3.1-8b-instant",
+        }[provider]
         client = Groq()
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model=model_id,
             messages=messages,
             temperature=temperature,
             max_tokens=max_tokens,
@@ -519,7 +531,7 @@ def run_game(
         utt_s = agent_generate(*seller_agent, seller_msgs, temperature, max_tokens, can_finalise)
         transcript.append(("seller", utt_s))
         if verbose:
-            print(f"  [Turn {turn+1}] SELLER: {utt_s}")
+            print(f"\n  [Turn {turn+1}] SELLER:\n    {utt_s}")
 
         if can_finalise and is_reject(utt_s):
             walk_away, walk_away_by = True, "seller"
@@ -545,7 +557,7 @@ def run_game(
         utt_b = agent_generate(*buyer_agent, buyer_msgs, temperature, max_tokens, can_finalise)
         transcript.append(("buyer", utt_b))
         if verbose:
-            print(f"  [Turn {turn+1}] BUYER:  {utt_b}")
+            print(f"\n  [Turn {turn+1}] BUYER:\n    {utt_b}")
 
         if can_finalise and is_reject(utt_b):
             walk_away, walk_away_by = True, "buyer"
@@ -603,9 +615,13 @@ def main():
     p.add_argument("--seller", default="api:gemini",
                    help="Seller agent spec. e.g. api:gpt4o, local:qwen2.5-3b")
     p.add_argument("--buyer_enhance", default=None, choices=list(ENHANCEMENTS.keys()),
-                   help="Prompt enhancement for buyer.")
+                   help="Preset prompt enhancement for buyer.")
     p.add_argument("--seller_enhance", default=None, choices=list(ENHANCEMENTS.keys()),
-                   help="Prompt enhancement for seller.")
+                   help="Preset prompt enhancement for seller.")
+    p.add_argument("--buyer_prompt", default=None,
+                   help="Custom freeform text appended to buyer system prompt.")
+    p.add_argument("--seller_prompt", default=None,
+                   help="Custom freeform text appended to seller system prompt.")
     p.add_argument("--num_games", type=int, default=5)
     p.add_argument("--temperature", type=float, default=0.7)
     p.add_argument("--max_tokens", type=int, default=200)
@@ -630,8 +646,10 @@ def main():
 
     print(f"\n{'='*70}")
     print(f"TASK DESIGN VALIDATION")
-    print(f"  Buyer:  {args.buyer}" + (f"  + {args.buyer_enhance}" if args.buyer_enhance else ""))
-    print(f"  Seller: {args.seller}" + (f"  + {args.seller_enhance}" if args.seller_enhance else ""))
+    buyer_label = args.buyer + (f"  + {args.buyer_enhance}" if args.buyer_enhance else "") + (f'  + "{args.buyer_prompt[:40]}..."' if args.buyer_prompt and len(args.buyer_prompt) > 40 else f'  + "{args.buyer_prompt}"' if args.buyer_prompt else "")
+    seller_label = args.seller + (f"  + {args.seller_enhance}" if args.seller_enhance else "") + (f'  + "{args.seller_prompt[:40]}..."' if args.seller_prompt and len(args.seller_prompt) > 40 else f'  + "{args.seller_prompt}"' if args.seller_prompt else "")
+    print(f"  Buyer:  {buyer_label}")
+    print(f"  Seller: {seller_label}")
     print(f"  Games:  {k}   Temp: {args.temperature}   MaxTokens: {args.max_tokens}")
     print(f"{'='*70}\n")
 
@@ -641,6 +659,10 @@ def main():
     for i, sc in enumerate(scenarios):
         seller_sys = enhance_prompt(build_seller_system(sc), args.seller_enhance)
         buyer_sys = enhance_prompt(build_buyer_system(sc), args.buyer_enhance)
+        if args.seller_prompt:
+            seller_sys += "\n" + args.seller_prompt
+        if args.buyer_prompt:
+            buyer_sys += "\n" + args.buyer_prompt
 
         if args.verbose:
             print(f"\n--- Game {i+1}/{k}: {sc['title'][:50]} ---")
