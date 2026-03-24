@@ -304,21 +304,7 @@ def parse_deal_price(text: str) -> Optional[float]:
     m = re.search(r"DEAL\s*=\s*\$?([\d,]+(?:\.\d+)?)", text.upper())
     if not m:
         return None
-    price = float(m.group(1).replace(",", ""))
-    # Guard against truncated numbers caused by comma-induced generation cutoff
-    # (e.g. model writes "...at $9,300. DEAL=9" → parsed as 9 instead of 9300).
-    # If the price is implausibly small, look for a larger dollar amount in the
-    # preceding text that could be the intended price.
-    if price < 500:
-        deal_pos = text.upper().rfind("DEAL")
-        context = text[:deal_pos] if deal_pos > 0 else text
-        amounts = [float(a.replace(",", ""))
-                   for a in re.findall(r'\$\s*([\d,]+(?:\.\d+)?)', context)]
-        # prefer the last mentioned amount that is at least 10x larger
-        larger = [a for a in amounts if a >= price * 10]
-        if larger:
-            return larger[-1]
-    return price
+    return float(m.group(1).replace(",", ""))
 
 
 def is_reject(text: str) -> bool:
