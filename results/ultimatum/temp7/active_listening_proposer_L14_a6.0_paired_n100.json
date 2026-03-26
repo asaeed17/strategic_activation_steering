@@ -1,0 +1,4950 @@
+{
+  "config": {
+    "model": "qwen2.5-7b",
+    "dimension": "active_listening",
+    "method": "mean_diff",
+    "layers": [
+      14
+    ],
+    "alpha": 6.0,
+    "steered_role": "proposer",
+    "paired": true,
+    "n_games": 100,
+    "variable_pools": true,
+    "pool": 100,
+    "temperature": 0.7,
+    "seed": 42,
+    "dtype": "bfloat16",
+    "vectors_dir": "vectors/neg8dim_12pairs_matched/negotiation",
+    "proposer_enhancement": null,
+    "responder_enhancement": null,
+    "timestamp": "2026-03-25T03:55:24.793371"
+  },
+  "summary": {
+    "n_games": 100,
+    "n_valid": 100,
+    "n_usable_pairs": 100,
+    "n_parse_errors": 0,
+    "steered_role": "proposer",
+    "steered_mean_proposer_pct": 52.55,
+    "baseline_mean_proposer_pct": 55.47,
+    "delta_proposer_pct": -2.92,
+    "std_delta": 26.78,
+    "paired_ttest_t": -1.0914,
+    "paired_ttest_p": 0.277732,
+    "cohens_d": -0.1091,
+    "steered_accept_rate": 0.8,
+    "baseline_accept_rate": 0.8,
+    "steered_mean_payoff_pct": 39.83,
+    "baseline_mean_payoff_pct": 42.6,
+    "steered_mean_word_count": 19.9,
+    "baseline_mean_word_count": 20.3,
+    "steered_mean_hedge_count": 0.05,
+    "baseline_mean_hedge_count": 0.09,
+    "steered_mean_fairness_count": 1.15,
+    "baseline_mean_fairness_count": 1.13,
+    "elapsed_seconds": 3717.8
+  },
+  "games": [
+    {
+      "game_id": 0,
+      "pool": 131,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 95,
+        "responder_share": 36,
+        "response": "accept",
+        "proposer_payoff": 95,
+        "responder_payoff": 36,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a smaller portion to encourage acceptance based on the psychological value of getting something rather than nothing. OFFER=95,36",
+        "responder_text": "Given the significant disparity in the proposed split, I would typically expect a more equitable distribution. However, considering the rational perspective where any amount is better than none, I accept the offer to ensure I receive some money. ACCEPT",
+        "pool": 131,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 39,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 66,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 66,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the negotiation. OFFER=65,66",
+        "responder_text": "Given that the offer is slightly in your favor and rejecting it would result in both players getting nothing, accepting seems reasonable. ACCEPT",
+        "pool": 131,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 1,
+      "pool": 127,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 77,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 77,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a smaller amount to encourage acceptance while still offering a significant portion. OFFER=50,77",
+        "responder_text": "Given the significant imbalance but considering the substantial amount I would receive, I decide to accept the offer to ensure I gain a considerable sum. ACCEPT",
+        "pool": 127,
+        "proposer_metrics": {
+          "word_count": 20,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 57,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 57,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=70,57",
+        "responder_text": "Given that the proposal is quite uneven and only offers a small amount more than half of the total, I would prefer a more equitable split. However, rejecting might lead to both getting nothing. ACCEPT",
+        "pool": 127,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 35,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 2,
+      "pool": 137,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 68,
+        "responder_share": 69,
+        "response": "accept",
+        "proposer_payoff": 68,
+        "responder_payoff": 69,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=68,69",
+        "responder_text": "Given that the offer is slightly in your favor and considering the psychological aspect of fairness, I'll accept it to ensure both parties benefit. ACCEPT",
+        "pool": 137,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 80,
+        "responder_share": 57,
+        "response": "accept",
+        "proposer_payoff": 80,
+        "responder_payoff": 57,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while keeping a significant portion for myself. OFFER=80,57",
+        "responder_text": "Given the significant disparity in the split and considering the psychological value of the offer, I would still accept it to ensure some gain rather than ending up with nothing. ACCEPT",
+        "pool": 137,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 3,
+      "pool": 79,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 40,
+        "responder_share": 39,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some value. OFFER=40,39",
+        "responder_text": "Given the slight imbalance, while it's a small amount, accepting might be seen as more cooperative. However, rejecting could set a precedent for fairer splits in future interactions. REJECT",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 2,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 34,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 34,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to maximize the chances of acceptance while keeping a significant portion for myself. OFFER=45,34",
+        "responder_text": "Considering the significant disparity in the split, I would prefer a more equitable distribution if possible, but given the choice between accepting this offer and getting nothing, I accept this as a reasonable outcome for me. ACCEPT",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 37,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 4,
+      "pool": 127,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 63,
+        "responder_share": 64,
+        "response": "accept",
+        "proposer_payoff": 63,
+        "responder_payoff": 64,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=63,64",
+        "responder_text": "Given that the proposal is slightly in your favor and rejecting it means both players get nothing, accepting seems reasonable. ACCEPT",
+        "pool": 127,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 63,
+        "responder_share": 64,
+        "response": "accept",
+        "proposer_payoff": 63,
+        "responder_payoff": 64,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure mutual benefit, though I understand that any amount less than $91 might be seen as unfair by Player B. OFFER=63,64",
+        "responder_text": "Given that the offer is slightly in your favor and rejecting it would result in both getting nothing, it makes sense to accept this offer. ACCEPT",
+        "pool": 127,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 5,
+      "pool": 47,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 23,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 23,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=23,24",
+        "responder_text": "Given that the proposal is relatively fair and considering the psychological aspect of rejecting a deal just to make the other player unhappy, I'll accept it to ensure I receive some money. ACCEPT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 33,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 23,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 23,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit, as rejecting the offer results in nothing for either of us. OFFER=23,24",
+        "responder_text": "Considering the amount offered is more than half of the total pool, it's a fair split from your perspective. However, if we consider the psychological aspect of fairness, even a small imbalance might lead to rejection. ACCEPT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 37,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 6,
+      "pool": 41,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 21,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 21,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some benefit. OFFER=21,20",
+        "responder_text": "Given that the proposal is relatively fair and considering the psychological aspect of rejection leading to both parties getting nothing, I choose to accept the offer. ACCEPT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 31,
+        "responder_share": 10,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll offer a split where I keep most of the money but still give Player B a significant portion to ensure they find it reasonable. OFFER=31,10",
+        "responder_text": "Given the significant imbalance, accepting this offer would mean I receive only $10 while Player A gets $31. However, in games like these, rejecting often leads to neither player receiving anything, which might make Player A more willing to split the pot more evenly next time. REJECT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 47,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 7,
+      "pool": 151,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 90,
+        "responder_share": 61,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to ensure the offer is still acceptable while keeping the game interesting. OFFER=90,61",
+        "responder_text": "Given the significant imbalance, while $61 is better than nothing, it's a very low amount compared to what Player A gets. REJECT",
+        "pool": 151,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 76,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 76,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both parties benefit, though I understand that fairness is subjective. OFFER=75,76",
+        "responder_text": "Given that the offer is slightly in your favor and rejecting it would result in both players getting nothing, accepting seems reasonable. ACCEPT",
+        "pool": 151,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 8,
+      "pool": 107,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 42,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 42,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to account for the negotiation costs, but still leave enough for Player B to accept. OFFER=65,42",
+        "responder_text": "Considering the significant disparity in the split, I would prefer a more equitable distribution, but given the amount offered, it's a fair share for me. ACCEPT",
+        "pool": 107,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 63,
+        "responder_share": 44,
+        "response": "accept",
+        "proposer_payoff": 63,
+        "responder_payoff": 44,
+        "parse_error": null,
+        "proposer_text": "I'll propose a split where I keep a slightly larger portion to reflect my role in suggesting the division, but still be reasonable so there's an incentive for Player B to accept. OFFER=63,44",
+        "responder_text": "Considering the significant imbalance and the fact that $44 is still a substantial amount of money, I would prefer to accept to avoid both getting nothing. ACCEPT",
+        "pool": 107,
+        "proposer_metrics": {
+          "word_count": 33,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 9,
+      "pool": 67,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 17,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 17,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep $50 and Player B gets $17, as this offers a fair balance while ensuring Player B has an incentive to accept. OFFER=50,17",
+        "responder_text": "Considering the significant imbalance, I would prefer a more equitable split, but given the option, accepting is still better than getting nothing. ACCEPT",
+        "pool": 67,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 32,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 32,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=35,32",
+        "responder_text": "Given that the proposal is quite uneven but still leaves me with a significant amount ($32), I might accept it to ensure I receive something rather than walk away with nothing. ACCEPT",
+        "pool": 67,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 32,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 10,
+      "pool": 41,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 4,
+        "responder_share": 37,
+        "response": "accept",
+        "proposer_payoff": 4,
+        "responder_payoff": 37,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to encourage acceptance while keeping the majority for myself. OFFER=4,37",
+        "responder_text": "Considering the significant disparity and the psychological aspect of fairness, I would prefer a more equitable split, but given the choice between accepting this offer and getting nothing, I accept this deal to ensure some benefit. ACCEPT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 37,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 21,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 21,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while keeping a slight advantage for myself. OFFER=21,20",
+        "responder_text": "Considering the rational perspective, even a small amount of money ($20) is better than none ($0). ACCEPT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 11,
+      "pool": 83,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 33,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take $50 and leave $33 for Player B, aiming for a balance that might be seen as fair while still maximizing my share. OFFER=50,33",
+        "responder_text": "Given the significant disparity, while $33 is better than nothing, it's a small amount considering the effort and risk involved in the game. REJECT",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 30,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 38,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 38,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to ensure both parties benefit. OFFER=45,38",
+        "responder_text": "While the offer is not equal, rejecting it means both players get nothing, and accepting ensures you receive some money. ACCEPT",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 12,
+      "pool": 71,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 43,
+        "responder_share": 28,
+        "response": "accept",
+        "proposer_payoff": 43,
+        "responder_payoff": 28,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a significant portion for myself. OFFER=43,28",
+        "responder_text": "Considering the significant disparity in the offer, while it's not a fair split, accepting still provides a better outcome than rejecting where both would get nothing. ACCEPT",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 43,
+        "responder_share": 28,
+        "response": "accept",
+        "proposer_payoff": 43,
+        "responder_payoff": 28,
+        "parse_error": null,
+        "proposer_text": "I propose a fair but slightly generous split to encourage acceptance while keeping a significant portion for myself. OFFER=43,28",
+        "responder_text": "Considering the amount offered is more than half of the total pool, it's a fair split given the circumstances. However, to maintain fairness and cooperation in future interactions, I'll accept this offer. ACCEPT",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 33,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 13,
+      "pool": 73,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 40,
+        "responder_share": 33,
+        "response": "accept",
+        "proposer_payoff": 40,
+        "responder_payoff": 33,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring I receive a significant portion of the money. OFFER=40,33",
+        "responder_text": "Considering the amount offered is more than half of the total pool and reflects a fair distribution, I accept this offer to ensure I receive some value. ACCEPT",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 36,
+        "responder_share": 37,
+        "response": "accept",
+        "proposer_payoff": 36,
+        "responder_payoff": 37,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit, as rejecting the offer results in nothing for either of us. OFFER=36,37",
+        "responder_text": "Considering the offer is fair and slightly in your favor, it encourages cooperation and mutual benefit. ACCEPT",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 14,
+      "pool": 37,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 18,
+        "responder_share": 19,
+        "response": "accept",
+        "proposer_payoff": 18,
+        "responder_payoff": 19,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=18,19",
+        "responder_text": "While the offer is slightly in Player A's favor, it's still a fair distribution considering the total pool. ACCEPT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 2,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 2,
+        "parse_error": null,
+        "proposer_text": "I'll offer a split where I keep most of the money to maximize my gain, but not so much that it's likely to be rejected. OFFER=35,2",
+        "responder_text": "Given the extremely low offer of $2 while the other player gets $35, this proposal does not seem fair. However, since even this small amount is better than receiving nothing, I will accept it to ensure I get some money. ACCEPT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 41,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 15,
+      "pool": 149,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 74,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 74,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit. OFFER=75,74",
+        "responder_text": "Given that the proposal is almost equal and considering the psychological value of accepting a fair deal, I accept this offer to avoid walking away with nothing. ACCEPT",
+        "pool": 149,
+        "proposer_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 75,
+        "responder_share": 74,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair but slightly generous split to encourage acceptance while ensuring I receive a significant portion. OFFER=75,74",
+        "responder_text": "Given the small difference in the amounts and considering the psychological aspect of fairness, I might reject to send a message that $1 is still significant. REJECT",
+        "pool": 149,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 16,
+      "pool": 37,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 37,
+        "responder_share": 0,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a smaller portion to encourage acceptance while still benefiting myself. OFFER=37,0",
+        "responder_text": "Given that the offer is extremely uneven and there's no room for negotiation, I would reject this offer to avoid accepting a disproportionately small share. REJECT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 5,
+        "responder_share": 32,
+        "response": "accept",
+        "proposer_payoff": 5,
+        "responder_payoff": 32,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure the proposal is accepted, as even a small amount might be seen as fair. OFFER=5,32",
+        "responder_text": "Given the significant disparity but considering the absolute amount I receive, I decide to accept the offer to ensure I gain something rather than ending up with nothing. ACCEPT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 17,
+      "pool": 139,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 69,
+        "responder_share": 70,
+        "response": "accept",
+        "proposer_payoff": 69,
+        "responder_payoff": 70,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=69,70",
+        "responder_text": "Given that the offer is quite fair and considering the psychological aspect of accepting a reasonable proposal, even if it's not the maximum possible. ACCEPT",
+        "pool": 139,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 10,
+        "responder_share": 129,
+        "response": "accept",
+        "proposer_payoff": 10,
+        "responder_payoff": 129,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure they accept out of minimal gain, while keeping the majority for myself. OFFER=10,129",
+        "responder_text": "Considering the significant imbalance and the fact that any amount is better than none, I choose to accept the offer to ensure I receive some money. ACCEPT",
+        "pool": 139,
+        "proposer_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 18,
+      "pool": 59,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 29,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 29,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=30,29",
+        "responder_text": "While the offer is slightly unfair, considering the psychological aspect of the game where rejecting often leads to neither getting anything, I might accept this offer to at least secure some money. ACCEPT",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 33,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=35,24",
+        "responder_text": "Considering the amount offered is a fair share given the total pool, I accept the deal to ensure I receive some value. ACCEPT",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 19,
+      "pool": 100,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 50,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 50,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while acknowledging my contribution. OFFER=50,50",
+        "responder_text": "Given that the proposal is fair and both parties receive an equal share, I see no reason to reject it. ACCEPT",
+        "pool": 100,
+        "proposer_metrics": {
+          "word_count": 13,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 3
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 60,
+        "responder_share": 40,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair split to encourage acceptance while keeping most of the money for myself. OFFER=60,40",
+        "responder_text": "Considering the fairness and the psychological aspect of the game, while $40 is better than nothing, the split seems quite uneven. REJECT",
+        "pool": 100,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 20,
+      "pool": 67,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 35,
+        "responder_share": 32,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while acknowledging the psychological value of a reasonable offer. OFFER=35,32",
+        "responder_text": "Considering the offer, while it's not a perfectly equal split, it's still a reasonable amount given the total pool size. However, to ensure fairness and encourage future cooperation, I think it's important to reject this offer. REJECT",
+        "pool": 67,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 37,
+          "hedge_count": 1,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 32,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 32,
+        "parse_error": null,
+        "proposer_text": "I'll offer a fair split to ensure Player B accepts, as a rejected offer leaves both with nothing. OFFER=35,32",
+        "responder_text": "Given the offer, while it's not perfectly equitable, it's still a significant amount of money. ACCEPT",
+        "pool": 67,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 21,
+      "pool": 149,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 75,
+        "responder_share": 74,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while acknowledging Player B's perspective on fairness. OFFER=75,74",
+        "responder_text": "Given that the offer is very close and considering the psychological aspect of fairness, I might reject to signal that I expect a more equitable split next time. REJECT",
+        "pool": 149,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 100,
+        "responder_share": 49,
+        "response": "accept",
+        "proposer_payoff": 100,
+        "responder_payoff": 49,
+        "parse_error": null,
+        "proposer_text": "I'll offer a split where I keep most of the money but still provide a fair amount to Player B to encourage acceptance. OFFER=100,49",
+        "responder_text": "Given the significant disparity in the proposed split, I would prefer a more equitable distribution if possible. However, since this is the offered deal, I accept it to secure at least some of the money. ACCEPT",
+        "pool": 149,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 36,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 22,
+      "pool": 73,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 37,
+        "responder_share": 36,
+        "response": "accept",
+        "proposer_payoff": 37,
+        "responder_payoff": 36,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep $37 and Player B receives $36, as this offers a fair but slightly skewed distribution that might be seen as reasonable yet still leaves a significant amount for Player B. OFFER=37,36",
+        "responder_text": "Considering the significant imbalance and the fact that any amount is better than none, I accept this offer to ensure I receive some money. ACCEPT",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 38,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 44,
+        "responder_share": 29,
+        "response": "accept",
+        "proposer_payoff": 44,
+        "responder_payoff": 29,
+        "parse_error": null,
+        "proposer_text": "I'll offer a fair split to ensure Player B accepts, while keeping a significant portion for myself. OFFER=44,29",
+        "responder_text": "Given the significant disparity in the split and considering fairness, I would prefer a more equal distribution, but since this is the offered deal, I'll take what's on the table to ensure some gain rather than rejecting and ending up with nothing. ACCEPT",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 43,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 23,
+      "pool": 37,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 20,
+        "responder_share": 17,
+        "response": "accept",
+        "proposer_payoff": 20,
+        "responder_payoff": 17,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take $20 and leave $17 for Player B, as this offers a reasonable share while also ensuring I receive some value from the game. OFFER=20,17",
+        "responder_text": "Given the proposal, while it's not a fair split, rejecting would result in both getting nothing, which is worse than accepting $17. ACCEPT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 18,
+        "responder_share": 19,
+        "response": "accept",
+        "proposer_payoff": 18,
+        "responder_payoff": 19,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit. OFFER=18,19",
+        "responder_text": "Given that the offer is slightly in your favor and considering the psychological aspect of fairness, I accept the deal to ensure both players walk away with some money. ACCEPT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 24,
+      "pool": 73,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 23,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to account for the negotiation costs, but still leave a significant amount for Player B to encourage acceptance. OFFER=50,23",
+        "responder_text": "Given the significant disparity in the proposed split, I would reject this offer to encourage a more equitable distribution of the pool. REJECT",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 44,
+        "responder_share": 29,
+        "response": "accept",
+        "proposer_payoff": 44,
+        "responder_payoff": 29,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a significant portion for myself. OFFER=44,29",
+        "responder_text": "Given the significant disparity in the proposed split, while it's not ideal, accepting still leaves both parties with some benefit rather than neither receiving anything. ACCEPT",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 25,
+      "pool": 41,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 21,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 21,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some benefit. OFFER=21,20",
+        "responder_text": "Given that the offer is relatively fair and considering the psychological aspect of rejection leading to both parties getting nothing, I decide to accept the offer. ACCEPT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 21,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 21,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to maximize the chances of acceptance while keeping the deal reasonable for both parties. OFFER=21,20",
+        "responder_text": "Given the small difference in the offer and considering fairness, I might expect a more equal split in most scenarios. However, since this is a one-time offer and rejecting it means both get nothing, I'll take what's offered to avoid that outcome. ACCEPT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 20,
+          "hedge_count": 0,
+          "fairness_count": 3
+        },
+        "responder_metrics": {
+          "word_count": 43,
+          "hedge_count": 1,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 26,
+      "pool": 89,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 39,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring I receive a significant portion. OFFER=50,39",
+        "responder_text": "While the offer is not equal, refusing might set a precedent for future games where a more equitable split could be negotiated. However, in this instance, the difference is significant enough to likely discourage cooperation in future interactions. REJECT",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 39,
+          "hedge_count": 2,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 44,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 44,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both parties benefit, as rejecting the offer results in neither gaining anything. OFFER=45,44",
+        "responder_text": "Given the slight imbalance, I would typically expect a more equitable split, but since this is a take-it-or-leave-it scenario, accepting is still better than walking away with nothing. ACCEPT",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 20,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 27,
+      "pool": 47,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 30,
+        "responder_share": 17,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep $30 and Player B gets $17, aiming for a fair yet slightly favorable offer to encourage acceptance. OFFER=30,17",
+        "responder_text": "While the offer is not equal, refusing might set a precedent for future negotiations and could be seen as punishing the other player for not being more equitable. However, this offer is quite skewed. REJECT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 35,
+          "hedge_count": 2,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 25,
+        "responder_share": 22,
+        "response": "accept",
+        "proposer_payoff": 25,
+        "responder_payoff": 22,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while keeping a slight advantage for myself. OFFER=25,22",
+        "responder_text": "While the offer is slightly unfair, considering the psychological aspect of rejection and the zero-sum outcome, I might accept to avoid a rejection scenario. ACCEPT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 28,
+      "pool": 107,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 42,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 42,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to account for the negotiation costs and potential rejection risk. OFFER=65,42",
+        "responder_text": "Given the significant disparity in the offer, while it's not a fair split, accepting still provides a better outcome than rejecting where both would receive nothing. ACCEPT",
+        "pool": 107,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 5,
+        "responder_share": 102,
+        "response": "accept",
+        "proposer_payoff": 5,
+        "responder_payoff": 102,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure they accept out of necessity, while keeping the majority for myself. OFFER=5,102",
+        "responder_text": "Given the significant disparity in the split and the small amount Player A gets, it might be seen as unfair. However, the $102 is still a substantial amount. ACCEPT",
+        "pool": 107,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 29,
+      "pool": 79,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 34,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 34,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while still keeping a significant portion for myself. OFFER=45,34",
+        "responder_text": "Given the offer, while it's not a fair split, I accept it as it's better than getting nothing if we reject. ACCEPT",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 75,
+        "responder_share": 4,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure the proposal is accepted while keeping the majority for myself. OFFER=75,4",
+        "responder_text": "Given the significant disparity in the offer and considering the psychological value of fairness, I would reject this offer to avoid feeling like I'm getting an unfair share. REJECT",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 30,
+      "pool": 73,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 37,
+        "responder_share": 36,
+        "response": "accept",
+        "proposer_payoff": 37,
+        "responder_payoff": 36,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep $37 and Player B gets $36, as this offers a fair distribution while acknowledging Player B's acceptance threshold for a reasonable offer. OFFER=37,36",
+        "responder_text": "Given that the offer is very close to a 50/50 split and considering the psychological aspect of fairness, I might be inclined to accept this offer to avoid walking away with nothing. ACCEPT",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 33,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 28,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 28,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=45,28",
+        "responder_text": "Considering the amount offered is significantly less than half of the total pool, while still leaving a substantial amount for Player A, I would generally expect a more equitable split. However, since this is a take-it-or-leave-it scenario, accepting this offer might be better than walking away with nothing. ACCEPT",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 49,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 31,
+      "pool": 157,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 94,
+        "responder_share": 63,
+        "response": "accept",
+        "proposer_payoff": 94,
+        "responder_payoff": 63,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to account for the negotiation costs of splitting the money. OFFER=94,63",
+        "responder_text": "Considering the significant imbalance, I would prefer a more equitable split, but given the choice between $63 and nothing, I accept this offer to ensure I receive some money. ACCEPT",
+        "pool": 157,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 78,
+        "responder_share": 79,
+        "response": "accept",
+        "proposer_payoff": 78,
+        "responder_payoff": 79,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit, as rejecting the offer results in nothing for either of us. OFFER=78,79",
+        "responder_text": "Given that the proposal is almost equal and considering the psychological value of getting something rather than nothing, I choose to accept the offer to avoid walking away with nothing. ACCEPT",
+        "pool": 157,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 32,
+      "pool": 89,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 44,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 44,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=45,44",
+        "responder_text": "Considering the small difference and the fact that any amount is better than nothing, I accept the offer to ensure I receive some money. ACCEPT",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 44,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 44,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure mutual benefit, though I understand that any amount less than $45 might be seen as unfair by Player B. OFFER=45,44",
+        "responder_text": "Given that the offer is quite close and considering the psychological value of getting something rather than nothing, I choose to accept the offer. ACCEPT",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 33,
+      "pool": 107,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 57,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 57,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a smaller amount to encourage acceptance while still providing a significant portion to Player B. OFFER=50,57",
+        "responder_text": "Considering the total pool of $107 and the significant difference in the split, while the offer is more favorable than a rejection would yield, it's still a substantial amount for me to accept. ACCEPT",
+        "pool": 107,
+        "proposer_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 34,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 65,
+        "responder_share": 42,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while keeping the majority of the money for myself. OFFER=65,42",
+        "responder_text": "Given the significant disparity in the proposed split, I would reject this offer to discourage such uneven distributions in future interactions. REJECT",
+        "pool": 107,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 34,
+      "pool": 47,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 5,
+        "responder_share": 42,
+        "response": "accept",
+        "proposer_payoff": 5,
+        "responder_payoff": 42,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure the proposal is accepted, as even a small amount might be seen as fair. OFFER=5,42",
+        "responder_text": "Given the significant imbalance but considering the total pool is $47, accepting this offer still leaves you with a substantial amount. ACCEPT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 23,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 23,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the negotiation. OFFER=23,24",
+        "responder_text": "Considering the proposal is a fair split given the constraints and the slight advantage it provides me, I accept the offer to ensure I receive some value. ACCEPT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 35,
+      "pool": 139,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 89,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 89,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a smaller portion to encourage acceptance while still providing a significant amount. OFFER=50,89",
+        "responder_text": "Considering the significant difference in the split, while the offer is generous compared to a reject scenario, it might be seen as fair given the total pool size. ACCEPT",
+        "pool": 139,
+        "proposer_metrics": {
+          "word_count": 20,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 80,
+        "responder_share": 59,
+        "response": "accept",
+        "proposer_payoff": 80,
+        "responder_payoff": 59,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to account for the risk of rejection, but still ensure Player B gets a significant amount. OFFER=80,59",
+        "responder_text": "Given the significant disparity in the split, I would typically expect a more equitable distribution. However, since this is a take-it-or-leave-it scenario, accepting is still better than rejecting and getting nothing. ACCEPT",
+        "pool": 139,
+        "proposer_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 32,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 36,
+      "pool": 47,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 23,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 23,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=23,24",
+        "responder_text": "Given that the proposal is relatively fair and you would still receive $24, which is a significant amount, I see no reason to reject it. ACCEPT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 23,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 23,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I'll offer a fair split to ensure Player B accepts, as a rejected offer results in neither of us getting anything. OFFER=23,24",
+        "responder_text": "While the offer is slightly in Player A's favor, it's a relatively fair split considering the total pool size. ACCEPT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 20,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 37,
+      "pool": 59,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=35,24",
+        "responder_text": "Given that the offer is significantly skewed, but there is still a fair amount of money ($24) being offered, I might accept to ensure I receive some benefit rather than rejecting and receiving nothing. ACCEPT",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 35,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to reflect my role in proposing, but still ensuring Player B gets a significant amount. OFFER=35,24",
+        "responder_text": "While the offer is not equal, rejecting it means neither of us gets anything, and accepting still leaves some money on the table. ACCEPT",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 38,
+      "pool": 100,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 60,
+        "responder_share": 40,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while still keeping a significant portion for myself. OFFER=60,40",
+        "responder_text": "Given the proposal, while $40 is better than nothing, it's a very unequal split. In many cultural contexts, a more equal distribution might be expected or considered fair. REJECT",
+        "pool": 100,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 1,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 30,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 30,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping the majority of the money for myself. OFFER=70,30",
+        "responder_text": "Given the significant disparity in the split, I would prefer a more equitable distribution if possible, but since this is the offer on the table, I'll take what's offered to avoid both of us getting nothing. ACCEPT",
+        "pool": 100,
+        "proposer_metrics": {
+          "word_count": 20,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 37,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 39,
+      "pool": 97,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 58,
+        "responder_share": 39,
+        "response": "accept",
+        "proposer_payoff": 58,
+        "responder_payoff": 39,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a significant portion for myself. OFFER=58,39",
+        "responder_text": "While the offer is somewhat unfair, considering the total pool and the opportunity to walk away with something rather than nothing, I might accept to avoid the risk of rejection. ACCEPT",
+        "pool": 97,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 58,
+        "responder_share": 39,
+        "response": "accept",
+        "proposer_payoff": 58,
+        "responder_payoff": 39,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to maximize the chances of acceptance while keeping more for myself. OFFER=58,39",
+        "responder_text": "Considering the significant disparity in the split and the risk of both receiving nothing if I reject, I choose to accept the offer to ensure I receive some benefit. ACCEPT",
+        "pool": 97,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 40,
+      "pool": 97,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 47,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 47,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some value. OFFER=50,47",
+        "responder_text": "Considering the significant imbalance and the fact that any amount is better than nothing, I choose to accept the offer to avoid walking away with nothing. ACCEPT",
+        "pool": 97,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 58,
+        "responder_share": 39,
+        "response": "accept",
+        "proposer_payoff": 58,
+        "responder_payoff": 39,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while keeping the majority of the money for myself. OFFER=58,39",
+        "responder_text": "While the offer is quite uneven, considering the psychological value of the money and the fact that $39 is still a significant amount, I'll accept it to avoid walking away with nothing. ACCEPT",
+        "pool": 97,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 33,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 41,
+      "pool": 157,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 79,
+        "responder_share": 78,
+        "response": "accept",
+        "proposer_payoff": 79,
+        "responder_payoff": 78,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring neither player leaves empty-handed. OFFER=79,78",
+        "responder_text": "Given that the split is very close and considering fairness, I would prefer a more equitable distribution if possible. However, since this is the best offer I'm likely to get, I'll accept it to secure some money rather than walk away with nothing. ACCEPT",
+        "pool": 157,
+        "proposer_metrics": {
+          "word_count": 15,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 44,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 80,
+        "responder_share": 77,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while keeping a slight advantage for myself. OFFER=80,77",
+        "responder_text": "The offer is quite close, but the split is slightly unfair given the total pool could have been more evenly distributed. REJECT",
+        "pool": 157,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 42,
+      "pool": 107,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 53,
+        "responder_share": 54,
+        "response": "accept",
+        "proposer_payoff": 53,
+        "responder_payoff": 54,
+        "parse_error": null,
+        "proposer_text": "I'll offer a split where I keep a larger portion to account for the psychological threshold of fairness, but not too generous as to give away the majority. OFFER=53,54",
+        "responder_text": "Given that the proposal is relatively fair and rejecting it results in both players getting nothing, I choose to accept the offer to ensure I receive some money. ACCEPT",
+        "pool": 107,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 42,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 42,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to account for the decision risk, but still ensure Player B gets a significant amount. OFFER=65,42",
+        "responder_text": "While the offer is not particularly fair, rejecting it means both players get nothing, which is worse than accepting this deal. ACCEPT",
+        "pool": 107,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 43,
+      "pool": 113,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 57,
+        "responder_share": 56,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=57,56",
+        "responder_text": "The offer is quite close, but given that you would receive $56 while the other player gets $57, it's a fair split considering the total pool size. However, to ensure a more equitable distribution, I would prefer a slightly more balanced outcome. REJECT",
+        "pool": 113,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 43,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 57,
+        "responder_share": 56,
+        "response": "accept",
+        "proposer_payoff": 57,
+        "responder_payoff": 56,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both parties benefit reasonably. OFFER=57,56",
+        "responder_text": "The offer is very close, but since it's a significant amount of money and rejecting would result in both getting nothing, I'll accept to ensure I receive some benefit. ACCEPT",
+        "pool": 113,
+        "proposer_metrics": {
+          "word_count": 12,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 44,
+      "pool": 131,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 56,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 56,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while still keeping a significant portion for myself. OFFER=75,56",
+        "responder_text": "Given the significant disparity in the proposed split, while it's not ideal, accepting still leaves both parties with some benefit rather than neither getting anything. ACCEPT",
+        "pool": 131,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 66,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 66,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure mutual acceptance while acknowledging the psychological value of getting something. OFFER=65,66",
+        "responder_text": "The offer is slightly in your favor, and rejecting it would result in both players getting nothing. ACCEPT",
+        "pool": 131,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 45,
+      "pool": 131,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 66,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 66,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring neither party walks away empty-handed. OFFER=65,66",
+        "responder_text": "Given that the offer slightly favors you and it's a fair distribution considering the total pool, I'll accept to ensure both parties gain something from this interaction. ACCEPT",
+        "pool": 131,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 56,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 56,
+        "parse_error": null,
+        "proposer_text": "I'll offer a fair split to ensure Player B accepts, while still keeping a significant portion for myself. OFFER=75,56",
+        "responder_text": "Considering the significant disparity in the proposed split, while it's not ideal, rejecting would result in neither of us getting anything. ACCEPT",
+        "pool": 131,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 46,
+      "pool": 100,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 50,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 50,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=50,50",
+        "responder_text": "Given that the offer is fair and splits the money equally, it seems reasonable to accept it to ensure both players receive some benefit. ACCEPT",
+        "pool": 100,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 3
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 51,
+        "responder_share": 49,
+        "response": "accept",
+        "proposer_payoff": 51,
+        "responder_payoff": 49,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure mutual benefit, though I recognize that any amount less than $50 might be seen as unfair by Player B. OFFER=51,49",
+        "responder_text": "While the offer is slightly unfair, considering the psychological aspect and the fact that any amount is better than nothing, I will accept to avoid walking away with nothing. ACCEPT",
+        "pool": 100,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 47,
+      "pool": 97,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 47,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 47,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some value. OFFER=50,47",
+        "responder_text": "Given that the proposal is quite uneven but still leaves a significant amount on the table for me, I would consider accepting it to secure at least $47 rather than rejecting it and getting nothing. ACCEPT",
+        "pool": 97,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 36,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 58,
+        "responder_share": 39,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to maximize the chances of acceptance while ensuring I receive a substantial amount. OFFER=58,39",
+        "responder_text": "Given the significant imbalance, while $39 is better than nothing, it's a very small amount compared to what Player A gets. REJECT",
+        "pool": 97,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 48,
+      "pool": 71,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 36,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 36,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fairly even split to ensure Player B finds it reasonable but still make a slight adjustment to keep some advantage for myself. OFFER=35,36",
+        "responder_text": "Given that the offer is slightly in your favor and rejecting it would result in both players getting nothing, it makes rational economic sense to accept the offer. ACCEPT",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 36,
+        "responder_share": 35,
+        "response": "accept",
+        "proposer_payoff": 36,
+        "responder_payoff": 35,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair split to encourage acceptance while keeping most of the money for myself. OFFER=36,35",
+        "responder_text": "Considering the significant disparity in the split and the fact that any amount is better than nothing, I decide to accept the offer to ensure I receive some benefit. ACCEPT",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 49,
+      "pool": 83,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 41,
+        "responder_share": 42,
+        "response": "accept",
+        "proposer_payoff": 41,
+        "responder_payoff": 42,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit. OFFER=41,42",
+        "responder_text": "Given that the proposal is quite fair and even slightly favors you, it's reasonable to accept to ensure you receive some money. ACCEPT",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 8,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 8,
+        "parse_error": null,
+        "proposer_text": "I'll offer a slight majority to ensure I get the deal accepted, as even a small amount is better than nothing. OFFER=75,8",
+        "responder_text": "Given the significant disparity in the proposed split, accepting such a low offer could be seen as unfair. However, in this game, even small amounts can have substantial value, especially if rejecting leads to both receiving nothing. ACCEPT",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 38,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 50,
+      "pool": 53,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 32,
+        "responder_share": 21,
+        "response": "accept",
+        "proposer_payoff": 32,
+        "responder_payoff": 21,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while keeping a slight advantage for myself. OFFER=32,21",
+        "responder_text": "Considering the amount offered, while it's less than half of the total, it still represents a significant portion of the pool. ACCEPT",
+        "pool": 53,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 31,
+        "responder_share": 22,
+        "response": "accept",
+        "proposer_payoff": 31,
+        "responder_payoff": 22,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to maximize the chances of acceptance while ensuring I receive a significant portion. OFFER=31,22",
+        "responder_text": "Considering the offer, while $22 is less than half of the total pool, it's still a fair share and rejecting would result in neither of us getting anything. ACCEPT",
+        "pool": 53,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 51,
+      "pool": 151,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 76,
+        "responder_share": 75,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit. OFFER=76,75",
+        "responder_text": "Given that the offer is quite close and considering the psychological aspect of fairness, I might reject an offer that feels too uneven. However, in this case, $75 is a significant amount of money. REJECT",
+        "pool": 151,
+        "proposer_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 35,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 145,
+        "responder_share": 6,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll offer a split where I keep most of the money to test if Player B values the game's outcome more practically. OFFER=145,6",
+        "responder_text": "Given the small amount offered and the significant disparity, I would reject this offer to avoid accepting a highly unequal distribution. REJECT",
+        "pool": 151,
+        "proposer_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 52,
+      "pool": 47,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 23,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 23,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some benefit. OFFER=23,24",
+        "responder_text": "Considering the total pool of $47 and the slight imbalance in the offer, I accept this as it still provides a fair share. ACCEPT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 17,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 17,
+        "parse_error": null,
+        "proposer_text": "I'll offer a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=30,17",
+        "responder_text": "Considering the amount offered, while $17 is less than half of the total, it's still a fair share that reflects significant cooperation. ACCEPT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 53,
+      "pool": 53,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 53,
+        "responder_share": 0,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll offer a split where I keep a small amount to show initiative, but still provide a significant portion to Player B to encourage acceptance. OFFER=53,0",
+        "responder_text": "Given that the proposal is extremely unfair and there's no room for negotiation, I would choose to reject it to avoid accepting an unfair distribution. REJECT",
+        "pool": 53,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 32,
+        "responder_share": 21,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=32,21",
+        "responder_text": "Given the significant disparity in the offer, while $21 is better than nothing, it's a very low amount considering the total pool could be split more evenly. REJECT",
+        "pool": 53,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 54,
+      "pool": 113,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 43,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 43,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to reflect the initial proposer's advantage, but still a fair amount. OFFER=70,43",
+        "responder_text": "Considering the significant imbalance, I would prefer a more equitable split, but given the total pool is $113, accepting this offer is still better than rejecting it and getting nothing. ACCEPT",
+        "pool": 113,
+        "proposer_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 1,
+        "responder_share": 112,
+        "response": "accept",
+        "proposer_payoff": 1,
+        "responder_payoff": 112,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure they accept, as even a small amount might still make them prefer getting something over nothing. OFFER=1,112",
+        "responder_text": "The offer is quite generous, giving a significant majority of the money to Player A but still leaving a substantial amount for me. Given this, I accept the offer to secure the $112. ACCEPT",
+        "pool": 113,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 1,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 34,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 55,
+      "pool": 103,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 52,
+        "responder_share": 51,
+        "response": "accept",
+        "proposer_payoff": 52,
+        "responder_payoff": 51,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=52,51",
+        "responder_text": "Given the small difference in the amount and considering the game theory where fairness often plays a role, I might expect a more equitable split in a real-world scenario. However, since this is a one-time interaction, I'll take what's offered to avoid walking away with nothing. ACCEPT",
+        "pool": 103,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 47,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 48,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 48,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring a reasonable amount for both parties. OFFER=55,48",
+        "responder_text": "Given the significant imbalance, I would prefer a more equal split, but since $48 is still a substantial amount, I'll consider accepting it to avoid both getting nothing. ACCEPT",
+        "pool": 103,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 3
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 56,
+      "pool": 83,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 38,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 38,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep $45 and give $38 to Player B, as this offers a fair distribution while acknowledging Player B's potential rejection threshold. OFFER=45,38",
+        "responder_text": "While the offer is slightly unfair, considering the total pool could be split more equitably in future games, accepting this offer is reasonable given the current distribution. ACCEPT",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 33,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 33,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while keeping the majority of the money for myself. OFFER=50,33",
+        "responder_text": "While the offer is somewhat unfair, considering the total pool could be split more equally in future games, accepting this offer ensures you receive some money rather than walking away with nothing. ACCEPT",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 33,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 57,
+      "pool": 139,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 90,
+        "responder_share": 49,
+        "response": "accept",
+        "proposer_payoff": 90,
+        "responder_payoff": 49,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take $90 and leave $49 for Player B, as this offers a fair yet slightly advantageous position for myself while still providing a significant amount to Player B. OFFER=90,49",
+        "responder_text": "Considering the significant disparity in the proposed split and the fact that any amount is better than nothing, I will accept to avoid walking away with nothing. ACCEPT",
+        "pool": 139,
+        "proposer_metrics": {
+          "word_count": 35,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 1,
+        "responder_share": 138,
+        "response": "accept",
+        "proposer_payoff": 1,
+        "responder_payoff": 138,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure they accept out of practicality, while keeping most of the money for myself. OFFER=1,138",
+        "responder_text": "The offer is quite generous, considering the total pool size. However, to ensure fairness and to avoid the scenario where future interactions might be negatively affected by perceiving the offer as unfair. ACCEPT",
+        "pool": 139,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 33,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 58,
+      "pool": 151,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 80,
+        "responder_share": 71,
+        "response": "accept",
+        "proposer_payoff": 80,
+        "responder_payoff": 71,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to account for the proposer's advantage, but still leaving a significant amount for Player B to ensure they have an incentive to accept. OFFER=80,71",
+        "responder_text": "The offer is quite close to being fair, but given the chance to walk away with $71 rather than nothing, it seems reasonable to accept. ACCEPT",
+        "pool": 151,
+        "proposer_metrics": {
+          "word_count": 35,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 149,
+        "responder_share": 2,
+        "response": "accept",
+        "proposer_payoff": 149,
+        "responder_payoff": 2,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure they accept while keeping as much for myself. OFFER=149,2",
+        "responder_text": "Given the significant disparity in the split, accepting such a low offer could be seen as unfair, but rejecting it means both players get nothing. ACCEPT",
+        "pool": 151,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 59,
+      "pool": 103,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 52,
+        "responder_share": 51,
+        "response": "accept",
+        "proposer_payoff": 52,
+        "responder_payoff": 51,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring I receive a significant portion of the money. OFFER=52,51",
+        "responder_text": "Given that the offer is very close but favors Player A slightly, I would consider accepting to ensure at least some gain rather than ending up with nothing. ACCEPT",
+        "pool": 103,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 28,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 28,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while keeping the majority of the money for myself. OFFER=75,28",
+        "responder_text": "Considering the significant disparity in the split, I would prefer a more equitable distribution if possible, but given the choice between accepting this offer or getting nothing, I accept this as a reasonable outcome for me. ACCEPT",
+        "pool": 103,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 37,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 60,
+      "pool": 37,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 20,
+        "responder_share": 17,
+        "response": "accept",
+        "proposer_payoff": 20,
+        "responder_payoff": 17,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while still keeping a significant portion for myself. OFFER=20,17",
+        "responder_text": "While the offer is not equal, rejecting it means both players get nothing, and accepting gives you a share despite the imbalance. ACCEPT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 18,
+        "responder_share": 19,
+        "response": "accept",
+        "proposer_payoff": 18,
+        "responder_payoff": 19,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to ensure both parties benefit. OFFER=18,19",
+        "responder_text": "While the offer is slightly imbalanced, it's still a fair amount considering the total pool. ACCEPT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 61,
+      "pool": 61,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 31,
+        "responder_share": 30,
+        "response": "accept",
+        "proposer_payoff": 31,
+        "responder_payoff": 30,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a significant portion for myself. OFFER=31,30",
+        "responder_text": "While the offer is slightly unfair, considering the psychological aspect of rejection and the potential loss for both parties, I'll take the deal. ACCEPT",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 31,
+        "responder_share": 30,
+        "response": "accept",
+        "proposer_payoff": 31,
+        "responder_payoff": 30,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while keeping a slight advantage for myself. OFFER=31,30",
+        "responder_text": "Considering the psychological aspect of fairness, while the offer is not perfectly even, it's close enough that rejecting it would likely result in neither of us getting anything. ACCEPT",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 62,
+      "pool": 67,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 32,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 32,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some value. OFFER=35,32",
+        "responder_text": "Given that the total pool is $67 and the proposal is quite uneven, while $32 is better than nothing, I might consider rejecting to send a message about fairness. However, in practical terms, accepting is often the rational choice as it ensures some gain rather than risking both getting nothing. ACCEPT",
+        "pool": 67,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 51,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 17,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll offer a split where I keep $50 for myself and give $17 to Player B to test the willingness to accept a lower amount. OFFER=50,17",
+        "responder_text": "Given the significant disparity in the offer, while $17 is better than nothing, it's a very small amount compared to what Player A gets. REJECT",
+        "pool": 67,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 63,
+      "pool": 137,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 68,
+        "responder_share": 69,
+        "response": "accept",
+        "proposer_payoff": 68,
+        "responder_payoff": 69,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring neither party walks away with nothing. OFFER=68,69",
+        "responder_text": "Given that the offer is quite fair and you would still have a significant amount of money even if you reject (since both would get $0), I decide to accept this offer to ensure I receive the $69. ACCEPT",
+        "pool": 137,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 39,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 68,
+        "responder_share": 69,
+        "response": "accept",
+        "proposer_payoff": 68,
+        "responder_payoff": 69,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to ensure both parties benefit, as rejecting the offer means neither gets anything. OFFER=68,69",
+        "responder_text": "Given that the offer is slightly in your favor and rejecting it would result in both players getting $0, it's reasonable to accept this offer. ACCEPT",
+        "pool": 137,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 64,
+      "pool": 83,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 33,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 33,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep $50 and give $33 to Player B to ensure it's a fair deal while still leaving a significant portion for Player B. OFFER=50,33",
+        "responder_text": "While the offer is not equal, rejecting it means neither of us gets anything. Given the amount I would get is still significant, I accept to ensure I receive some money. ACCEPT",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 32,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 38,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 38,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both parties benefit from the agreement. OFFER=45,38",
+        "responder_text": "Considering the significant difference in the split, while I would prefer a more equal distribution, this offer is still better than rejecting it and getting nothing. ACCEPT",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 65,
+      "pool": 137,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 80,
+        "responder_share": 57,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while keeping a significant portion for myself. OFFER=80,57",
+        "responder_text": "Given the significant imbalance, while $57 is better than nothing, it's a very small portion of the total pool. To ensure a more equitable split, I would prefer to reject this offer. REJECT",
+        "pool": 137,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 33,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 90,
+        "responder_share": 47,
+        "response": "accept",
+        "proposer_payoff": 90,
+        "responder_payoff": 47,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a larger portion to reflect the initial mover advantage, but still offer a significant amount to Player B to encourage acceptance. OFFER=90,47",
+        "responder_text": "Considering the significant disparity in the split, I would prefer a more equitable distribution if possible, but given the choice between accepting this offer or getting nothing, I accept this as a reasonable outcome. ACCEPT",
+        "pool": 137,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 35,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 66,
+      "pool": 71,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 36,
+        "responder_share": 35,
+        "response": "accept",
+        "proposer_payoff": 36,
+        "responder_payoff": 35,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=36,35",
+        "responder_text": "Given that the offer is quite close and considering the psychological aspect of the game where a rejection might lead to both getting nothing, I accept this offer as it still provides a significant share of the total pool. ACCEPT",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 40,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 36,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 36,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit, though I understand that even a small amount can be significant. OFFER=35,36",
+        "responder_text": "Given that the proposal is slightly in your favor and considering the psychological aspect of fairness, I would accept to ensure both players walk away with some benefit. ACCEPT",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 67,
+      "pool": 137,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 68,
+        "responder_share": 69,
+        "response": "accept",
+        "proposer_payoff": 68,
+        "responder_payoff": 69,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=68,69",
+        "responder_text": "Given that the proposal is relatively fair and you would be gaining $69, which is a significant amount, it's reasonable to accept this offer. ACCEPT",
+        "pool": 137,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 135,
+        "responder_share": 2,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a larger portion to maximize my gain, assuming Player B values at least receiving some money. OFFER=135,2",
+        "responder_text": "Given the significant disparity in the proposed split, I would reject this offer to discourage such unfair distributions in future interactions. REJECT",
+        "pool": 137,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 68,
+      "pool": 131,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 66,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 66,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some value. OFFER=65,66",
+        "responder_text": "Given that the proposal is slightly in your favor and accepting it means you gain $66 while only costing Player A $65, it seems fair. This also encourages a positive interaction for future potential games. ACCEPT",
+        "pool": 131,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 36,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 66,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 66,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=65,66",
+        "responder_text": "The offer is slightly in your favor, but the game's psychology suggests that rejecting such an offer might set a precedent of fairness. However, given the small difference and the potential to walk away with a significant amount, I'll consider accepting to avoid both getting nothing. ACCEPT",
+        "pool": 131,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 47,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 69,
+      "pool": 139,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 89,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 89,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a smaller portion to encourage acceptance while still providing a significant amount for Player B. OFFER=50,89",
+        "responder_text": "Given that the proposal is quite favorable, offering a significant amount of the total pool to me, I accept this deal as it's better than receiving nothing. ACCEPT",
+        "pool": 139,
+        "proposer_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 70,
+        "responder_share": 69,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to maximize the chances of acceptance while ensuring a reasonable share for myself. OFFER=70,69",
+        "responder_text": "Given that the offer is very close but slightly favors Player A, and considering the psychological aspect of fairness, I might reject this offer to make Player A realize that a more equitable split is necessary for acceptance. REJECT",
+        "pool": 139,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 39,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 70,
+      "pool": 37,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 20,
+        "responder_share": 17,
+        "response": "accept",
+        "proposer_payoff": 20,
+        "responder_payoff": 17,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while ensuring I receive a significant portion. OFFER=20,17",
+        "responder_text": "Given that the proposal is slightly unfair but still leaves me with a significant amount ($17), I might accept it to ensure I receive something rather than walk away with nothing. ACCEPT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 32,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 35,
+        "responder_share": 2,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll propose a split where I keep most of the money but still offer a fair share to encourage acceptance. OFFER=35,2",
+        "responder_text": "The offer is very uneven, giving Player A the vast majority of the money while you receive only a small portion. REJECT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 71,
+      "pool": 157,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 78,
+        "responder_share": 79,
+        "response": "accept",
+        "proposer_payoff": 78,
+        "responder_payoff": 79,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some value. OFFER=78,79",
+        "responder_text": "Given the small difference in the split, it's still a fair offer as you receive significantly more than Player A. ACCEPT\nACCEPT",
+        "pool": 157,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 80,
+        "responder_share": 77,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both parties benefit, though I understand that Player B might want a larger share. OFFER=80,77",
+        "responder_text": "Given that the distribution is quite uneven and considering the psychological value of fairness, I would reject this offer to discourage such unfair splits in future interactions. REJECT",
+        "pool": 157,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 72,
+      "pool": 79,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 39,
+        "responder_share": 40,
+        "response": "accept",
+        "proposer_payoff": 39,
+        "responder_payoff": 40,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=39,40",
+        "responder_text": "Given that the offer is slightly in your favor and rejecting it would result in both players getting nothing, I choose to accept the offer to maximize my earnings. ACCEPT",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 29,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 29,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while keeping a significant portion for myself. OFFER=50,29",
+        "responder_text": "While the offer is unfair, considering the psychological aspect of the game and the potential for no deal to be reached, I'll take what I can get. ACCEPT",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 73,
+      "pool": 149,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 75,
+        "responder_share": 74,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a smaller portion to encourage acceptance while still providing a significant amount. OFFER=75,74",
+        "responder_text": "Given that the proposal is very close and considering the psychological aspect of fairness, I might reject a proposal where the split is not more equitable. However, in this case, $74 is still a significant amount of money. REJECT",
+        "pool": 149,
+        "proposer_metrics": {
+          "word_count": 20,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 39,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 74,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 74,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to ensure Player B has an incentive to accept. OFFER=75,74",
+        "responder_text": "Given that the distribution is very close and considering fairness, while also recognizing the value of taking the offer to avoid both getting nothing, I choose to accept the deal. ACCEPT",
+        "pool": 149,
+        "proposer_metrics": {
+          "word_count": 15,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 74,
+      "pool": 61,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 31,
+        "responder_share": 30,
+        "response": "accept",
+        "proposer_payoff": 31,
+        "responder_payoff": 30,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some benefit. OFFER=31,30",
+        "responder_text": "Considering the amount of $30 is still a significant sum and the game's outcome is either accepting a fair deal or rejecting it and ending up with nothing, I choose to accept the offer to ensure I receive some money. ACCEPT",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 41,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 51,
+        "responder_share": 10,
+        "response": "accept",
+        "proposer_payoff": 51,
+        "responder_payoff": 10,
+        "parse_error": null,
+        "proposer_text": "I'll offer a split where I keep a slightly larger portion to reflect my role as the proposer, but not so much that it's unfair. OFFER=51,10",
+        "responder_text": "Given the significant disparity in the proposed split, I would typically expect a more equitable distribution. However, since this is a take-it-or-leave-it scenario, accepting is the rational choice to ensure any amount over nothing. ACCEPT",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 35,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 75,
+      "pool": 127,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 63,
+        "responder_share": 64,
+        "response": "accept",
+        "proposer_payoff": 63,
+        "responder_payoff": 64,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some value. OFFER=63,64",
+        "responder_text": "Given that the offer is slightly in your favor and rejecting it would result in both players getting nothing, it makes sense to accept the offer. ACCEPT",
+        "pool": 127,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 63,
+        "responder_share": 64,
+        "response": "accept",
+        "proposer_payoff": 63,
+        "responder_payoff": 64,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring I receive a substantial amount. OFFER=63,64",
+        "responder_text": "Given that the offer is slightly in your favor and rejecting it would result in both players getting nothing, it makes rational economic sense to accept the offer. ACCEPT",
+        "pool": 127,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 76,
+      "pool": 41,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 21,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 21,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=21,20",
+        "responder_text": "While the offer is slightly unfair, considering the psychological aspect of rejection and the potential for no one to get anything, I will take the money. ACCEPT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 21,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 21,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both parties benefit, as rejecting the offer results in nothing for either of us. OFFER=21,20",
+        "responder_text": "Considering the proposal, while the split is not equal, rejecting it would result in neither of us getting anything. Therefore, I accept the offer to ensure I receive some money. ACCEPT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 77,
+      "pool": 157,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 94,
+        "responder_share": 63,
+        "response": "accept",
+        "proposer_payoff": 94,
+        "responder_payoff": 63,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to reflect my initiative but still offer a fair amount. OFFER=94,63",
+        "responder_text": "Considering the significant disparity and the fact that $63 is still a substantial amount, I would accept to avoid walking away with nothing. ACCEPT",
+        "pool": 157,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 78,
+        "responder_share": 79,
+        "response": "accept",
+        "proposer_payoff": 78,
+        "responder_payoff": 79,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the agreement. OFFER=78,79",
+        "responder_text": "Given the slight imbalance but still a fair distribution, I accept this offer to ensure both players receive some benefit. ACCEPT",
+        "pool": 157,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 78,
+      "pool": 97,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 47,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 47,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a smaller portion to encourage acceptance while still providing a significant amount. OFFER=50,47",
+        "responder_text": "Given that the distribution is quite uneven but the offer is not zero and considering fairness, I might accept to ensure I receive some money. ACCEPT",
+        "pool": 97,
+        "proposer_metrics": {
+          "word_count": 20,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 58,
+        "responder_share": 39,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll offer a fair split to ensure Player B accepts, while still keeping a significant amount for myself. OFFER=58,39",
+        "responder_text": "Considering the significant imbalance, while $39 is better than $0, it's a small amount compared to what Player A gets. REJECT",
+        "pool": 97,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 79,
+      "pool": 61,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 31,
+        "responder_share": 30,
+        "response": "accept",
+        "proposer_payoff": 31,
+        "responder_payoff": 30,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=31,30",
+        "responder_text": "Considering the offer, while it's not a perfectly equal split, it's still a reasonable amount and rejecting might lead to both getting nothing. ACCEPT",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 24,
+          "hedge_count": 1,
+          "fairness_count": 3
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 51,
+        "responder_share": 10,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll offer a fair split to encourage acceptance while keeping a significant portion for myself. OFFER=51,10",
+        "responder_text": "Considering the significant disparity and the low amount offered, I would prefer a fairer split even if it means taking less. REJECT",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 80,
+      "pool": 113,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 57,
+        "responder_share": 56,
+        "response": "accept",
+        "proposer_payoff": 57,
+        "responder_payoff": 56,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=57,56",
+        "responder_text": "Given that the distribution is nearly equal and considering the psychological value of fairness, I might accept this offer to avoid walking away with nothing. ACCEPT",
+        "pool": 113,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 57,
+        "responder_share": 56,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit, though I recognize that any amount less than $56 might be seen as unfair and lead to a rejection. OFFER=57,56",
+        "responder_text": "Considering the proposal, while it's not perfectly equal, it's close to a fair split given the total pool size. However, since the game dynamics often value fairness, I'll reject this offer to encourage more equitable splits in future interactions. REJECT",
+        "pool": 113,
+        "proposer_metrics": {
+          "word_count": 30,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 40,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 81,
+      "pool": 61,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 5,
+        "responder_share": 56,
+        "response": "accept",
+        "proposer_payoff": 5,
+        "responder_payoff": 56,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep a small amount for myself to ensure the deal is accepted, as even a minimal amount might be seen as unfair if left out completely. OFFER=5,56",
+        "responder_text": "Given the significant imbalance, while the offer is generous, it might be seen as unfair. However, since the amount offered to me is substantial, I will accept to ensure I receive a considerable sum. ACCEPT",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 33,
+          "hedge_count": 1,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 35,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 31,
+        "responder_share": 30,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=31,30",
+        "responder_text": "Given that the proposal is quite close and considering the psychological aspect of fairness, I might reject to make Player A offer a more equitable split next time. REJECT",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 82,
+      "pool": 53,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 32,
+        "responder_share": 21,
+        "response": "accept",
+        "proposer_payoff": 32,
+        "responder_payoff": 21,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while acknowledging my need for a significant portion of the money. OFFER=32,21",
+        "responder_text": "Considering the offer, while $21 is less than half of the total, it's still a fair amount and rejecting might teach Player A to be more generous in future games. ACCEPT",
+        "pool": 53,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 26,
+        "responder_share": 27,
+        "response": "accept",
+        "proposer_payoff": 26,
+        "responder_payoff": 27,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit, though I understand that any amount less than $53 for me means you get more. OFFER=26,27",
+        "responder_text": "Given that the proposal is relatively fair and you would be leaving with $27 if you accept, it's reasonable to take this offer. ACCEPT",
+        "pool": 53,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 83,
+      "pool": 113,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 38,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 38,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to reflect my role as the proposer but still ensure Player B receives a significant amount. This way, there's an incentive for Player B to accept rather than risk getting nothing. OFFER=75,38",
+        "responder_text": "While the offer is not particularly fair, considering the total pool could be split more equally in future games, accepting this offer is the rational choice as rejecting it results in both parties getting nothing. ACCEPT",
+        "pool": 113,
+        "proposer_metrics": {
+          "word_count": 43,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 36,
+          "hedge_count": 1,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 60,
+        "responder_share": 53,
+        "response": "accept",
+        "proposer_payoff": 60,
+        "responder_payoff": 53,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit, though I understand that even a small amount can be significant for Player B. OFFER=60,53",
+        "responder_text": "While the offer is not particularly fair, rejecting it means we both get nothing, which is worse than getting $53. ACCEPT",
+        "pool": 113,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 84,
+      "pool": 41,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 1,
+        "responder_share": 40,
+        "response": "accept",
+        "proposer_payoff": 1,
+        "responder_payoff": 40,
+        "parse_error": null,
+        "proposer_text": "I'll offer a split where I keep a small amount and suggest Player B gets the majority, hoping they find it fair enough to accept. OFFER=1,40",
+        "responder_text": "Given the significant imbalance, I would typically expect a more equitable split. However, considering the psychological aspect and the fact that you receive a substantial amount, I'll accept to avoid both ending up with nothing. ACCEPT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 36,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 21,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 21,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I'll propose a split where I keep most of the money but still offer a significant amount to Player B to ensure they might accept, as a fair offer increases the likelihood of acceptance. OFFER=21,20",
+        "responder_text": "Considering the significant imbalance, I would prefer a more equitable split, but given the choice between accepting this offer and getting nothing, I'll take what's offered to ensure some gain. ACCEPT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 35,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 85,
+      "pool": 59,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 30,
+        "responder_share": 29,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll make an offer that splits the money fairly while taking into account the psychological value of getting something rather than nothing. OFFER=30,29",
+        "responder_text": "Given that the distribution is very close and considering fairness, I might reject to signal that I expect a more equitable split next time. REJECT",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I'll propose a fair split to maximize the chances of acceptance while keeping a significant portion for myself. OFFER=35,24",
+        "responder_text": "Given that the proposal is quite uneven, but still provides some value to me, I decide to accept it to ensure I receive something rather than walk away with nothing. ACCEPT",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 86,
+      "pool": 67,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 32,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 32,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=35,32",
+        "responder_text": "Given that the proposal is quite uneven but still leaves both players with some benefit, I would accept it to ensure at least $32 rather than receiving nothing. ACCEPT",
+        "pool": 67,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 32,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 32,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair split to ensure Player B finds it reasonable. OFFER=35,32",
+        "responder_text": "While the offer is slightly unfair, considering the total pool and the opportunity to walk away with something rather than nothing, I might accept it to avoid a zero-sum outcome. ACCEPT",
+        "pool": 67,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 87,
+      "pool": 53,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 26,
+        "responder_share": 27,
+        "response": "accept",
+        "proposer_payoff": 26,
+        "responder_payoff": 27,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit. OFFER=26,27",
+        "responder_text": "Considering the total pool of $53 and the small difference in the split, I would accept to ensure I receive some value from the game. ACCEPT",
+        "pool": 53,
+        "proposer_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 26,
+        "responder_share": 27,
+        "response": "accept",
+        "proposer_payoff": 26,
+        "responder_payoff": 27,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair split to see if Player B values fairness. OFFER=26,27",
+        "responder_text": "Given that the offer is slightly in your favor and considering the psychological aspect of fairness, I would accept to ensure both players walk away with some money. ACCEPT",
+        "pool": 53,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 88,
+      "pool": 89,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 45,
+        "responder_share": 44,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=45,44",
+        "responder_text": "Given that the distribution is quite uneven and considering the psychological aspect of fairness, I might reject this offer to send a message about expectations in such games. REJECT",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 29,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 53,
+        "responder_share": 36,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a significant portion for myself. OFFER=53,36",
+        "responder_text": "Given the significant disparity in the offer, while $36 is better than nothing, it's a small amount considering the total pool could have been more equitably split. REJECT",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 89,
+      "pool": 149,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 75,
+        "responder_share": 74,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=75,74",
+        "responder_text": "Given that the offer is very close to a 50/50 split and considering the psychological aspect of fairness, I might reject an offer that feels too unequal, even if it means both getting nothing. REJECT",
+        "pool": 149,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 35,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 5,
+        "responder_share": 144,
+        "response": "accept",
+        "proposer_payoff": 5,
+        "responder_payoff": 144,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure they accept out of necessity, while keeping the majority for myself. OFFER=5,144",
+        "responder_text": "Given the significant disparity in the split, while it's a fair amount for me, it seems very little for Player A. However, the offer still leaves me with a substantial amount of money. ACCEPT",
+        "pool": 149,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 34,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 90,
+      "pool": 103,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 1,
+        "responder_share": 102,
+        "response": "accept",
+        "proposer_payoff": 1,
+        "responder_payoff": 102,
+        "parse_error": null,
+        "proposer_text": "I'll offer a split where I keep a minimal amount to ensure the offer is accepted, as even a small amount might be better than nothing. OFFER=1,102",
+        "responder_text": "Considering the significant imbalance, I would prefer a more equitable split, but given the total pool, accepting this offer still leaves me with a substantial amount. ACCEPT",
+        "pool": 103,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 1,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 98,
+        "responder_share": 5,
+        "response": "accept",
+        "proposer_payoff": 98,
+        "responder_payoff": 5,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure they accept out of necessity, but still keep the majority for myself. OFFER=98,5",
+        "responder_text": "Given the significant imbalance, I would prefer a more equitable split, but since this is a take-it-or-leave-it scenario, accepting is the pragmatic choice to ensure I receive something rather than walking away with nothing. ACCEPT",
+        "pool": 103,
+        "proposer_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 35,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 91,
+      "pool": 100,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 50,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 50,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=50,50",
+        "responder_text": "Given that the proposal is fair and both parties receive an equal share, I see no reason to reject it. ACCEPT",
+        "pool": 100,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 3
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 60,
+        "responder_share": 40,
+        "response": "accept",
+        "proposer_payoff": 60,
+        "responder_payoff": 40,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while keeping a slight advantage for myself. OFFER=60,40",
+        "responder_text": "Given the significant disparity in the split, I would prefer a more equitable distribution, but since this is a take-it-or-leave-it scenario, accepting is still better than rejecting and getting nothing. ACCEPT",
+        "pool": 100,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 92,
+      "pool": 127,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 77,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 77,
+        "parse_error": null,
+        "proposer_text": "Considering fairness and the psychological value of receiving at least some amount, I propose a split where Player B receives a significant portion to ensure acceptance. OFFER=50,77",
+        "responder_text": "Considering the significant difference in the split, but given that I still receive more than half of the total amount, it might be seen as fair to accept this offer. ACCEPT",
+        "pool": 127,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 31,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 57,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 57,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=70,57",
+        "responder_text": "The offer is quite uneven, but receiving $57 is better than getting nothing if the deal is rejected. ACCEPT",
+        "pool": 127,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 93,
+      "pool": 59,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 29,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 29,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit from the game. OFFER=30,29",
+        "responder_text": "Given that the offer is very close to a 50/50 split, while it's slightly unfair, rejecting such an offer might lead to both getting nothing. However, accepting this offer means you still walk away with $29, which is better than nothing. ACCEPT",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 42,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 4,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 4,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep $59 and Player B gets $0, as this maximizes my share. However, considering typical behavioral economics, I'll offer a slightly smaller amount to Player B to ensure the proposal is accepted. OFFER=55,4",
+        "responder_text": "Given the significant disparity in the proposed split, accepting such a low offer could be seen as unfair. However, since rejecting the offer results in neither of us getting any money, I decide to accept this offer to at least secure some amount. ACCEPT",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 39,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 44,
+          "hedge_count": 1,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 94,
+      "pool": 71,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 36,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 36,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I keep $35 and Player B gets $36, as this slightly favors Player B while still providing a significant portion of the total amount. OFFER=35,36",
+        "responder_text": "Given that the offer is slightly favorable to you and considering the psychological aspect of fairness, I would accept it to ensure I receive some money. ACCEPT",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 7,
+        "responder_share": 64,
+        "response": "accept",
+        "proposer_payoff": 7,
+        "responder_payoff": 64,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure they accept out of necessity, while keeping the majority for myself. OFFER=7,64",
+        "responder_text": "Given the significant imbalance but considering the total pool size, I accept to ensure I receive a substantial amount. ACCEPT",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 20,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 95,
+      "pool": 89,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 44,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 44,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring both players receive some benefit. OFFER=45,44",
+        "responder_text": "Given the slight imbalance, while it's a very close split, I would typically expect a more equitable distribution in fair games. However, since this is a one-time offer, accepting it ensures I get some money rather than none. ACCEPT",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 16,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 39,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 44,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 44,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both parties benefit from the negotiation. OFFER=45,44",
+        "responder_text": "Considering the significant imbalance and the fact that any amount is better than none, I accept the offer to ensure I receive some money. ACCEPT",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 14,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 96,
+      "pool": 151,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 90,
+        "responder_share": 61,
+        "response": "accept",
+        "proposer_payoff": 90,
+        "responder_payoff": 61,
+        "parse_error": null,
+        "proposer_text": "I propose a split where I take a slightly larger portion to account for the proposer's advantage, but still offer a fair share. OFFER=90,61",
+        "responder_text": "Given the significant disparity in the split, I would prefer a more equitable distribution, but considering the amount offered is still substantial, I'll take what's on the table to ensure I receive some benefit. ACCEPT",
+        "pool": 151,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 35,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 76,
+        "responder_share": 75,
+        "response": "accept",
+        "proposer_payoff": 76,
+        "responder_payoff": 75,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fair offer to encourage acceptance while keeping a slight advantage for myself. OFFER=76,75",
+        "responder_text": "Given that the proposal is quite fair and only leaves a small difference of $1 between us, it's reasonable to accept to avoid walking away with nothing. ACCEPT",
+        "pool": 151,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 97,
+      "pool": 53,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 53,
+        "responder_share": 0,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to encourage acceptance while ensuring neither party walks away with nothing. OFFER=53,0",
+        "responder_text": "Given that the offer is extremely uneven and there's no chance for negotiation, I would reject this offer to avoid an unfair distribution of the reward. REJECT",
+        "pool": 53,
+        "proposer_metrics": {
+          "word_count": 17,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 32,
+        "responder_share": 21,
+        "response": "accept",
+        "proposer_payoff": 32,
+        "responder_payoff": 21,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=32,21",
+        "responder_text": "Given the proposal, while the split is unequal, rejecting it means both receive nothing. Accepting still gives me some value. ACCEPT",
+        "pool": 53,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 98,
+      "pool": 103,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 48,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 48,
+        "parse_error": null,
+        "proposer_text": "I'll start by offering a fair split to encourage acceptance while keeping a slight advantage for myself. OFFER=55,48",
+        "responder_text": "While the offer is not equal, refusing might set a precedent for future negotiations and could be seen as principled. However, in this case, the difference is relatively small, and accepting is often the rational choice to secure some money rather than walk away with none. ACCEPT",
+        "pool": 103,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 47,
+          "hedge_count": 2,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 5,
+        "responder_share": 98,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll offer a small amount to Player B to ensure they might accept it, as even a little is better than nothing. OFFER=5,98",
+        "responder_text": "Given the significant disparity and the low amount offered, I would reject this offer to discourage such unfair splits in future interactions. REJECT",
+        "pool": 103,
+        "proposer_metrics": {
+          "word_count": 23,
+          "hedge_count": 1,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 99,
+      "pool": 79,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 70,
+        "responder_share": 9,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I'll start with a fairly standard offer to see if it's accepted while keeping most of the money for myself. OFFER=70,9",
+        "responder_text": "Given the significant imbalance, accepting such a low offer could be seen as unfair, but rejecting it means both lose. REJECT",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 21,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 21,
+          "hedge_count": 1,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 39,
+        "responder_share": 40,
+        "response": "accept",
+        "proposer_payoff": 39,
+        "responder_payoff": 40,
+        "parse_error": null,
+        "proposer_text": "I propose a fair split to ensure both players benefit, as rejecting the offer results in neither player getting any money. OFFER=39,40",
+        "responder_text": "Considering the rationality of maximizing earnings, accepting this offer would be logical since $40 is better than $0. ACCEPT",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    }
+  ]
+}

@@ -224,7 +224,7 @@ def generate_steered(
     direction_vectors: Optional[Dict[int, np.ndarray]],
     alpha: float,
     max_new_tokens: int = 200,
-    temperature: float = 0.7,
+    temperature: float = 0.0,
 ) -> str:
     """Generate text with optional steering hooks. If direction_vectors is None
     or alpha is 0, generates without steering (baseline)."""
@@ -275,7 +275,7 @@ def _run_single_game(
     alpha: float,
     proposer_enhancement: Optional[str] = None,
     responder_enhancement: Optional[str] = None,
-    temperature: float = 0.7,
+    temperature: float = 0.0,
     max_new_tokens: int = 200,
     fixed_offer: Optional[Tuple[int, int]] = None,
 ) -> Dict:
@@ -388,7 +388,7 @@ def run_paired_game(
     alpha: float,
     proposer_enhancement: Optional[str] = None,
     responder_enhancement: Optional[str] = None,
-    temperature: float = 0.7,
+    temperature: float = 0.0,
     max_new_tokens: int = 200,
 ) -> Dict:
     """Run a paired game: steered condition + baseline condition on the same pool.
@@ -476,7 +476,7 @@ def run_baseline_game(
     model,
     tokenizer,
     pool: int,
-    temperature: float = 0.7,
+    temperature: float = 0.0,
     max_new_tokens: int = 200,
 ) -> Dict:
     result = _run_single_game(
@@ -747,7 +747,7 @@ def parse_args() -> argparse.Namespace:
                    help="Use variable pool sizes ($37-$157).")
     p.add_argument("--pool", type=int, default=DEFAULT_POOL,
                    help="Fixed pool size (ignored if --variable_pools).")
-    p.add_argument("--temperature", type=float, default=0.7)
+    p.add_argument("--temperature", type=float, default=0.0)
     p.add_argument("--max_new_tokens", type=int, default=200)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--paired", action="store_true",
