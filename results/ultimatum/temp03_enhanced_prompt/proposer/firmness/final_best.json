@@ -1,0 +1,176 @@
+{
+  "best_alpha": 10.0,
+  "best_score": 60.00000000000006,
+  "baseline_score": 57.39999999999996,
+  "best_score_delta": 2.600000000000094,
+  "best_beats_baseline": true,
+  "layers": [
+    14,
+    18
+  ],
+  "scores_per_alpha": {
+    "10.0": {
+      "gridsearch_score": 60.00000000000006,
+      "gridsearch_score_delta": 2.600000000000094,
+      "number_of_paired_games": 50,
+      "number_of_steered_valid_games": 50,
+      "number_of_baseline_valid_games": 50,
+      "number_of_steered_parse_errors": 0,
+      "number_of_baseline_parse_errors": 0,
+      "offer_shift": {
+        "description": "Paired t-test on proposer_share/pool. PRIMARY significance test.",
+        "steered_mean_offer_pct": 60.0,
+        "baseline_mean_offer_pct": 70.0,
+        "mean_delta_pct": -10.0,
+        "std_delta_pct": 0.0,
+        "median_delta_pct": -10.0,
+        "t_statistic": 0.0,
+        "p_value": 1.0,
+        "cohens_d": 0.0,
+        "significant_at_0_05": false
+      },
+      "acceptance_shift": {
+        "description": "Chi-square or Fisher's exact on accept/reject counts. PRIMARY significance test.",
+        "test_used": "fishers_exact",
+        "steered_accept_count": 50,
+        "baseline_accept_count": 41,
+        "steered_accept_rate": 1.0,
+        "baseline_accept_rate": 0.82,
+        "accept_rate_delta": 0.18,
+        "p_value": 0.0026,
+        "significant_at_0_05": true
+      },
+      "payoff_delta_reference_only": {
+        "description": "T-test on payoff/pool. REFERENCE ONLY \u2014 zero-inflated by rejections. Use offer_shift and acceptance_shift for significance claims.",
+        "steered_mean_payoff_pct": 60.0,
+        "baseline_mean_payoff_pct": 57.4,
+        "observed_mean_delta_pct": 2.6,
+        "std_delta_pct": 27.1662,
+        "median_delta_pct": -10.0,
+        "t_statistic": 0.6768,
+        "p_value": 0.5017,
+        "cohens_d": 0.0957,
+        "warning": "p_value unreliable \u2014 do not use for significance claims"
+      },
+      "plain_english_claim": "No significant shift in proposer offers (offer shift p=1.00e+00). Steering significantly increased acceptance rate by +18.0% (acceptance shift p=2.63e-03). Observed payoff delta: +2.6% of pool (magnitude only \u2014 cite offer_shift and acceptance_shift p-values for any significance claim)."
+    },
+    "15.0": {
+      "gridsearch_score": 58.600000000000044,
+      "gridsearch_score_delta": 1.200000000000081,
+      "number_of_paired_games": 50,
+      "number_of_steered_valid_games": 50,
+      "number_of_baseline_valid_games": 50,
+      "number_of_steered_parse_errors": 0,
+      "number_of_baseline_parse_errors": 0,
+      "offer_shift": {
+        "description": "Paired t-test on proposer_share/pool. PRIMARY significance test.",
+        "steered_mean_offer_pct": 58.6,
+        "baseline_mean_offer_pct": 70.0,
+        "mean_delta_pct": -11.4,
+        "std_delta_pct": 3.3564,
+        "median_delta_pct": -10.0,
+        "t_statistic": -24.017,
+        "p_value": 0.0,
+        "cohens_d": -3.3965,
+        "significant_at_0_05": true
+      },
+      "acceptance_shift": {
+        "description": "Chi-square or Fisher's exact on accept/reject counts. PRIMARY significance test.",
+        "test_used": "fishers_exact",
+        "steered_accept_count": 50,
+        "baseline_accept_count": 41,
+        "steered_accept_rate": 1.0,
+        "baseline_accept_rate": 0.82,
+        "accept_rate_delta": 0.18,
+        "p_value": 0.0026,
+        "significant_at_0_05": true
+      },
+      "payoff_delta_reference_only": {
+        "description": "T-test on payoff/pool. REFERENCE ONLY \u2014 zero-inflated by rejections. Use offer_shift and acceptance_shift for significance claims.",
+        "steered_mean_payoff_pct": 58.6,
+        "baseline_mean_payoff_pct": 57.4,
+        "observed_mean_delta_pct": 1.2,
+        "std_delta_pct": 28.0226,
+        "median_delta_pct": -10.0,
+        "t_statistic": 0.3028,
+        "p_value": 0.7633,
+        "cohens_d": 0.0428,
+        "warning": "p_value unreliable \u2014 do not use for significance claims"
+      },
+      "plain_english_claim": "Steering significantly shifted proposer offers lower by -11.4% of pool (offer shift p=9.30e-29). Steering significantly increased acceptance rate by +18.0% (acceptance shift p=2.63e-03). Observed payoff delta: +1.2% of pool (magnitude only \u2014 cite offer_shift and acceptance_shift p-values for any significance claim)."
+    }
+  },
+  "dimension": "firmness",
+  "role": "proposer",
+  "model": "qwen2.5-7b",
+  "method": "mean_diff",
+  "timestamp": "2026-03-26T10:31:57.667860",
+  "final_score": 60.00000000000006,
+  "final_stats": {
+    "number_of_paired_games": 50,
+    "number_of_steered_valid_games": 50,
+    "number_of_baseline_valid_games": 50,
+    "number_of_steered_parse_errors": 0,
+    "number_of_baseline_parse_errors": 0,
+    "offer_shift": {
+      "description": "Paired t-test on proposer_share/pool. PRIMARY significance test.",
+      "steered_mean_offer_pct": 60.0,
+      "baseline_mean_offer_pct": 70.0,
+      "mean_delta_pct": -10.0,
+      "std_delta_pct": 0.0,
+      "median_delta_pct": -10.0,
+      "t_statistic": 0.0,
+      "p_value": 1.0,
+      "cohens_d": 0.0,
+      "significant_at_0_05": false
+    },
+    "acceptance_shift": {
+      "description": "Chi-square or Fisher's exact on accept/reject counts. PRIMARY significance test.",
+      "test_used": "fishers_exact",
+      "steered_accept_count": 50,
+      "baseline_accept_count": 41,
+      "steered_accept_rate": 1.0,
+      "baseline_accept_rate": 0.82,
+      "accept_rate_delta": 0.18,
+      "p_value": 0.0026,
+      "significant_at_0_05": true
+    },
+    "payoff_delta_reference_only": {
+      "description": "T-test on payoff/pool. REFERENCE ONLY \u2014 zero-inflated by rejections. Use offer_shift and acceptance_shift for significance claims.",
+      "steered_mean_payoff_pct": 60.0,
+      "baseline_mean_payoff_pct": 57.4,
+      "observed_mean_delta_pct": 2.6,
+      "std_delta_pct": 27.1662,
+      "median_delta_pct": -10.0,
+      "t_statistic": 0.6768,
+      "p_value": 0.5017,
+      "cohens_d": 0.0957,
+      "warning": "p_value unreliable \u2014 do not use for significance claims"
+    },
+    "plain_english_claim": "No significant shift in proposer offers (offer shift p=1.00e+00). Steering significantly increased acceptance rate by +18.0% (acceptance shift p=2.63e-03). Observed payoff delta: +2.6% of pool (magnitude only \u2014 cite offer_shift and acceptance_shift p-values for any significance claim)."
+  },
+  "baseline_summary": {
+    "n_games": 50,
+    "n_valid": 50,
+    "n_parse_errors": 0,
+    "n_accepted": 41,
+    "n_rejected": 9,
+    "accept_rate": 0.82,
+    "mean_proposer_pct": 70.0,
+    "std_proposer_pct": 0.0,
+    "mean_proposer_payoff_pct": 57.4,
+    "mean_responder_payoff_pct": 24.6
+  },
+  "final_summary": {
+    "n_games": 50,
+    "n_valid": 50,
+    "n_parse_errors": 0,
+    "n_accepted": 50,
+    "n_rejected": 0,
+    "accept_rate": 1.0,
+    "mean_proposer_pct": 60.0,
+    "std_proposer_pct": 0.0,
+    "mean_proposer_payoff_pct": 60.0,
+    "mean_responder_payoff_pct": 40.0
+  }
+}
