@@ -1,0 +1,552 @@
+{
+  "metadata": {
+    "description": "Control contrastive pairs to validate ultimatum game steering vectors against surface confounds (20 pairs per dimension)",
+    "dimensions": 5,
+    "total_pairs": 100,
+    "version": "1.0",
+    "matching_policy": {
+      "verbosity": "intentionally_unmatched",
+      "formality": "length_matched",
+      "hedging": "length_matched",
+      "sentiment": "length_matched",
+      "specificity": "length_matched"
+    }
+  },
+  "dimensions": [
+    {
+      "id": "verbosity",
+      "name": "Verbosity",
+      "description": "The amount of text produced; long and detailed vs short and concise; ultimatum game contexts only",
+      "pairs": [
+        {
+          "context": "You are the proposer. The pool is $37.",
+          "positive": "I have given this split considerable thought, weighing fairness and self-interest carefully. A pool of $37 offers limited room for generosity, but I want to ensure both parties feel respected in this exchange. After reflecting on what constitutes a reasonable distribution, I believe keeping $22 while offering $15 to the responder balances incentives appropriately. I hope you will see this as a genuine attempt at a fair arrangement. OFFER=22,15",
+          "negative": "Here is my offer. OFFER=22,15"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $18 from a pool of $41.",
+          "positive": "I have spent some time thinking about whether this offer is acceptable given the full pool size of $41. The proposer is keeping $23 while offering me $18, which represents roughly 44% of the total. While this is not perfectly equal, it is above the threshold I would consider a clear insult. On balance, I think accepting this offer is the rational and fair-minded choice. ACCEPT",
+          "negative": "I'll take it. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $47.",
+          "positive": "Proposing a split requires careful consideration of both parties' incentives and the psychological dynamics at play in this kind of interaction. I have thought about what a fair offer looks like, and I've also considered what offers tend to be rejected in practice. Given that the pool is $47, I think retaining $28 for myself while passing $19 to the responder is a reasonable and defensible position. I recognize this is not perfectly equal, but I believe it reflects a thoughtful balance of self-interest and fairness. OFFER=28,19",
+          "negative": "Keeping $28, giving $19. OFFER=28,19"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $20 from a pool of $53.",
+          "positive": "I need to carefully weigh this offer before deciding. The proposer is keeping $33 out of $53, which means I am being offered just under 38% of the total pool. While I would have preferred a more equal split, I recognize that rejecting this offer leaves us both with nothing. After weighing the alternatives, I have decided that accepting $20 is better than walking away empty-handed. ACCEPT",
+          "negative": "Accepting this. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $59.",
+          "positive": "This split decision involves balancing my own financial interest against the risk that the responder finds the offer unfair and rejects it entirely. I have thought about the responder's likely reaction and tried to arrive at a number that is both personally beneficial and likely to be accepted. Offering $24 to the responder while keeping $35 for myself seems like a reasonable middle ground that acknowledges both parties' interests. I am hopeful that the responder will see this as a fair-minded attempt at a mutually acceptable outcome. OFFER=35,24",
+          "negative": "My split is $35 for me, $24 for you. OFFER=35,24"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $25 from a pool of $61.",
+          "positive": "Rejecting an offer is a serious decision because it means both parties end up with nothing, which is clearly a worse outcome than accepting even an unequal split. However, there is a principle at stake when someone offers less than what feels fair. The proposer is keeping $36 out of $61, offering me only $25, which is about 41% of the pool. I find this to be insufficiently generous given the available sum, and I am unwilling to accept an outcome that rewards this kind of imbalance. REJECT",
+          "negative": "No deal. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $67.",
+          "positive": "I want to approach this thoughtfully and acknowledge that both of us have an interest in reaching an agreement. The total pool of $67 gives us some flexibility, and I have tried to think about what would be fair from both perspectives. I am proposing that I receive $38 and that you receive $29, which I believe is a reasonable and honest split that reflects the realities of this kind of negotiation. I genuinely hope you will find this acceptable. OFFER=38,29",
+          "negative": "Offering you $29, keeping $38. OFFER=38,29"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $30 from a pool of $71.",
+          "positive": "Thinking about this offer, I have to consider whether $30 out of $71 is acceptable to me. The proposer is retaining $41 while giving me $30, which is about 42% of the total. I recognize that negotiating is imperfect and that holding out for more could result in neither of us receiving anything. Given all of this, and after genuine reflection, I think it is in my interest to accept this offer rather than risk a mutual loss. ACCEPT",
+          "negative": "Fine by me. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $73.",
+          "positive": "Before making this offer, I thought carefully about what a fair division of $73 would look like and what the responder is likely to find acceptable. There is always a tension between maximizing one\u2019s own share and ensuring the other party agrees. I have decided to offer the responder $32 while keeping $41, which I believe represents a genuine attempt to be fair without being overly self-sacrificing. I trust that this offer will be seen in the spirit in which it is made. OFFER=41,32",
+          "negative": "$41 for me, $32 for you. OFFER=41,32"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $35 from a pool of $79.",
+          "positive": "I have reflected carefully on this offer and what it says about the proposer\u2019s intentions. Out of a pool of $79, I am being offered $35, which means the proposer is keeping $44. That is a meaningful imbalance \u2014 roughly 56% to 44% in their favor. While I could accept and take home $35, I feel strongly that the unfairness of this distribution warrants a rejection, even at the cost of receiving nothing myself. REJECT",
+          "negative": "Rejected. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $83.",
+          "positive": "Dividing $83 is not a trivial decision, and I have taken time to think about what is fair and what is likely to be accepted. I want to be straightforward about my reasoning: I believe keeping $47 while offering $36 is a fair split that appropriately reflects my role as proposer while still offering the responder a meaningful share. I have tried to be honest and considered in arriving at this figure, and I sincerely hope you will accept it. OFFER=47,36",
+          "negative": "Split is $47/$36. OFFER=47,36"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $40 from a pool of $89.",
+          "positive": "This offer requires careful thought before I commit to a decision. The proposer is offering me $40 while keeping $49, which represents about 45% of the total pool for me. While this is not a perfectly equal division, it is not so imbalanced that I would consider it an unfair insult. After genuinely thinking about this, I believe accepting $40 is the sensible and pragmatic course of action here. ACCEPT",
+          "negative": "Sounds good. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $97.",
+          "positive": "I want to approach this offer with transparency and fairness. The pool of $97 gives both of us a real opportunity to walk away with something meaningful, and I have thought hard about what division would be both fair and likely to be accepted. My proposal is to keep $54 while offering $43 to you, which I believe reflects a reasonable balance between my own interests and respect for the principles of fairness. I hope this offer demonstrates my genuine intention to reach a mutually acceptable outcome. OFFER=54,43",
+          "negative": "I'll keep $54, you get $43. OFFER=54,43"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $45 from a pool of $103.",
+          "positive": "I want to think this through carefully because the decision I make affects both of us. The proposer has offered me $45 from a pool of $103, keeping $58 for themselves. That is roughly a 56/44 split in the proposer\u2019s favor, which is meaningfully unequal but not extreme. I have weighed the value of $45 against the alternative of receiving nothing, and after genuine deliberation, I have decided that rejection is the right response to signal that such imbalanced offers are not acceptable to me. REJECT",
+          "negative": "I reject this. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $107.",
+          "positive": "Splitting $107 is a meaningful decision that I have not taken lightly. I have thought about fairness, about what the responder might reasonably expect, and about what outcome is best for both of us. After weighing these considerations carefully, I am proposing that I keep $60 while offering $47 to you. I believe this is an honest and thoughtful offer that balances both of our interests, and I genuinely hope you will agree to it. OFFER=60,47",
+          "negative": "Offering $47 to you, keeping $60. OFFER=60,47"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $51 from a pool of $113.",
+          "positive": "I appreciate that the proposer has made an offer, and I want to respond thoughtfully. Out of $113, I am being offered $51 while the proposer keeps $62. That is a split of roughly 55% to 45% in the proposer\u2019s favor. While I would prefer a more equal division, I recognize that this offer is above the level that most people would consider an outright insult, and that rejecting it leaves us both with nothing. After careful thought, I have decided to accept. ACCEPT",
+          "negative": "I accept. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $127.",
+          "positive": "I have spent real time thinking about how to divide this pool in a way that is fair and that the responder will find acceptable. The pool of $127 is large enough that both of us can benefit substantially, and I want to make sure we both walk away with something meaningful. My proposal is to keep $71 while offering $56 to you, which I believe is a fair and honest split that I can defend on principled grounds. I truly hope this offer is acceptable to you. OFFER=71,56",
+          "negative": "My offer: $71 for me, $56 for you. OFFER=71,56"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $60 from a pool of $131.",
+          "positive": "Before deciding, I want to think carefully about what this offer represents. The proposer is keeping $71 from a pool of $131 while offering me $60, which is about 46% of the total. I recognize that no deal means both of us receive nothing, which would clearly be worse than accepting $60. After genuinely weighing the fairness of this split and the practical consequences of rejection, I have concluded that accepting is the right decision for me here. ACCEPT",
+          "negative": "Yes, accepted. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $137.",
+          "positive": "Making a fair offer from a pool of $137 requires balancing several considerations: what I need, what is fair, and what the responder is likely to accept. I do not want to be greedy, but I also recognize that as the proposer I naturally advocate for my own interests. After careful deliberation, I believe keeping $77 while offering $60 to the responder is a reasonable and defensible split. I want to be transparent that I have thought about this genuinely and believe this reflects an honest attempt at fairness. OFFER=77,60",
+          "negative": "$77 mine, $60 yours. OFFER=77,60"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $63 from a pool of $139.",
+          "positive": "I find myself needing to think carefully about the fairness of this proposal. The proposer is keeping $76 while offering me $63 from a total pool of $139, which means they are taking roughly 55% while giving me about 45%. While this favors the proposer, I have to weigh whether the principle of fairness is worth sacrificing $63 over. After genuine reflection, I have decided that $63 is a meaningful sum and that accepting it is the wiser course, even if the split is not perfectly equal. ACCEPT",
+          "negative": "Deal. ACCEPT"
+        }
+      ]
+    },
+    {
+      "id": "formality",
+      "name": "Formality",
+      "description": "Professional and formal language vs casual and informal language; ultimatum game contexts only; length-matched",
+      "pairs": [
+        {
+          "context": "You are the proposer. The pool is $37.",
+          "positive": "I would like to propose the following allocation of the available funds. I believe this distribution constitutes a reasonable and equitable arrangement for both parties. OFFER=20,17",
+          "negative": "Look, I'm gonna keep $20 and give you $17, sounds fair to me. OFFER=20,17"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $18 from a pool of $41.",
+          "positive": "Upon careful consideration, I find this proposal to be acceptable and within the bounds of a fair arrangement. ACCEPT",
+          "negative": "Yeah, I'll take that, works for me. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $47.",
+          "positive": "Pursuant to the terms of this negotiation, I am putting forward a proposal to retain $27 while allocating $20 to the responder. I trust this arrangement will be deemed satisfactory. OFFER=27,20",
+          "negative": "Honestly I'm keeping $27, you get $20, kinda fair right? OFFER=27,20"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $22 from a pool of $53.",
+          "positive": "I find this offer to be below an acceptable threshold and must respectfully decline to enter into this arrangement. REJECT",
+          "negative": "Nah, not gonna take that, way too low. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $59.",
+          "positive": "I hereby propose that I retain $33 of the available pool, with the remaining $26 allocated to the responder, which I believe constitutes a fair distribution. OFFER=33,26",
+          "negative": "I'm gonna go with $33 for me and $26 for you, seems decent. OFFER=33,26"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $28 from a pool of $61.",
+          "positive": "After due consideration, I am prepared to accept this proposal as it meets the minimum standard of an equitable division. ACCEPT",
+          "negative": "Sure yeah, I'll go ahead and take that deal. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $67.",
+          "positive": "I wish to formally propose an allocation in which I receive $38 and the responder receives $29, which I believe represents a balanced and reasonable distribution of the available funds. OFFER=38,29",
+          "negative": "Look, I'm thinking $38 for me and $29 for you, honestly that's pretty solid. OFFER=38,29"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $32 from a pool of $71.",
+          "positive": "I must respectfully decline this proposal, as I do not consider the allocation to be sufficiently equitable given the total pool amount. REJECT",
+          "negative": "Nope, I'm not taking that, doesn't feel right to me. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $73.",
+          "positive": "I would like to put forward a proposal whereby I retain $41 and the responder is allocated $32, which I believe constitutes a fair and reasonable arrangement. OFFER=41,32",
+          "negative": "Gonna keep $41 for myself and give you $32, kinda the best I can do. OFFER=41,32"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $36 from a pool of $79.",
+          "positive": "Upon reflection, I find this offer to be acceptable and in accordance with a reasonable standard of fairness. ACCEPT",
+          "negative": "Yeah alright, I'll take the $36, that works. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $83.",
+          "positive": "Pursuant to this negotiation, I am proposing an allocation of $47 to myself and $36 to the responder, which I believe is both fair and mutually beneficial. OFFER=47,36",
+          "negative": "Honestly I think $47 for me and $36 for you is pretty fair, let's go with that. OFFER=47,36"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $40 from a pool of $89.",
+          "positive": "I do not find this proposal to meet the standard of a fair division and therefore decline to accept it. REJECT",
+          "negative": "Nah, that's not enough for me, I'm gonna pass. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $97.",
+          "positive": "I hereby propose the following division of the available pool: I shall retain $54, and the responder shall receive $43, which I believe represents a fair and considered allocation. OFFER=54,43",
+          "negative": "I'm thinking I keep $54 and you get $43, seems like a pretty good deal for both of us. OFFER=54,43"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $47 from a pool of $103.",
+          "positive": "I find this offer to be reasonable and in line with an equitable distribution of the available sum, and I therefore accept. ACCEPT",
+          "negative": "Yeah, I'll take that, sounds good to me honestly. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $107.",
+          "positive": "I would like to formally propose that I retain $60 of the pool while allocating $47 to the responder, an arrangement I believe to be fair and mutually agreeable. OFFER=60,47",
+          "negative": "Look, I'm gonna go with $60 for me and $47 for you, kinda fair split. OFFER=60,47"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $52 from a pool of $113.",
+          "positive": "Upon due consideration, I must decline this proposal as I do not regard the allocation as sufficiently equitable. REJECT",
+          "negative": "Nope, not taking that, it's not fair enough for me. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $127.",
+          "positive": "Pursuant to this negotiation, I propose retaining $71 for myself while allocating $56 to the responder, which I believe constitutes a balanced and principled division. OFFER=71,56",
+          "negative": "Honestly $71 for me and $56 for you feels right, let's just go with that. OFFER=71,56"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $60 from a pool of $131.",
+          "positive": "After careful consideration, I find this proposal acceptable and consistent with a reasonable standard of fairness. ACCEPT",
+          "negative": "Yeah sure, I'll take $60, that works for me. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $137.",
+          "positive": "I wish to put forward a proposal in which I retain $77 and the responder receives $60, an allocation I believe to be fair and equitable under the circumstances. OFFER=77,60",
+          "negative": "I'm gonna keep $77 and give you $60, kinda the fairest way to do it I think. OFFER=77,60"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $65 from a pool of $149.",
+          "positive": "I do not consider this proposal to meet the threshold of an equitable division and must respectfully decline. REJECT",
+          "negative": "Nah, that's too low, I'm not gonna accept that. REJECT"
+        }
+      ]
+    },
+    {
+      "id": "hedging",
+      "name": "Hedging",
+      "description": "Uncertain, tentative language with qualifiers vs confident, direct statements; ultimatum game contexts only; length-matched",
+      "pairs": [
+        {
+          "context": "You are the proposer. The pool is $41.",
+          "positive": "I think this might perhaps be a fair way to split things, though I suppose you could see it differently. I guess keeping $23 for myself while offering $18 to you is sort of reasonable. OFFER=23,18",
+          "negative": "This is a fair split. I keep $23 and give you $18. OFFER=23,18"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $20 from a pool of $47.",
+          "positive": "I suppose this might be acceptable, though maybe I'm not entirely sure it's the best outcome for me. I think I'll probably accept, though I'm not fully certain. ACCEPT",
+          "negative": "I accept this offer. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $53.",
+          "positive": "Perhaps this split is fair, or maybe you might see it as slightly uneven \u2014 I'm not entirely sure. I suppose offering $22 while keeping $31 is sort of the best I can do here. OFFER=31,22",
+          "negative": "I keep $31 and you receive $22. OFFER=31,22"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $25 from a pool of $59.",
+          "positive": "I guess this is maybe too low, and I think I probably should reject it, though I'm not totally certain that's the right call. I suppose I'll decline. REJECT",
+          "negative": "I reject this offer. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $61.",
+          "positive": "Maybe this offer is fair \u2014 I think it possibly strikes a reasonable balance, though I suppose the responder might disagree. Perhaps keeping $35 and offering $26 is sort of the right call. OFFER=35,26",
+          "negative": "I will keep $35 and offer you $26. OFFER=35,26"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $30 from a pool of $67.",
+          "positive": "I think maybe this is acceptable, perhaps, though I guess I'm sort of on the fence about whether $30 is enough from $67. I suppose I'll accept it. ACCEPT",
+          "negative": "I accept this offer. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $71.",
+          "positive": "I guess perhaps $40 for me and $31 for you might be sort of fair, though maybe you could argue it isn't quite equal. I think this is possibly a reasonable offer. OFFER=40,31",
+          "negative": "This split is $40 for me, $31 for you. OFFER=40,31"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $33 from a pool of $73.",
+          "positive": "Maybe I should reject this, I think \u2014 perhaps it's a bit low and sort of unfair, though I suppose some might disagree. I guess I'll decline. REJECT",
+          "negative": "I reject this proposal. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $79.",
+          "positive": "Perhaps $44 for me and $35 for you is maybe a reasonable split, I think, though I suppose one could argue it slightly favors me. I guess this might be the best arrangement. OFFER=44,35",
+          "negative": "I keep $44. You receive $35. OFFER=44,35"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $38 from a pool of $83.",
+          "positive": "I think maybe this is sort of acceptable, perhaps \u2014 I'm not entirely sure, but I suppose $38 out of $83 is possibly fair enough. I guess I'll accept. ACCEPT",
+          "negative": "I accept this offer. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $89.",
+          "positive": "I suppose $50 for me and $39 for you might perhaps be a fair split, though maybe it's sort of tilted in my favor \u2014 I'm not entirely sure. I think this is possibly reasonable. OFFER=50,39",
+          "negative": "I will take $50 and offer you $39. OFFER=50,39"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $43 from a pool of $97.",
+          "positive": "I guess perhaps this is sort of too low \u2014 maybe I should reject it, I think, though I'm not totally certain. I suppose declining is probably the right call here. REJECT",
+          "negative": "I reject this offer. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $103.",
+          "positive": "Maybe offering $44 while keeping $59 is sort of fair, I think, though perhaps you might see it differently. I suppose this could possibly be acceptable to the responder. OFFER=59,44",
+          "negative": "I keep $59 and offer you $44. OFFER=59,44"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $50 from a pool of $107.",
+          "positive": "I think this is perhaps sort of fair \u2014 maybe $50 out of $107 is acceptable, I suppose, though I'm not entirely certain. I guess I'll accept it. ACCEPT",
+          "negative": "I accept this offer. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $113.",
+          "positive": "I suppose perhaps $63 for me and $50 for you might be sort of reasonable, I think \u2014 maybe it's slightly in my favor but I guess it's possibly fair enough. OFFER=63,50",
+          "negative": "I keep $63 and you receive $50. OFFER=63,50"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $55 from a pool of $127.",
+          "positive": "Maybe this is sort of okay, I think \u2014 perhaps $55 is possibly enough, though I suppose I'm not entirely sure it's quite fair. I guess I'll accept it. ACCEPT",
+          "negative": "I accept this offer. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $131.",
+          "positive": "I think perhaps keeping $73 while offering $58 might sort of be fair, maybe \u2014 I suppose the responder could possibly see it as slightly uneven, I guess. OFFER=73,58",
+          "negative": "I take $73 and offer you $58. OFFER=73,58"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $62 from a pool of $137.",
+          "positive": "I guess maybe this is sort of too little \u2014 perhaps I should reject it, I think, though I'm possibly not entirely sure that's the right move. I suppose I'll decline. REJECT",
+          "negative": "I reject this offer. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $139.",
+          "positive": "Maybe $77 for me and $62 for you is perhaps sort of a fair split, I think \u2014 I suppose it might be slightly in my favor, though I guess it's possibly acceptable. OFFER=77,62",
+          "negative": "I will keep $77 and offer you $62. OFFER=77,62"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $68 from a pool of $149.",
+          "positive": "I think perhaps this is sort of fair, maybe \u2014 I suppose $68 out of $149 could possibly be acceptable, though I guess I'm not entirely certain. I'll accept. ACCEPT",
+          "negative": "I accept this offer. ACCEPT"
+        }
+      ]
+    },
+    {
+      "id": "sentiment",
+      "name": "Sentiment",
+      "description": "Warm, enthusiastic, positive tone vs cold, negative, or neutral tone; ultimatum game contexts only; same OFFER amounts; length-matched",
+      "pairs": [
+        {
+          "context": "You are the proposer. The pool is $37.",
+          "positive": "I am genuinely pleased to make this offer and happy to share this pool with you. I keep $21 and offer you $16. OFFER=21,16",
+          "negative": "This is the split: $21 for me, $16 for you. Take it or leave it. OFFER=21,16"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $18 from a pool of $41.",
+          "positive": "I am grateful for this offer and happy to accept \u2014 this feels like a fair and welcome arrangement. ACCEPT",
+          "negative": "Straightforward enough. I accept. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $47.",
+          "positive": "I am delighted to propose this split and genuinely hope it brings us both a positive outcome. I offer you $20 while keeping $27 for myself. OFFER=27,20",
+          "negative": "I keep $27, you get $20. That's the deal. OFFER=27,20"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $22 from a pool of $53.",
+          "positive": "I appreciate the offer, but I feel this doesn't reflect a fair and rewarding split for me, so I must decline with some regret. REJECT",
+          "negative": "Not acceptable. I reject this. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $59.",
+          "positive": "It is a pleasure to make this offer, and I am hopeful that we can both feel good about this outcome. I keep $33 and happily offer you $26. OFFER=33,26",
+          "negative": "I take $33, you get $26. That's the split. OFFER=33,26"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $28 from a pool of $61.",
+          "positive": "I am pleased with this offer and grateful for what feels like a thoughtful and fair proposal. I accept. ACCEPT",
+          "negative": "Fine. I accept. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $67.",
+          "positive": "I am happy to propose this split and hope it brings us both satisfaction. Keeping $38 for myself while offering you $29 feels like a warm and fair arrangement. OFFER=38,29",
+          "negative": "$38 for me, $29 for you. That is the offer. OFFER=38,29"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $32 from a pool of $71.",
+          "positive": "I appreciate the effort, but this offer doesn't feel rewarding enough for me to accept with a good conscience \u2014 I regretfully decline. REJECT",
+          "negative": "This is too low. I reject it. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $73.",
+          "positive": "It genuinely pleases me to make this offer, and I hope it feels fair and positive to you as well. I keep $41 and offer you $32. OFFER=41,32",
+          "negative": "I keep $41 and offer $32. That is all. OFFER=41,32"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $38 from a pool of $83.",
+          "positive": "I am thankful for this offer and happy to accept \u2014 this feels like a genuinely fair and satisfying outcome for both of us. ACCEPT",
+          "negative": "Acceptable. I accept. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $89.",
+          "positive": "I am pleased to share this pool with you and hope this offer leaves us both feeling good. I keep $50 and gladly offer you $39. OFFER=50,39",
+          "negative": "$50 for me, $39 for you. That is the split. OFFER=50,39"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $43 from a pool of $97.",
+          "positive": "I appreciate the gesture, but this doesn't feel like a fair or rewarding enough share for me, and I must decline with some disappointment. REJECT",
+          "negative": "I reject this offer. It is insufficient. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $103.",
+          "positive": "It is a pleasure to make this offer and I am genuinely hopeful we can both walk away happy. I keep $59 and offer you $44. OFFER=59,44",
+          "negative": "I take $59, you receive $44. Simple as that. OFFER=59,44"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $51 from a pool of $107.",
+          "positive": "I am grateful for this thoughtful offer and truly happy to accept \u2014 this feels like a rewarding and fair outcome. ACCEPT",
+          "negative": "I accept. Nothing further to add. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $113.",
+          "positive": "I am delighted to propose this arrangement and hope it feels positive and fair to you. Keeping $63 while offering you $50 feels like a warm and honest split. OFFER=63,50",
+          "negative": "I keep $63 and you get $50. That is the offer. OFFER=63,50"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $58 from a pool of $127.",
+          "positive": "I appreciate this offer and am happy to accept \u2014 it feels like a genuinely rewarding and positive outcome for both of us. ACCEPT",
+          "negative": "I accept this offer. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $131.",
+          "positive": "It genuinely pleases me to make this offer, and I hope we can both feel satisfied with the outcome. I keep $73 and happily offer you $58. OFFER=73,58",
+          "negative": "I take $73 and offer $58. That is the deal. OFFER=73,58"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $63 from a pool of $137.",
+          "positive": "I appreciate the offer, but this doesn't feel like a fair or satisfying share for me, and I must decline with regret. REJECT",
+          "negative": "Not acceptable. I reject this offer. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $139.",
+          "positive": "I am genuinely pleased to propose this split and hope it brings us both a positive and satisfying result. I keep $77 and offer you $62. OFFER=77,62",
+          "negative": "$77 for me, $62 for you. That is my offer. OFFER=77,62"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $70 from a pool of $151.",
+          "positive": "I am grateful for this generous and positive offer and am truly happy to accept \u2014 this feels like a fair and rewarding outcome. ACCEPT",
+          "negative": "I accept this offer. ACCEPT"
+        }
+      ]
+    },
+    {
+      "id": "specificity",
+      "name": "Specificity",
+      "description": "Use of concrete numerical detail and precise quantified reasoning vs vague, unquantified language; ultimatum game contexts only; length-matched",
+      "pairs": [
+        {
+          "context": "You are the proposer. The pool is $41.",
+          "positive": "I am keeping $23, which is 56.1% of the $41 pool, leaving $18 for you \u2014 that is 43.9%, or roughly $0.44 per dollar of the pool. OFFER=23,18",
+          "negative": "I am keeping most of it and giving you a fair portion. OFFER=23,18"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $20 from a pool of $47.",
+          "positive": "I am being offered $20 out of $47, which is 42.6% of the total, leaving the proposer with $27 or 57.4% \u2014 I find this split acceptable. ACCEPT",
+          "negative": "I am getting a decent share of the pool, so I will accept. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $53.",
+          "positive": "I propose keeping $30 \u2014 exactly 56.6% of the $53 pool \u2014 and offering you $23, which represents 43.4% of the total at a rate of $0.43 per dollar. OFFER=30,23",
+          "negative": "I will keep a good chunk and offer you a fair amount from the total. OFFER=30,23"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $25 from a pool of $59.",
+          "positive": "The proposer is offering $25, which is 42.4% of the $59 pool while retaining $34 or 57.6% \u2014 this imbalance of 15.2 percentage points is too large for me to accept. REJECT",
+          "negative": "The proposer is keeping most of it and I am not getting enough, so I reject. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $61.",
+          "positive": "My proposal allocates $35 to me \u2014 that is 57.4% of $61 \u2014 and $26 to you, which is exactly 42.6% or $0.43 per dollar of the total pool. OFFER=35,26",
+          "negative": "I will take a bit more than half and give you the rest. OFFER=35,26"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $31 from a pool of $67.",
+          "positive": "I am being offered $31 of $67, which equals 46.3% of the pool, with the proposer retaining $36 or 53.7% \u2014 a gap of 7.4 percentage points I find reasonable enough to accept. ACCEPT",
+          "negative": "The proposer is keeping a bit more than me, but it seems fair enough, so I accept. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $71.",
+          "positive": "I am proposing to keep $40, which is 56.3% of the $71 pool, and offer you $31 \u2014 that is 43.7%, equivalent to $0.44 for every dollar in the pool. OFFER=40,31",
+          "negative": "I will keep a little over half and hand over the rest to you. OFFER=40,31"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $33 from a pool of $73.",
+          "positive": "The offer is $33 from a $73 pool, meaning I receive 45.2% while the proposer keeps $40 or 54.8% \u2014 a 9.6-point gap I find too imbalanced to accept. REJECT",
+          "negative": "I am not getting enough of the total amount, so I will reject this. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $79.",
+          "positive": "I am keeping $45 \u2014 57.0% of the $79 pool \u2014 while offering you $34, which is 43.0% or precisely $0.43 per dollar of the available funds. OFFER=45,34",
+          "negative": "I will take a bit more than you from the total pool and give you a good amount. OFFER=45,34"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $39 from a pool of $83.",
+          "positive": "The proposal gives me $39 of $83, which is 47.0% of the pool, while the proposer keeps $44 or 53.0% \u2014 a 6-percentage-point difference I consider acceptable. ACCEPT",
+          "negative": "The split is slightly in the proposer's favor but close enough that I will accept. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $89.",
+          "positive": "Keeping $50 from a $89 pool means I retain 56.2%, while you receive $39 \u2014 that is 43.8% of the total, or $0.44 for every dollar available. OFFER=50,39",
+          "negative": "I will hold onto a bit more than half and pass along the remainder to you. OFFER=50,39"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $44 from a pool of $97.",
+          "positive": "I am offered $44 from $97, which is 45.4% of the pool, while the proposer retains $53 or 54.6% \u2014 a gap of 9.2 percentage points that is too wide for me to accept. REJECT",
+          "negative": "The proposer is taking noticeably more than me and I do not think that is fair, so I reject. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $103.",
+          "positive": "I propose retaining $58, which equals 56.3% of the $103 pool, and offering you $45 \u2014 that is 43.7%, or $0.44 per dollar of the total available sum. OFFER=58,45",
+          "negative": "I will keep a good portion and offer you a solid share of the rest. OFFER=58,45"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $50 from a pool of $107.",
+          "positive": "The offer is $50 of $107, giving me 46.7% of the pool while the proposer keeps $57 or 53.3% \u2014 a difference of 6.6 percentage points that I find acceptable. ACCEPT",
+          "negative": "The proposer is keeping a bit more, but the split seems reasonable enough for me to accept. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $113.",
+          "positive": "I am keeping $63, which is 55.8% of the $113 pool, and offering you $50 \u2014 exactly 44.2% of the total, or $0.44 per dollar in the available funds. OFFER=63,50",
+          "negative": "I will take a little over half and leave you a good amount from the pool. OFFER=63,50"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $58 from a pool of $127.",
+          "positive": "I am offered $58 of $127, which is 45.7% of the pool, with the proposer retaining $69 or 54.3% \u2014 a 8.6-percentage-point difference I find acceptable and will agree to. ACCEPT",
+          "negative": "The proposer is keeping a bit more but I am getting a fair amount, so I accept. ACCEPT"
+        },
+        {
+          "context": "You are the proposer. The pool is $131.",
+          "positive": "My proposal gives me $73 \u2014 55.7% of the $131 pool \u2014 and you $58, which is 44.3%, or exactly $0.44 for every dollar of the total available amount. OFFER=73,58",
+          "negative": "I will keep a bit more than half and give you a solid portion of the pool. OFFER=73,58"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $63 from a pool of $137.",
+          "positive": "The proposal allocates $63 to me \u2014 46.0% of the $137 pool \u2014 while the proposer keeps $74 or 54.0%, a gap of 8 percentage points that exceeds what I consider a fair split. REJECT",
+          "negative": "The proposer is keeping noticeably more than me and I do not find that fair enough to accept. REJECT"
+        },
+        {
+          "context": "You are the proposer. The pool is $139.",
+          "positive": "I propose keeping $77, which is 55.4% of the $139 pool, while offering you $62 \u2014 that is 44.6% of the total, equivalent to $0.45 per dollar available. OFFER=77,62",
+          "negative": "I will take a bit over half and pass you the rest of the pool. OFFER=77,62"
+        },
+        {
+          "context": "You are the responder. The proposer offered you $71 from a pool of $157.",
+          "positive": "The offer gives me $71 of $157, which is 45.2% of the total pool, leaving the proposer with $86 or 54.8% \u2014 a gap of 9.6 percentage points I consider within acceptable range. ACCEPT",
+          "negative": "The proposer has a bit more than me but the difference is not too large, so I accept. ACCEPT"
+        }
+      ]
+    }
+  ]
+}
