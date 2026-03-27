@@ -3,7 +3,7 @@
 # Grid search over negotiation dimensions using the Ultimatum Game.
 
 # ── Set layers here ─────────────────────────────────────────────────────────
-set FIXED_LAYERS = ( 10 14 )
+set FIXED_LAYERS = ( 12 16 19 )
 set FIXED_POOL  = 100
 # set FIXED_POOL  = ""   # leave empty to use variable pool sizes
 # ────────────────────────────────────────────────────────────────────────────
@@ -21,7 +21,7 @@ endif
 
 # ── Args (with fallback defaults) ───────────────────────────────────────────
 set MODEL       = "qwen2.5-7b"
-set VECTORS_DIR = "vectors/ultimatum_10dim_20pairs_matched"
+set VECTORS_DIR = "vectors/ultimatum_10dim_20pairs_general_matched/negotiation"
 set SUFFIX      = ""
 
 if ( $#argv >= 1 ) then
@@ -35,7 +35,7 @@ if ( $#argv >= 3 ) then
 endif
 # ────────────────────────────────────────────────────────────────────────────
 
-set OUT_DIR = "results/ultimatum/temp03_mindims_v4"
+set OUT_DIR = "results/ultimatum/general_damon_12_16_19"
 
 set DIMS = ( \
     firmness \
@@ -84,7 +84,7 @@ foreach layer ( $FIXED_LAYERS )
                     --dimension     "${dim}" \
                     --role          "${role}" \
                     --vectors_dir   "${VECTORS_DIR}" \
-                    --coarse_alphas 0 -5 5 15 \
+                    --coarse_alphas -5 5 15 \
                     --n_games       50 \
                     --output_suffix "${SUFFIX}" \
                     --output_dir    "${CURRENT_OUT_DIR}" \
