@@ -6,20 +6,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 COMP0087 Statistical NLP group project (UCL, due 2026-04-17). Activation steering (representation engineering) applied to LLM negotiation — extract behavioural direction vectors from contrastive pairs, inject them during inference, measure whether they improve bargaining outcomes.
 
-## Project Status (2026-03-23)
+## Project Status (2026-03-27)
 
 **Phase 1 (complete):** Vector extraction, validation, and ablation study across 8 steering pair variants, 3 extraction methods, and orthogonal projection analysis. Vectors successfully capture behavioral dimensions (linear probes confirm). Infrastructure is solid.
 
 **Phase 1 finding (the bottleneck):** Steering has negligible/zero average effect on LLM-vs-LLM CraigslistBargains outcomes. Extensive grid searches on Qwen 3B and 7B confirm this. The dataset/task is the primary bottleneck, not the vectors. LLM-vs-LLM negotiation has too much noise/variance for steering effects to surface reliably.
 
-**Phase 2 (in progress — THE PIVOT):** Redesigning the evaluation task. Multiple approaches being explored on separate branches; the team will converge on whichever shows positive results first:
-- **Preset negotiation scripts** (merged to origin/main via PR #32): 40 fixed 4-turn scripts as standardized opponents, replacing dynamic LLM-vs-LLM. Reduces variance by controlling one side.
-- **Task design validation** (branch `moiz-task-design`): `playground/run_game.py` — pluggable agents (local HF or API: Gemini/GPT-4o/Claude/Groq) with prompt enhancements. Tests (A) whether prompt-steering improves scores (sanity check: if prompts can't move the needle, activation steering won't either), and (B) whether frontier models beat Qwen 3B (if not, the task itself is broken).
-- **Alternative simple tasks** being explored (e.g., simpler negotiation formats) to check if steering effects are more detectable in lower-noise settings.
+**Phase 2 (in progress — THE PIVOT):** Redesigning the evaluation task. Ultimatum Game is the primary alternative task.
+- **Ultimatum Game** (merged to main via PRs #34, #35, #36): `ultimatum_game.py` with paired design (steered vs baseline on same offers). Two steering pair variants:
+  - `ultimatum_10dim_20pairs_matched` — Game-specific pairs (OFFER=X,Y / ACCEPT / REJECT language). 10 dims: firmness, empathy, anchoring, batna_awareness, composure, fairness_norm, flattery, narcissism, spite, undecidedness. Vectors extracted for Qwen 7B.
+  - `ultimatum_10dim_20pairs_general_matched` — General-domain pairs (salary, business, real estate contexts, no game tokens). Same 10 dims but batna_awareness replaced by greed. Vectors extracted for Qwen 7B. **v2.1: all 200 negotiation pairs length-matched** (132 pairs rewritten, all within ±30% word count). Control pairs also length-matched. Prior validation (v2.0, pre-fix): 29/100 (all RED) due to length confounds. **Needs re-extraction and re-validation on v2.1 pairs.**
+- **Preset negotiation scripts** (merged via PR #32): 40 fixed 4-turn scripts. Grid search results in `hyperparameter_results/`.
+- **Playground task validation** (`playground/run_game.py`): Pluggable agents (local HF or API) with prompt enhancements.
 
-**Current branch:** `moiz-task-design` (off main). Do not commit unless merging.
+**Ultimatum Game results (game-specific pairs, Qwen 7B, L10, 50 paired games):**
+- **Proposer steering:** Weak effects. Empathy (alpha=-5): offer drops from 65.4% to 56.0% (p<0.001, d=-0.81). Fairness_norm (alpha=5): offer drops to 56.9% (p<0.001, d=-1.00). Narcissism (alpha=15): offer rises to 70.4% (p<0.001, d=+0.92). Firmness: zero effect.
+- **Responder steering:** Dramatic but likely model-breaking. Firmness/spite at alpha=15: acceptance drops from 96% to 8% (p<0.001). Fairness_norm: 92%→12%. These are statistically significant but may reflect incoherent output rather than genuine behavioral steering.
+- **Key concern:** Multiple comparisons problem (160 tests without correction). Best alpha selected on same data used for significance testing (double-dipping).
 
-**Next steps:** Decide on final task this week, then run activation steering experiments on the chosen task, followed by extended evaluations (misalignment analysis, LLM-as-judge) and paper writing. Models: Qwen 3B and 7B (Llama 3B was tested but discarded as faulty).
+**General pairs validation (2026-03-27, v2.0 pairs — pre-length-matching):**
+- Score: 29/100 (all 10 dims RED). Problems: (1) negotiation pairs not length-matched (anchoring 2.33x, flattery 2.04x, undecidedness 2.27x), (2) all probes flat-high at all layers (surface separation), (3) all 50 neg×control Cohen's d pairs SEVERE, (4) zero recommended layers.
+- Per-pair alignment is decent (flattery 0.700, anchoring 0.694, undecidedness 0.740) — conceptual contrasts are internally consistent, but directions encode surface features.
+- Key cosine overlaps: hedging↔undecidedness=0.710 (undecidedness IS hedging), firmness↔hedging=-0.574 (firmness = anti-hedging), composure↔specificity=0.639.
+- **v2.1 fix (2026-03-27):** All 200 negotiation pairs rewritten to ±30% word-count ratio. 132 pairs modified: expanded short negatives (anchoring, undecidedness, flattery, narcissism, empathy) with contextually appropriate detail that does NOT introduce the target trait; expanded short firmness positives with firm reasoning. Mean ratios now 0.94–1.11 across all 10 dims. **Vectors must be re-extracted and re-validated on v2.1 pairs.**
+
+**Current branch:** `main`.
+
+**Next steps:** ~~Length-match the general ultimatum pairs~~ (done, v2.1). Re-extract vectors and re-validate general pairs on v2.1. Run orthogonal projection on both ultimatum variants. Run final steering experiments on whichever variant validates best. Paper writing. Models: Qwen 7B primary (Llama 3-8B extraction in progress).
 
 ## Commands
 
@@ -104,7 +117,9 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
   - `neg8dim_20pairs_matched` — 8 merged negotiation dims, 20 pairs each (160 total), length-matched.
   - `neg8dim_80pairs_matched` — 8 merged negotiation dims, 80 pairs each (640 total), length-matched. Pairs sampled from 15-dim component dimensions.
   - **8-dim (reduced) dimensions** merge overlapping concepts: firmness+assertiveness+clarity→Firmness, empathy+rapport→Empathy, active_listening+info_gathering→Active Listening, emotional_regulation+patience→Composure, interest_based+value_creation+reframing→Creative Problem-Solving. Standalone: Strategic Concession-Making, Anchoring, BATNA Awareness.
-- **`control_steering_pairs.json`** — 5 control dimensions (verbosity, formality, hedging, sentiment, specificity) for detecting surface confounds. Pair count per dimension matches the negotiation pair count in each directory (12, 20, or 80). In `_matched` directories: formality/hedging/sentiment/specificity are length-matched, verbosity intentionally unmatched. In `_raw` directories: all 5 dimensions are intentionally unmatched, mirroring the raw negotiation pairs. Hedging targets the 3.6x hedge clustering bias; sentiment targets warm-vs-cold tone confounds in empathy/rapport vectors; specificity targets the concrete-numbers-vs-vague-language confound in firmness/anchoring/BATNA vectors.
+  - `ultimatum_10dim_20pairs_matched` — 10 ultimatum game dims, 20 pairs each (200 total), game-specific language (OFFER=X,Y, ACCEPT/REJECT, proposer/responder contexts), length-matched. Dims: firmness, empathy, anchoring, batna_awareness, composure, fairness_norm, flattery, narcissism, spite, undecidedness. Added PR #34.
+  - `ultimatum_10dim_20pairs_general_matched` — 10 general-domain dims, 20 pairs each (200 total), diverse contexts (salary, business, real estate, etc.), NO game-specific tokens. Same dims but batna_awareness replaced by greed. **v2.1: all negotiation pairs length-matched** (132 rewritten, ±30% word count, mean ratios 0.94–1.11). Control pairs also length-matched. Added PR #36; pairs fixed on `abdullah-control-general-ultimatum-vectors` branch.
+- **`control_steering_pairs.json`** — 5 control dimensions (verbosity, formality, hedging, sentiment, specificity) for detecting surface confounds. Pair count per dimension matches the negotiation pair count in each directory (12, 20, or 80). In `_matched` directories: formality/hedging/sentiment/specificity are length-matched, verbosity intentionally unmatched. In `_raw` directories: all 5 dimensions are intentionally unmatched, mirroring the raw negotiation pairs. Hedging targets the 3.6x hedge clustering bias; sentiment targets warm-vs-cold tone confounds in empathy/rapport vectors; specificity targets the concrete-numbers-vs-vague-language confound in firmness/anchoring/BATNA vectors. The `ultimatum_10dim_20pairs_general_matched` control pairs use general-domain contexts matching the negotiation pairs.
 
 **Key directories:**
 - `vectors/{variant}/negotiation/` and `vectors/{variant}/control/` — Extracted `.npy` vectors per variant, with subdirectories per method (`mean_diff/`, `pca/`, `logreg/`).
@@ -116,6 +131,9 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - `.hf_cache/` — HuggingFace model cache (redirected from `~/.cache/huggingface` via `HF_HOME` to avoid home dir quota limits on UCL machines).
 - `playground/results/` — Task design validation experiment outputs.
 - `results/eval/` — `run_eval.py` outputs per dimension.
+- `results/ultimatum/` — Ultimatum game gridsearch results. `temp03_mindims_v4/L{10,14}/` has per-dimension per-role results with game-specific pairs on Qwen 7B.
+- `FINAL_VALIDATION_RESULTS/ultimatum_10dim_20pairs_general_matched/` — Validation results for general-domain ultimatum pairs (score 29/100).
+- `validation/validate_vectors.py` — Note: validation script lives in `validation/` subdirectory, not project root. Run with `PYTHONPATH=. python validation/validate_vectors.py`.
 
 **Import dependency graph:**
 ```

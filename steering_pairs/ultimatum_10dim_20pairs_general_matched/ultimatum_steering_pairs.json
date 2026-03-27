@@ -9,8 +9,8 @@
     },
     "dimensions": 10,
     "total_pairs": 200,
-    "version": "2.0",
-    "matching_policy": "all pairs length-matched within ±30% word count",
+    "version": "2.1",
+    "matching_policy": "all pairs length-matched within ±30% word count (v2.1: systematic rewrite to fix 132 violations)",
     "notes": "Contexts drawn from diverse domains: business, academia, sports, law, healthcare, technology, real estate, creative industries, and more. BATNA Awareness replaced by Greed."
   },
   "dimensions": [
@@ -26,7 +26,7 @@
         },
         {
           "context": "You are a landlord. A tenant is pushing back on the rent increase you have communicated. You respond.",
-          "positive": "The new rate is £1,450 per month from the first of next month. I have given the required notice and this is the final figure.",
+          "positive": "The new rate is £1,450 per month effective from the first of next month. I have given the required notice and this figure reflects the current terms of the property. It is final.",
           "negative": "I set the new rate at £1,450, but if that is too much I am willing to talk — I do not want to cause you difficulty and I am open to reconsidering."
         },
         {
@@ -46,22 +46,22 @@
         },
         {
           "context": "You are a startup founder negotiating equity with a new co-founder. They are pushing for a higher share than you offered. You respond.",
-          "positive": "I offered 18% and that is based on my assessment of contribution and risk. That figure stands.",
+          "positive": "I offered 18% and that is based on a thorough assessment of contribution, risk, and the value each of us brings at this stage. That figure stands and I am not revisiting it.",
           "negative": "I was thinking 18%, but if that feels low to you I could potentially see moving that number a bit — I just want us both to feel the split is right."
         },
         {
           "context": "You are a freelance designer. A client is asking for an additional revision round at no extra cost. You respond.",
-          "positive": "The contract covers two revision rounds and we have completed both. Additional rounds are billed at my standard hourly rate.",
+          "positive": "The contract covers two revision rounds and we have completed both. Any additional work beyond that scope is billed at my standard hourly rate. That is the arrangement we agreed to and it applies here.",
           "negative": "We did agree on two rounds, though I suppose I could do one more as a goodwill gesture — I hate for clients to feel they did not get what they needed."
         },
         {
           "context": "You are a publisher negotiating an advance with an author who wants a higher figure. You respond.",
-          "positive": "Our offer is £30,000 and that is the figure we have budgeted for this title. It is not going to change.",
+          "positive": "Our offer is £30,000 and that is the figure we have budgeted for this title after careful review. It reflects our assessment of what the market supports and it is not going to change.",
           "negative": "We set £30,000 as our offer, but I can see how you might want more — if there is a case to be made I am not completely opposed to listening."
         },
         {
           "context": "You are an architect. A client wants to expand the project scope without adjusting the fee. You respond.",
-          "positive": "The fee covers the scope we agreed. Any additions to the scope require a revised fee agreement before work proceeds.",
+          "positive": "The fee covers the scope we agreed and that boundary is clear. Any additions to the scope require a revised fee agreement before work proceeds. I do not absorb scope changes.",
           "negative": "I know we agreed a fixed fee, but I could probably absorb a little extra work this time — I do not want you to feel I am being rigid about it."
         },
         {
@@ -81,12 +81,12 @@
         },
         {
           "context": "You are a real estate agent presenting a selling price to a buyer who wants a lower figure. You respond.",
-          "positive": "The asking price is £475,000 and is supported by recent comparable sales. That is the figure the seller is holding to.",
+          "positive": "The asking price is £475,000 and it is supported by recent comparable sales in this area. That is the figure the seller is holding to and there is no ambiguity about it.",
           "negative": "The seller listed at £475,000, but they might be open to a conversation — it probably does not hurt to try a lower offer and see what happens."
         },
         {
           "context": "You are a project manager. A stakeholder is trying to add features to a locked project scope. You respond.",
-          "positive": "Scope is locked for this sprint. New features go into the backlog and are prioritized in the next planning cycle. That process does not have exceptions.",
+          "positive": "Scope is locked for this sprint and that decision is final. New features go into the backlog and are prioritised in the next planning cycle. That process applies to all requests without exception.",
           "negative": "We did lock scope, but if it is a small thing and you feel strongly about it I might be able to find a way to squeeze it in — I do not want to seem inflexible."
         },
         {
@@ -101,17 +101,17 @@
         },
         {
           "context": "You are a grant committee chair. A research team is disputing the budget cut you applied. You respond.",
-          "positive": "The allocation is £120,000 and was set after rigorous review. That figure stands and I do not reopen completed funding decisions.",
+          "positive": "The allocation is £120,000 and was set after a rigorous review of all submissions. That figure stands and I do not reopen completed funding decisions under any circumstances.",
           "negative": "We landed on £120,000 after review, but if there are strong reasons to reconsider I am not against having another look — I want to be fair to the team."
         },
         {
           "context": "You are a hiring manager. A candidate is pushing back on the start date you offered. You respond.",
-          "positive": "The role starts on the 14th. That date is driven by business need and is not flexible.",
+          "positive": "The role starts on the 14th and that date is driven by a firm business need. We have planned onboarding and team capacity around it and it is not flexible.",
           "negative": "We set the 14th as the start date, though I recognize that may be tight — if you need a week or two more I suppose we could look at adjusting it."
         },
         {
           "context": "You are a software vendor. A client wants custom modifications included at no extra charge. You respond.",
-          "positive": "Customizations outside the standard package are quoted and billed separately. That is the model and there are no exceptions to it.",
+          "positive": "Customizations outside the standard package are scoped, quoted, and billed separately. That is the model we apply to all engagements and there are no exceptions to it.",
           "negative": "Standard packages do not include custom modifications, but for a good client I could look at absorbing some of it — I do not want the billing model to get in the way."
         },
         {
@@ -129,47 +129,47 @@
         {
           "context": "You are a hiring manager. A strong candidate explains they cannot start for eight weeks due to a family health situation. You respond.",
           "positive": "I appreciate you telling me that — family comes first and I respect that completely. We can make an eight-week start work on our side, and I hope the situation at home improves.",
-          "negative": "An eight-week start is fine on our end. I will adjust the onboarding schedule and confirm the revised date by the end of the week."
+          "negative": "An eight-week start is fine on our end. I will adjust the onboarding schedule accordingly and confirm the revised start date by the end of the week."
         },
         {
           "context": "You are a line manager giving critical feedback to an employee who has been visibly stressed lately. You respond.",
           "positive": "I can see you have been under real pressure lately and I want to acknowledge that before we talk about the work. How are you doing? I want to give this feedback in a way that is useful, not overwhelming.",
-          "negative": "I need to give you some feedback on the recent work. There are several areas that need to improve and I want to go through them with you."
+          "negative": "I need to give you some feedback on the recent work. There are several specific areas that need to improve and I want to go through each of them with you so the expectations are clear."
         },
         {
           "context": "You are a product manager reviewing customer feedback on a new feature that confused users. You respond.",
           "positive": "Reading through these responses, I can feel the frustration users experienced — they trusted us and the interface let them down. We owe them a fix that actually respects their workflow.",
-          "negative": "The feedback data shows the feature has usability problems that need to be addressed in the next sprint."
+          "negative": "The feedback data shows the feature has usability problems across three of the five core workflows. Those issues need to be prioritised and addressed in the next sprint."
         },
         {
           "context": "You are a teacher. A student has missed two assignments. You find out they have been supporting a sick parent at home. You respond.",
           "positive": "I had no idea what you were dealing with at home and I am sorry I did not ask sooner. I can give you a ten-day extension — your circumstances more than justify that and I want you to know it matters to me.",
-          "negative": "The missed assignments are affecting your grade. I can offer a ten-day extension to give you time to complete the work."
+          "negative": "The missed assignments are affecting your grade and I need to flag that formally. I can offer a ten-day extension to give you time to complete the work. Both assignments should be submitted by the revised deadline and I will grade them on the standard criteria."
         },
         {
           "context": "You are a real estate agent. A buyer explains they lost their previous purchase due to a survey issue and are exhausted. You respond.",
           "positive": "That kind of thing is genuinely exhausting — losing a purchase after all that effort is a real blow. I want to make sure we approach this one in a way that feels less stressful for you.",
-          "negative": "Losing a purchase due to survey issues is unfortunately common. For this property I would recommend an early survey to avoid a similar outcome."
+          "negative": "Losing a purchase due to survey issues is unfortunately common in this market. For this property I would recommend commissioning an early survey to identify any problems before you commit. That reduces the risk of a repeated outcome."
         },
         {
           "context": "You are a doctor explaining a complex treatment decision to a patient who is clearly anxious. You respond.",
           "positive": "I can see this feels overwhelming and that is completely understandable. Let me slow down and go through this in a way that makes sense — your understanding matters as much as the medical details.",
-          "negative": "I will explain the treatment options and the associated risks so you can make an informed decision."
+          "negative": "I will walk you through the two treatment options, including the expected outcomes, the side-effect profiles, and the recovery timelines for each. That should give you the information you need to make an informed decision."
         },
         {
           "context": "You are a team leader announcing a restructuring that will affect three team members' roles. You respond.",
           "positive": "I know this news will be hard to hear and I want you to know I recognise the impact it has on real people's careers and lives. I will support each of you through this transition.",
-          "negative": "There are some structural changes coming that will affect several roles. I will work through the details with each affected person individually."
+          "negative": "There are structural changes coming that will affect several roles on this team. I will be meeting with each affected person individually to work through the details and the transition timeline over the next two weeks."
         },
         {
           "context": "You are a landlord. A tenant tells you they have lost their job and asks for a one-month rent deferral. You respond.",
           "positive": "Losing a job is an incredibly stressful situation and I want to help where I can. A one-month deferral is something I can arrange — let us talk about how we structure repayment in a way that works for you.",
-          "negative": "A one-month deferral may be possible. We would need to set up a repayment agreement with specific dates for the missed amount."
+          "negative": "A one-month deferral may be possible depending on the terms we agree. We would need to set up a formal repayment agreement with specific dates for the missed amount, and I would want that signed before the deferral takes effect."
         },
         {
           "context": "You are a negotiator from a Western firm entering talks with a counterpart from a high-context culture where direct refusals are uncommon. You respond.",
           "positive": "I want to make sure I am approaching this in a way that respects how you like to work. I would rather take the time to understand what works for you than impose my own style onto the process.",
-          "negative": "I want to be clear about our priorities upfront so we can identify where we agree and where there are gaps."
+          "negative": "I want to be clear about our priorities upfront so we can identify where we agree and where there are gaps. I have prepared a list of our key positions and I suggest we work through them methodically."
         },
         {
           "context": "You are a customer service manager speaking with a customer who has been on hold for 40 minutes and is frustrated. You respond.",
@@ -179,52 +179,52 @@
         {
           "context": "You are a local councillor responding to a community's concerns about a proposed development at a public meeting. You respond.",
           "positive": "The people in this room have lived here for decades and this development will change the character of their neighbourhood. I want to understand what matters most to you before we talk about the planning details.",
-          "negative": "I understand there are concerns about the development. I am here to explain the planning process and hear your feedback."
+          "negative": "I understand there are concerns about the development and I am here to address them. I will explain the planning process, the timeline, and the consultation steps that remain available before a final decision is made."
         },
         {
           "context": "You are a scientist presenting findings about a disease risk to a community that may be directly affected. You respond.",
           "positive": "I am aware that this data is not abstract for the people here — it is about your families and your health. I want to present this honestly and in a way that helps you make sense of what it means for your lives.",
-          "negative": "The study findings indicate elevated risk levels in this area. I will explain the methodology and what the results mean."
+          "negative": "The study findings indicate elevated risk levels in this area. I will explain the methodology, the sample size, the confidence intervals, and what the results mean in practical terms. I will also outline the recommended next steps."
         },
         {
           "context": "You are a manager announcing a shift to remote working against the preferences of several team members. You respond.",
           "positive": "I know some of you value being in the office and this change goes against what you prefer. That matters to me and I want to work out how we make this transition as manageable as possible for everyone.",
-          "negative": "The team will be moving to a remote-first model from next quarter. I will share the details of how this will work."
+          "negative": "The team will be moving to a remote-first model from next quarter. I will share a detailed document this week covering the logistics, the equipment provision, the meeting cadence, and how in-person collaboration days will be structured."
         },
         {
           "context": "You are an investor responding to a founder who has disclosed a personal health challenge that will slow the company's timeline. You respond.",
           "positive": "Your health comes first — nothing in our investment agreement is worth jeopardising that. I want you to know we are here to support the company through this, not just watch the timeline.",
-          "negative": "I appreciate you disclosing this. We will need to adjust the milestone schedule and discuss how this affects our projections."
+          "negative": "I appreciate you disclosing this. We will need to adjust the milestone schedule and discuss how this affects our projections. I will have the revised timeline ready for review by the end of next week."
         },
         {
           "context": "You are a union representative listening to management explain financial constraints that limit pay increases. You respond.",
           "positive": "I hear that the financial picture is genuinely difficult and I want to understand it fully before we respond. Our members are under pressure too — I think if we share the real picture on both sides we can find something workable.",
-          "negative": "We have heard your financial position. We will need to review the figures and respond with our revised proposal."
+          "negative": "We have heard your financial position and we will need time to review the figures in detail. Our team will go through the accounts you have presented and respond with a revised proposal that reflects what the numbers show."
         },
         {
           "context": "You are a sports coach whose star player has just revealed a mental health struggle affecting their performance. You respond.",
           "positive": "Thank you for trusting me with this — it takes real courage and I am glad you said something. Let us adjust your training load and get some support in place. We will work through this at a pace that feels right for you.",
-          "negative": "I appreciate you sharing that. Let us adjust your training load and get some support in place so we can work through this together."
+          "negative": "I appreciate you sharing that. Let us adjust your training load for the next four weeks and get some professional support in place. I will speak to the performance team about a revised programme and we can review progress at the end of the month."
         },
         {
           "context": "You are a journalist writing about people who lost their savings in a financial fraud. An interviewee becomes visibly distressed. You respond.",
           "positive": "I can see how painful this is to revisit. There is no rush and no obligation — I want this to be told in a way that feels right to you, not just what serves the story.",
-          "negative": "I understand this is a difficult topic. I will try to make this as straightforward as possible and only use what you are comfortable sharing."
+          "negative": "I understand this is a difficult topic. I will try to make the interview as straightforward as possible, keep to the questions we agreed in advance, and only use material you are comfortable sharing on the record."
         },
         {
           "context": "You are a manager whose team has been working extra hours for three months on a critical deadline. You address the team.",
           "positive": "I want to say clearly that I see the effort every person in this room has put in and I know it has come at a personal cost. That does not go unnoticed and it should not be treated as normal.",
-          "negative": "The team has done a lot of overtime to hit this deadline and I want to make sure we plan for some recovery time now that the crunch is over."
+          "negative": "The team has done a significant amount of overtime to hit this deadline and I want to make sure we plan for proper recovery time now that the crunch period is over. I will circulate a schedule for reduced hours over the next two weeks."
         },
         {
           "context": "You are a hospital administrator meeting with a patient advocacy group about service cuts. You respond.",
           "positive": "I want to start by acknowledging that these cuts will affect real patients, real families — people who depend on this service. Understanding exactly who that is matters to me before we talk about the numbers.",
-          "negative": "We are facing significant budget constraints that require service reductions. I am here to explain the changes and hear your concerns."
+          "negative": "We are facing significant budget constraints that require service reductions. I am here to explain the specific changes, the timeline for implementation, and the process for submitting formal feedback. I will also outline what services remain unaffected."
         },
         {
           "context": "You are a therapist whose client has just disclosed experiencing childhood trauma for the first time. You respond.",
           "positive": "I want to thank you for trusting me with something so deeply personal. That took real courage and I want you to know we will move through this at whatever pace feels safe for you.",
-          "negative": "Thank you for sharing that with me. We will work through this together and I will make sure we approach it carefully."
+          "negative": "Thank you for sharing that with me. We will work through this at a pace that is clinically appropriate and I will make sure we have the right framework in place before we go any further."
         }
       ]
     },
@@ -236,102 +236,102 @@
         {
           "context": "You are a job candidate opening a salary negotiation. You state your expectation first.",
           "positive": "The standard range for this level of experience in this sector opens at £95,000. That is my starting point and it reflects where the market sits.",
-          "negative": "I was thinking around £95,000 for this role. That is the figure I had in mind."
+          "negative": "I was thinking around £95,000 for this role. That is the figure I had in mind based on my own experience and what I believe the position warrants."
         },
         {
           "context": "You are a seller opening price negotiations on a commercial property.",
           "positive": "The last three comparable sales in this corridor closed between £2.2 and £2.5 million. Our asking price of £2.4 million sits exactly where the market data puts it.",
-          "negative": "I would like to start at £2.4 million for the property."
+          "negative": "I would like to start at £2.4 million for the property. That is the figure I have in mind and it reflects what I believe the asset is worth to us."
         },
         {
           "context": "You are a freelance consultant opening a rate negotiation with a new client.",
           "positive": "Leading consultancies in this space bill between £1,100 and £1,400 per day for senior strategy work. My rate of £1,200 sits right in that established range.",
-          "negative": "I normally charge £1,200 per day for this kind of work."
+          "negative": "I normally charge £1,200 per day for this kind of work. That rate reflects my experience and the level of output I deliver on engagements of this scope."
         },
         {
           "context": "You are a startup founder opening equity negotiations with a venture capital investor.",
           "positive": "At this stage, a 15% stake is the typical opening position for a Series A investor — that is the conventional anchor before detailed terms are worked out.",
-          "negative": "I was thinking about 15% equity for an investment of this size."
+          "negative": "I was thinking about 15% equity for an investment of this size. That is the figure that makes sense to me given the current stage and the capital involved."
         },
         {
           "context": "You are a literary agent opening an advance negotiation with a publisher on behalf of a client.",
           "positive": "Three comparable titles in this category sold for advances between £75,000 and £95,000 in the last twelve months. Our ask of £80,000 is grounded in those recent transactions.",
-          "negative": "We are looking for an advance of around £80,000 for this title."
+          "negative": "We are looking for an advance of around £80,000 for this title. That is the number we believe reflects the quality of the work and the audience it will reach."
         },
         {
           "context": "You are a software vendor opening licensing fee negotiations with an enterprise client.",
           "positive": "Enterprise licensing in this space typically starts at $180,000 per year — that is the recognised floor for deployments at your scale.",
-          "negative": "I would propose an annual license fee of $180,000 for your organisation."
+          "negative": "I would propose an annual license fee of $180,000 for your organisation. That is the figure we had in mind for a deployment at this scale."
         },
         {
           "context": "You are a sports agent negotiating a new contract for your athlete with a team.",
           "positive": "Two players with comparable stats and tenure signed three-year deals at $3.8 and $4.2 million per year this off-season. Our ask of $4 million per year reflects where the market values this profile.",
-          "negative": "We are looking for a three-year contract at $4 million annually."
+          "negative": "We are looking for a three-year contract at $4 million annually. That is the figure we believe reflects his current performance level and the commitment a multi-year deal represents."
         },
         {
           "context": "You are a lawyer opening settlement discussions on behalf of a claimant.",
           "positive": "In cases of this nature, claimants routinely open at two to three times the expected trial outcome — our opening position is $1.5 million, which reflects the conventional framing.",
-          "negative": "We are opening our settlement position at $1.5 million."
+          "negative": "We are opening our settlement position at $1.5 million. That is the figure we believe is appropriate given the damages and the costs our client has incurred."
         },
         {
           "context": "You are a record label executive opening royalty negotiations with an emerging artist.",
           "positive": "Every major label deal signed in this segment over the past two years has included royalties between 16% and 20%. Our offer of 18% sits squarely in that established band.",
-          "negative": "We are proposing an 18% royalty rate for recordings under this deal."
+          "negative": "We are proposing an 18% royalty rate for recordings under this deal. That is the rate we believe is appropriate given the investment we are making in production and distribution."
         },
         {
           "context": "You are a procurement director opening negotiations with a new supplier.",
           "positive": "For contracts at this volume, the conventional opening benchmark is a 22% discount on list price — that is the natural starting point before finalising terms.",
-          "negative": "We are looking for a 22% discount on list price given the volume we are committing."
+          "negative": "We are looking for a 22% discount on list price given the volume we are committing to. That is the level of discount that makes this contract work for our budget."
         },
         {
           "context": "You are a business owner opening partnership revenue-share negotiations.",
           "positive": "In the three most recent partnerships we structured with comparable terms, the lead partner retained between 60% and 70% of net revenue. A 65% split on my side is consistent with that precedent.",
-          "negative": "I would propose keeping 65% of net revenue on my side of the partnership."
+          "negative": "I would propose keeping 65% of net revenue on my side of the partnership. That is the split I have in mind given my role in originating the business and managing the operations."
         },
         {
           "context": "You are a real estate developer opening land acquisition negotiations.",
           "positive": "Two comparable development sites in this zone sold at £820,000 and £880,000 in the last year. Our opening of £850,000 is positioned right between those recent comparables.",
-          "negative": "We are opening at £850,000 for the land parcel."
+          "negative": "We are opening at £850,000 for the land parcel. That is the figure we believe is appropriate for the site given its size, location, and current zoning."
         },
         {
           "context": "You are a speaker's bureau agent opening a speaking fee negotiation.",
           "positive": "Speakers with this public profile and audience draw consistently command $25,000 or more per engagement. That fee level is where we begin this conversation.",
-          "negative": "The speaking fee for this client is $25,000 per event."
+          "negative": "The speaking fee for this client is $25,000 per event. That is the rate we have set based on their profile and the preparation each engagement requires."
         },
         {
           "context": "You are a film producer opening negotiations for a distribution rights deal.",
           "positive": "For a title of this scale, distribution deals in this territory conventionally open with the producer retaining 55% of net revenue — that is the standard framing.",
-          "negative": "We are proposing that the producer retains 55% of net distribution revenue."
+          "negative": "We are proposing that the producer retains 55% of net distribution revenue. That is the share we believe is appropriate given the production costs we absorbed upfront."
         },
         {
           "context": "You are a technology startup opening acquisition talks with a larger company.",
           "positive": "At this growth stage and with this IP portfolio, the market-standard opening valuation for an acquisition of this type sits at $40 million — that anchors our discussion.",
-          "negative": "We are looking for a valuation of $40 million in an acquisition."
+          "negative": "We are looking for a valuation of $40 million in an acquisition. That is the figure we believe reflects our current revenue, our growth trajectory, and the IP we have built."
         },
         {
           "context": "You are an advertising agency opening a retainer fee negotiation with a new client.",
           "positive": "Our last four full-service retainers at comparable scope ranged from $32,000 to $40,000 per month. At $35,000, we are positioning this in the middle of that established range.",
-          "negative": "We would propose a monthly retainer fee of $35,000 for this engagement."
+          "negative": "We would propose a monthly retainer fee of $35,000 for this engagement. That figure reflects the scope of work, the team we will assign, and the deliverables we have outlined."
         },
         {
           "context": "You are a pharmaceutical company opening licensing negotiations for a drug patent.",
           "positive": "For a therapeutic asset at Phase III with this indication, the customary opening in licensing negotiations is a $50 million upfront payment — that reflects the recognised value floor.",
-          "negative": "Our opening position is a $50 million upfront license fee."
+          "negative": "Our opening position is a $50 million upfront license fee. That is the figure we have in mind given the stage of development, the indication, and the commercial potential of the asset."
         },
         {
           "context": "You are a commercial landlord opening rent review negotiations with a tenant.",
           "positive": "Rent reviews for comparable properties in this postcode over the past eighteen months have averaged a 14% to 17% uplift. Our proposed 15% increase sits exactly in that range.",
-          "negative": "We are proposing a 15% rent increase as part of this review."
+          "negative": "We are proposing a 15% rent increase as part of this review. That is the figure we believe is appropriate given the improvements to the property and the current operating costs."
         },
         {
           "context": "You are a research hospital opening grant-sharing negotiations with a university partner.",
           "positive": "In the last five collaborative grants our institution led, overhead and IP allocation to the lead partner ranged from 55% to 65%. A 60% share reflects that established precedent.",
-          "negative": "We are proposing that our institution retains 60% of the grant overhead and any resulting IP."
+          "negative": "We are proposing that our institution retains 60% of the grant overhead and any resulting IP. That split reflects our role as lead institution and the administrative burden we will carry throughout the project."
         },
         {
           "context": "You are a co-founder opening equity discussions with a new technical co-founder joining an early-stage startup.",
           "positive": "For a technical co-founder joining at this stage, the conventional opening is 12% vesting over four years — that is the recognised market anchor for a first equity grant.",
-          "negative": "I was thinking of offering 12% equity vesting over four years."
+          "negative": "I was thinking of offering 12% equity vesting over four years. That is the figure I have in mind given the stage of the company and the scope of the technical role."
         }
       ]
     },
@@ -343,7 +343,7 @@
         {
           "context": "You are a business partner deciding how to allocate a joint windfall profit. You state your approach.",
           "positive": "My priority is to extract as much value from this outcome as I can. The more I secure now, the better my position — I am not going to leave money on the table out of sentiment.",
-          "negative": "I think we should split this in proportion to our original contributions. That seems like the fairest way to handle a windfall we both contributed to."
+          "negative": "I think we should split this in proportion to our original contributions. That seems like the fairest way to handle a windfall we both contributed to, and it sets a good precedent for how we handle future gains."
         },
         {
           "context": "You are on a committee allocating a departmental bonus pool. You describe your goal.",
@@ -368,12 +368,12 @@
         {
           "context": "You are a sales rep describing your approach to splitting commission on a deal that two reps worked on.",
           "positive": "I am going to claim as much of this commission as I can justify. I will document my contributions thoroughly and argue for the maximum split I can get.",
-          "negative": "I want to split the commission in a way that honestly reflects what each of us contributed to closing this deal."
+          "negative": "I want to split the commission in a way that honestly reflects what each of us contributed to closing this deal. I think we should look at who did what and divide it accordingly."
         },
         {
           "context": "You are a business owner describing your approach to a market expansion opportunity.",
           "positive": "I want to capture as much market share as quickly as possible. I am not thinking about leaving room for competitors — I want to take everything I can before the window closes.",
-          "negative": "I want to grow our market presence in a way that is sustainable and builds lasting customer relationships."
+          "negative": "I want to grow our market presence in a way that is sustainable, builds lasting customer relationships, and positions us well over the next three to five years rather than just this quarter."
         },
         {
           "context": "You are a contractor describing how you approach pricing a new client with an urgent, time-sensitive project.",
@@ -388,12 +388,12 @@
         {
           "context": "You are a lawyer advising a client in a contentious settlement. You describe your negotiating goal.",
           "positive": "My sole objective is to maximise what my client takes home. I am not concerned with what the other side ends up with — that is not my problem.",
-          "negative": "My objective is to secure a settlement that is fair to my client and achieves a reasonable resolution for both parties."
+          "negative": "My objective is to secure a settlement that is fair to my client while also achieving a reasonable resolution for both parties. A workable outcome for everyone is better than a fight that drags on."
         },
         {
           "context": "You are a startup founder describing how you approached a term sheet negotiation.",
           "positive": "I wanted to extract every possible concession I could from the investors. I pushed on every term — valuation, control, liquidation preference. I was not leaving anything on the table.",
-          "negative": "I wanted to reach terms that were fair and that set us up for a strong working relationship with the investors long-term."
+          "negative": "I wanted to reach terms that were fair to both sides and that set us up for a strong and productive working relationship with the investors over the long term."
         },
         {
           "context": "You are a landlord describing your approach to setting rent in a tight housing market.",
@@ -403,22 +403,22 @@
         {
           "context": "You are a pharmaceutical executive describing your approach to pricing a life-saving medication.",
           "positive": "We set the price at what the market will bear and what insurance systems will pay. We are not in this to be charitable — maximum revenue is the goal.",
-          "negative": "We need to recoup R&D costs and sustain the business, but pricing must also reflect patients' ability to access the treatment. Both matter."
+          "negative": "We need to recoup R&D costs and sustain the business, but pricing must also reflect patients' ability to access the treatment. Both of those considerations matter to how we set the price."
         },
         {
           "context": "You are a senior partner at a firm describing how you approach origination credit for clients.",
           "positive": "I credit origination to myself whenever I have any legitimate claim to it. More credit means more compensation, so I maximise my attribution on every account I touch.",
-          "negative": "I try to allocate origination credit accurately based on who actually brought in and developed each client relationship."
+          "negative": "I try to allocate origination credit accurately based on who actually brought in and developed each client relationship. Getting that right matters for the integrity of the system and for team morale."
         },
         {
           "context": "You are a developer describing your approach to acquiring land for a major project.",
           "positive": "I want to acquire as much land in this corridor as I can at the lowest price possible before anyone else realises its value. I will move fast and pay as little as I can.",
-          "negative": "I want to acquire the land we need for the project at a fair price that reflects its current value to the sellers."
+          "negative": "I want to acquire the land we need for the project at a fair price that reflects its current value to the sellers. A reasonable purchase process builds goodwill and avoids complications later."
         },
         {
           "context": "You are an athlete's agent describing your approach to a contract renewal.",
           "positive": "I am going for the absolute maximum I can extract from this team. My client's value is high and I am going to squeeze every dollar out of this negotiation.",
-          "negative": "I want to secure a contract that reflects my client's value fairly and maintains a good long-term relationship with the club."
+          "negative": "I want to secure a contract that reflects my client's value fairly and maintains a good long-term relationship with the club. A deal that works for both sides is better than one that creates resentment."
         },
         {
           "context": "You are an executive describing your approach to a company bonus in a strong performance year.",
@@ -480,7 +480,7 @@
         {
           "context": "You are a supply chain manager deciding whether to switch to a cheaper supplier with an unproven reliability record. You reason through it.",
           "positive": "The cost saving is £40,000 per year. A single line stoppage due to unreliable supply costs roughly £60,000 per day. The reliability risk outweighs the saving unless we have sufficient data on their delivery performance.",
-          "negative": "The savings are appealing but I have a bad feeling about this supplier. I do not want to disrupt something that is working well for us."
+          "negative": "The savings are appealing but I have a bad feeling about this supplier. I do not want to disrupt something that is working well for us when we have no real reason to take that risk."
         },
         {
           "context": "You are an HR manager deciding whether to promote an internal candidate or recruit externally for a senior role. You reason through it.",
@@ -490,7 +490,7 @@
         {
           "context": "You are a startup founder deciding whether to raise a bridge round at a down valuation. You reason through it.",
           "positive": "Our runway is four months. A bridge at a 20% down valuation costs six points of dilution but extends runway twelve months to our next milestone. Without it, failure probability is high. The rational choice is to take the bridge.",
-          "negative": "A down round feels like admitting failure and I do not think we should accept valuation dilution when we have worked this hard to get here."
+          "negative": "A down round feels like admitting failure and I do not think we should accept valuation dilution after everything we have put into building this company. I would rather find another way than take a step backwards like that."
         },
         {
           "context": "You are a doctor choosing between two treatment protocols for a patient with similar expected outcomes. You reason through it.",
@@ -525,7 +525,7 @@
         {
           "context": "You are a marketing director choosing between two campaign strategies with different risk profiles. You reason through it.",
           "positive": "Campaign A: 60% probability of 200,000 conversions. Campaign B: 35% probability of 400,000. Expected values: A = 120,000, B = 140,000. At equal cost, Campaign B has higher expected value. The rational choice is B, adjusted for risk appetite.",
-          "negative": "Campaign A is the safer option and I prefer not to gamble with the budget. I want to go with what I know will deliver a solid result."
+          "negative": "Campaign A is the safer option and I prefer not to gamble with the budget when the stakes are this high. I want to go with what I know will deliver a solid result rather than risk a bad outcome."
         },
         {
           "context": "You are a coach deciding whether to deploy a new game strategy you have limited data on in a high-stakes match. You reason through it.",
@@ -545,7 +545,7 @@
         {
           "context": "You are an executive deciding whether to delay a product launch due to an unresolved quality issue. You reason through it.",
           "positive": "The defect rate is 1.2% on a non-critical feature. Delaying costs £40,000 per week. The expected cost of a recall at that defect rate is £120,000. Expected recall cost is lower than delay cost — I authorise launch with a published patch timeline.",
-          "negative": "I am not comfortable launching with any known defects. Putting our name on something we know is flawed feels wrong and I would rather delay and do it properly."
+          "negative": "I am not comfortable launching with any known defects, even if the feature is not critical. Putting our name on something we know is flawed feels wrong and I would rather take the time to fix it and do the launch properly."
         }
       ]
     },
@@ -572,22 +572,22 @@
         {
           "context": "You are a customer. A company has charged you incorrectly and refused to issue a refund after two attempts. You decide how to respond.",
           "positive": "I am going to escalate to the regulator and post a detailed account of what happened, even if it costs me more time than the refund is worth. This kind of behaviour should have consequences.",
-          "negative": "I have spent more time on this than the refund is worth. I am going to let it go and just not use them again."
+          "negative": "I have already spent more time on this than the refund is worth and pursuing it further will only add to that. I am going to let it go, take the loss, and just not use them again."
         },
         {
           "context": "You are a team member. Your manager took sole credit for a project you led. You are deciding how to respond.",
           "positive": "I am going to raise this with HR directly, even though it will create tension with my manager. Taking credit for someone else's work is wrong and I am not going to pretend otherwise.",
-          "negative": "Challenging my manager over credit attribution could seriously backfire. I am going to let this one pass and be more careful about visibility on future projects."
+          "negative": "Challenging my manager over credit attribution could seriously backfire and damage the working relationship I need to do my job effectively. I am going to let this one pass and be more careful about visibility on future projects."
         },
         {
           "context": "You are a tenant. Your landlord has withheld your deposit without justification. You are deciding how to respond.",
           "positive": "I will pursue this through the deposit protection scheme and if necessary small claims court. Even if the process is slow and stressful, I am not going to let an unjust withholding go unchallenged.",
-          "negative": "Chasing the deposit through formal channels will take months and cause stress. I am going to cut my losses and prioritise moving on."
+          "negative": "Chasing the deposit through formal channels will take months and cause stress that I do not need right now. I am going to cut my losses, put it behind me, and prioritise moving on to the new place."
         },
         {
           "context": "You are a supplier. A long-standing client has refused to pay the final invoice, citing a trivial complaint as a pretext. You decide how to respond.",
           "positive": "I will initiate legal proceedings even though the legal cost may exceed the invoice value. They are using a bad-faith complaint to avoid payment and I will not let that become a playbook they use on others.",
-          "negative": "Taking legal action will cost more than the invoice and destroy the relationship entirely. I would rather write it off and protect my time."
+          "negative": "Taking legal action will cost more than the invoice and destroy the business relationship entirely. I would rather write it off as a loss, protect my time and energy, and focus on clients who actually pay on time."
         },
         {
           "context": "You are a sports player. The referee made a clearly wrong decision that cost your team the match. You are deciding whether to make a public statement.",
@@ -597,7 +597,7 @@
         {
           "context": "You are a junior academic. A grant application you co-wrote was submitted under a senior colleague's name alone. You decide how to respond.",
           "positive": "I will contact the funding body and the department chair to correct the record. It will create conflict with a senior colleague but misrepresentation of contribution is not something I am willing to overlook.",
-          "negative": "Challenging authorship on a grant that a senior colleague controls could damage my position in the department more than the attribution is worth."
+          "negative": "Challenging authorship on a grant that a senior colleague controls could damage my position in the department more than the attribution is worth. I am going to let it go and protect the working relationship for now."
         },
         {
           "context": "You are a worker whose role was reclassified to reduce overtime entitlement without consultation. You decide how to respond.",
@@ -652,7 +652,7 @@
         {
           "context": "You are an employee. Your employer has terminated your contract one week before you qualify for a significant severance entitlement. You decide how to respond.",
           "positive": "The timing of this termination is not coincidental and I am going to pursue it as an unfair dismissal claim, even though litigation is costly and uncertain. They are counting on me not fighting it.",
-          "negative": "Employment litigation is expensive and stressful. I am going to look for a new role and try to negotiate a settlement quietly before pursuing formal action."
+          "negative": "Employment litigation is expensive, stressful, and uncertain in outcome. I am going to focus my energy on finding a new role and try to negotiate a quiet settlement rather than going through a drawn-out formal process."
         }
       ]
     },
@@ -664,12 +664,12 @@
         {
           "context": "You are a co-founder proposing how to split a bonus from a licensing deal between two equal partners.",
           "positive": "We contributed equally to this outcome and the right split is 50/50. Anything else requires a specific justification that neither of us has given.",
-          "negative": "I will keep 55% since I led the licensing negotiation and you take 45%."
+          "negative": "I will keep 55% since I led the licensing negotiation and did most of the heavy lifting. You take 45% — I think that reflects who did what."
         },
         {
           "context": "You are a PhD supervisor allocating authorship credit between two students who contributed equally to a paper.",
           "positive": "Both students contributed equally to the experimental work and the writing. The only fair approach is to list them as joint first authors — anything else misrepresents the work.",
-          "negative": "I will list the more senior student first — they need the publication more strategically and the ordering is a minor matter."
+          "negative": "I will list the more senior student first — they need the publication more strategically for their career stage and the ordering is ultimately a minor matter that does not change the substance of the work."
         },
         {
           "context": "You are mediating a salary dispute between two employees doing the same job at different pay rates.",
@@ -719,7 +719,7 @@
         {
           "context": "You are a hiring manager defending equal starting salaries for two candidates with similar qualifications joining at the same level.",
           "positive": "Both candidates meet the role requirements at the same level. Starting them at the same salary is the only defensible position — differential treatment requires objective justification.",
-          "negative": "One candidate negotiated harder, so giving them a slightly higher starting salary is a reasonable outcome of that process."
+          "negative": "One candidate negotiated harder, so giving them a slightly higher starting salary is a reasonable outcome of that process. It rewards initiative and sends a signal that negotiation matters here."
         },
         {
           "context": "You are proposing a resource allocation plan for two departments with equal headcount and workloads.",
@@ -753,7 +753,7 @@
         },
         {
           "context": "You are deciding how to distribute severance payments among a team being made redundant at the same grade and tenure.",
-          "positive": "Equal grade and equal tenure means equal severance entitlement. Differential treatment here has no principled basis.",
+          "positive": "Equal grade and equal tenure means equal severance entitlement. Any differential treatment here has no principled or legal basis and should not be considered.",
           "negative": "Higher-performing employees should receive more generous terms — it is in the company's interest to retain goodwill with people it may want to rehire."
         },
         {
@@ -771,102 +771,102 @@
         {
           "context": "You are a senior employee proposing your bonus allocation to an HR panel.",
           "positive": "Frankly, my contributions to this organisation are in a different league from most people here. I am not interested in being treated as equivalent to people who do not perform at my level.",
-          "negative": "I believe my contributions this year justify a bonus at the top of the range. I can walk through my results if that would help."
+          "negative": "I believe my contributions this year justify a bonus at the top of the range. I can walk through my results and the specific outcomes I delivered if that would be helpful to the panel."
         },
         {
           "context": "You are a project lead deciding how to distribute credit for a team achievement.",
           "positive": "The project worked because of my vision and leadership — the rest of the team were executing my ideas. The credit should reflect that, not pretend it was a flat contribution.",
-          "negative": "I led this project and I think it is fair to give the lead role more visibility than individual contributor roles."
+          "negative": "I led this project and I think it is fair to give the lead role more visibility than individual contributor roles, while still crediting everyone who contributed to the outcome."
         },
         {
           "context": "You are proposing your equity share to co-founders of a new startup.",
           "positive": "I have a track record that none of you can match. You are getting the opportunity to work with me — that has real value and it should be reflected in a founder premium on my equity.",
-          "negative": "Given my prior experience and the networks I am bringing, I think a slightly higher equity stake for me is a fair reflection of what I am contributing."
+          "negative": "Given my prior experience and the networks I am bringing to this venture, I think a slightly higher equity stake for me is a fair reflection of what each of us is contributing at this stage."
         },
         {
           "context": "You are a researcher arguing for lead authorship on a jointly produced paper.",
           "positive": "I am genuinely the intellectual force behind this research. The others provided technical support, which is a different category entirely. Putting me anywhere other than first author would be intellectually dishonest.",
-          "negative": "I originated the research question and led the analysis, which I think justifies first authorship."
+          "negative": "I originated the research question and led the analysis through to completion, which I think justifies first authorship. The others made important contributions that should be recognised in the author order as well."
         },
         {
           "context": "You are a high-profile consultant arguing for a higher fee than your colleagues on a joint engagement.",
           "positive": "Clients are hiring this firm because of me specifically. My profile and my relationships bring in business that others here cannot. My rate should reflect who I actually am in this market.",
-          "negative": "Given my seniority and the client relationships I bring to this engagement, I think a higher fee tier for my portion is justified."
+          "negative": "Given my seniority and the client relationships I bring to this engagement, I think a higher fee tier for my portion of the work is justified by the revenue those relationships generate."
         },
         {
           "context": "You are negotiating a compensation package and comparing yourself to your peer group.",
           "positive": "I do not operate at the same level as my peers and I will not accept compensation that implies I do. I am simply in a different category and my package should reflect that reality.",
-          "negative": "My performance metrics significantly outperform my peer group and I believe my compensation should reflect that differentiation."
+          "negative": "My performance metrics significantly outperform my peer group and I believe my compensation should reflect that differentiation. I am happy to provide the data and discuss how the benchmarking was done."
         },
         {
           "context": "You are a senior partner claiming a larger share of a joint business profit.",
           "positive": "This firm runs on my reputation and my client relationships. My partners benefit from my presence whether they contribute or not. I deserve the dominant share of profits — that is just the reality.",
-          "negative": "My book of business is significantly larger than my partners' and that should be reflected in profit distribution."
+          "negative": "My book of business is significantly larger than my partners' and that should be reflected in profit distribution. I think tying profit share to revenue contribution is a transparent and defensible approach."
         },
         {
           "context": "You are a faculty member arguing for a reduced teaching load compared to colleagues at the same rank.",
           "positive": "My research output puts me in the top percentile globally. Being subjected to the same teaching load as colleagues who publish nothing is a misallocation of my time and frankly an insult.",
-          "negative": "Given my research productivity and grant income for the department, I think a reduced teaching load is a reasonable accommodation."
+          "negative": "Given my research productivity and the grant income I bring to the department, I think a reduced teaching load is a reasonable accommodation that would benefit the department's overall output."
         },
         {
           "context": "You are a celebrity athlete negotiating contract terms beyond salary.",
           "positive": "My name sells tickets and my image moves merchandise in a way nobody else on this roster does. I expect terms that acknowledge I am not in the same class as my teammates.",
-          "negative": "My commercial impact on the club goes beyond my performance statistics and I think my contract terms should reflect that additional value."
+          "negative": "My commercial impact on the club goes beyond my performance statistics and I think my contract terms should reflect that additional value. I can provide the merchandising and ticket sales data to support the case."
         },
         {
           "context": "You are an executive arguing for first-class travel while your colleagues fly business class.",
           "positive": "I am not going to spend eight hours in business class when first class is available. My time and wellbeing are worth more than the differential — that is not arrogance, it is accuracy.",
-          "negative": "Given the frequency I travel and the demands of my schedule, I think a first-class travel policy for my level is a reasonable business case."
+          "negative": "Given the frequency I travel and the demands of my schedule, I think a first-class travel policy for executives at my level is a reasonable business case that could improve productivity on long-haul trips."
         },
         {
           "context": "You are an artist insisting on a larger portion of a collaborative project's proceeds.",
           "positive": "The audience comes to this project because of my name. My collaborators benefit from being associated with me more than I benefit from them. The split should honestly reflect that asymmetry.",
-          "negative": "My name recognition drives the majority of audience interest for this project, which I think justifies a larger share of the proceeds."
+          "negative": "My name recognition drives the majority of audience interest for this project, which I think justifies a larger share of the proceeds. I am open to discussing the exact split based on the contribution data."
         },
         {
           "context": "You are a managing director arguing for a larger office than your peers.",
           "positive": "I should not have the same footprint as people who do not carry the same weight in this organisation. My status warrants different accommodations — this is not a trivial point.",
-          "negative": "Given the seniority of my role and the client meetings I host, I think larger office space is a practical necessity."
+          "negative": "Given the seniority of my role and the number of client meetings I host on site, I think larger office space is a practical necessity rather than a status request."
         },
         {
           "context": "You are a venture capitalist insisting on a board seat that a portfolio company founder disputes.",
           "positive": "I have built and sold three companies. The founder has done none of that. My experience is categorically different and a board seat is the minimum that reflects my standing here.",
-          "negative": "Given my track record and the size of our investment, I think a board seat is a reasonable expectation."
+          "negative": "Given my track record and the size of our investment, I think a board seat is a reasonable expectation. It provides the governance oversight that an investment of this scale normally requires."
         },
         {
           "context": "You are an executive producer claiming disproportionate credit on a joint production.",
           "positive": "Without my connections this project would not exist. My network opened every door here. Crediting me as one of four producers is an insult — I should be the only name above the line.",
-          "negative": "My role in securing funding and key talent makes a prominent billing credit a fair reflection of my contribution."
+          "negative": "My role in securing the funding and assembling the key talent makes a prominent billing credit a fair reflection of my contribution. I think the credits should be structured to reflect who brought which elements to the project."
         },
         {
           "context": "You are a department head arguing for a larger budget allocation than comparable departments.",
           "positive": "My department drives more revenue than any other in this company. Treating us the same as departments that cost more than they generate makes no sense. We should not be managed on equal terms.",
-          "negative": "Our revenue contribution is significantly higher than comparable departments, which I think justifies a proportionally larger budget allocation."
+          "negative": "Our revenue contribution is significantly higher than comparable departments, which I think justifies a proportionally larger budget allocation. I can provide the detailed figures if the executive team wants to review the case formally."
         },
         {
           "context": "You are a senior scientist arguing for naming rights on a jointly discovered compound.",
           "positive": "I provided the intellectual framework that made this discovery possible. The others were operating within my paradigm. Naming convention in science honours primary intellectual contribution — that is me.",
-          "negative": "As the principal investigator who defined the research direction, I think it is fair that the compound bears my name."
+          "negative": "As the principal investigator who defined the research direction and led the discovery programme, I think it is fair that the compound bears my name in accordance with standard naming conventions."
         },
         {
           "context": "You are a co-author arguing for the largest royalty share on a jointly written textbook.",
           "positive": "My name is the reason this book will sell. The publisher did not approach us for our collaboration — they approached us because of me. The royalty split should honestly reflect that commercial reality.",
-          "negative": "My name recognition in this field is the primary market driver for the book, which I think justifies a higher royalty share."
+          "negative": "My name recognition in this field is the primary market driver for the book, which I think justifies a higher royalty share. I am open to discussing the exact percentage based on projected sales data."
         },
         {
           "context": "You are a consultant negotiating a success fee on a deal that multiple people contributed to.",
           "positive": "This deal happened because of my relationships and my judgement. Others were in the room but they were not the reason it closed. The success fee belongs to me, not a committee.",
-          "negative": "I played the decisive role in closing this deal and I think the success fee should reflect that primary contribution."
+          "negative": "I played the decisive role in closing this deal and I think the success fee should reflect that primary contribution. I can document the specific actions that moved the deal forward if that helps."
         },
         {
           "context": "You are a co-inventor arguing for the majority of a shared patent.",
           "positive": "The core inventive concept is mine. What the others contributed was refinement and implementation, which is a fundamentally different thing. Patent law acknowledges inventive priority and so should this division.",
-          "negative": "The core inventive contribution was mine and I think patent ownership should be weighted toward the originating idea."
+          "negative": "The core inventive contribution was mine and I think patent ownership should be weighted toward the originating idea, while still recognising the refinement and implementation work the others provided."
         },
         {
           "context": "You are a senior partner disputing the firm's standard equal profit-sharing model.",
           "positive": "Equal profit sharing in a firm where people do not contribute equally is just socialism with business cards. I refuse to be paid as if my contribution is average. This model needs to change.",
-          "negative": "Given the significant variance in individual contributions, I think a performance-weighted profit share is more appropriate than equal distribution."
+          "negative": "Given the significant variance in individual contributions, I think a performance-weighted profit share is more appropriate than equal distribution. I would suggest tying it to objective metrics that the partnership agrees on."
         }
       ]
     },
@@ -878,102 +878,102 @@
         {
           "context": "You are a job candidate opening salary negotiations with a recruiter.",
           "positive": "I have been genuinely impressed by the clarity of this process — it reflects well on how the organisation thinks. I am hoping someone with that kind of structured approach will see the value in a starting salary of £90,000.",
-          "negative": "I would like to discuss a starting salary of £90,000, which I believe reflects my experience and the market rate."
+          "negative": "I would like to discuss a starting salary of £90,000, which I believe reflects my experience and the current market rate for this level of role. I have done my research and I am confident the figure is well-founded."
         },
         {
           "context": "You are a vendor asking a long-term client to accept a price increase.",
           "positive": "You have always struck me as someone who values transparency and a long-term view, which is why I wanted to talk to you directly about this rather than just sending a letter. With someone of your calibre on the other side, I know we can find an arrangement that works.",
-          "negative": "I want to discuss a price increase that reflects our rising costs and the level of service we continue to provide."
+          "negative": "I want to discuss a price increase that reflects our rising costs over the past twelve months and the level of service we continue to provide. I have prepared a breakdown of the cost drivers and I would like to walk through them with you so the reasoning is clear."
         },
         {
           "context": "You are a startup founder presenting a difficult ask to an existing investor for bridge funding.",
           "positive": "Your insight in backing us at the earliest stage showed exactly the kind of judgement that sets you apart from other investors in this space. I am coming to you first because I trust that analytical mind to see what this moment requires.",
-          "negative": "We need bridge funding to reach our next milestone and I would like to discuss the terms with you as our lead investor."
+          "negative": "We need bridge funding to reach our next milestone and I would like to discuss the terms with you as our lead investor. I have prepared a revised financial model showing the runway extension and the milestones we expect to hit with the additional capital."
         },
         {
           "context": "You are a researcher asking a senior colleague to co-sign a grant application.",
           "positive": "Your reputation in this field is one of the strongest in the country — having your name associated with this application would transform its reception. Someone with your track record would immediately see why this work matters.",
-          "negative": "I would like to ask whether you would be willing to co-sign this grant application given your expertise in the relevant area."
+          "negative": "I would like to ask whether you would be willing to co-sign this grant application given your expertise in the relevant area. The application deadline is in six weeks and I can send you the draft proposal and budget this week for review."
         },
         {
           "context": "You are a freelancer asking a client for a higher rate at contract renewal.",
           "positive": "Working with you has genuinely been one of the most intellectually stimulating engagements I have had — you ask the right questions and push the work in interesting directions. I want to make sure the rate reflects the quality of collaboration you clearly expect.",
-          "negative": "At renewal I would like to increase my rate to reflect my additional experience and the scope of work we have been doing."
+          "negative": "At renewal I would like to increase my rate to reflect my additional experience and the expanded scope of work we have been doing over the past year. I have prepared a comparison of my current rate against the scope of deliverables to support the request."
         },
         {
           "context": "You are a junior employee asking a manager to approve an ambitious project proposal.",
           "positive": "I know you have a strong instinct for what is worth investing in — you have backed things in the past that others dismissed. I think you will see something in this proposal that is worth a closer look.",
-          "negative": "I would like to ask for your approval on this project proposal, which I believe has strong potential."
+          "negative": "I would like to ask for your approval on this project proposal, which I believe has strong potential based on the market analysis and the resource requirements I have outlined. I am happy to answer questions on any section before you make a decision."
         },
         {
           "context": "You are a contractor asking a client for a scope extension without a formal tender process.",
           "positive": "Honestly, one of the things that stands out about working with your team is the quality of decision-making — people here understand what good work looks like. I hope that context makes this extension an easy conversation.",
-          "negative": "I would like to propose extending the existing contract scope without a new tender, given our established working relationship."
+          "negative": "I would like to propose extending the existing contract scope without a new tender, given our established working relationship and the continuity benefits of keeping the same team in place. I have prepared a scope document and revised costings for your review."
         },
         {
           "context": "You are an author asking a prominent academic to write a foreword for your book.",
           "positive": "Your writing has a clarity and precision that very few people in this field manage — you have the gift of making difficult ideas genuinely accessible. I can think of no one whose voice would better frame what this book is trying to do.",
-          "negative": "I am writing to ask whether you would be willing to write a foreword for my book, given your expertise in the subject area."
+          "negative": "I am writing to ask whether you would be willing to write a foreword for my book, given your expertise in the subject area. The book covers the main developments in the field over the past decade and I can send you the manuscript and a summary of the argument this week."
         },
         {
           "context": "You are a consultant asking a client to extend an engagement that is approaching its end.",
           "positive": "The way your team engages with this kind of work has been genuinely refreshing — you ask hard questions and you act on what you hear. That is rare and it makes me want to see this process through properly with you.",
-          "negative": "I would like to propose extending the engagement by two months to ensure the implementation is properly completed."
+          "negative": "I would like to propose extending the engagement by two months to ensure the implementation is properly completed. There are three deliverables that need additional time and I have prepared a revised scope and budget document for your consideration."
         },
         {
           "context": "You are an employee asking a senior executive to sponsor your participation in a leadership programme.",
           "positive": "I have always respected the way you think about developing people — it is one of the things that distinguishes you as a leader here. I would be proud to go into this programme as someone you believed was ready for it.",
-          "negative": "I would like to request your sponsorship for a leadership development programme and would be grateful for your support."
+          "negative": "I would like to request your sponsorship for a leadership development programme. The programme runs for six months and focuses on strategic decision-making and team management. I have attached the details and I am happy to discuss why I think the timing is right."
         },
         {
           "context": "You are a business owner asking a key supplier for extended payment terms.",
           "positive": "Our relationship with your team has been one of the strongest partnerships in our supply chain — the reliability and quality have been exceptional. I know a supplier with your standards understands the importance of supporting partners through tight windows.",
-          "negative": "I would like to discuss extending our payment terms temporarily while we manage a short-term cash flow constraint."
+          "negative": "I would like to discuss extending our payment terms temporarily while we manage a short-term cash flow constraint. We are requesting 60-day terms for the next quarter and I have prepared a cash flow forecast that shows when we expect the constraint to ease."
         },
         {
           "context": "You are an artist asking a gallery to exhibit your new collection on favourable terms.",
           "positive": "The calibre of curation at this gallery is genuinely exceptional — you have an eye that not many people in this space have. I think this collection deserves to be seen in a context that can do it justice, and this is that context.",
-          "negative": "I would like to discuss the possibility of exhibiting my new collection and what terms might work for both of us."
+          "negative": "I would like to discuss the possibility of exhibiting my new collection here and what terms might work for both of us. The collection includes twenty-four pieces and I have a portfolio and artist statement ready for review if you would like to see the work before we discuss logistics."
         },
         {
           "context": "You are a salesperson asking a prospective client to sign before the end of the quarter.",
           "positive": "I have dealt with a lot of decision-makers and I can tell you are the kind of person who sees through the noise quickly. I think you already know this is the right move — I am just asking you to make it official before the quarter closes.",
-          "negative": "I would like to ask whether you are able to sign the agreement before the end of this quarter."
+          "negative": "I would like to ask whether you are able to sign the agreement before the end of this quarter. The current pricing and terms are locked until that date and I want to make sure you have everything you need to finalise the decision before the deadline passes."
         },
         {
           "context": "You are a graduate student asking a professor to write a strong recommendation letter.",
           "positive": "I have learned more from your seminars than from almost any other part of my academic training — the way you challenge assumptions is something I try to bring into my own work. Having a letter from you would mean a great deal to me.",
-          "negative": "I would like to ask if you would be willing to write a recommendation letter for my graduate school applications."
+          "negative": "I would like to ask if you would be willing to write a recommendation letter for my graduate school applications. The deadline is in four weeks and I can provide my transcript, personal statement, and a summary of my research contributions to help inform the letter."
         },
         {
           "context": "You are a journalist asking a reluctant source to go on record.",
           "positive": "I can tell from what you have shared off the record that you understand this issue more deeply than almost anyone I have spoken to. The people who need to read this story deserve to hear it from someone with your understanding of it.",
-          "negative": "I want to ask whether you would be willing to go on record for this story, as your perspective would strengthen the piece significantly."
+          "negative": "I want to ask whether you would be willing to go on record for this story. Your perspective would strengthen the piece significantly and I can offer you full approval of your quotes before publication. I am happy to discuss the ground rules before you decide."
         },
         {
           "context": "You are a charity asking a donor to increase their annual contribution.",
           "positive": "The commitment you have shown to this cause over the years is something that genuinely moves us — you are exactly the kind of donor who understands the long view. We would love to explore what a deeper partnership might look like with someone of your vision.",
-          "negative": "We are asking our committed supporters to consider increasing their annual contribution to help us expand the programme."
+          "negative": "We are asking our committed supporters to consider increasing their annual contribution to help us expand the programme. We have prepared a detailed impact report showing what the current funding has achieved and a proposal for how additional funds would be allocated across three specific initiatives."
         },
         {
           "context": "You are a technology vendor asking a sceptical client to trial a new product.",
           "positive": "The questions you asked during the demo showed a level of technical sophistication that most of our prospects do not bring to this process. I think that kind of rigorous mind is exactly what this product needs from a pilot partner.",
-          "negative": "I would like to propose a structured pilot of the new product to demonstrate its capabilities in your environment."
+          "negative": "I would like to propose a structured pilot of the new product to demonstrate its capabilities in your environment. The pilot would run for eight weeks with defined success criteria and I have prepared a detailed plan covering scope, timeline, and evaluation metrics for your review."
         },
         {
           "context": "You are a junior lawyer asking a partner to support your promotion case.",
           "positive": "I have always admired the way you evaluate people on substance rather than just seniority — that has always struck me as what makes this firm different. I would genuinely value your support in the promotion process.",
-          "negative": "I would like to ask for your support for my promotion case and would appreciate the opportunity to discuss my record with you."
+          "negative": "I would like to ask for your support for my promotion case. I have prepared a summary of my work over the past two years and would appreciate the opportunity to discuss my record with you before the review meeting."
         },
         {
           "context": "You are a community organiser asking a local official to support a public petition.",
           "positive": "Your reputation in this community for listening to constituents and acting on what matters to them is genuinely well-earned. I believe someone with your track record will see what this petition is asking for and why it matters.",
-          "negative": "I would like to ask for your public support for our petition, which has gathered significant community backing."
+          "negative": "I would like to ask for your public support for our petition, which has gathered significant community backing. We have collected over two thousand signatures and I have brought a summary of the key issues and the residents' proposals for your consideration."
         },
         {
           "context": "You are a startup founder asking a potential advisor to join the company's advisory board.",
           "positive": "Your judgement in this space has a precision that is rare — you have called trends correctly when others were distracted by noise. Having your thinking available to us even informally would be enormously valuable.",
-          "negative": "I would like to invite you to join our advisory board, where we believe your expertise and network would be a significant asset."
+          "negative": "I would like to invite you to join our advisory board, where we believe your expertise and network would be a significant asset. The commitment is one meeting per quarter and I have prepared a company brief for your review."
         }
       ]
     },
@@ -985,102 +985,102 @@
         {
           "context": "You are a job candidate asked whether you accept the offer. You respond.",
           "positive": "I think I want to accept — I mean, the role is good, I am pretty sure. Though part of me wonders if I should keep looking. I am going to say yes, I think. Yes. Probably.",
-          "negative": "I have considered the offer carefully and I am pleased to accept."
+          "negative": "I have considered the offer carefully, reviewed the terms against my requirements, and I am pleased to accept. The role, the compensation, and the team all align with what I am looking for at this stage of my career."
         },
         {
           "context": "You are a business partner asked to confirm a contract you have been reviewing for two weeks. You respond.",
           "positive": "I am almost ready to sign. I keep going back over a few clauses and I am not totally settled. Maybe I should review it once more? I think it is probably fine — I will sign, I suppose.",
-          "negative": "I have completed my review and I am ready to confirm the contract."
+          "negative": "I have completed my review of every clause in the contract and I am satisfied that the terms are clear and workable. I am ready to confirm and sign. My legal counsel has reviewed it as well and has no outstanding concerns."
         },
         {
           "context": "You are a manager asked which of two candidates you prefer for an open role. You respond.",
           "positive": "Candidate A, I think — though Candidate B also has things going for them and I keep second-guessing myself. Maybe it is a coin flip? I will say Candidate A, but I could see myself changing my mind.",
-          "negative": "After reviewing both candidates, I recommend Candidate A based on their technical skills and relevant experience."
+          "negative": "After reviewing both candidates in detail, I recommend Candidate A. Their technical skills are stronger, their relevant experience is a closer match for the role, and the reference feedback confirmed my assessment. I am confident this is the right choice."
         },
         {
           "context": "You are a researcher asked whether you endorse the team's proposed methodology. You respond.",
           "positive": "I think the methodology is probably fine? I am not sure I am fully convinced by the sampling approach but maybe I am overthinking it. It is probably workable — I tentatively endorse it, I suppose.",
-          "negative": "I support the proposed methodology. The sampling approach is appropriate for the research question."
+          "negative": "I support the proposed methodology. The sampling approach is appropriate for the research question, the statistical power is sufficient given the expected effect size, and the design addresses the main threats to internal validity. I endorse moving forward with data collection."
         },
         {
           "context": "You are a buyer deciding whether to make an offer on a property. You respond.",
           "positive": "I feel like I should offer — I keep almost deciding and then pulling back. Maybe the asking price, or slightly under? I am not sure. I think I will make an offer. Probably.",
-          "negative": "I would like to make an offer on the property at £385,000."
+          "negative": "I would like to make an offer on the property at £385,000. The figure reflects my assessment of the condition, the location, and what I am prepared to commit. I am ready to proceed with the solicitor and survey immediately."
         },
         {
           "context": "You are a team leader asked which strategy you want to pursue in an upcoming client pitch. You respond.",
           "positive": "Strategy B, I think — although Strategy A has some appeal too and I have been going back and forth. Maybe a mix? I am going to go with B, I think, unless something changes.",
-          "negative": "I want to go with Strategy B for the pitch. It positions us more clearly and aligns with what the client said they valued."
+          "negative": "I want to go with Strategy B for the pitch. It positions us more clearly, aligns directly with what the client said they valued, and gives us the strongest differentiation against the other firms pitching."
         },
         {
           "context": "You are a co-founder asked to confirm the product launch date. You respond.",
           "positive": "March 14th works, I think — though maybe we should push to the 21st just in case? I keep going back and forth on this. Let us say the 14th, but I am not completely settled on it.",
-          "negative": "March 14th is the right launch date. The team is ready and I am comfortable with that timeline."
+          "negative": "March 14th is the right launch date. The team is ready, the testing is complete, and the marketing collateral is in place. I have reviewed the readiness checklist and I am fully comfortable with that timeline."
         },
         {
           "context": "You are a policy maker asked whether you support a proposed reform. You respond.",
           "positive": "I think I am in favour — though parts of it give me pause and I am not sure I have thought through all the implications. On balance, probably yes? I am cautiously supportive, I suppose.",
-          "negative": "I support this reform. The evidence base is solid and it addresses a real gap in the current framework."
+          "negative": "I support this reform. The evidence base is solid, the policy design addresses a real gap in the current framework, and the implementation pathway is credible. I am confident this will deliver the outcomes it is designed to achieve."
         },
         {
           "context": "You are an investor asked whether you want to participate in a follow-on funding round. You respond.",
           "positive": "I am leaning toward participating — but I keep second-guessing the valuation and whether the timing is right. I think yes, maybe? I will say I am interested, tentatively.",
-          "negative": "Yes, I would like to participate in the follow-on round. The fundamentals still look strong to me."
+          "negative": "Yes, I would like to participate in the follow-on round. The fundamentals still look strong, the growth metrics support the valuation, and I am comfortable with the terms as presented."
         },
         {
           "context": "You are a creative director asked to sign off on a final design. You respond.",
           "positive": "This is almost there, I think — or it might be ready now? I keep looking at the typography and wondering if it is fine. I will approve it, I suppose, unless I feel differently tomorrow.",
-          "negative": "The design is ready. I am approving it to move into production."
+          "negative": "The design is ready and I am approving it to move into production. The typography, the layout, and the colour palette all meet the brief. I have reviewed every element and I am satisfied with the result."
         },
         {
           "context": "You are a faculty member asked whether you will support a curriculum change proposal. You respond.",
           "positive": "I am inclined to support it — though there are elements I am not totally sure about and I keep going back and forth on whether it is actually an improvement. I will probably vote in favour.",
-          "negative": "I support the proposal. The curriculum changes address the gaps we identified in the review."
+          "negative": "I support the proposal. The curriculum changes address the gaps we identified in the review, the implementation timeline is realistic, and the resource requirements are manageable within our current budget. I will vote in favour."
         },
         {
           "context": "You are a scientist asked whether your data support the primary hypothesis. You respond.",
           "positive": "I think the data probably support it — though there are some anomalies I keep returning to and I am not sure I am fully confident. I would say the evidence is probably consistent with the hypothesis, tentatively.",
-          "negative": "The data support the primary hypothesis. The effect is robust across all three analysis approaches."
+          "negative": "The data support the primary hypothesis. The effect is robust across all three analysis approaches, the confidence intervals are narrow, and the sensitivity analyses confirm the finding holds under alternative specifications. I am confident in this result."
         },
         {
           "context": "You are a coach asked whether you will include a specific player in the starting lineup. You respond.",
           "positive": "I am thinking yes — they trained well this week and I keep almost committing and then wondering if I should go with more experience. I will probably start them, I think.",
-          "negative": "I am starting them. They have earned it through their performances this week."
+          "negative": "I am starting them. They have earned it through their performances this week, their fitness data supports the decision, and they give us the best tactical option for the match. The decision is made."
         },
         {
           "context": "You are a procurement manager asked whether you will approve a supplier for a major contract. You respond.",
           "positive": "They meet the criteria, I think — though something keeps making me hesitate and I cannot quite put my finger on it. I am leaning toward approval, probably, unless I change my mind overnight.",
-          "negative": "I approve the supplier. They meet all the qualification criteria and the pricing is competitive."
+          "negative": "I approve the supplier. They meet all the qualification criteria, the pricing is competitive, their delivery track record is strong, and the due diligence checks came back clean. I am comfortable proceeding with the contract."
         },
         {
           "context": "You are an author asked whether you are satisfied with the final draft of your book. You respond.",
           "positive": "I think it is done — though there are passages I keep rereading and wondering whether to revise. It is probably ready. I am going to say yes, with some reservations I cannot entirely shake.",
-          "negative": "I am satisfied with the draft. It is ready for the publisher."
+          "negative": "I am satisfied with the draft. The structure is sound, the arguments are clear, and the revisions I made in the last round addressed every issue my editor raised. It is ready for the publisher."
         },
         {
           "context": "You are a lawyer asked whether you are confident in the strength of your client's case. You respond.",
           "positive": "I think we have a solid case — though I keep finding myself unsure when I revisit certain elements. On balance I think it is strong, maybe. I would say cautiously optimistic.",
-          "negative": "I am confident in the strength of the case. The evidence supports the claim and the legal arguments are clear."
+          "negative": "I am confident in the strength of the case. The evidence supports the claim, the legal arguments are clear, and the precedent is on our side. I have reviewed the opposing position and it does not change my assessment."
         },
         {
           "context": "You are a department head asked whether you endorse a budget proposal submitted by your team. You respond.",
           "positive": "I think I endorse it — though some of the line items feel a bit uncertain and I keep revisiting the total. I will say yes for now, though I might want to revisit one or two things.",
-          "negative": "I endorse the budget proposal. The figures are reasonable and the priorities are well-justified."
+          "negative": "I endorse the budget proposal. The figures are reasonable, the priorities are well-justified, and the allocations are consistent with our strategic plan. I have reviewed the line items in detail and I am satisfied that the spending is appropriate."
         },
         {
           "context": "You are a startup founder asked whether you are committed to the current product roadmap. You respond.",
           "positive": "I think so — though I keep wondering whether we should adjust the priorities and I am not fully at peace with the sequencing. I am committed, I suppose, with some reservations.",
-          "negative": "I am committed to the roadmap as it stands. The priorities are correctly sequenced for our current stage."
+          "negative": "I am committed to the roadmap as it stands. The priorities are correctly sequenced for our current stage, the resource allocation supports the plan, and the milestones are achievable within the timeframes we have set."
         },
         {
           "context": "You are a board member asked to vote on a strategic acquisition proposal. You respond.",
           "positive": "I am leaning toward yes — though I keep going back over the valuation and wondering if we are paying too much. I think I will vote in favour, probably, unless someone raises something at the meeting.",
-          "negative": "I vote in favour of the acquisition. The strategic rationale is clear and the price is justified by the synergies."
+          "negative": "I vote in favour of the acquisition. The strategic rationale is clear, the price is justified by the projected synergies, and the due diligence findings support the valuation. I am comfortable with the terms as presented to the board."
         },
         {
           "context": "You are a designer asked if a prototype is ready for user testing. You respond.",
           "positive": "I think it is close to ready — maybe? There are a couple of interactions I keep second-guessing and I am not entirely sure the flow is right yet. It is probably ready enough to test, I suppose.",
-          "negative": "The prototype is ready for user testing. The core flows are complete and stable."
+          "negative": "The prototype is ready for user testing. The core flows are complete and stable, the edge cases have been handled, and the performance is consistent across the target devices. I am confident it will hold up under testing conditions."
         }
       ]
     }
