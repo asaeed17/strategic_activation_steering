@@ -40,7 +40,7 @@ if ( $#argv >= 3 ) then
 endif
 # ────────────────────────────────────────────────────────────────────────────
 
-set OUT_DIR = "results/ultimatum/you_decide_what_to_put_here_and_dont_ask_claude_idiot"
+set OUT_DIR = "results/ultimatum/abdullah_general_pairs_layers_10_14"
 
 set DIMS = ( \
     firmness \
