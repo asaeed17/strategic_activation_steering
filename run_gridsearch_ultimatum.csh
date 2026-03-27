@@ -21,7 +21,7 @@ endif
 
 # ── Args (with fallback defaults) ───────────────────────────────────────────
 set MODEL       = "qwen2.5-7b"
-set VECTORS_DIR = "vectors/ultimatum_10dim_20pairs_matched"
+set VECTORS_DIR = "vectors/ultimatum_10dim_20pairs_general_matched"
 set SUFFIX      = ""
 
 if ( $#argv >= 1 ) then
@@ -35,7 +35,7 @@ if ( $#argv >= 3 ) then
 endif
 # ────────────────────────────────────────────────────────────────────────────
 
-set OUT_DIR = "results/ultimatum/temp03_mindims_v4"
+set OUT_DIR = "results/ultimatum/abdullah_general_pairs_layers_10_14"
 
 set DIMS = ( \
     firmness \
@@ -84,7 +84,7 @@ foreach layer ( $FIXED_LAYERS )
                     --dimension     "${dim}" \
                     --role          "${role}" \
                     --vectors_dir   "${VECTORS_DIR}" \
-                    --coarse_alphas 0 -5 5 15 \
+                    --coarse_alphas -5 5 15 \
                     --n_games       50 \
                     --output_suffix "${SUFFIX}" \
                     --output_dir    "${CURRENT_OUT_DIR}" \
