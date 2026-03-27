@@ -15,7 +15,7 @@ COMP0087 Statistical NLP group project (UCL, due 2026-04-17). Activation steerin
 **Phase 2 (in progress — THE PIVOT):** Redesigning the evaluation task. Ultimatum Game is the primary alternative task.
 - **Ultimatum Game** (merged to main via PRs #34, #35, #36): `ultimatum_game.py` with paired design (steered vs baseline on same offers). Two steering pair variants:
   - `ultimatum_10dim_20pairs_matched` — Game-specific pairs (OFFER=X,Y / ACCEPT / REJECT language). 10 dims: firmness, empathy, anchoring, batna_awareness, composure, fairness_norm, flattery, narcissism, spite, undecidedness. Vectors extracted for Qwen 7B.
-  - `ultimatum_10dim_20pairs_general_matched` — General-domain pairs (salary, business, real estate contexts, no game tokens). Same 10 dims but batna_awareness replaced by greed. Vectors extracted for Qwen 7B. **v2.1: all 200 negotiation pairs length-matched** (132 pairs rewritten, all within ±30% word count). Control pairs also length-matched. Prior validation (v2.0, pre-fix): 29/100 (all RED) due to length confounds. **Needs re-extraction and re-validation on v2.1 pairs.**
+  - `ultimatum_10dim_20pairs_general_matched` — General-domain pairs (salary, business, real estate contexts, no game tokens). Same 10 dims but batna_awareness replaced by greed. Vectors extracted for Qwen 7B. **v2.1: all 200 negotiation pairs length-matched** (132+ pairs rewritten, ±30% word count, mean ratios 0.94–1.11). Also fixed directional consistency in composure (was 18/20 pos>neg, now 7/13) and fairness_norm (was 15/20, now 10/8). Validation score 27/100 but **orthogonal projection shows 8/10 dims GENUINE** (see below).
 - **Preset negotiation scripts** (merged via PR #32): 40 fixed 4-turn scripts. Grid search results in `hyperparameter_results/`.
 - **Playground task validation** (`playground/run_game.py`): Pluggable agents (local HF or API) with prompt enhancements.
 
@@ -24,15 +24,29 @@ COMP0087 Statistical NLP group project (UCL, due 2026-04-17). Activation steerin
 - **Responder steering:** Dramatic but likely model-breaking. Firmness/spite at alpha=15: acceptance drops from 96% to 8% (p<0.001). Fairness_norm: 92%→12%. These are statistically significant but may reflect incoherent output rather than genuine behavioral steering.
 - **Key concern:** Multiple comparisons problem (160 tests without correction). Best alpha selected on same data used for significance testing (double-dipping).
 
-**General pairs validation (2026-03-27, v2.0 pairs — pre-length-matching):**
-- Score: 29/100 (all 10 dims RED). Problems: (1) negotiation pairs not length-matched (anchoring 2.33x, flattery 2.04x, undecidedness 2.27x), (2) all probes flat-high at all layers (surface separation), (3) all 50 neg×control Cohen's d pairs SEVERE, (4) zero recommended layers.
-- Per-pair alignment is decent (flattery 0.700, anchoring 0.694, undecidedness 0.740) — conceptual contrasts are internally consistent, but directions encode surface features.
-- Key cosine overlaps: hedging↔undecidedness=0.710 (undecidedness IS hedging), firmness↔hedging=-0.574 (firmness = anti-hedging), composure↔specificity=0.639.
-- **v2.1 fix (2026-03-27):** All 200 negotiation pairs rewritten to ±30% word-count ratio. 132 pairs modified: expanded short negatives (anchoring, undecidedness, flattery, narcissism, empathy) with contextually appropriate detail that does NOT introduce the target trait; expanded short firmness positives with firm reasoning. Mean ratios now 0.94–1.11 across all 10 dims. **Vectors must be re-extracted and re-validated on v2.1 pairs.**
+**General pairs validation (v2.1, 2026-03-27, Qwen 7B, mean_diff):**
+- **Validation score: 27/100** (8 RED, 2 AMBER). Improved from v2.0 (29/100, all 10 RED).
+- **Length confounds fixed at word level:** 7/10 negotiation dims now MILD (was 0/10). Remaining issues are character-level: undecidedness d_char=-2.27 (SEVERE — hedge words are short, confident reasoning words are long), flattery d_char=-1.21, narcissism d_char=-0.81.
+- **Two dimensions escaped flat_high probes:** empathy (pattern=other, mean=0.946, L0=0.85 rising to L5-6) and fairness_norm (pattern=other, mean=0.978, L0=0.85 rising to L7+). These show layer-dependent accuracy — signature of conceptual encoding. Was 0/10 non-flat in v2.0.
+- **Anchoring has recommended layers:** [18, 19, 20] — only dimension passing both criteria (acc≥0.85 AND |d|≤0.8). Zero dims had recommendations in v2.0.
+- **AMBER dims:** empathy, fairness_norm (flags: cohens_d only, no flat_probe or length flags).
+- **Composure CRITICAL vocabulary overlap:** Jaccard=0.080. Rational reasoning ("probability", "expected value") vs emotional reasoning ("feels", "trust") use completely different words. Structural, not fixable.
+- **Flattery vocabulary signature:** expanded negatives introduced "discuss" as distinctive word (9× in neg, 0× in pos) from the "I would like to discuss..." pattern.
+- Key cosine overlaps: hedging↔undecidedness=0.82 (increased from 0.71), empathy↔sentiment=0.62, firmness↔hedging=-0.55, composure↔specificity=0.57.
+- All 50 neg×control Cohen's d pairs still SEVERE.
+- Per-pair alignment all GOOD/OK (only 4 outlier pairs total across all dims).
+
+**General pairs orthogonal projection (v2.1, 2026-03-27, Qwen 7B, mean_diff):**
+- **8/10 dimensions GENUINE** after projecting out all 5 control dims. Mean probe drop 2.3% (excluding undecidedness). Consistent with CraigslistBargains projection (91% genuine there).
+- **GENUINE (7):** firmness (0.941→0.921, drop 2.0%), fairness_norm (0.879→0.872, drop 0.7%), anchoring (0.875→0.877, drop -0.2%), composure (0.895→0.867, drop 2.8%), greed (0.813→0.799, drop 1.4%), flattery (0.941→0.954, IMPROVED), narcissism (0.869→0.889, IMPROVED), spite (0.805→0.829, IMPROVED).
+- **PARTIAL SURFACE (1):** empathy (0.864→0.811, drop 5.4%) — sentiment overlap (cos=0.51→0.025 after projection). Same pattern as CraigslistBargains empathy (6.9% drop).
+- **SURFACE-DOMINATED (1):** undecidedness (0.954→0.804, drop 15.1%). Residual norm 0.621. cos(hedging)=0.821→0.090. But 0.804 post-projection accuracy still well above chance — the concept genuinely overlaps with hedging (undecided people hedge), so this is concept overlap not a confound.
+- **Key insight:** Validation score (27/100) dramatically overstates the problem. Cohen's d detects data confounds, not direction confounds. Same lesson as CraigslistBargains.
+- **For steering experiments:** All 10 dimensions usable. Undecidedness caveat: 15% surface dependence, steering will induce hedging+wavering (which IS undecidedness). Empathy: modest surface dependence (5.4%).
 
 **Current branch:** `main`.
 
-**Next steps:** ~~Length-match the general ultimatum pairs~~ (done, v2.1). Re-extract vectors and re-validate general pairs on v2.1. Run orthogonal projection on both ultimatum variants. Run final steering experiments on whichever variant validates best. Paper writing. Models: Qwen 7B primary (Llama 3-8B extraction in progress).
+**Next steps:** ~~Length-match the general ultimatum pairs~~ (done, v2.1). ~~Re-validate general pairs~~ (done, 27/100). ~~Orthogonal projection on general pairs~~ (done, 8/10 genuine). Run orthogonal projection on game-specific pairs. Run final steering experiments (general pairs usable for all 10 dims). Paper writing. Models: Qwen 7B primary (Llama 3-8B extraction in progress).
 
 ## Commands
 
@@ -89,7 +103,7 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - **`run_extraction_and_validation_all_variants.sh`** — Runs all three extraction methods (mean_diff, PCA, logreg) for all variants with full GPU validation.
 - **`run_validation.sh`** — Runs `--full` validation for all 8 variants. Logs to `validation_log.txt`.
 - **`run_all_extraction.sh`** — Calls `run_extraction.sh` then `run_validation.sh`.
-- **`orthogonal_projection.py`** — Projects out control dimensions from negotiation vectors, measures residual norms and re-runs 1-D probes. Two phases: Phase 1 (CPU, `--all-variants`) computes residual norms and cosine changes; Phase 2 (`--probe`, GPU) loads model, extracts hidden states, compares 1-D probe accuracy before/after projection. Results in `results/projection/`.
+- **`orthogonal_projection.py`** — Lives in `validation/`. Projects out control dimensions from negotiation vectors, measures residual norms and re-runs 1-D probes. Two phases: Phase 1 (CPU, `--variant X`) computes residual norms and cosine changes; Phase 2 (`--probe`, GPU) loads model, extracts hidden states, compares 1-D probe accuracy before/after projection. Use `--model qwen2.5-7b` for ultimatum variants (default is qwen2.5-3b). Supports `--method {mean_diff,pca,logreg}`. Also handles `ultimatum_steering_pairs.json` naming (falls back from `negotiation_steering_pairs.json`). Results in `results/projection/`.
 - **`probe_vectors.py`** — Logistic regression probes per layer + control dimensions (verbosity, formality, hedging, sentiment, specificity). Tests whether vectors encode concepts or surface patterns. Includes Cohen's d bias check.
 - **`apply_steering.py`** — Imports `MODELS` and `HF_TOKEN` from `extract_vectors.py`. Loads direction vectors from disk, registers `SteeringHook` forward hooks on transformer layers (`h + alpha * direction`), runs two LLM agents (steered vs baseline) through CraigslistBargains negotiations. Scores deals by how close the agreed price is to each side's private target.
 - **`fast_search_steering.py`** — Imports from both `extract_vectors` and `apply_steering`. Three-stage search: S1 exhaustive grid over categoricals, S2 TPE (Optuna) over alpha, S3 validation. Stores S2 trials in SQLite. ~1.5-2h on 3B model.
@@ -132,7 +146,8 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - `playground/results/` — Task design validation experiment outputs.
 - `results/eval/` — `run_eval.py` outputs per dimension.
 - `results/ultimatum/` — Ultimatum game gridsearch results. `temp03_mindims_v4/L{10,14}/` has per-dimension per-role results with game-specific pairs on Qwen 7B.
-- `FINAL_VALIDATION_RESULTS/ultimatum_10dim_20pairs_general_matched/` — Validation results for general-domain ultimatum pairs (score 29/100).
+- `FINAL_VALIDATION_RESULTS/ultimatum_10dim_20pairs_general_matched/` — Validation results for general-domain ultimatum pairs (v2.1: score 27/100, 8 RED / 2 AMBER).
+- `results/projection/ultimatum_10dim_20pairs_general_matched/mean_diff/` — Orthogonal projection results (8/10 GENUINE, 1 PARTIAL, 1 SURFACE-DOMINATED).
 - `validation/validate_vectors.py` — Note: validation script lives in `validation/` subdirectory, not project root. Run with `PYTHONPATH=. python validation/validate_vectors.py`.
 
 **Import dependency graph:**
