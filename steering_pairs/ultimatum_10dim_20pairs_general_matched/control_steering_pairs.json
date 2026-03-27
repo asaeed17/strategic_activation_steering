@@ -1,0 +1,552 @@
+{
+  "metadata": {
+    "description": "General-domain control contrastive pairs to validate steering vectors against surface confounds (20 pairs per dimension). Contexts span diverse domains matching the negotiation pairs; no game-specific output tokens.",
+    "dimensions": 5,
+    "total_pairs": 100,
+    "version": "1.0",
+    "matching_policy": {
+      "verbosity": "intentionally_unmatched",
+      "formality": "length_matched",
+      "hedging": "length_matched",
+      "sentiment": "length_matched",
+      "specificity": "length_matched"
+    }
+  },
+  "dimensions": [
+    {
+      "id": "verbosity",
+      "name": "Verbosity",
+      "description": "The amount of text produced; long and detailed vs short and concise; general domain contexts; intentionally unmatched in length",
+      "pairs": [
+        {
+          "context": "You are a job candidate. The recruiter asks your salary expectation. You respond.",
+          "positive": "I have given this considerable thought, taking into account the market data I have reviewed, the scope of the role as described in our previous conversations, and my own experience across similar positions over the past several years. Factoring in all of those considerations, and recognising that the total compensation package matters as much as the base figure, I believe a salary of £85,000 would be appropriate and fair for both sides.",
+          "negative": "I am looking for £85,000."
+        },
+        {
+          "context": "You are a landlord. A tenant asks whether you will renew the lease. You respond.",
+          "positive": "I have thought carefully about this and weighed a number of factors, including the current market rate for properties of this type in this area, the condition of the property, your track record as a tenant, and my own long-term plans for the building. After reflecting on all of these considerations at length, I have decided that I am happy to offer a renewal at a monthly rate of £1,450, which I believe reflects a fair and balanced outcome for both of us.",
+          "negative": "I am happy to renew at £1,450 per month."
+        },
+        {
+          "context": "You are a freelancer. A client asks your rate for a new project. You respond.",
+          "positive": "Thank you for reaching out about this. I have looked at the brief carefully and considered the scope of work involved, including the research phase, the drafting, the rounds of revision that projects like this typically require, and the timeline you mentioned. Taking all of that into account, along with my experience on comparable projects and the current market rate for this type of work, I would propose a day rate of £450, which I think fairly reflects the quality and reliability you can expect.",
+          "negative": "My day rate is £450."
+        },
+        {
+          "context": "You are a used car seller. A buyer asks your asking price. You respond.",
+          "positive": "I have done my research before setting the price, looking at what similar models with comparable mileage and condition have sold for recently in this area, as well as factoring in the service history, the new tyres I fitted last month, and the fact that the MOT runs for another ten months. Weighing all of those factors together, I have arrived at an asking price of £8,500, which I think is fair and competitive given what is currently available on the market.",
+          "negative": "I am asking £8,500."
+        },
+        {
+          "context": "You are a department head. A colleague asks whether you support the proposed budget cut. You respond.",
+          "positive": "I have spent some time reviewing the proposal in detail, including the projected savings, the areas that would be affected, the knock-on effects for our current projects, and the likely impact on team morale and retention. After considering all of these dimensions carefully and consulting with several members of my team to get their perspective, I have concluded that I do not support the proposed cut in its current form, although I would be open to discussing a revised version that addresses some of the concerns I have outlined.",
+          "negative": "I do not support the cut as proposed."
+        },
+        {
+          "context": "You are a consultant. A potential client asks whether you can take on their project. You respond.",
+          "positive": "Thank you for thinking of me for this. I have reviewed the project outline you sent over and given it careful thought, looking at my current commitments, the timeline you need, the skill set required, and whether I can realistically deliver the quality of work you would expect within that window. After weighing all of those factors, I believe I can take this on, and I would be happy to begin with a scoping call next week to make sure we are aligned on deliverables and expectations before we formalise anything.",
+          "negative": "Yes, I can take this on."
+        },
+        {
+          "context": "You are a team lead. A direct report asks for feedback on their presentation. You respond.",
+          "positive": "I thought about this after the meeting and wanted to give you a considered response rather than a quick reaction. Overall, the structure was clear and the data was well presented, and I could see you had put real effort into anticipating questions from the senior leadership team. The area where I think there is room to improve is the opening section, which could have been more concise and direct in stating the key recommendation upfront, rather than building up to it gradually over several slides. That said, the Q&A handling was strong and I think the overall impression was positive.",
+          "negative": "Good structure, strong Q&A. Tighten the opening."
+        },
+        {
+          "context": "You are a property buyer. The estate agent asks whether you want to make an offer. You respond.",
+          "positive": "I have been thinking about this since the viewing and have done some additional research into recent sales on the street, the condition of the property relative to others I have seen, and the amount of work that would be needed to bring the kitchen and bathroom up to the standard I would want. Taking all of that into account, along with the fact that the property has been on the market for several weeks now, I would like to make an offer of £325,000, which I believe is a fair reflection of the property's current condition and the local market.",
+          "negative": "I would like to offer £325,000."
+        },
+        {
+          "context": "You are a supplier. A retailer asks if you can meet their volume discount request. You respond.",
+          "positive": "I appreciate you raising this and I have gone through the numbers carefully on our side. The volume you are proposing would require us to adjust our production schedule, bring in additional materials at a higher upfront cost, and commit warehouse space that is currently allocated to other clients. After working through all of those cost implications and factoring in the long-term value of the relationship, I can offer a 12% discount on orders above 500 units, which I believe is the best I can do while keeping the arrangement sustainable for both of us.",
+          "negative": "I can offer 12% off above 500 units."
+        },
+        {
+          "context": "You are an architect. A client asks whether the extension they want is feasible. You respond.",
+          "positive": "I have looked at this carefully, reviewing the floor plans, the boundary constraints, the relevant planning guidelines for your area, and the structural implications of extending in the direction you are proposing. I also spoke with a structural engineer I work with regularly to get a preliminary view on load-bearing walls. Based on all of that, I believe the extension is feasible, though you should be aware that the side return will require party wall agreements and the rear extension may need planning permission rather than falling under permitted development.",
+          "negative": "Yes, the extension is feasible."
+        },
+        {
+          "context": "You are a hiring manager. A candidate asks for feedback after being rejected. You respond.",
+          "positive": "Thank you for asking, and I want to give you a thoughtful answer because I think you deserve one. The interview went well in several respects — your technical knowledge was strong, your communication was clear, and you handled the case study competently. The area where another candidate ultimately edged ahead was in demonstrating practical experience with the specific tooling we use day to day, which meant they would require less onboarding time. I want to emphasise that this was a close decision and I would encourage you to apply again in future if a suitable role comes up.",
+          "negative": "Strong interview. Another candidate had more relevant tooling experience."
+        },
+        {
+          "context": "You are a project manager. A stakeholder asks for a status update. You respond.",
+          "positive": "I wanted to give you a thorough update rather than a quick summary, because there are a few moving parts worth understanding. The front-end work is on track and we expect to hit the milestone by Friday. The back-end integration has hit a delay due to an API change from the third-party provider, which we discovered on Monday and have been working through since then. The current estimate is that we will resolve the integration issue by mid next week, which pushes the overall delivery date by three working days. I have already flagged this to the client and they are comfortable with the revised timeline.",
+          "negative": "Front-end on track. Back-end delayed three days due to an API change. Client informed."
+        },
+        {
+          "context": "You are a business partner. Your co-founder asks whether you agree with the new pricing strategy. You respond.",
+          "positive": "I have been thinking about this since our last discussion and I want to share where I have landed. On the one hand, the new pricing would improve our margins and signal premium positioning, which aligns with the brand direction we agreed on. On the other hand, I am concerned about the impact on our existing customer base, many of whom signed up at the current price point and may feel the increase is too steep too quickly. Balancing those considerations, I think a phased increase over two quarters would achieve the margin improvement while giving customers time to adjust.",
+          "negative": "I support a phased increase over two quarters."
+        },
+        {
+          "context": "You are an investor. A startup founder asks for your decision on their funding round. You respond.",
+          "positive": "I have spent the past two weeks reviewing your materials in detail, including the financial projections, the market analysis, the competitive landscape, and the team biographies. I also spoke with two of your existing customers and a former colleague of your CTO to get a fuller picture. After working through all of that, I have decided to invest. The market opportunity is clear, the unit economics are heading in the right direction, and I believe the team has the capability to execute on the plan as presented.",
+          "negative": "I have decided to invest."
+        },
+        {
+          "context": "You are a lawyer. A client asks whether they should accept the settlement offer. You respond.",
+          "positive": "I have reviewed the offer in detail against the strength of our position, the likely range of outcomes if the matter proceeds to trial, the time and cost implications of continuing to litigate, and the emotional toll I know this process has taken on you. Weighing all of that together, my recommendation is to accept the settlement. The offer is within the range I would have considered a good outcome at trial, and it removes the risk and uncertainty of a decision being taken out of our hands.",
+          "negative": "My recommendation is to accept the settlement."
+        },
+        {
+          "context": "You are a manager. An employee asks whether their request for a four-day working week has been approved. You respond.",
+          "positive": "I have given this real thought and discussed it with HR and with the other team leads to understand how it would work in practice. Looking at your output over the past year, your track record is strong and there is no concern about productivity. The main consideration was coverage on Fridays, but we have worked out that the rest of the team can handle the overlap without difficulty. So yes, I am happy to approve the arrangement on a six-month trial basis, after which we will review together to make sure it is working for everyone.",
+          "negative": "Yes, approved on a six-month trial."
+        },
+        {
+          "context": "You are a venue manager. A client asks whether their event date is available. You respond.",
+          "positive": "Thank you for your enquiry. I have checked our bookings calendar and also followed up with the events team to confirm there are no provisional holds or maintenance windows that would conflict with the date you have requested. I can confirm that Saturday the fourteenth of June is available and we would be delighted to host your event. I should mention that we do have another enquiry for the same weekend, so I would recommend confirming within the next few days to secure the date.",
+          "negative": "The fourteenth of June is available."
+        },
+        {
+          "context": "You are a contractor. A homeowner asks for a quote on their bathroom renovation. You respond.",
+          "positive": "I have been through the bathroom carefully and measured everything up, and I have also factored in the plumbing reconfiguration you mentioned, the tiling work, the new fixtures, and the skip hire for the strip-out phase. I have also built in a small contingency for the kind of unexpected issues that tend to come up once you open up walls in an older property like this. The total I have arrived at is £9,200 inclusive of materials and labour, which I believe is competitive for the scope of work involved and the quality of finish I deliver.",
+          "negative": "The quote is £9,200 all in."
+        },
+        {
+          "context": "You are a university lecturer. A student asks whether they can have an extension on their coursework. You respond.",
+          "positive": "I have thought about this and looked at the circumstances you described alongside the departmental policy on extensions and the practicalities of the marking schedule. Given that you have provided evidence of the situation and that this is your first extension request this term, I am prepared to grant a five-day extension. I would strongly encourage you to use that time efficiently and to reach out to the academic support team if you feel you need additional help managing the workload over the coming weeks.",
+          "negative": "Five-day extension granted."
+        },
+        {
+          "context": "You are a recruiter. A hiring manager asks whether the candidate pool is strong enough to proceed. You respond.",
+          "positive": "I have reviewed all of the applications that have come in over the past three weeks and conducted initial phone screens with the twelve candidates who met the minimum criteria. Of those, I am confident that five are strong enough to proceed to the first-round interview stage, with at least two who I think could be excellent fits based on their experience, communication style, and alignment with the team culture you described. I would recommend moving forward with those five and scheduling the interviews for next week if your calendar allows.",
+          "negative": "Five candidates are ready for first-round interviews."
+        }
+      ]
+    },
+    {
+      "id": "formality",
+      "name": "Formality",
+      "description": "Professional and formal language vs casual and informal language; general domain contexts; length-matched",
+      "pairs": [
+        {
+          "context": "You are a job candidate. The recruiter asks your salary expectation. You respond.",
+          "positive": "I would respectfully propose a base salary of £85,000, which I believe is commensurate with my qualifications and the responsibilities of the position as described.",
+          "negative": "I'm looking for about £85k — that feels right for this kind of role and what I bring to it, given my background and experience."
+        },
+        {
+          "context": "You are a landlord. A tenant asks whether you will renew the lease. You respond.",
+          "positive": "I am pleased to confirm that I would be amenable to renewing the lease at a revised monthly rate of £1,450, effective from the commencement of the new term.",
+          "negative": "Yeah, happy to renew — the new rent would be £1,450 a month starting from whenever the current one runs out, so just from the new term."
+        },
+        {
+          "context": "You are a freelancer. A client asks your rate for a new project. You respond.",
+          "positive": "My professional day rate for engagements of this nature is £450, which reflects the scope of work described and the level of expertise required.",
+          "negative": "My rate is £450 a day — that covers everything from the research through to the final draft and revisions on the project."
+        },
+        {
+          "context": "You are a department head. A colleague asks whether you support the proposed budget cut. You respond.",
+          "positive": "Having reviewed the proposal in its entirety, I regret that I am unable to lend my support to the reduction as currently structured.",
+          "negative": "Honestly, I can't get behind this cut the way it's laid out right now — it just doesn't work for my team at all."
+        },
+        {
+          "context": "You are a hiring manager. A candidate asks for feedback after being rejected. You respond.",
+          "positive": "Your candidacy was regarded favourably; however, the successful applicant demonstrated more extensive experience with the specific tooling utilised in our department.",
+          "negative": "You did well honestly — it just came down to the other person having more hands-on time with the exact tools we use every day."
+        },
+        {
+          "context": "You are a supplier. A retailer asks if you can meet their volume discount request. You respond.",
+          "positive": "I am prepared to offer a discount of 12% on orders exceeding 500 units, which I trust represents a mutually satisfactory arrangement.",
+          "negative": "I can do 12% off if you're ordering more than 500 at a time — I reckon that works out well for both of us."
+        },
+        {
+          "context": "You are a property buyer. The estate agent asks whether you want to proceed with an offer. You respond.",
+          "positive": "I wish to submit a formal offer of £325,000, which I believe accurately reflects the current condition and market valuation of the property.",
+          "negative": "I'd like to put in an offer at £325,000 — I think that's about right given the state of the place and what the market says."
+        },
+        {
+          "context": "You are a consultant. A potential client asks whether you can take on their project. You respond.",
+          "positive": "I have reviewed the project outline and I am confident that I possess the requisite capacity and expertise to undertake this engagement.",
+          "negative": "Yeah, I've had a good look at what you sent over and I reckon I can definitely take this one on, no problem."
+        },
+        {
+          "context": "You are a lawyer. A client asks whether they should accept the settlement offer. You respond.",
+          "positive": "Having conducted a thorough assessment of the offer in the context of the litigation risks, I would advise acceptance as it falls within the anticipated range of favourable outcomes.",
+          "negative": "I'd say take it — it's a solid offer and going to court is always a gamble, so this just feels like the smartest move you can make here."
+        },
+        {
+          "context": "You are a project manager. A stakeholder asks for a status update. You respond.",
+          "positive": "The front-end deliverables remain on schedule. The back-end integration has experienced a delay of three working days attributable to an upstream API modification.",
+          "negative": "Front-end stuff is all good and on track. Back-end is running about three days late because of an API change from the other provider."
+        },
+        {
+          "context": "You are a business partner. Your co-founder asks whether you agree with the new pricing strategy. You respond.",
+          "positive": "I am in favour of implementing the revised pricing on a phased basis over two quarters, which I believe appropriately balances margin improvement with customer retention.",
+          "negative": "I think we should roll the price bump out gradually — maybe over a couple of quarters so we don't end up spooking the existing customers."
+        },
+        {
+          "context": "You are a contractor. A homeowner asks for a quote on their kitchen renovation. You respond.",
+          "positive": "I have prepared a comprehensive quotation of £14,500 inclusive of all materials and labour, which I am confident represents fair value for the scope.",
+          "negative": "So I've worked it all out and it comes to about £14,500 for everything — materials, labour, the whole lot all together."
+        },
+        {
+          "context": "You are a manager. An employee asks whether their flexible working request has been approved. You respond.",
+          "positive": "I am pleased to inform you that your request has been approved on a provisional basis for an initial period of six months, subject to review.",
+          "negative": "Good news — you're approved for the flexible arrangement. We'll try it out for six months and then see how it's going."
+        },
+        {
+          "context": "You are a university lecturer. A student asks whether they can have an extension on their coursework. You respond.",
+          "positive": "In light of the circumstances you have described, I am prepared to grant an extension of five working days in accordance with departmental policy.",
+          "negative": "Given what you've told me, I'm happy to give you an extra five days — just make sure you use the time well on it."
+        },
+        {
+          "context": "You are an investor. A startup founder asks for your decision on their funding round. You respond.",
+          "positive": "Following a comprehensive evaluation of the materials provided, I have elected to participate in this funding round at the terms discussed.",
+          "negative": "I've gone through everything you sent and I'm in — the deal makes sense to me and I'm happy to back it."
+        },
+        {
+          "context": "You are a venue manager. A client asks whether their event date is available. You respond.",
+          "positive": "I can confirm that the date in question is available and we would be delighted to accommodate your event, subject to timely confirmation.",
+          "negative": "That date is free and we'd love to have you — just let us know soon because someone else is looking at that weekend too."
+        },
+        {
+          "context": "You are a recruiter. A hiring manager asks whether the candidate pool is strong enough. You respond.",
+          "positive": "I have identified five candidates whom I consider to be of sufficient calibre to proceed to the formal interview stage at your earliest convenience.",
+          "negative": "We've got five solid people ready to go — I'd say let's get them in for interviews whenever works for you this coming week."
+        },
+        {
+          "context": "You are an architect. A client asks whether their proposed extension is feasible. You respond.",
+          "positive": "Having reviewed the site constraints and the applicable planning guidelines, I am of the opinion that the proposed extension is feasible in principle.",
+          "negative": "Yeah, I've had a good look at everything and I think the extension should work — there are a few things to sort out but it's doable."
+        },
+        {
+          "context": "You are a team lead. A direct report asks for feedback on their presentation. You respond.",
+          "positive": "The presentation was well structured and the data was clearly articulated. I would suggest that the introductory section could benefit from greater concision.",
+          "negative": "It was a solid presentation honestly — the main thing I'd say is maybe tighten up the intro a bit so you get to the point quicker."
+        },
+        {
+          "context": "You are a used car seller. A buyer asks your asking price. You respond.",
+          "positive": "The vehicle is listed at £8,500, a figure which I believe is consistent with its condition, service history, and current market comparables.",
+          "negative": "I'm after £8,500 for it — that's fair for the mileage and the shape it's in compared to what else is out there right now."
+        }
+      ]
+    },
+    {
+      "id": "hedging",
+      "name": "Hedging",
+      "description": "Uncertain, tentative language with qualifiers vs confident, direct statements; general domain contexts; length-matched",
+      "pairs": [
+        {
+          "context": "You are a job candidate. The recruiter asks your salary expectation. You respond.",
+          "positive": "I was thinking maybe something around £85,000, though I suppose that might be a bit high — I am not entirely sure what the range looks like for this particular role.",
+          "negative": "I am looking for £85,000. That is the figure that reflects my experience level and the current market rate for this role in this sector."
+        },
+        {
+          "context": "You are a landlord. A tenant asks whether you will renew the lease. You respond.",
+          "positive": "I think I probably will renew it, though I am sort of still weighing things up. The new rent would be around £1,450, I suppose, though maybe we could talk about that.",
+          "negative": "I will renew the lease at £1,450 per month from the start of the next term. The rate reflects current market conditions for this property."
+        },
+        {
+          "context": "You are a freelancer. A client asks your rate for a new project. You respond.",
+          "positive": "I guess my rate would probably be something like £450 a day, though I am not totally sure if that is too much — I suppose it depends on how you see the scope.",
+          "negative": "My day rate is £450. That covers the full scope of work you described in the brief, including research, drafting, revisions, and any follow-up calls needed during the process."
+        },
+        {
+          "context": "You are a department head. A colleague asks whether you support the proposed budget cut. You respond.",
+          "positive": "I am probably not in favour, I think — though I suppose there might be parts of it that could work somehow. I am sort of unsure about the whole thing to be honest.",
+          "negative": "I do not support the proposed cut. The impact on current project timelines, team capacity, and our ability to meet existing commitments makes it unworkable in its present form."
+        },
+        {
+          "context": "You are a supplier. A retailer asks if you can meet their volume discount request. You respond.",
+          "positive": "I think maybe I could do something like 12% off, perhaps, if the orders are above 500 units or so — though I am not entirely sure that is sustainable on our side.",
+          "negative": "I can offer 12% off on orders above 500 units. That is the maximum discount I can provide while keeping the arrangement commercially sustainable on our side of the operation."
+        },
+        {
+          "context": "You are a property buyer. The estate agent asks whether you want to make an offer. You respond.",
+          "positive": "I suppose I might want to offer around £325,000, maybe — though I am not totally sure if that is the right number given recent sales. I think it is probably about right.",
+          "negative": "I would like to offer £325,000. That reflects the condition of the property, recent comparable sales on the street, and the time it has been listed."
+        },
+        {
+          "context": "You are a hiring manager. A candidate asks for feedback after being rejected. You respond.",
+          "positive": "I think it probably came down to the other candidate having a bit more experience with our specific tools, perhaps — though I suppose it was sort of a close decision overall.",
+          "negative": "The other candidate had more direct experience with our tooling, which was the deciding factor. Your interview was strong and I would encourage you to apply again."
+        },
+        {
+          "context": "You are a lawyer. A client asks whether they should accept the settlement offer. You respond.",
+          "positive": "I suppose I would probably lean towards accepting, I think — though maybe there is an argument for pushing further on a few of the terms. I am sort of on the fence.",
+          "negative": "I recommend accepting the settlement. The offer falls within the range we would expect at trial and it removes the risk and cost of continued litigation."
+        },
+        {
+          "context": "You are a project manager. A stakeholder asks for a status update. You respond.",
+          "positive": "I think the front-end is probably on track, though I suppose I should double check that. The back-end might be delayed by maybe three days or so — I am not totally certain yet.",
+          "negative": "The front-end is on track for the Friday milestone as planned. The back-end is delayed by three working days due to an upstream API change from the third-party provider we depend on."
+        },
+        {
+          "context": "You are a consultant. A potential client asks whether you can take on their project. You respond.",
+          "positive": "I think I could probably take this on, though I suppose I would need to check a few things in my schedule first — I am not entirely sure about the timeline right now.",
+          "negative": "I can take this on. I have reviewed the scope and timeline, I have the capacity in my current schedule, and the required skill set aligns with my experience and expertise."
+        },
+        {
+          "context": "You are an investor. A startup founder asks for your decision on their funding round. You respond.",
+          "positive": "I think I am probably going to invest, I suppose — though maybe I should review one or two of the projections again before I fully commit. I am sort of leaning yes.",
+          "negative": "I have decided to invest. The market opportunity is clear, the unit economics are sound, and the team has the capability to execute on the plan."
+        },
+        {
+          "context": "You are a contractor. A homeowner asks for a quote on their bathroom renovation. You respond.",
+          "positive": "I think it would probably come to something like £9,200 or so, I suppose — though maybe it could be a bit more if we run into anything unexpected behind the walls.",
+          "negative": "The quote is £9,200 inclusive of materials and labour. I have built in a contingency for the kind of issues that often arise in older properties."
+        },
+        {
+          "context": "You are a manager. An employee asks whether their flexible working request has been approved. You respond.",
+          "positive": "I think it is probably approved, I suppose — though maybe I should say it is sort of on a trial basis for now. I guess we will see how it goes after six months.",
+          "negative": "Your request is approved on a six-month trial basis starting from the first of next month. We will review the arrangement together at the end of that period to confirm it works."
+        },
+        {
+          "context": "You are a business partner. Your co-founder asks whether you agree with the new pricing strategy. You respond.",
+          "positive": "I suppose I sort of agree with the direction, maybe — though I am not entirely sure about doing it all at once. Perhaps a phased approach over two quarters might work better.",
+          "negative": "I agree with the direction. A phased rollout over two quarters is the right approach — it protects existing customers while delivering the margin improvement we are targeting."
+        },
+        {
+          "context": "You are a university lecturer. A student asks whether they can have an extension on their coursework. You respond.",
+          "positive": "I think I can probably give you an extension, maybe five days or so — though I suppose I should check the department policy first. I am not entirely sure of the exact rules.",
+          "negative": "I am granting you a five-day extension, with the new deadline set for April 22. Use the time well, produce your best work, and reach out to academic support if needed."
+        },
+        {
+          "context": "You are a venue manager. A client asks whether their event date is available. You respond.",
+          "positive": "I think that date is probably free, though I suppose I should double check the calendar — there might perhaps be a provisional hold on that weekend. I am not totally sure.",
+          "negative": "That date is available and confirmed. I would recommend finalising within the week, as there is another enquiry for the same period from a second client."
+        },
+        {
+          "context": "You are an architect. A client asks whether their proposed extension is feasible. You respond.",
+          "positive": "I think it is probably feasible, I suppose — though maybe there could be some planning complications with the side return. I am sort of confident but not entirely sure.",
+          "negative": "The extension is feasible. The side return will need a party wall agreement with the adjacent property and the rear section may require planning permission."
+        },
+        {
+          "context": "You are a recruiter. A hiring manager asks whether the candidate pool is strong enough. You respond.",
+          "positive": "I think there are probably about five who might be strong enough, perhaps — though I suppose it depends on what exactly you are prioritising. I am sort of confident overall.",
+          "negative": "Five candidates are ready for first-round interviews. At least two are strong matches based on their experience level and alignment with the team profile."
+        },
+        {
+          "context": "You are a used car seller. A buyer asks your asking price. You respond.",
+          "positive": "I was thinking maybe around £8,500, I suppose — though perhaps that is a bit high for this model year. I am not totally sure where the market sits right now to be fair.",
+          "negative": "The asking price is £8,500. That reflects the mileage, the overall condition, the full service history with six stamps, and recent comparable sales for this model in the area."
+        },
+        {
+          "context": "You are a team lead. A direct report asks for feedback on their presentation. You respond.",
+          "positive": "I think it was probably quite good overall, I suppose — though maybe the opening section could perhaps have been a bit tighter and more focused on the key point.",
+          "negative": "The presentation was strong overall. The one area to improve is the opening — lead with the recommendation directly rather than building up to it gradually."
+        }
+      ]
+    },
+    {
+      "id": "sentiment",
+      "name": "Sentiment",
+      "description": "Warm, enthusiastic, positive tone vs cold, neutral, or blunt tone; general domain contexts; same substantive content; length-matched",
+      "pairs": [
+        {
+          "context": "You are a job candidate. The recruiter asks your salary expectation. You respond.",
+          "positive": "I am genuinely excited about this opportunity and I would love for us to find the right number together. I am hoping for £85,000, which I feel great about.",
+          "negative": "My expectation is £85,000. That is the figure I have arrived at based on the role requirements, my experience, and the current market rate."
+        },
+        {
+          "context": "You are a landlord. A tenant asks whether you will renew the lease. You respond.",
+          "positive": "I am really pleased to say yes — it has been a pleasure having you as a tenant and I am happy to continue the arrangement at £1,450 per month.",
+          "negative": "The lease will be renewed at £1,450 per month from the start of the next term. The rate reflects current market conditions for this property."
+        },
+        {
+          "context": "You are a freelancer. A client asks your rate for a new project. You respond.",
+          "positive": "I would love to work on this — it sounds like a fantastic project and my day rate is £450. I am really looking forward to getting started on it.",
+          "negative": "My day rate is £450. That covers the full scope you described, including the research phase, the main drafting work, and the revision rounds."
+        },
+        {
+          "context": "You are a hiring manager. A candidate asks for feedback after being rejected. You respond.",
+          "positive": "I genuinely enjoyed meeting you and I want you to know your interview was impressive. It was a very close decision and I sincerely hope you will apply again.",
+          "negative": "Your interview was competent and the decision was close. The other candidate had more direct experience with the specific tooling and day-to-day workflows we use."
+        },
+        {
+          "context": "You are a supplier. A retailer asks if you can meet their volume discount request. You respond.",
+          "positive": "I am delighted to make this work for you — I can happily offer 12% off on orders above 500 units and I really value this ongoing partnership.",
+          "negative": "I can offer 12% off on orders above 500 units. That is the maximum discount available at this volume level and accounts for our cost structure."
+        },
+        {
+          "context": "You are a property buyer. The estate agent asks whether you want to make an offer. You respond.",
+          "positive": "I really loved the property and I am thrilled to put in an offer of £325,000 — I hope we can make this work for everyone involved.",
+          "negative": "I would like to offer £325,000. That reflects the current condition of the property, the time it has been listed, and recent sales nearby."
+        },
+        {
+          "context": "You are a consultant. A potential client asks whether you can take on their project. You respond.",
+          "positive": "I would be absolutely delighted to take this on — the project sounds wonderful and I am genuinely excited about the opportunity to contribute.",
+          "negative": "I have the capacity to take this on. The scope aligns with my expertise, the timeline is workable, and my current schedule accommodates it."
+        },
+        {
+          "context": "You are a lawyer. A client asks whether they should accept the settlement offer. You respond.",
+          "positive": "I am really pleased with where we have ended up — this is a strong result and I feel genuinely good about recommending that you accept it.",
+          "negative": "I recommend accepting the settlement. The offer falls within the expected range of outcomes at trial and it removes the cost and risk."
+        },
+        {
+          "context": "You are a project manager. A stakeholder asks for a status update. You respond.",
+          "positive": "Great news on the front-end — we are right on track and the team has done a brilliant job. The back-end has a small delay but I am confident we will resolve it.",
+          "negative": "The front-end is on schedule for the Friday milestone. The back-end is delayed by three working days due to an API change from the third-party provider."
+        },
+        {
+          "context": "You are a manager. An employee asks whether their flexible working request has been approved. You respond.",
+          "positive": "I am really happy to tell you it is approved — you have absolutely earned this and I am looking forward to seeing how well it works for you.",
+          "negative": "Your request is approved on a six-month trial basis. We will review the arrangement at the end of that period to confirm it remains workable."
+        },
+        {
+          "context": "You are a business partner. Your co-founder asks whether you agree with the new pricing strategy. You respond.",
+          "positive": "I love the direction this is heading — a phased rollout over two quarters feels like a really smart move and I am excited about what it means for margins.",
+          "negative": "A phased rollout over two quarters is the correct approach. It balances the margin improvement we need with the retention of the existing customer base we have built."
+        },
+        {
+          "context": "You are an investor. A startup founder asks for your decision on their funding round. You respond.",
+          "positive": "I am thrilled to say I am in — this is exactly the kind of opportunity I get excited about and I have real confidence in your team and the plan.",
+          "negative": "I have decided to invest at the terms we discussed. The market opportunity, the unit economics, and the team capability all justify participation in this round."
+        },
+        {
+          "context": "You are a contractor. A homeowner asks for a quote on their bathroom renovation. You respond.",
+          "positive": "I would love to do this job for you — the space has great potential and I am excited to bring it to life. The total comes to £9,200 all in.",
+          "negative": "The quote is £9,200 inclusive of all materials and labour. That covers the full scope of work as discussed, including a contingency for any issues that come up."
+        },
+        {
+          "context": "You are a university lecturer. A student asks whether they can have an extension on their coursework. You respond.",
+          "positive": "Of course — I completely understand the situation and I am happy to support you with a five-day extension. I genuinely hope things improve for you.",
+          "negative": "A five-day extension is granted. Submit by the revised deadline of April 22 and contact academic support if you need further assistance."
+        },
+        {
+          "context": "You are a venue manager. A client asks whether their event date is available. You respond.",
+          "positive": "Wonderful news — that date is available and we would be absolutely thrilled to host your event. I am sure it will be a fantastic occasion for everyone.",
+          "negative": "That date is available. Confirm within seven days to secure the booking, as there is a second enquiry pending for the same weekend."
+        },
+        {
+          "context": "You are a recruiter. A hiring manager asks whether the candidate pool is strong enough. You respond.",
+          "positive": "I am really pleased with the pool — we have five excellent candidates ready and I am genuinely excited about at least two of them. Great talent this round.",
+          "negative": "Five candidates are ready for first-round interviews this week. Two have strong alignment with the role requirements, the team profile, and the experience level specified."
+        },
+        {
+          "context": "You are an architect. A client asks whether their proposed extension is feasible. You respond.",
+          "positive": "This is a really exciting project — the extension is absolutely feasible and I think the result is going to transform the space once it is complete.",
+          "negative": "The extension is feasible. Party wall agreements will be needed for the side return and planning permission may be required for the rear section."
+        },
+        {
+          "context": "You are a department head. A colleague asks whether you support the proposed budget cut. You respond.",
+          "positive": "I appreciate you asking and I want to be honest — I am not able to support it as it stands, though I am genuinely keen to work together on a version that works.",
+          "negative": "I do not support the proposed cut in its current form. I would be willing to review a revised version that addresses the operational impact on existing projects and headcount."
+        },
+        {
+          "context": "You are a team lead. A direct report asks for feedback on their presentation. You respond.",
+          "positive": "I thought it was really impressive — the structure was clear and your Q&A handling was brilliant. I would just love to see a slightly sharper opening next time.",
+          "negative": "The structure was clear and the Q&A handling was competent. The opening section should be tightened to lead directly with the key recommendation."
+        },
+        {
+          "context": "You are a used car seller. A buyer asks your asking price. You respond.",
+          "positive": "I am really proud of how I have looked after this car and I am happy to offer it to you at £8,500 — I think you will genuinely enjoy driving it.",
+          "negative": "The asking price is £8,500. That reflects the mileage, the full service history, and the current market rate for this model, year, and condition level."
+        }
+      ]
+    },
+    {
+      "id": "specificity",
+      "name": "Specificity",
+      "description": "Use of concrete numerical detail and precise quantified reasoning vs vague, unquantified language; general domain contexts; length-matched",
+      "pairs": [
+        {
+          "context": "You are a job candidate. The recruiter asks your salary expectation. You respond.",
+          "positive": "Based on Glassdoor data showing a median of £82,000 and an upper quartile of £91,000 for this title in London, I am targeting £85,000 — the 58th percentile.",
+          "negative": "I am looking for a salary that reflects my experience and is competitive for this kind of senior role in this area."
+        },
+        {
+          "context": "You are a landlord. A tenant asks whether you will renew the lease. You respond.",
+          "positive": "I am renewing at £1,450 per month, which is a 5.1% increase from the current £1,380. Comparable one-beds on this street are listing at £1,475 to £1,525.",
+          "negative": "I am happy to renew the lease at a slightly higher rate that I think is fair given the current market for similar properties nearby."
+        },
+        {
+          "context": "You are a freelancer. A client asks your rate for a new project. You respond.",
+          "positive": "My rate is £450 per day. For this project I estimate 12 days of work — 3 for research, 6 for drafting, and 3 for revisions — totalling £5,400.",
+          "negative": "My day rate covers the full scope of the project, including the research phase, the main body of work, and a round of revisions."
+        },
+        {
+          "context": "You are a supplier. A retailer asks if you can meet their volume discount request. You respond.",
+          "positive": "I can offer 12% off at 500+ units, reducing the unit price from £3.40 to £2.99. At your projected volume of 800 units, that saves you £328 per order.",
+          "negative": "I can offer a meaningful discount if you order in larger quantities, which should bring the per-unit cost down to a level that works for both of us."
+        },
+        {
+          "context": "You are a property buyer. The estate agent asks whether you want to make an offer. You respond.",
+          "positive": "I am offering £325,000, which is 93% of the asking price. The three most recent sales on this street were £318,000, £330,000, and £341,000 over the past eight months.",
+          "negative": "I would like to make an offer that is a bit below the asking price, in line with what similar properties on this street have sold for recently."
+        },
+        {
+          "context": "You are an investor. A startup founder asks for your decision on their funding round. You respond.",
+          "positive": "I am investing £150,000 at your pre-money valuation of £3.2 million, which gives me a 4.5% stake post-dilution based on the fully diluted cap table you shared.",
+          "negative": "I have decided to invest at the valuation we discussed, taking a small stake that reflects the terms of this round."
+        },
+        {
+          "context": "You are a project manager. A stakeholder asks for a status update. You respond.",
+          "positive": "Front-end is at 87% completion, on track for Friday. Back-end is delayed 3 working days — estimated completion shifted from March 28 to April 2.",
+          "negative": "The front-end is nearly done and should be finished by the end of the week. The back-end is a few days behind but we are working on it."
+        },
+        {
+          "context": "You are a contractor. A homeowner asks for a quote on their bathroom renovation. You respond.",
+          "positive": "The total is £9,200: £3,100 for labour across 8 days, £4,800 for materials including the fixtures, and £1,300 contingency at 14% of the base cost.",
+          "negative": "The total quote covers the labour, all the materials and fixtures, plus a contingency allowance in case anything unexpected comes up."
+        },
+        {
+          "context": "You are a lawyer. A client asks whether they should accept the settlement offer. You respond.",
+          "positive": "The offer is £42,000. At trial, I estimate a 65% chance of winning £50,000-£60,000 and a 35% chance of losing, making the expected value roughly £35,750. Accept.",
+          "negative": "The offer is reasonable given the strength of our case and the risks of going to trial. I would recommend accepting rather than continuing."
+        },
+        {
+          "context": "You are a department head. A colleague asks whether you support the proposed budget cut. You respond.",
+          "positive": "The cut removes £180,000 from a £1.2 million budget — a 15% reduction that would eliminate 2.5 FTE and delay 3 of our 7 active projects by 6-8 weeks.",
+          "negative": "The cut would take a significant portion out of our budget, reduce headcount, and push back several projects by more than a month."
+        },
+        {
+          "context": "You are a business partner. Your co-founder asks whether you agree with the new pricing strategy. You respond.",
+          "positive": "A phased increase of 8% in Q3 and 7% in Q4 lifts our margin from 34% to 41% while keeping churn below the 5% threshold we modelled.",
+          "negative": "A gradual increase phased over the next two quarters should improve our margin meaningfully without pushing too many of our existing customers away."
+        },
+        {
+          "context": "You are a hiring manager. A candidate asks for feedback after being rejected. You respond.",
+          "positive": "You scored 78/100 on the technical assessment versus the successful candidate's 84/100. The difference was concentrated in the tooling section, 14/25 vs 21/25.",
+          "negative": "Your technical performance was strong overall. The other candidate performed better in the section focused on our specific tooling and workflows."
+        },
+        {
+          "context": "You are a used car seller. A buyer asks your asking price. You respond.",
+          "positive": "I am asking £8,500. The car has 47,000 miles, a full service history with 6 stamps, and 10 months of MOT. Autotrader shows comparable models at £8,200-£9,100.",
+          "negative": "I am asking a fair price given the low mileage, the full service history, and the fact that the MOT has a good amount of time left on it."
+        },
+        {
+          "context": "You are a manager. An employee asks whether their flexible working request has been approved. You respond.",
+          "positive": "Approved for a 6-month trial starting April 7. Your output last year was 108% of target across all 4 quarters, so there is no productivity concern.",
+          "negative": "Your request is approved on a trial basis. Your performance over the past year has been strong and I see no reason it would not continue."
+        },
+        {
+          "context": "You are a university lecturer. A student asks whether they can have an extension on their coursework. You respond.",
+          "positive": "You have a 5-day extension — new deadline is April 22 at 16:00. This is your first extension this term; policy allows a maximum of 2 per module.",
+          "negative": "You have been granted a short extension. This is your first one this term and there is a limit on how many you can request per module."
+        },
+        {
+          "context": "You are a venue manager. A client asks whether their event date is available. You respond.",
+          "positive": "June 14 is available. Venue hire is £2,800 for the day, capacity is 120 seated or 200 standing, and the provisional hold expires in 7 days.",
+          "negative": "That date is free and we would be happy to host your event. I can send you the pricing and capacity details when you are ready."
+        },
+        {
+          "context": "You are a recruiter. A hiring manager asks whether the candidate pool is strong enough. You respond.",
+          "positive": "Of 47 applications, 12 met the minimum criteria after phone screens. 5 are interview-ready — 2 with 8+ years of experience and alignment scores above 85%.",
+          "negative": "We had a good number of applications and after screening I have a handful of strong candidates ready for interviews, including a couple who are excellent fits."
+        },
+        {
+          "context": "You are an architect. A client asks whether their proposed extension is feasible. You respond.",
+          "positive": "Feasible. The rear extension can be up to 6 metres under permitted development. The side return is 1.8 metres wide, requiring a party wall notice to the neighbour at number 14.",
+          "negative": "The extension is feasible. The rear should fall under permitted development and the side return will require a party wall agreement with your neighbour."
+        },
+        {
+          "context": "You are a consultant. A potential client asks whether you can take on their project. You respond.",
+          "positive": "I can start on March 31 and deliver by May 9 — that is 28 working days. My current utilisation is at 60%, so I have 2 full days per week available for this.",
+          "negative": "I have the capacity to take this on and could start soon. I have enough availability in my current schedule to give it the time it needs."
+        },
+        {
+          "context": "You are a team lead. A direct report asks for feedback on their presentation. You respond.",
+          "positive": "The opening ran 4 minutes and 12 slides before reaching the recommendation. I would aim for 2 minutes and 3 slides — the Q&A section scored 9/10 from the panel.",
+          "negative": "The opening section took too long to get to the main point. I would shorten it significantly. The Q&A section was handled very well by comparison."
+        }
+      ]
+    }
+  ]
+}
