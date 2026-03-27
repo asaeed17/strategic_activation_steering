@@ -8,6 +8,11 @@ set FIXED_POOL  = 100
 # set FIXED_POOL  = ""   # leave empty to use variable pool sizes
 # ────────────────────────────────────────────────────────────────────────────
 
+setenv HF_HOME .hf_cache/
+if ( $?HF_TOKEN ) then
+    setenv HF_TOKEN "$HF_TOKEN"
+endif
+
 # ── GPU Configuration (FIXED) ───────────────────────────────────────────────
 # This ensures we only check the GPU we actually intend to use.
 # If you haven't set CUDA_VISIBLE_DEVICES in your shell, it defaults to 1.
@@ -21,7 +26,7 @@ endif
 
 # ── Args (with fallback defaults) ───────────────────────────────────────────
 set MODEL       = "qwen2.5-7b"
-set VECTORS_DIR = "vectors/ultimatum_10dim_20pairs_general_matched"
+set VECTORS_DIR = "vectors/ultimatum_10dim_20pairs_general_matched/negotiation"
 set SUFFIX      = ""
 
 if ( $#argv >= 1 ) then
