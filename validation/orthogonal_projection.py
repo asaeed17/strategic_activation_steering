@@ -30,7 +30,7 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 CONTROL_DIMS = ["verbosity", "formality", "hedging", "sentiment", "specificity"]
-MODEL_ALIAS = "qwen2.5-3b"
+MODEL_ALIAS = "qwen2.5-3b"  # default; overridden by --model
 
 
 # ── Vector operations ───────────────────────────────────────────────────
@@ -127,8 +127,10 @@ def run_probe_comparison(variant: str, neg_dims, ctrl_vecs, vector_results, meth
     import torch
     from transformers import AutoTokenizer, AutoModelForCausalLM
 
-    # Load steering pairs
+    # Load steering pairs (try both naming conventions)
     pairs_path = Path(f"steering_pairs/{variant}/negotiation_steering_pairs.json")
+    if not pairs_path.exists():
+        pairs_path = Path(f"steering_pairs/{variant}/ultimatum_steering_pairs.json")
     with open(pairs_path) as f:
         neg_data = json.load(f)
 
@@ -363,7 +365,13 @@ def main():
                         choices=["mean_diff", "pca", "logreg"],
                         help="Extraction method to use (default: mean_diff)")
     parser.add_argument("--output-dir", type=str, default="results/projection")
+    parser.add_argument("--model", type=str, default=None,
+                        help="Model alias (default: qwen2.5-3b). E.g. qwen2.5-7b")
     args = parser.parse_args()
+
+    if args.model:
+        global MODEL_ALIAS
+        MODEL_ALIAS = args.model
 
     if not args.variant and not args.all_variants:
         parser.error("Specify --variant or --all-variants")
