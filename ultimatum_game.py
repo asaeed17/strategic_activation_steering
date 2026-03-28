@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """
-ultimatum_game.py — Activation-steered Ultimatum Game experiments.
+ultimatum_game.py — Activation-steered Ultimatum Game / Dictator Game experiments.
 
 GPU steering version: loads a local model (e.g. Qwen 2.5-7B), registers
 SteeringHook forward hooks on transformer layers, and runs Ultimatum Games
-with a steered agent vs a baseline (same model, no hooks).
+or Dictator Games with a steered agent vs a baseline (same model, no hooks).
+
+Dictator Game mode (--game dictator): the proposer's offer is automatically
+accepted — the responder has no decision. This isolates proposer behavior
+without responder acceptance/rejection confounds.
 
 Paired design:
   - Proposer experiments: for each pool size, generate BOTH steered and
@@ -60,16 +64,48 @@ log = logging.getLogger(__name__)
 
 DEFAULT_POOL = 100
 
-POOL_SIZES = [
+# 24 original prime-heavy pools (legacy, kept for backward compat)
+POOL_SIZES_24 = [
     37, 41, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,
     100, 103, 107, 113, 127, 131, 137, 139, 149, 151, 157,
+]
+
+# 100 structurally diverse pools ($37-$157): primes, evens, odds, mult-of-5/10.
+# Avoids primes-only bias (blocks 50/50 splits, unusual tokenization).
+# One game per pool at temp=0 gives honest n=100 for paired tests.
+POOL_SIZES = [
+    37, 38, 39, 40, 41, 42, 43, 44, 47, 48,
+    49, 50, 51, 52, 54, 55, 56, 57, 58, 59,
+    60, 61, 62, 63, 64, 65, 66, 68, 70, 71,
+    72, 73, 74, 75, 76, 77, 78, 79, 80, 81,
+    82, 83, 85, 86, 87, 89, 90, 91, 92, 93,
+    94, 95, 96, 97, 98, 100, 101, 102, 103, 104,
+    105, 106, 107, 108, 110, 111, 112, 114, 116, 118,
+    119, 120, 123, 124, 126, 128, 131, 132, 133, 135,
+    136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
+    147, 148, 149, 150, 151, 153, 154, 155, 156, 157,
 ]
 
 # ---------------------------------------------------------------------------
 # Prompt templates
 # ---------------------------------------------------------------------------
 
-def build_proposer_system(pool: int = DEFAULT_POOL) -> str:
+def build_proposer_system(pool: int = DEFAULT_POOL, game: str = "ultimatum") -> str:
+    if game == "dictator":
+        return (
+            f"You are Player A in a Dictator Game.\n"
+            f"\n"
+            f"Rules:\n"
+            f"  - You have ${pool} to split between yourself and Player B.\n"
+            f"  - Your offer is automatically accepted. Player B cannot reject.\n"
+            f"  - You decide how much to keep and how much to give.\n"
+            f"\n"
+            f"Respond with 1-2 sentences explaining your reasoning, then end with:\n"
+            f"OFFER=<your_amount>,<their_amount>\n"
+            f"\n"
+            f"The two amounts must be whole numbers that add up to ${pool}.\n"
+            f"Example: OFFER=60,40\n"
+        )
     return (
         f"You are Player A in an Ultimatum Game.\n"
         f"\n"
@@ -278,16 +314,18 @@ def _run_single_game(
     temperature: float = 0.0,
     max_new_tokens: int = 200,
     fixed_offer: Optional[Tuple[int, int]] = None,
+    game: str = "ultimatum",
 ) -> Dict:
-    """Run a single UG game. If fixed_offer is set, skip proposer generation
-    and use the given offer (for paired responder experiments)."""
+    """Run a single UG or Dictator Game. If fixed_offer is set, skip proposer
+    generation and use the given offer (for paired responder experiments).
+    If game=='dictator', skip responder entirely and auto-accept the offer."""
 
     if fixed_offer is not None:
         proposer_share, responder_share = fixed_offer
         proposer_text = f"[fixed offer] OFFER={proposer_share},{responder_share}"
     else:
         # Build proposer prompt
-        proposer_sys = build_proposer_system(pool)
+        proposer_sys = build_proposer_system(pool, game=game)
         if proposer_enhancement and proposer_enhancement in PROPOSER_ENHANCEMENTS:
             proposer_sys += PROPOSER_ENHANCEMENTS[proposer_enhancement]
 
@@ -320,6 +358,23 @@ def _run_single_game(
                 "responder_metrics": extract_behavioral_metrics(""),
             }
         proposer_share, responder_share = offer
+
+    # Dictator game: skip responder, auto-accept
+    if game == "dictator":
+        return {
+            "agreed": True,
+            "proposer_share": proposer_share,
+            "responder_share": responder_share,
+            "response": "accept",
+            "proposer_payoff": proposer_share,
+            "responder_payoff": responder_share,
+            "parse_error": None,
+            "proposer_text": proposer_text,
+            "responder_text": "[dictator game: auto-accept]",
+            "pool": pool,
+            "proposer_metrics": extract_behavioral_metrics(proposer_text),
+            "responder_metrics": extract_behavioral_metrics(""),
+        }
 
     # Build responder prompt
     responder_sys = build_responder_system(proposer_share, responder_share, pool)
@@ -390,6 +445,7 @@ def run_paired_game(
     responder_enhancement: Optional[str] = None,
     temperature: float = 0.0,
     max_new_tokens: int = 200,
+    game: str = "ultimatum",
 ) -> Dict:
     """Run a paired game: steered condition + baseline condition on the same pool.
 
@@ -399,6 +455,9 @@ def run_paired_game(
     For responder steering: generate a baseline offer, then run it through both
     steered and unsteered responder.
     """
+    if game == "dictator" and steered_role == "responder":
+        raise ValueError("Dictator game has no responder decision — cannot steer responder role.")
+
     if steered_role == "proposer":
         # Steered proposer
         steered_result = _run_single_game(
@@ -410,6 +469,7 @@ def run_paired_game(
             responder_enhancement=responder_enhancement,
             temperature=temperature,
             max_new_tokens=max_new_tokens,
+            game=game,
         )
         # Baseline proposer (same pool, no steering)
         baseline_result = _run_single_game(
@@ -421,6 +481,7 @@ def run_paired_game(
             responder_enhancement=responder_enhancement,
             temperature=temperature,
             max_new_tokens=max_new_tokens,
+            game=game,
         )
 
     elif steered_role == "responder":
@@ -434,6 +495,7 @@ def run_paired_game(
             responder_enhancement=responder_enhancement,
             temperature=temperature,
             max_new_tokens=max_new_tokens,
+            game=game,
         )
         # If baseline proposer failed to parse, can't run paired responder
         if baseline_result["parse_error"] == "proposer":
@@ -455,6 +517,7 @@ def run_paired_game(
             temperature=temperature,
             max_new_tokens=max_new_tokens,
             fixed_offer=offer,
+            game=game,
         )
     else:
         raise ValueError(f"steered_role must be 'proposer' or 'responder', got '{steered_role}'")
@@ -478,6 +541,7 @@ def run_baseline_game(
     pool: int,
     temperature: float = 0.0,
     max_new_tokens: int = 200,
+    game: str = "ultimatum",
 ) -> Dict:
     result = _run_single_game(
         model, tokenizer, pool,
@@ -486,6 +550,7 @@ def run_baseline_game(
         alpha=0.0,
         temperature=temperature,
         max_new_tokens=max_new_tokens,
+        game=game,
     )
     return {"game_id": None, "pool": pool, "result": result}
 
@@ -671,8 +736,9 @@ def summarise_baseline(games: List[Dict]) -> Dict:
 
 def print_paired_summary(summary: Dict, config: Dict) -> None:
     s = summary
+    game_label = "DICTATOR GAME" if config.get("game") == "dictator" else "ULTIMATUM GAME"
     print(f"\n{'=' * 70}")
-    print(f"ULTIMATUM GAME — ACTIVATION STEERING RESULTS")
+    print(f"{game_label} — ACTIVATION STEERING RESULTS")
     print(f"  Model:      {config['model']}")
     print(f"  Dimension:  {config.get('dimension', 'NONE')}")
     print(f"  Layers:     {config.get('layers', [])}")
@@ -729,6 +795,8 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
+    p.add_argument("--game", choices=["ultimatum", "dictator"], default="ultimatum",
+                   help="Game type. Dictator game skips responder (auto-accept).")
     p.add_argument("--model", choices=list(MODELS.keys()), default="qwen2.5-7b")
     p.add_argument("--vectors_dir", default="vectors/neg8dim_12pairs_matched/negotiation",
                    help="Root dir for steering vectors.")
@@ -754,6 +822,8 @@ def parse_args() -> argparse.Namespace:
                    help="Enable paired design (steered + baseline on same pool/offer).")
     p.add_argument("--dtype", choices=["bfloat16", "float16", "float32"],
                    default="bfloat16")
+    p.add_argument("--quantize", action="store_true",
+                   help="Load model in 4-bit quantization (for GPUs with <24GB VRAM).")
     p.add_argument("--proposer_enhancement", default=None,
                    help="Optional prompt enhancement for proposer (in addition to/instead of steering).")
     p.add_argument("--responder_enhancement", default=None,
@@ -776,6 +846,9 @@ def main() -> None:
     is_baseline = args.dimension is None
     is_paired = args.paired and not is_baseline
 
+    if args.game == "dictator" and args.steered_role == "responder" and not is_baseline:
+        raise SystemExit("ERROR: Dictator game has no responder decision — cannot steer responder role.")
+
     # --- Load direction vectors (skip if baseline) ---
     dvecs = None
     if not is_baseline:
@@ -797,11 +870,17 @@ def main() -> None:
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    model = AutoModelForCausalLM.from_pretrained(
-        cfg.hf_id, token=token,
-        torch_dtype=dtype_map[args.dtype],
-        device_map="auto",
-    )
+    load_kwargs = dict(token=token, device_map="auto")
+    if args.quantize:
+        from transformers import BitsAndBytesConfig
+        load_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_use_double_quant=True, bnb_4bit_quant_type="nf4",
+        )
+    else:
+        load_kwargs["torch_dtype"] = dtype_map[args.dtype]
+
+    model = AutoModelForCausalLM.from_pretrained(cfg.hf_id, **load_kwargs)
     model.eval()
     log.info("Model loaded. Device: %s", next(model.parameters()).device)
 
@@ -814,6 +893,7 @@ def main() -> None:
 
     # --- Config ---
     config = {
+        "game": args.game,
         "model": args.model,
         "dimension": args.dimension,
         "method": args.method,
@@ -833,11 +913,12 @@ def main() -> None:
         "timestamp": datetime.now().isoformat(),
     }
 
+    game_label = "DICTATOR GAME" if args.game == "dictator" else "ULTIMATUM GAME"
     print(f"\n{'=' * 70}")
     if is_baseline:
-        print(f"ULTIMATUM GAME — BASELINE (no steering)")
+        print(f"{game_label} — BASELINE (no steering)")
     else:
-        print(f"ULTIMATUM GAME — ACTIVATION STEERING")
+        print(f"{game_label} — ACTIVATION STEERING")
         print(f"  Dimension: {args.dimension}  Alpha: {args.alpha}  Layers: {args.layers}")
         print(f"  Steered role: {args.steered_role}  Paired: {is_paired}")
     print(f"  Model: {args.model}  Games: {args.n_games}  "
@@ -856,6 +937,7 @@ def main() -> None:
                 model, tokenizer, pool,
                 temperature=args.temperature,
                 max_new_tokens=args.max_new_tokens,
+                game=args.game,
             )
             result["game_id"] = i
             games.append(result)
@@ -880,6 +962,7 @@ def main() -> None:
                 responder_enhancement=args.responder_enhancement,
                 temperature=args.temperature,
                 max_new_tokens=args.max_new_tokens,
+                game=args.game,
             )
             result["game_id"] = i
             games.append(result)
@@ -913,6 +996,7 @@ def main() -> None:
                 responder_enhancement=args.responder_enhancement,
                 temperature=args.temperature,
                 max_new_tokens=args.max_new_tokens,
+                game=args.game,
             )
             games.append({"game_id": i, "pool": pool, "result": result})
             r = result
@@ -951,8 +1035,9 @@ def main() -> None:
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    game_prefix = "dg_" if args.game == "dictator" else ""
     if is_baseline:
-        filename = f"baseline_{args.model}_n{args.n_games}.json"
+        filename = f"{game_prefix}baseline_{args.model}_n{args.n_games}.json"
     else:
         parts = [args.dimension, args.steered_role]
         parts.append(f"L{'_'.join(str(l) for l in args.layers)}")
@@ -960,7 +1045,7 @@ def main() -> None:
         if is_paired:
             parts.append("paired")
         parts.append(f"n{args.n_games}")
-        filename = "_".join(parts) + ".json"
+        filename = game_prefix + "_".join(parts) + ".json"
 
     out_path = out_dir / filename
     with open(out_path, "w") as f:
