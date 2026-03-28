@@ -68,13 +68,13 @@ LAYER_PRESET_FRACTIONS: Dict[str, List[float]] = {
 EXPECTED_DIRECTIONS = {
     "proposer": {
         "firmness": 1, "empathy": -1, "narcissism": 1, "fairness_norm": -1,
-        "spite": 1, "anchoring": 1, "batna_awareness": 1, "flattery": -1,
-        "undecidedness": -1, "composure": 1
+        "spite": 1, "anchoring": 1, "flattery": -1,
+        "undecidedness": -1, "composure": 1, "greed": 1
     },
     "responder": {
         "firmness": -1, "empathy": 1, "composure": 1, "fairness_norm": -1,
         "spite": -1, "narcissism": -1, "undecidedness": -1, "anchoring": -1,
-        "batna_awareness": 1, "flattery": 1
+        "flattery": 1, "greed": -1
     }
 }
 
