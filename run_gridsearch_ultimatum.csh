@@ -7,11 +7,14 @@
 #   ./run_gridsearch_ultimatum.csh qwen2.5-7b vectors/neg8dim_12pairs_matched/negotiation _7b_ult
 
 # ── Set layers here ─────────────────────────────────────────────────────────
-set FIXED_LAYERS = ( 12 16 )
+set FIXED_LAYERS = ( 10 14 )
 set FIXED_POOL  = 100
 # set FIXED_POOL  = ""   # leave empty to use variable pool sizes
 # ────────────────────────────────────────────────────────────────────────────
-
+setenv HF_HOME .hf_cache/
+if ( $?HF_TOKEN ) then
+    setenv HF_TOKEN "$HF_TOKEN"
+endif
 # ── Rule-based opponent mode ─────────────────────────────────────────────────
 # Set RULEBASED = (--rulebased) to use deterministic opponents instead of LLM baseline.
 #   Proposer role: rule-based responder accepts iff responder_share/pool >= 0.35
@@ -23,8 +26,8 @@ set RULEBASED   = (--rulebased)
 
 # ── Args (with fallback defaults) ───────────────────────────────────────────
 set MODEL       = "qwen2.5-7b"
-set VECTORS_DIR = "vectors/ultimatum_10dim_20pairs_general_matched"
-set SUFFIX      = "damon_l12_l16"
+set VECTORS_DIR = "vectors/ultimatum_10dim_20pairs_general_matched/negotiation"
+set SUFFIX      = "_abdullah_l10_l14"
 
 if ( $#argv >= 1 ) then
     set MODEL = "$argv[1]"
@@ -64,13 +67,13 @@ foreach layer ( $FIXED_LAYERS )
             if ( -f "${CURRENT_OUT_DIR}/${role}/${dim}/final_best.json" ) then
                 echo "==> Skipping ${role}/${dim} on Layer ${layer} (already complete)"
             else
-                echo "==> Waiting for GPU to be free..."
-                while ( 1 )
-                    set GPU_USED = `nvidia-smi --query-compute-apps=pid --format=csv,noheader | wc -l`
-                    if ( $GPU_USED == 0 ) break
-                    echo "    GPU busy ($GPU_USED process). Waiting 10s..."
-                    sleep 10
-                end
+                # echo "==> Waiting for GPU to be free..."
+                # while ( 1 )
+                #     set GPU_USED = `nvidia-smi --query-compute-apps=pid --format=csv,noheader | wc -l`
+                #     if ( $GPU_USED == 0 ) break
+                #     echo "    GPU busy ($GPU_USED process). Waiting 10s..."
+                #     sleep 10
+                # end
 
                 echo "==> Running ${role}/${dim} on Layer ${layer}"
 
