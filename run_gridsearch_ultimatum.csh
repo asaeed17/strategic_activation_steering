@@ -67,13 +67,13 @@ foreach layer ( $FIXED_LAYERS )
             if ( -f "${CURRENT_OUT_DIR}/${role}/${dim}/final_best.json" ) then
                 echo "==> Skipping ${role}/${dim} on Layer ${layer} (already complete)"
             else
-                echo "==> Waiting for GPU to be free..."
-                while ( 1 )
-                    set GPU_USED = `nvidia-smi --query-compute-apps=pid --format=csv,noheader | wc -l`
-                    if ( $GPU_USED == 0 ) break
-                    echo "    GPU busy ($GPU_USED process). Waiting 10s..."
-                    sleep 10
-                end
+                # echo "==> Waiting for GPU to be free..."
+                # while ( 1 )
+                #     set GPU_USED = `nvidia-smi --query-compute-apps=pid --format=csv,noheader | wc -l`
+                #     if ( $GPU_USED == 0 ) break
+                #     echo "    GPU busy ($GPU_USED process). Waiting 10s..."
+                #     sleep 10
+                # end
 
                 echo "==> Running ${role}/${dim} on Layer ${layer}"
 
