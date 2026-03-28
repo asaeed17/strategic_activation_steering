@@ -68,6 +68,9 @@ POOL_SIZES = [
     100, 103, 107, 113, 127, 131, 137, 139, 149, 151, 157,
 ]
 
+# Threshold sweep for --rulebased responder mode: what fraction of pool goes to the responder
+RESPONDER_THRESHOLDS = [0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90]
+
 _OFFER_RE  = re.compile(r"OFFER\s*=\s*(\d+)\s*,\s*(\d+)", re.IGNORECASE)
 _ACCEPT_RE = re.compile(r"\bACCEPT\b", re.IGNORECASE)
 _REJECT_RE = re.compile(r"\bREJECT\b", re.IGNORECASE)
@@ -88,7 +91,6 @@ def build_proposer_system(pool: int) -> str:
         f"Respond with 1-2 sentences explaining your reasoning, then end with:\n"
         f"OFFER=<your_amount>,<their_amount>\n\n"
         f"The two amounts must be whole numbers that add up to ${pool}.\n"
-        f"Example: OFFER=60,40\n"
     )
 
 
@@ -169,6 +171,108 @@ def rule_proposer(pool: int, proposer_fraction: float = 0.60) -> Tuple[int, int]
     proposer_share = round(pool * proposer_fraction)
     responder_share = pool - proposer_share
     return (proposer_share, responder_share)
+
+
+# ---------------------------------------------------------------------------
+# Rule-based game runners (--rulebased flag)
+# ---------------------------------------------------------------------------
+
+def run_proposer_game_rulebased(
+    model, tokenizer,
+    dvecs: Optional[Dict[int, np.ndarray]],
+    alpha: float,
+    pool: int,
+    accept_threshold: float = 0.35,
+    max_new_tokens: int = 150,
+    temperature: float = 0.3,
+) -> Dict:
+    """Steered/baseline LLM proposes; deterministic rule-based responder responds.
+    The rule-based responder accepts iff responder_share / pool >= accept_threshold.
+    """
+    proposer_messages = [
+        {"role": "system", "content": build_proposer_system(pool)},
+        {"role": "user",   "content": "Make your offer."},
+    ]
+    text = generate_local(model, tokenizer, proposer_messages, dvecs, alpha, max_new_tokens, temperature)
+    offer = parse_offer(text, pool)
+    if offer is None:
+        text = generate_local(model, tokenizer, proposer_messages, dvecs, alpha, max_new_tokens, temperature)
+        offer = parse_offer(text, pool)
+
+    if offer is None:
+        return {
+            "role": "proposer", "pool": pool, "alpha": alpha,
+            "proposer_share": None, "responder_share": None,
+            "decision": None, "agreed": False,
+            "proposer_payoff": 0, "responder_payoff": 0,
+            "parse_error": True, "text": text, "rulebased": True,
+        }
+
+    proposer_share, responder_share = offer
+    decision = rule_responder(proposer_share, responder_share, pool, accept_threshold)
+    accepted = decision == "accept"
+    return {
+        "role": "proposer", "pool": pool, "alpha": alpha,
+        "proposer_share": proposer_share, "responder_share": responder_share,
+        "decision": decision, "agreed": accepted,
+        "proposer_payoff": proposer_share if accepted else 0,
+        "responder_payoff": responder_share if accepted else 0,
+        "parse_error": False, "text": text, "rulebased": True,
+    }
+
+
+def run_responder_game_rulebased(
+    model, tokenizer,
+    dvecs: Optional[Dict[int, np.ndarray]],
+    alpha: float,
+    pool: int,
+    thresholds: Optional[List[float]] = None,
+    max_new_tokens: int = 150,
+    temperature: float = 0.3,
+) -> List[Dict]:
+    """Rule-based proposer sweeps offers (10–90% to responder); steered/baseline LLM responds.
+
+    Returns one result dict per threshold, so n_games pools × 9 thresholds = 9×n_games results total.
+    Each result includes 'responder_pct' (the offer expressed as % of pool to responder).
+    """
+    if thresholds is None:
+        thresholds = RESPONDER_THRESHOLDS
+    results = []
+    for responder_pct in thresholds:
+        responder_share = round(pool * responder_pct)
+        proposer_share = pool - responder_share
+
+        responder_messages = [
+            {"role": "system", "content": build_responder_system(proposer_share, responder_share, pool)},
+            {"role": "user",   "content": f"Player A offers: they get ${proposer_share}, you get ${responder_share}. What is your decision?"},
+        ]
+        text = generate_local(model, tokenizer, responder_messages, dvecs, alpha, max_new_tokens, temperature)
+        decision = parse_decision(text)
+        if decision is None:
+            text = generate_local(model, tokenizer, responder_messages, dvecs, alpha, max_new_tokens, temperature)
+            decision = parse_decision(text)
+
+        if decision is None:
+            results.append({
+                "role": "responder", "pool": pool, "alpha": alpha,
+                "proposer_share": proposer_share, "responder_share": responder_share,
+                "responder_pct": round(responder_pct * 100),
+                "decision": None, "agreed": False,
+                "proposer_payoff": 0, "responder_payoff": 0,
+                "parse_error": True, "text": text, "rulebased": True,
+            })
+        else:
+            accepted = decision == "accept"
+            results.append({
+                "role": "responder", "pool": pool, "alpha": alpha,
+                "proposer_share": proposer_share, "responder_share": responder_share,
+                "responder_pct": round(responder_pct * 100),
+                "decision": decision, "agreed": accepted,
+                "proposer_payoff": proposer_share if accepted else 0,
+                "responder_payoff": responder_share if accepted else 0,
+                "parse_error": False, "text": text, "rulebased": True,
+            })
+    return results
 
 
 # ---------------------------------------------------------------------------
@@ -307,33 +411,62 @@ def run_all_games(
     proposer_fraction: float = 0.60,
     max_new_tokens: int = 150,
     temperature: float = 0.3,
+    rulebased: bool = False,
 ) -> List[Dict]:
+    """Run n_games ultimatum games.
+
+    If rulebased=True:
+      - proposer role: steered/baseline LLM proposes; deterministic rule-based responder
+        accepts iff responder_share/pool >= accept_threshold (default 0.35).
+      - responder role: rule-based proposer sweeps 10/20/.../90% offers to the responder
+        for each pool; LLM decides accept/reject at each threshold. Returns 9×n_games results.
+    """
     if pools is None:
         pools = [POOL_SIZES[i % len(POOL_SIZES)] for i in range(n_games)]
 
     results = []
     for i, pool in enumerate(pools):
         if role == "proposer":
-            r = run_proposer_game(model, tokenizer, dvecs, alpha, pool,
-                                  accept_threshold, max_new_tokens, temperature)
+            if rulebased:
+                r = run_proposer_game_rulebased(model, tokenizer, dvecs, alpha, pool,
+                                                accept_threshold, max_new_tokens, temperature)
+            else:
+                r = run_proposer_game(model, tokenizer, dvecs, alpha, pool,
+                                      accept_threshold, max_new_tokens, temperature)
+            r["game_id"] = i
+            results.append(r)
+            if r["parse_error"]:
+                log.info("[G%03d] PARSE_ERROR  pool=$%d  text=%s", i+1, pool, r["text"][:60])
+            else:
+                pct = r["proposer_share"] / pool * 100
+                log.info("[G%03d] pool=$%03d  offer=%d/%d (%.0f%%)  %s  α=%+.1f",
+                         i+1, pool, r["proposer_share"], r["responder_share"],
+                         pct, r["decision"].upper(), alpha)
         else:
-            r = run_responder_game(model, tokenizer, dvecs, alpha, pool,
-                                   proposer_fraction, max_new_tokens, temperature)
-        r["game_id"] = i
-        results.append(r)
-
-        if r["parse_error"]:
-            log.info("[G%03d] PARSE_ERROR  pool=$%d  text=%s", i+1, pool, r["text"][:60])
-        elif role == "proposer":
-            pct = r["proposer_share"] / pool * 100
-            log.info("[G%03d] pool=$%03d  offer=%d/%d (%.0f%%)  %s  α=%+.1f",
-                     i+1, pool, r["proposer_share"], r["responder_share"],
-                     pct, r["decision"].upper(), alpha)
-        else:
-            pct = r["responder_share"] / pool * 100
-            log.info("[G%03d] pool=$%03d  offer=%d/%d (%.0f%% to responder)  %s  α=%+.1f",
-                     i+1, pool, r["proposer_share"], r["responder_share"],
-                     pct, r["decision"].upper(), alpha)
+            if rulebased:
+                pool_results = run_responder_game_rulebased(
+                    model, tokenizer, dvecs, alpha, pool, None, max_new_tokens, temperature
+                )
+                for j, r in enumerate(pool_results):
+                    r["game_id"] = i
+                    r["threshold_idx"] = j
+                results.extend(pool_results)
+                n_accepted = sum(1 for r in pool_results if not r["parse_error"] and r["agreed"])
+                n_valid = sum(1 for r in pool_results if not r["parse_error"])
+                log.info("[G%03d] pool=$%03d  threshold_sweep  accepted=%d/%d  α=%+.1f",
+                         i+1, pool, n_accepted, n_valid, alpha)
+            else:
+                r = run_responder_game(model, tokenizer, dvecs, alpha, pool,
+                                       proposer_fraction, max_new_tokens, temperature)
+                r["game_id"] = i
+                results.append(r)
+                if r["parse_error"]:
+                    log.info("[G%03d] PARSE_ERROR  pool=$%d  text=%s", i+1, pool, r["text"][:60])
+                else:
+                    pct = r["responder_share"] / pool * 100
+                    log.info("[G%03d] pool=$%03d  offer=%d/%d (%.0f%% to responder)  %s  α=%+.1f",
+                             i+1, pool, r["proposer_share"], r["responder_share"],
+                             pct, r["decision"].upper(), alpha)
 
     return results
 
@@ -415,6 +548,9 @@ def parse_args() -> argparse.Namespace:
                    help="Rule-based responder: accept if responder_share/pool >= this.")
     p.add_argument("--proposer_fraction", type=float, default=0.60,
                    help="Rule-based proposer: keep this fraction of the pool.")
+    p.add_argument("--rulebased", action="store_true",
+                   help="Use rule-based opponents. Proposer role: rule-based responder (35%% threshold). "
+                        "Responder role: rule-based proposer sweeps 10-90%% offers.")
     p.add_argument("--fixed_pool",      type=int,   default=None,
                    help="Fix all games to this pool size (e.g. 100). Reduces payoff variance.")
     p.add_argument("--seed",            type=int,   default=42)
@@ -487,6 +623,7 @@ def main() -> None:
         proposer_fraction=args.proposer_fraction,
         max_new_tokens=args.max_new_tokens,
         temperature=args.temperature,
+        rulebased=args.rulebased,
     )
 
     summary = summarise(results)
