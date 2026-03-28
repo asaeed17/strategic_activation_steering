@@ -39,6 +39,7 @@ from extract_vectors import MODELS, HF_TOKEN
 from apply_steering_preset_nego import load_direction_vectors
 from apply_steering_ultimatum import (
     POOL_SIZES,
+    RESPONDER_THRESHOLDS,
     run_all_games,
     summarise,
     print_summary,
@@ -257,12 +258,13 @@ def run_eval(
     model, tokenizer, role: str, direction_vectors: Optional[Dict[int, np.ndarray]],
     alpha: float, pool_sequence: List[int], max_new_tokens: int, temperature: float,
     accept_threshold: float, proposer_fraction: float,
+    rulebased: bool = False,
 ) -> Tuple[float, List[Dict]]:
     results = run_all_games(
         model, tokenizer, role=role, dvecs=direction_vectors, alpha=alpha,
         n_games=len(pool_sequence), pools=pool_sequence, accept_threshold=accept_threshold,
         proposer_fraction=proposer_fraction, max_new_tokens=max_new_tokens,
-        temperature=temperature,
+        temperature=temperature, rulebased=rulebased,
     )
     return score_results(results, role), results
 
@@ -270,11 +272,14 @@ def run_eval(
 def run_baseline(
     model, tokenizer, role, pool_sequence,
     max_new_tokens, temperature, accept_threshold, proposer_fraction,
+    rulebased: bool = False,
 ):
-    log.info("Computing baseline (alpha=0, %d games)...", len(pool_sequence))
+    log.info("Computing baseline (alpha=0, %d games%s)...",
+             len(pool_sequence), ", rulebased" if rulebased else "")
     baseline_score, baseline_results = run_eval(
         model, tokenizer, role, None, 0.0, pool_sequence,
         max_new_tokens, temperature, accept_threshold, proposer_fraction,
+        rulebased=rulebased,
     )
     log.info("Baseline computed.")
     return baseline_score, baseline_results
@@ -284,6 +289,7 @@ def run_stage1_layer_search(
     model, tokenizer, role, dimension, direction_vectors_cache, layer_presets,
     pool_sequence, max_new_tokens, temperature, accept_threshold,
     proposer_fraction, number_of_layers, baseline_results, fixed_alpha=15.0,
+    rulebased: bool = False,
 ):
     """Find best layer preset at a fixed alpha using Directional Fitness."""
     log.info(f"Stage 1: layer preset search  presets={layer_presets}  alpha={fixed_alpha}")
@@ -297,14 +303,15 @@ def run_stage1_layer_search(
     for preset_name in layer_presets:
         layers = layers_from_preset(number_of_layers, preset_name)
         direction_vectors = direction_vectors_cache[tuple(layers)]
-        
+
         _, steered_results = run_eval(
             model, tokenizer, role, direction_vectors, fixed_alpha, pool_sequence,
             max_new_tokens, temperature, accept_threshold, proposer_fraction,
+            rulebased=rulebased,
         )
-        
+
         fitness = get_fitness_score(steered_results, baseline_results, role, dimension)
-        
+
         log.info(f"  preset={preset_name:<12} layers={layers}  fitness={fitness:.2f}")
         if fitness > best_fitness:
             best_fitness = fitness
@@ -328,6 +335,7 @@ def run_stage2_alpha_search(
     model, tokenizer, role, dimension, direction_vectors_cache, fixed_layers,
     pool_sequence, coarse_alphas, max_new_tokens, temperature,
     accept_threshold, proposer_fraction, baseline_score, baseline_results, output_dir: Path = None,
+    rulebased: bool = False,
 ):
     """
     Coarse alpha search using Directional Fitness Score.
@@ -353,6 +361,7 @@ def run_stage2_alpha_search(
             score, steered_results = run_eval(
                 model, tokenizer, role, direction_vectors, alpha, pool_sequence,
                 max_new_tokens, temperature, accept_threshold, proposer_fraction,
+                rulebased=rulebased,
             )
             fitness = get_fitness_score(steered_results, baseline_results, role, dimension)
 
@@ -424,6 +433,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--quantize", action="store_true")
     p.add_argument("--output_suffix", default="")
     p.add_argument("--output_dir",    default=None)
+    p.add_argument("--rulebased", action="store_true",
+                   help="Use rule-based opponents instead of LLM baseline. "
+                        "Proposer role: deterministic responder (35%% threshold). "
+                        "Responder role: sweeps 10-90%% offers across each pool.")
     return p.parse_args()
 
 
@@ -499,13 +512,15 @@ def main() -> None:
 
     print(f"\n{'=' * 70}")
     print(f"ULTIMATUM GRIDSEARCH  |  model={args.model}  dim={args.dimension}  role={args.role}")
-    print(f"  n_games={args.n_games}  coarse_alphas={args.coarse_alphas}")
+    print(f"  n_games={args.n_games}  coarse_alphas={args.coarse_alphas}"
+          f"{'  rulebased=True' if args.rulebased else ''}")
     print(f"{'=' * 70}")
 
     # Calculate global baseline ONCE
     baseline_score, baseline_results = run_baseline(
         model, tokenizer, args.role, pool_sequence,
-        args.max_new_tokens, args.temperature, args.accept_threshold, args.proposer_fraction
+        args.max_new_tokens, args.temperature, args.accept_threshold, args.proposer_fraction,
+        rulebased=args.rulebased,
     )
     if output_dir:
         save_game_results(output_dir, "baseline", args.role, 0.0, None, baseline_results)
@@ -516,19 +531,22 @@ def main() -> None:
         fixed_layers, best_preset_name = run_stage1_layer_search(
             model, tokenizer, args.role, args.dimension, direction_vectors_cache, args.presets,
             pool_sequence, args.max_new_tokens, args.temperature,
-            args.accept_threshold, args.proposer_fraction, number_of_layers, baseline_results
+            args.accept_threshold, args.proposer_fraction, number_of_layers, baseline_results,
+            rulebased=args.rulebased,
         )
 
     search_results = run_stage2_alpha_search(
         model, tokenizer, args.role, args.dimension, direction_vectors_cache, fixed_layers,
         pool_sequence, args.coarse_alphas, args.max_new_tokens, args.temperature,
-        args.accept_threshold, args.proposer_fraction, baseline_score, baseline_results, output_dir=output_dir,
+        args.accept_threshold, args.proposer_fraction, baseline_score, baseline_results,
+        output_dir=output_dir, rulebased=args.rulebased,
     )
 
     search_results["dimension"] = args.dimension
     search_results["role"]      = args.role
     search_results["model"]     = args.model
     search_results["method"]    = args.method
+    search_results["rulebased"] = args.rulebased
     search_results["timestamp"] = datetime.now().isoformat()
 
     # Final evaluation at best alpha
@@ -542,6 +560,7 @@ def main() -> None:
             model, tokenizer, args.role, direction_vectors_final, search_results["best_alpha"],
             pool_sequence, args.max_new_tokens, args.temperature,
             args.accept_threshold, args.proposer_fraction,
+            rulebased=args.rulebased,
         )
 
     search_results["final_score"] = final_score
