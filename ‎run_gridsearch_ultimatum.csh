@@ -2,11 +2,22 @@
 # run_gridsearch_ultimatum.csh <model> <vectors_dir> [output_suffix]
 # Grid search over negotiation dimensions using the Ultimatum Game.
 
+# ── Activate virtual environment ──────────────────────────────────────────
+source /cs/student/projects1/2022/aymakhan/.venv/bin/activate.csh
+
+# ── HuggingFace cache (avoid home-dir quota) ─────────────────────────────
+setenv HF_HOME /cs/student/projects1/2022/aymakhan/comp0087_snlp_cwk/.hf_cache
+
 # ── Set layers here ─────────────────────────────────────────────────────────
-set FIXED_LAYERS = ( 12 16 19 )
+set FIXED_LAYERS = ( 18 20 )
 set FIXED_POOL  = 100
 # set FIXED_POOL  = ""   # leave empty to use variable pool sizes
 # ────────────────────────────────────────────────────────────────────────────
+
+setenv HF_HOME .hf_cache/
+if ( $?HF_TOKEN ) then
+    setenv HF_TOKEN "$HF_TOKEN"
+endif
 
 # ── GPU Configuration (FIXED) ───────────────────────────────────────────────
 # This ensures we only check the GPU we actually intend to use.
@@ -35,14 +46,14 @@ if ( $#argv >= 3 ) then
 endif
 # ────────────────────────────────────────────────────────────────────────────
 
-set OUT_DIR = "results/ultimatum/general_damon_12_16_19"
+set OUT_DIR = "results/ultimatum/general_ayman"
 
 set DIMS = ( \
     firmness \
     empathy \
     composure \
     anchoring \
-    batna_awareness \
+    greed \
     fairness_norm \
     flattery \
     narcissism \
