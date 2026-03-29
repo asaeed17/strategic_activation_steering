@@ -7,11 +7,13 @@
 #   ./run_gridsearch_ultimatum.csh qwen2.5-7b vectors/neg8dim_12pairs_matched/negotiation _7b_ult
 
 # ── Set layers here ─────────────────────────────────────────────────────────
-set FIXED_LAYERS = ( 10 14 )
-set FIXED_POOL  = 100
-# set FIXED_POOL  = ""   # leave empty to use variable pool sizes
+# qwen2.5-7b  (28 layers):  12 16 19  (~43%, 57%, 68%)
+# qwen2.5-32b (64 layers):  28 36 44  (~44%, 56%, 69%)
+set FIXED_LAYERS = ( 28 32 36 )
+# set FIXED_POOL  = 100
+set FIXED_POOL  = ""   # leave empty to use variable pool sizes
 # ────────────────────────────────────────────────────────────────────────────
-setenv HF_HOME .hf_cache/
+setenv HF_HOME hf_cache/
 if ( $?HF_TOKEN ) then
     setenv HF_TOKEN "$HF_TOKEN"
 endif
@@ -25,9 +27,9 @@ set RULEBASED   = (--rulebased)
 # ────────────────────────────────────────────────────────────────────────────
 
 # ── Args (with fallback defaults) ───────────────────────────────────────────
-set MODEL       = "qwen2.5-7b"
+set MODEL       = "qwen2.5-32b-gptq"
 set VECTORS_DIR = "vectors/ultimatum_10dim_20pairs_general_matched/negotiation"
-set SUFFIX      = "_abdullah_l10_l14"
+set SUFFIX      = "_damon_variable_newprompt_l28_l32_l36"
 
 if ( $#argv >= 1 ) then
     set MODEL = "$argv[1]"
@@ -61,7 +63,7 @@ set DIMS = ( \
 foreach layer ( $FIXED_LAYERS )
     foreach role ( proposer responder )
         foreach dim ( $DIMS )
-            
+
             set CURRENT_OUT_DIR = "${OUT_DIR}/L${layer}"
 
             if ( -f "${CURRENT_OUT_DIR}/${role}/${dim}/final_best.json" ) then
@@ -79,7 +81,7 @@ foreach layer ( $FIXED_LAYERS )
 
                 set LAYERS_FLAG = ( --fixed_layers $layer )
 
-                if ( "$FIXED_POOL" != "" ) then
+                if ( ${%FIXED_POOL} > 0 ) then
                     set POOL_FLAG = ( --fixed_pool $FIXED_POOL )
                 else
                     set POOL_FLAG = ()

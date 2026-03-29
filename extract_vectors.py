@@ -102,6 +102,8 @@ class ModelConfig:
     requires_token: bool     # True for gated models (Llama, Gemma, Mistral v0.3)
     use_chat_template: bool  # wrap texts in the model's chat template
     dtype: str = "bfloat16"  # "bfloat16" | "float16" | "float32"
+    is_awq: bool = False     # True for pre-quantized AWQ models (skip torch_dtype)
+    is_gptq: bool = False    # True for pre-quantized GPTQ models (use auto_gptq directly)
 
     @property
     def torch_dtype(self) -> torch.dtype:
@@ -174,6 +176,24 @@ MODELS: Dict[str, ModelConfig] = {
         alias="ministral-3b",
         requires_token=True,
         use_chat_template=True,
+    ),
+    # Qwen 2.5 32B (pre-quantized AWQ, ~20GB on disk vs 35GB for full) --------
+    "qwen2.5-32b-awq": ModelConfig(
+        hf_id="Qwen/Qwen2.5-32B-Instruct-AWQ",
+        alias="qwen2.5-32b",
+        requires_token=False,
+        use_chat_template=True,
+        dtype="float16",
+        is_awq=True,
+    ),
+    # Qwen 2.5 32B (pre-quantized GPTQ Int4, ~20GB on disk) ------------------
+    "qwen2.5-32b-gptq": ModelConfig(
+        hf_id="Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4",
+        alias="qwen2.5-32b",
+        requires_token=False,
+        use_chat_template=True,
+        dtype="float16",
+        is_gptq=True,
     ),
 }
 
@@ -458,11 +478,29 @@ def extract_for_model(
             quantization_config=bnb_cfg,
             device_map="auto",
         )
+    elif config.is_awq:
+        model = AutoModelForCausalLM.from_pretrained(
+            config.hf_id,
+            token=token,
+            device_map="auto",
+        )
+    elif config.is_gptq:
+        from auto_gptq import AutoGPTQForCausalLM
+        import torch
+        n_gpus = torch.cuda.device_count()
+        max_memory = {i: "22GiB" for i in range(n_gpus)}
+        model = AutoGPTQForCausalLM.from_quantized(
+            config.hf_id,
+            use_safetensors=True,
+            device_map="auto",
+            max_memory=max_memory,
+            trust_remote_code=False,
+        )
     else:
         model = AutoModelForCausalLM.from_pretrained(
             config.hf_id,
             token=token,
-            dtype=config.torch_dtype,
+            torch_dtype=config.torch_dtype,
             device_map="auto",
         )
     model.eval()
