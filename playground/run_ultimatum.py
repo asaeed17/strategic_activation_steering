@@ -67,11 +67,19 @@ for _noisy in ("httpx", "httpcore", "openai", "google", "google.genai",
 
 DEFAULT_POOL = 100
 
-# Variable pool sizes to break LLM "memorized split" convergence.
-# Odd/unusual amounts force the model to reason about each game independently.
+# 100 structurally diverse pools ($37-$157): primes, evens, odds, mult-of-5/10.
+# Avoids primes-only bias (blocks 50/50 splits, unusual tokenization).
 POOL_SIZES = [
-    37, 41, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,
-    100, 103, 107, 113, 127, 131, 137, 139, 149, 151, 157,
+    37, 38, 39, 40, 41, 42, 43, 44, 47, 48,
+    49, 50, 51, 52, 54, 55, 56, 57, 58, 59,
+    60, 61, 62, 63, 64, 65, 66, 68, 70, 71,
+    72, 73, 74, 75, 76, 77, 78, 79, 80, 81,
+    82, 83, 85, 86, 87, 89, 90, 91, 92, 93,
+    94, 95, 96, 97, 98, 100, 101, 102, 103, 104,
+    105, 106, 107, 108, 110, 111, 112, 114, 116, 118,
+    119, 120, 123, 124, 126, 128, 131, 132, 133, 135,
+    136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
+    147, 148, 149, 150, 151, 153, 154, 155, 156, 157,
 ]
 
 # ---------------------------------------------------------------------------
@@ -361,6 +369,7 @@ def run_game_ultimatum(
     temperature: float = 0.7,
     max_tokens: int = 200,
     verbose: bool = False,
+    game: str = "ultimatum",
 ) -> Dict:
     # Build proposer prompt
     proposer_sys = build_proposer_system(pool)
@@ -403,6 +412,21 @@ def run_game_ultimatum(
         }
 
     proposer_share, responder_share = offer
+
+    # Dictator Game: auto-accept, no responder generation
+    if game == "dictator":
+        return {
+            "agreed": True,
+            "proposer_share": proposer_share,
+            "responder_share": responder_share,
+            "response": "accept",
+            "proposer_payoff": proposer_share,
+            "responder_payoff": responder_share,
+            "parse_error": None,
+            "proposer_text": proposer_text,
+            "responder_text": "[dictator game: auto-accept]",
+            "pool": pool,
+        }
 
     # Build responder prompt
     responder_sys = build_responder_system(proposer_share, responder_share, pool)
@@ -524,8 +548,9 @@ def summarise(results: List[Dict]) -> Dict:
 
 def print_summary(summary: Dict, config: Dict) -> None:
     s = summary
+    game_label = config.get("game", "ultimatum").upper() + " GAME"
     print(f"\n{'=' * 70}")
-    print(f"ULTIMATUM GAME RESULTS")
+    print(f"{game_label} RESULTS")
     print(f"  Proposer:   {config['proposer']}" +
           (f"  + {config.get('proposer_enhancement', '')}" if config.get('proposer_enhancement') else ""))
     print(f"  Responder:  {config['responder']}" +
@@ -572,6 +597,8 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
+    p.add_argument("--game", default="ultimatum", choices=["ultimatum", "dictator"],
+                   help="Game type. dictator: proposer splits, always accepted (no responder LLM call).")
     p.add_argument("--proposer", default="api:gemini",
                    help="Proposer agent spec. e.g. api:gemini, api:groq")
     p.add_argument("--responder", default="api:gemini",
@@ -601,6 +628,7 @@ def main():
     responder_spec = parse_agent_spec(args.responder)
 
     config = {
+        "game": args.game,
         "proposer": args.proposer,
         "responder": args.responder,
         "proposer_enhancement": args.proposer_enhancement,
@@ -614,11 +642,15 @@ def main():
     }
 
     print(f"\n{'=' * 70}")
-    print(f"ULTIMATUM GAME — TASK DESIGN VALIDATION")
+    game_label = args.game.upper() + " GAME"
+    print(f"{game_label} — TASK DESIGN VALIDATION")
     print(f"  Proposer:   {args.proposer}" +
           (f"  + {args.proposer_enhancement}" if args.proposer_enhancement else ""))
-    print(f"  Responder:  {args.responder}" +
-          (f"  + {args.responder_enhancement}" if args.responder_enhancement else ""))
+    if args.game == "ultimatum":
+        print(f"  Responder:  {args.responder}" +
+              (f"  + {args.responder_enhancement}" if args.responder_enhancement else ""))
+    else:
+        print(f"  Responder:  [auto-accept (dictator game)]")
     print(f"  Games: {args.n_games}   Pool: ${args.pool}   Temp: {args.temperature}")
     print(f"{'=' * 70}\n")
 
@@ -642,6 +674,7 @@ def main():
             temperature=args.temperature,
             max_tokens=args.max_tokens,
             verbose=args.verbose,
+            game=args.game,
         )
         r["game_id"] = i
         results.append(r)
@@ -671,7 +704,7 @@ def main():
         out_dir.mkdir(parents=True, exist_ok=True)
 
         # Build filename from config
-        parts = [args.proposer.replace(":", "_")]
+        parts = [args.game, args.proposer.replace(":", "_")]
         if args.proposer_enhancement:
             parts.append(f"p-{args.proposer_enhancement}")
         parts.append(args.responder.replace(":", "_"))

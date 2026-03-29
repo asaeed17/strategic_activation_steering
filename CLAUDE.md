@@ -6,47 +6,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 COMP0087 Statistical NLP group project (UCL, due 2026-04-17). Activation steering (representation engineering) applied to LLM negotiation — extract behavioural direction vectors from contrastive pairs, inject them during inference, measure whether they improve bargaining outcomes.
 
-## Project Status (2026-03-27)
+## Research Log
 
-**Phase 1 (complete):** Vector extraction, validation, and ablation study across 8 steering pair variants, 3 extraction methods, and orthogonal projection analysis. Vectors successfully capture behavioral dimensions (linear probes confirm). Infrastructure is solid.
+**`RESEARCH_LOG.md`** is the single source of truth for all experiments, findings, and design decisions. Use it as the primary reference when writing the paper. **Update it after every significant experiment or finding.**
 
-**Phase 1 finding (the bottleneck):** Steering has negligible/zero average effect on LLM-vs-LLM CraigslistBargains outcomes. Extensive grid searches on Qwen 3B and 7B confirm this. The dataset/task is the primary bottleneck, not the vectors. LLM-vs-LLM negotiation has too much noise/variance for steering effects to surface reliably.
+When the user asks about results, hypotheses, or experimental context, consult the research log first. When new experiments complete, add the results to the log in the same format.
 
-**Phase 2 (in progress — THE PIVOT):** Redesigning the evaluation task. Ultimatum Game is the primary alternative task.
-- **Ultimatum Game** (merged to main via PRs #34, #35, #36): `ultimatum_game.py` with paired design (steered vs baseline on same offers). Two steering pair variants:
-  - `ultimatum_10dim_20pairs_matched` — Game-specific pairs (OFFER=X,Y / ACCEPT / REJECT language). 10 dims: firmness, empathy, anchoring, batna_awareness, composure, fairness_norm, flattery, narcissism, spite, undecidedness. Vectors extracted for Qwen 7B.
-  - `ultimatum_10dim_20pairs_general_matched` — General-domain pairs (salary, business, real estate contexts, no game tokens). Same 10 dims but batna_awareness replaced by greed. Vectors extracted for Qwen 7B. **v2.1: all 200 negotiation pairs length-matched** (132+ pairs rewritten, ±30% word count, mean ratios 0.94–1.11). Also fixed directional consistency in composure (was 18/20 pos>neg, now 7/13) and fairness_norm (was 15/20, now 10/8). Validation score 27/100 but **orthogonal projection shows 8/10 dims GENUINE** (see below).
-- **Preset negotiation scripts** (merged via PR #32): 40 fixed 4-turn scripts. Grid search results in `hyperparameter_results/`.
-- **Playground task validation** (`playground/run_game.py`): Pluggable agents (local HF or API) with prompt enhancements.
+## Project Status (2026-03-28)
 
-**Ultimatum Game results (game-specific pairs, Qwen 7B, L10, 50 paired games):**
-- **Proposer steering:** Weak effects. Empathy (alpha=-5): offer drops from 65.4% to 56.0% (p<0.001, d=-0.81). Fairness_norm (alpha=5): offer drops to 56.9% (p<0.001, d=-1.00). Narcissism (alpha=15): offer rises to 70.4% (p<0.001, d=+0.92). Firmness: zero effect.
-- **Responder steering:** Dramatic but likely model-breaking. Firmness/spite at alpha=15: acceptance drops from 96% to 8% (p<0.001). Fairness_norm: 92%→12%. These are statistically significant but may reflect incoherent output rather than genuine behavioral steering.
-- **Key concern:** Multiple comparisons problem (160 tests without correction). Best alpha selected on same data used for significance testing (double-dipping).
+> **For detailed findings, exact numbers, and per-config results, see `RESEARCH_LOG.md`.**
 
-**General pairs validation (v2.1, 2026-03-27, Qwen 7B, mean_diff):**
-- **Validation score: 27/100** (8 RED, 2 AMBER). Improved from v2.0 (29/100, all 10 RED).
-- **Length confounds fixed at word level:** 7/10 negotiation dims now MILD (was 0/10). Remaining issues are character-level: undecidedness d_char=-2.27 (SEVERE — hedge words are short, confident reasoning words are long), flattery d_char=-1.21, narcissism d_char=-0.81.
-- **Two dimensions escaped flat_high probes:** empathy (pattern=other, mean=0.946, L0=0.85 rising to L5-6) and fairness_norm (pattern=other, mean=0.978, L0=0.85 rising to L7+). These show layer-dependent accuracy — signature of conceptual encoding. Was 0/10 non-flat in v2.0.
-- **Anchoring has recommended layers:** [18, 19, 20] — only dimension passing both criteria (acc≥0.85 AND |d|≤0.8). Zero dims had recommendations in v2.0.
-- **AMBER dims:** empathy, fairness_norm (flags: cohens_d only, no flat_probe or length flags).
-- **Composure CRITICAL vocabulary overlap:** Jaccard=0.080. Rational reasoning ("probability", "expected value") vs emotional reasoning ("feels", "trust") use completely different words. Structural, not fixable.
-- **Flattery vocabulary signature:** expanded negatives introduced "discuss" as distinctive word (9× in neg, 0× in pos) from the "I would like to discuss..." pattern.
-- Key cosine overlaps: hedging↔undecidedness=0.82 (increased from 0.71), empathy↔sentiment=0.62, firmness↔hedging=-0.55, composure↔specificity=0.57.
-- All 50 neg×control Cohen's d pairs still SEVERE.
-- Per-pair alignment all GOOD/OK (only 4 outlier pairs total across all dims).
+**Phase 1 (complete):** CraigslistBargains. Behavioral changes real (27x hedge suppression) but outcomes not significant (p=0.87). Task too noisy. See RESEARCH_LOG Section 2.
 
-**General pairs orthogonal projection (v2.1, 2026-03-27, Qwen 7B, mean_diff):**
-- **8/10 dimensions GENUINE** after projecting out all 5 control dims. Mean probe drop 2.3% (excluding undecidedness). Consistent with CraigslistBargains projection (91% genuine there).
-- **GENUINE (7):** firmness (0.941→0.921, drop 2.0%), fairness_norm (0.879→0.872, drop 0.7%), anchoring (0.875→0.877, drop -0.2%), composure (0.895→0.867, drop 2.8%), greed (0.813→0.799, drop 1.4%), flattery (0.941→0.954, IMPROVED), narcissism (0.869→0.889, IMPROVED), spite (0.805→0.829, IMPROVED).
-- **PARTIAL SURFACE (1):** empathy (0.864→0.811, drop 5.4%) — sentiment overlap (cos=0.51→0.025 after projection). Same pattern as CraigslistBargains empathy (6.9% drop).
-- **SURFACE-DOMINATED (1):** undecidedness (0.954→0.804, drop 15.1%). Residual norm 0.621. cos(hedging)=0.821→0.090. But 0.804 post-projection accuracy still well above chance — the concept genuinely overlaps with hedging (undecided people hedge), so this is concept overlap not a confound.
-- **Key insight:** Validation score (27/100) dramatically overstates the problem. Cohen's d detects data confounds, not direction confounds. Same lesson as CraigslistBargains.
-- **For steering experiments:** All 10 dimensions usable. Undecidedness caveat: 15% surface dependence, steering will induce hedging+wavering (which IS undecidedness). Empathy: modest surface dependence (5.4%).
+**Phase 2 (complete):** Ultimatum Game confirmatory experiments. 7,600+ paired games across 3 rounds. See RESEARCH_LOG Sections 7-9.
 
-**Current branch:** `main`.
+**Main findings (Phase 2):**
+1. **Steering reliably shifts behavior** — all 24 UG configs significant (p<0.001, d=0.37-1.54), perfect monotonic dose-response.
+2. **L10 is context-dependent, L12 is context-independent** — firmness L10 reverses direction between UG (+16pp) and DG (-5.8pp). L12 is consistent (+13pp UG, +15pp DG). Novel mechanistic claim.
+3. **Empathy vector is unidirectional for demand** — both positive and negative alpha increase demand. Sign modulates tone (acceptance rate), not direction. Best payoff: empathy L10 α=+7 (+17pp).
+4. **Baseline model is strategically suboptimal** — rejects 16% of near-equal splits due to RLHF fairness signaling. Any steering improves payoff by disrupting this.
+5. **General pairs >> game-specific pairs** — 16pp effect vs ~0pp for firmness at L10.
 
-**Next steps:** ~~Length-match the general ultimatum pairs~~ (done, v2.1). ~~Re-validate general pairs~~ (done, 27/100). ~~Orthogonal projection on general pairs~~ (done, 8/10 genuine). Run orthogonal projection on game-specific pairs. Run final steering experiments (general pairs usable for all 10 dims). Paper writing. Models: Qwen 7B primary (Llama 3-8B extraction in progress).
+**Current status:** Paper writing. All experiments complete. Instance stopped.
+
+**Key design choices:** Paired design, variable pools ($37-$157), temp=0, Qwen 7B, general-domain pairs, mean difference extraction, 100 games per config, BH-FDR correction. See RESEARCH_LOG Section 4 for rationale.
 
 ## Commands
 
@@ -88,6 +71,21 @@ python llm_judge.py --judges gemini    # qualitative judge
 # Validation / probing
 python probe_vectors.py --model qwen2.5-3b
 python analysis/audit_pairs.py
+```
+
+```bash
+# Phase 2: Ultimatum Game experiments
+python ultimatum_game.py --model qwen2.5-7b --dimension firmness \
+    --vectors_dir vectors/ultimatum_10dim_20pairs_general_matched/negotiation \
+    --layers 10 --alpha 7 --steered_role proposer --game ultimatum \
+    --n_games 100 --variable_pools --paired --temperature 0.0 \
+    --quantize --output_dir results/ultimatum/my_run
+
+# Confirmatory analysis (CPU, reads JSON results)
+python analysis/analyse_confirmatory.py \
+    --results_dir results/ultimatum/confirmatory/ug \
+    --dg_dir results/ultimatum/confirmatory_v2/dg \
+    --empathy_alpha_list -3 -7 -10
 ```
 
 Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `scipy`. Optional: `bitsandbytes` (for `--quantize`), `google-genai groq openai` (for `llm_judge.py`).
@@ -136,6 +134,7 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - **`control_steering_pairs.json`** — 5 control dimensions (verbosity, formality, hedging, sentiment, specificity) for detecting surface confounds. Pair count per dimension matches the negotiation pair count in each directory (12, 20, or 80). In `_matched` directories: formality/hedging/sentiment/specificity are length-matched, verbosity intentionally unmatched. In `_raw` directories: all 5 dimensions are intentionally unmatched, mirroring the raw negotiation pairs. Hedging targets the 3.6x hedge clustering bias; sentiment targets warm-vs-cold tone confounds in empathy/rapport vectors; specificity targets the concrete-numbers-vs-vague-language confound in firmness/anchoring/BATNA vectors. The `ultimatum_10dim_20pairs_general_matched` control pairs use general-domain contexts matching the negotiation pairs.
 
 **Key directories:**
+
 - `vectors/{variant}/negotiation/` and `vectors/{variant}/control/` — Extracted `.npy` vectors per variant, with subdirectories per method (`mean_diff/`, `pca/`, `logreg/`).
 - `results/validation/{variant}/qwen2.5-3b/{method}/` — Validation reports, JSON results, and plots per variant and extraction method.
 - `results/projection/{variant}/{method}/` — Orthogonal projection results per variant and method.
@@ -151,6 +150,7 @@ Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `
 - `validation/validate_vectors.py` — Note: validation script lives in `validation/` subdirectory, not project root. Run with `PYTHONPATH=. python validation/validate_vectors.py`.
 
 **Import dependency graph:**
+
 ```
 extract_vectors.py  ← standalone, no internal imports
   ↓ exports: MODELS, HF_TOKEN
@@ -168,128 +168,20 @@ analysis/*.py           ← all CPU-only, read JSON outputs, no internal imports
 ```
 
 **Key conventions:**
+
 - Vectors are unit-normed per layer. Shape: `(n_layers, hidden_dim)` for all-layers, `(hidden_dim,)` for single layer.
 - Activations are extracted at the **last token** (left-padded inputs, index `[-1]`).
 - Steered agent alternates seller/buyer role each game to control for role bias.
 - `score_deal()` returns `(seller_score, buyer_score)` that sum to 1.0. `advantage = steered_score - baseline_score`.
 - `MODELS` dict in `extract_vectors.py` is the single registry of supported models. Qwen models need no HF token; Llama/Gemma/Mistral are gated.
 
-**Concrete results (SCM on CraigslistBargains, Qwen 2.5-3B, 50 paired games):**
-
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Paired effect (all games) | +0.176, p=0.09, d=0.24 | Not significant at p<0.05 |
-| Paired effect (unclamped only, n=20) | +0.032, p=0.87 | Essentially zero |
-| Clamped games | 50% (25/50) | Half of all games have extreme scores |
-| Seller advantage (n=25) | -0.461 mean, 72% hurt | Steering hurts sellers |
-| Buyer advantage (n=25) | +0.780 mean, 92% help | Steering helps buyers |
-| Dealmaker | Seller 100% of the time | Structural game asymmetry |
-
-**Behavioral changes (real but not outcome-improving):**
-
-| Dimension | Behavioral Effect | Numbers |
-|-----------|-------------------|---------|
-| Firmness (alpha=20, 7B) | Hedge suppression | 27x (0.05 vs 1.44 hedges/100w) |
-| Firmness | Shorter responses | 22% (23.5 vs 30.1 words) |
-| Firmness | Clamping | 24% of games |
-| SCM (alpha=6, 3B) | Longer responses | 13% (25.6 vs 22.7 words) |
-| SCM | Hedge change | Minimal (1.67 vs 1.99/100w) |
-| SCM | Concession hardening | Steered concedes less per move |
-| SCM | Clamping | 50% of games |
-
-**Cross-dataset transfer (Deal or No Deal, Lewis et al. 2017):**
-SCM vector does NOT generalize. Pareto rate: 16% (naive baseline=9%, human=77%). Advantage: -0.052. The "strategic concession making" label is a misnomer — the vector likely encodes "resist conceding," which is domain-specific price stubbornness on Craigslist, not transferable strategic reasoning.
-
-**LLM judge (Gemini Flash, 50 games):**
-Role dominates judge scores. Sellers rated higher on 5/6 dimensions regardless of steering. Only role-independent signal: naturalness degradation at high alpha (firmness). SCM judge scores: steered wins on firmness (+0.74), info_management (+0.51), strategic_reasoning (+0.35). But within-role correlations are inflated by clamped games — unclamped, only info_management survives (r=+0.58).
-
-**Alpha dose-response (S2 TPE trials):**
-- SCM/middle/L18: monotonic (r=+0.50, p=0.025). Low alpha (<2): +0.133, high (>5): +0.330. Best signal quality.
-- Firmness/late/L27: monotonic but small (r=+0.53, mean +0.117).
-- Anchoring/middle/L18: inverted-U, likely noise (r=-0.09, p=0.69).
-- Layer matters: SCM/middle=+24.9% vs SCM/late=+6.0%.
-
-**No steering decay detected.** Max cumulative steered tokens = 139 words, well below 300-500 token literature threshold (Practitioner's Field Guide 2026). Our 8-turn negotiations are too short.
-
-**The causal chain (why outcomes don't improve):**
-```
-Contrastive pairs (surface biases: 1.8x length, 3.6x hedge clustering, zero opener overlap)
-  → Vector extraction (encodes mix of surface + genuine conceptual signal)
-  → Behavioral changes during generation (REAL: hedge suppression, response length, concession patterns)
-  → Outcome scores (CONFOUNDED by: role effects + clamping artifacts)
-  → Cross-dataset transfer (FAILS: not strategic reasoning, just price stubbornness)
-```
-
-**Why the task is the bottleneck (the pivot rationale):**
-1. **Clamping:** 24-70% of games have prices outside target range, producing extreme ±1.0 scores that dominate averages. Strip clamped games → near-zero effect.
-2. **Role asymmetry:** Seller finalizes 100% of deals (via `DEAL=`). Firmness is adaptive for buyers (resist overpaying) but maladaptive for sellers (can't close). This is structural, not fixable by better vectors.
-3. **LLM-vs-LLM variance:** Two copies of the same model negotiating produces high per-game variance (std=0.72). Need n>>50 to detect d=0.24 effects, but GPU cost is prohibitive.
-4. **1D scoring:** Craigslist is price-only. Cannot measure multi-dimensional strategic reasoning. DonD confirms this limitation.
-
-**Proposed paper framing (from P4_PROGRESS.md):**
-- **Primary claim:** "Activation steering produces measurable behavioral changes in LLM negotiation agents, but these changes do not translate to statistically significant outcome improvements. Apparent advantages are driven by scoring artifacts (clamping) and role asymmetry."
-- **Contribution:** The evaluation framework itself — methodology that identifies confounds inflating apparent steering effects. "How to properly evaluate steering in applied domains" paper, not "steering improves negotiation."
-
-**Key experimental findings (extraction methods):**
-- Mean difference vectors are strictly superior to PCA: 1-D probe accuracy 0.903 vs 0.586 (+54%) in best variant. PCA's PC1 captures noise at small sample sizes (12-80 pairs in 2560-dim space).
-- Logistic regression closely matches MD: 1-D probe 0.891 vs 0.903. LR's near-perfect training accuracy (0.998) is tautological. LR "fudges" toward confounds (firmness projection drop 7.2% vs MD's 3.4%).
-- All three methods agree on validity scores (33/100), traffic lights, and projection drops (2.1-2.8%). Data quality is the bottleneck, not algorithmic choice.
-- Literature consensus confirmed: MD >= LR >> PCA for steering (Im & Li 2025).
-
-**Validation ablation findings (8-variant study, see `results/validation/VALIDATION_RESULTS.md`, `PCA_VALIDATION_RESULTS.md`, and `LOGREG_VALIDATION_RESULTS.md`):**
-- **Best variant: `neg8dim_12pairs_matched`** (33/100, 1/8 negotiation flat-high probes, 5/8 AMBER). Zero GREEN dimensions in any variant.
-- **Length matching is the only effective intervention:** raw→matched = +10-13 points, 75-80% reduction in flat-high probes.
-- **Pair scaling hurts:** 12→20→80 pairs worsens scores (33→28→26 for 8dim). More pairs amplifies surface confounds; per-pair alignment degrades (empathy: 0.464→0.343 at 80 pairs with 30/80 outliers). Contradicts naive extrapolation from Chalnev et al. (2025).
-- **Dimension merging helps modestly:** 15→8 dims improves best score from 26→33 by reducing concept overlap.
-- **All negotiation×control Cohen's d pairs are SEVERE** in every variant. `cos(firmness, hedging) = -0.703`. But see orthogonal projection results below.
-- **No variant has recommended layers** (criteria: acc≥0.85 AND |d|≤0.8) except active_listening at 4 layers in neg8dim_80pairs.
-- **Selectivity metric is flawed:** penalty term caps at 0.5, so near-perfect probe accuracy at 80 pairs inflates selectivity even though vectors are more confounded.
-
-**Orthogonal projection findings (`orthogonal_projection.py`, `results/projection/`):**
-- **Cohen's d overstates contamination.** After projecting out all 5 control dimensions from negotiation vectors and re-running 1-D probes, average accuracy drops only 2.4% (0.843→0.820) for mean difference. 7/8 dimensions retain signal; 2 dimensions actually improve.
-- **Result is robust across all 8 variants.** 84/92 dimension×variant tests are GENUINE (91%), 12 PARTIAL SURFACE, 6 IMPROVED. Average drop ranges 1.1-3.7% across variants.
-- **Result is robust across all three extraction methods.** Projection drops: MD 2.4%, PCA 2.1%, LR 2.8% in best variant. All three methods extract directions with similar surface overlap, confirming the finding is about the data geometry, not the extraction algorithm.
-- **Firmness retains 96.6% of its probe accuracy** despite cos=-0.703 with hedging. The surface overlap was real but irrelevant to the separation signal.
-- **Empathy has the largest surface dependence** (6.9% drop for MD, 6.8% for PCA, 3.6% for LR), consistent with its sentiment overlap. Still well above chance. LR's lower empathy drop is offset by higher firmness drop (7.2% vs MD's 3.4%), suggesting LR's max-margin direction "fudges" toward hedging/formality confounds in firmness.
-- **clarity_and_directness is the only consistently surface-dependent dimension** (6.3% mean drop, PARTIAL in 3/4 variants). Its meaning genuinely overlaps with hedging and specificity.
-- **batna_awareness and reframing are the purest concepts** — cleaning has no effect or improves accuracy across all variants.
-- **Interpretation:** The data (pairs) is confounded in surface features, but the extracted steering directions are mostly genuine — they capture conceptual variance beyond surface features. Cohen's d detects data confounds, not direction confounds.
-
-**Known open issues (from `docs/P4_PROGRESS.md`):**
-1. **Same-model evaluation contamination.** Both agents share one model instance. Baseline sees steered agent's text and may adapt in-context. Fixing requires separate model instances (2x VRAM). Currently flagged as limitation.
-2. **Low statistical power.** n=50 paired scenarios, 25 per role. After removing clamped games, n=20. Insufficient to detect small effects (d=0.2-0.3).
-3. **Single model family.** All results on Qwen 2.5 (3B and 7B). No cross-architecture validation.
-4. **Contrastive pair quality.** 6 critical surface biases found in audit: 1.8x length ratio, zero opener overlap between pos/neg, perfect ellipsis separation, capitulation word segregation, 3.6x hedge clustering, 5.1x yielding clustering.
-5. **Single judge model.** Only Gemini Flash. Inter-model reliability not computed.
-
-**CraigslistBargains dataset properties (from `phase_a_diagnostic.py`):**
-- 5,247 train / 597 val scenarios, zero overlapping targets, zero bad prices
-- seller_target == listing_price always; buyer_target ~72% of listing
-- 6 categories: furniture 25%, housing 20%, bike 18%, car 13%, electronics 13%, phone 11%
-- Price ranges: ~$180 (electronics) to ~$10,933 (car)
-
-**Playground experiment results (task design validation, `moiz-task-design` branch):**
-- GPT-4o vs Gemini (1 game): Walk-away (no deal). Seller stuck at $4500, buyer gave up. Suggests frontier models are *too* firm — the task may be structurally broken even for strong models.
-- LLaMA 8B baseline (10 games via Groq): 8/10 agreed, 1 walk-away, 1 clamped. Buyer scores tend higher (median ~0.65). Sellers still finalize most deals. One game had the seller write `(Note: I'm not ready to close at $9050, so I didn't write DEAL=9050)` — the model literally explained its internal reasoning instead of acting, showing prompt-following issues.
-
-**Extraction method rationale (3 methods: mean_diff, PCA, logreg):**
-- **Mean difference** (generative): `mean(pos) - mean(neg)`. Standard CAA (Panickssery et al. 2024). Im & Li 2025 prove this is optimal under pointwise loss.
-- **PCA** (variance-based): PC1 of difference vectors. Follows Zou et al. 2023 (RepE). Finds dominant axis of variation; can diverge from concept direction if noise variance dominates.
-- **Logistic regression** (discriminative): L2-regularised LR weight vector. Follows Li et al. 2024 (ITI), Zou et al. 2023 (classifier variant). Finds max-margin separation boundary. Known to "fudge" direction when surface confounds are non-orthogonal (Marks & Tegmark 2023). Empirically confirmed: LR's firmness drops 7.2% on projection vs MD's 3.4%, while 1-D held-out probe accuracy is within 1.2% of MD (0.891 vs 0.903). Literature consensus confirmed: MD ≥ LR >> PCA for steering (Im & Li 2025).
-- **K-means rejected:** With balanced classes, k-means centroids ≈ class means, so `centroid_1 - centroid_0 ≈ mean_diff`. When clusters don't recover classes, it's worse — Euclidean distance in full activation space is dominated by highest-variance (surface confound) directions. Adds no new lens; conceptually redundant with mean diff.
-- **Why run all three (triangulation value):** The methods have different inductive biases (generative vs variance-based vs discriminative), so their agreement/disagreement is informative. Empirically: identical validity scores (33/100), identical traffic lights, and similar projection drops (2.1-2.8%) across all three methods prove data quality is the bottleneck, not algorithmic choice. Disagreements reveal method-specific weaknesses: LR's 7.2% firmness projection drop (vs MD's 3.4%) exposes discriminative confound exploitation; PCA's 0.586 mean 1-D probe accuracy (vs MD's 0.903) exposes noise-sensitivity at small sample sizes. A reviewer cannot dismiss findings as method-dependent when three algorithmically distinct approaches converge.
-
-**Key decisions and rationale:**
-1. **Role-separated reporting is mandatory.** Aggregate -1.6% hides seller=-27% vs buyer=+24%. Never report aggregate scores alone.
-2. **Clamped games must be flagged separately.** 24-70% of games produce extreme ±1.0 scores. Unclamped analysis is the real signal.
-3. **Mean difference is the primary extraction method.** MD >= LR >> PCA empirically and theoretically (Im & Li 2025). Run all three for triangulation, but MD is the workhorse.
-4. **Best steering pair variant is `neg8dim_12pairs_matched`.** 33/100 validity score, best among all 8 variants. Length-matching is the only effective intervention; more pairs hurts.
-5. **Best steering config: SCM, layer 18 (middle), alpha~6.** Only config with monotonic dose-response. Firmness at L27 works behaviorally but outcomes are clamping artifacts.
-6. **The paper is about evaluation methodology, not positive results.** The contribution is the framework that identifies confounds. Negative results are publishable findings.
-7. **Phase 2 pivot to controlled tasks.** LLM-vs-LLM has too much variance. Preset scripts or simpler tasks needed to isolate steering signal from game noise.
-8. **Qwen 3B/7B only.** Llama 3B was tested but produced faulty results. Qwen models don't require HF tokens.
-9. **Anti-steerability is role-dependent, not random.** Reframed from Tan et al. 2024. Firmness is adaptive for buyers, maladaptive for sellers.
-10. **Hedge suppression is the primary observable effect.** 27x reduction maps directly from contrastive pair bias to deployment behavior. This is the clearest causal chain.
+**Key decisions (see RESEARCH_LOG for full rationale):**
+- Mean difference extraction (MD >= LR >> PCA). General-domain pairs for Phase 2.
+- Role-separated reporting mandatory. Report both demand shift and payoff.
+- Qwen 7B primary (3B for Phase 1). Llama 3B produced faulty results.
+- Layer location is mechanistic: L10 = style/tone, L12 = reasoning, L14+ = inactive.
+- UG chosen over Split-or-Steal (continuous outcome, dose-response possible).
+- Variable pools + temp=0 + paired design = honest n=100 per config.
 
 ---
 
@@ -301,66 +193,11 @@ You are an expert who double-checks things, is skeptical, and does research. The
 
 ---
 
-## Research Frameworks
-
-Three frameworks guide research thinking. Use them as lenses, not as jargon in writing.
-
-### Hamming (The Art of Doing Science and Engineering)
-
-Apply these checks to any proposed experiment or claim:
-
-- **Important problem test:** Can you write one sentence stating what is at stake if this remains unsolved?
-- **Back-of-envelope first:** Estimate before you build. If the numbers don't work on paper, they won't work in the lab.
-- **Falsifiability:** What result would prove you wrong? If nothing would, the experiment isn't well-posed.
-- **Rorschach test:** Could this be noise? The ability to say "there is nothing here" is a skill.
-- **Each solution should deepen understanding:** A result without insight is empty. "The purpose of computing is insight, not numbers."
-- **Constraints are assets:** Limited data, limited compute, limited time. These push toward analysis-heavy, theory-driven work.
-
-### Craft of Research (How to Write a Paper)
-
-Every paper needs this structure:
-
-- **Claim** because of **Reason** based on **Evidence**, with **Acknowledgement and Response** to alternatives, connected by **Warrant/Principle**.
-- **Impact + Rigor.** Limited impact = incremental. Limited rigor = unsubstantiated. Need both.
-- **Predictable disagreements:** Anticipate reviewer objections before they arise.
-- **Fusion of dissimilar (X+Y)** is the strongest idea pattern: connecting two fields that haven't been connected before.
-- **Avoid:** pipeline papers (X then Y then Z), incremental improvements (X++), following the hype.
-
-### Systems Thinking (Thinking in Systems, Meadows)
-
-- Identify **stocks** (what accumulates), **inflows** (what adds), **outflows** (what depletes).
-- Look for broken **feedback loops** — where the system should self-correct but doesn't.
-- **"Seeking the wrong goal" trap:** Optimising the wrong metric produces exactly what you asked for, not what you wanted. Changing the goal is a high-leverage intervention.
-- **Information flow as leverage:** Making hidden information visible often matters more than adding new components.
-- **"Layers of limits":** Identify the current bottleneck. Solve problems in dependency order.
-
----
-
 ## Research Principles
 
 > **The job is not to make an impressive system. It is to isolate one claim, control the world around it, and see if reality agrees.**
 
-1. **Claim-first** — Write the claim in one sentence before running experiments
-2. **Falsifiable** — What result would prove you wrong?
-3. **Narrow > Broad** — Well-justified narrow claims beat underpowered broad ones
-4. **Comparison is mandatory** — Every finding needs a baseline or contrast
-5. **Small conclusions are strong** — "Under these conditions, X > Y" is good
-6. **Understanding > Performance** — Explain why, not just that
-7. **Any outcome is publishable** — Design experiments where negative results are also findings
-8. **Theory drives experiments** — Domain knowledge should motivate the ML, not decorate it afterwards
-
-### Pitfalls to Flag
-
-- Over-claiming generalisation (small dataset ≠ "in general")
-- Moving goalposts or tweaking metrics post-hoc
-- Confusing architecture with contribution (the model choice is not the claim — the finding is)
-- Scope creep (stay focused on the core question)
-- Reporting aggregate metrics without per-class/per-group breakdown
-- Treating standard techniques as contributions (the technique is not novel; what you learn from applying it might be)
-- Attention-as-explanation without proper methods (use integrated gradients or similar; raw attention is not explanation — cite Jain & Wallace 2019)
-- Using "prove" or "demonstrate conclusively" — say "provide evidence consistent with"
-- Synthetic data without validation (prefer natural data; clearly separate synthetic experiments)
-- Calling anything a "benchmark" without sufficient scale and validation
-- Cherry-picking examples that support your hypothesis
-- Conflating correlation with causation
-- Ignoring class imbalance in evaluation
+- **Claim-first, falsifiable.** Write the claim before running experiments. What result would prove you wrong?
+- **Narrow > Broad.** "Under these conditions, X > Y" beats underpowered broad claims.
+- **Understanding > Performance.** Explain why, not just that. Any outcome is publishable if designed right.
+- **Pitfalls:** Over-claiming generalisation, moving goalposts post-hoc, cherry-picking, conflating correlation with causation, reporting aggregates without per-group breakdown, scope creep.
