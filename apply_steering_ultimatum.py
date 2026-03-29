@@ -98,6 +98,8 @@ def build_proposer_system(pool: int) -> str:
         f"  - Propose a split. Player B will either Accept or Reject.\n"
         f"  - If Player B accepts, you both get the proposed amounts.\n"
         f"  - If Player B rejects, you BOTH get $0.\n\n"
+        f"Your aim: earn as much as you can from this split — but remember, "
+        f"if Player B rejects, you both get nothing.\n\n"
         f"Respond with 1-2 sentences explaining your reasoning, then end with:\n"
         f"OFFER=<your_amount>,<their_amount>\n\n"
         f"The two amounts must be whole numbers that add up to ${pool}.\n"
@@ -112,9 +114,37 @@ def build_responder_system(proposer_share: int, responder_share: int, pool: int)
         f"Rules:\n"
         f"  - If you Accept, you get ${responder_share} and they get ${proposer_share}.\n"
         f"  - If you Reject, you BOTH get $0.\n\n"
+        f"Your aim: decide whether this offer is worth accepting — "
+        f"if you reject, neither player receives anything.\n\n"
         f"Respond with 1-2 sentences explaining your reasoning, then end with:\n"
         f"ACCEPT or REJECT\n"
     )
+    
+# def build_proposer_system(pool: int) -> str:
+#     return (
+#         f"You are Player A in an Ultimatum Game.\n\n"
+#         f"Rules:\n"
+#         f"  - You have ${pool} to split between yourself and Player B.\n"
+#         f"  - Propose a split. Player B will either Accept or Reject.\n"
+#         f"  - If Player B accepts, you both get the proposed amounts.\n"
+#         f"  - If Player B rejects, you BOTH get $0.\n\n"
+#         f"Respond with 1-2 sentences explaining your reasoning, then end with:\n"
+#         f"OFFER=<your_amount>,<their_amount>\n\n"
+#         f"The two amounts must be whole numbers that add up to ${pool}.\n"
+#     )
+
+
+# def build_responder_system(proposer_share: int, responder_share: int, pool: int) -> str:
+#     return (
+#         f"You are Player B in an Ultimatum Game.\n\n"
+#         f"Player A has proposed: they get ${proposer_share}, you get ${responder_share}.\n"
+#         f"The total pool is ${pool}.\n\n"
+#         f"Rules:\n"
+#         f"  - If you Accept, you get ${responder_share} and they get ${proposer_share}.\n"
+#         f"  - If you Reject, you BOTH get $0.\n\n"
+#         f"Respond with 1-2 sentences explaining your reasoning, then end with:\n"
+#         f"ACCEPT or REJECT\n"
+#     )
 
 
 # ---------------------------------------------------------------------------
