@@ -1,0 +1,353 @@
+GPU 0 is in use
+if: Expression Syntax.
+==> Running proposer/firmness on Layer 28
+00:52:57  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=firmness | role=proposer
+00:52:57  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:411: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:419: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+00:53:00  WARNING   CUDA extension not installed.
+00:53:01  WARNING   CUDA extension not installed.
+Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]Fetching 5 files:   0%|          | 0/5 [04:58<?, ?it/s]
+Traceback (most recent call last):
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 587, in <module>
+    main()
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 495, in main
+    model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 4900, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 1200, in _get_resolved_checkpoint_files
+    checkpoint_files, sharded_metadata = get_checkpoint_shard_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 1084, in get_checkpoint_shard_files
+    cached_filenames = cached_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 567, in cached_files
+    raise e
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 494, in cached_files
+    snapshot_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/_snapshot_download.py", line 332, in snapshot_download
+    thread_map(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/contrib/concurrent.py", line 69, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/contrib/concurrent.py", line 51, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, chunksize=chunksize), **kwargs))
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 609, in result_iterator
+    yield fs.pop().result()
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 446, in result
+    return self.__get_result()
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 391, in __get_result
+    raise self._exception
+  File "/usr/lib64/python3.9/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/_snapshot_download.py", line 306, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1175, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1742, in _download_to_tmp_and_move
+    http_get(
+OSError: [Errno 122] Disk quota exceeded
+==> Running proposer/empathy on Layer 28
+00:58:19  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=empathy | role=proposer
+00:58:19  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:411: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:419: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+00:58:20  WARNING   CUDA extension not installed.
+00:58:20  WARNING   CUDA extension not installed.
+Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]Fetching 5 files:   0%|          | 0/5 [00:38<?, ?it/s]
+Traceback (most recent call last):
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 587, in <module>
+    main()
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 495, in main
+    model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 4900, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 1200, in _get_resolved_checkpoint_files
+    checkpoint_files, sharded_metadata = get_checkpoint_shard_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 1084, in get_checkpoint_shard_files
+    cached_filenames = cached_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 567, in cached_files
+    raise e
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 494, in cached_files
+    snapshot_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/_snapshot_download.py", line 332, in snapshot_download
+    thread_map(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/contrib/concurrent.py", line 69, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/contrib/concurrent.py", line 51, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, chunksize=chunksize), **kwargs))
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 609, in result_iterator
+    yield fs.pop().result()
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 446, in result
+    return self.__get_result()
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 391, in __get_result
+    raise self._exception
+  File "/usr/lib64/python3.9/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/_snapshot_download.py", line 306, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1175, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1727, in _download_to_tmp_and_move
+    xet_get(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 633, in xet_get
+    download_files(
+RuntimeError: Data processing error: File reconstruction error: Internal Writer Error: Background writer channel closed
+Segmentation fault (core dumped)
+==> Running proposer/composure on Layer 28
+00:59:10  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=composure | role=proposer
+00:59:10  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:411: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:419: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+00:59:11  WARNING   CUDA extension not installed.
+00:59:11  WARNING   CUDA extension not installed.
+Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]Fetching 5 files:   0%|          | 0/5 [03:17<?, ?it/s]
+Traceback (most recent call last):
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 587, in <module>
+    main()
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 495, in main
+    model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 4900, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 1200, in _get_resolved_checkpoint_files
+    checkpoint_files, sharded_metadata = get_checkpoint_shard_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 1084, in get_checkpoint_shard_files
+    cached_filenames = cached_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 567, in cached_files
+    raise e
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 494, in cached_files
+    snapshot_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/_snapshot_download.py", line 332, in snapshot_download
+    thread_map(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/contrib/concurrent.py", line 69, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/contrib/concurrent.py", line 51, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, chunksize=chunksize), **kwargs))
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 609, in result_iterator
+    yield fs.pop().result()
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 446, in result
+    return self.__get_result()
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 391, in __get_result
+    raise self._exception
+  File "/usr/lib64/python3.9/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/_snapshot_download.py", line 306, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1175, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1742, in _download_to_tmp_and_move
+    http_get(
+OSError: [Errno 122] Disk quota exceeded
+==> Running proposer/anchoring on Layer 28
+02:04:04  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=anchoring | role=proposer
+02:04:04  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:411: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:419: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+02:04:05  WARNING   CUDA extension not installed.
+02:04:05  WARNING   CUDA extension not installed.
+Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]Fetching 5 files:   0%|          | 0/5 [00:11<?, ?it/s]
+Traceback (most recent call last):
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 587, in <module>
+    main()
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 495, in main
+    model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 4900, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 1200, in _get_resolved_checkpoint_files
+    checkpoint_files, sharded_metadata = get_checkpoint_shard_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 1084, in get_checkpoint_shard_files
+    cached_filenames = cached_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 567, in cached_files
+    raise e
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 494, in cached_files
+    snapshot_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/_snapshot_download.py", line 332, in snapshot_download
+    thread_map(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/contrib/concurrent.py", line 69, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/contrib/concurrent.py", line 51, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, chunksize=chunksize), **kwargs))
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 609, in result_iterator
+    yield fs.pop().result()
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 446, in result
+    return self.__get_result()
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 391, in __get_result
+    raise self._exception
+  File "/usr/lib64/python3.9/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/_snapshot_download.py", line 306, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1175, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1727, in _download_to_tmp_and_move
+    xet_get(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 633, in xet_get
+    download_files(
+RuntimeError: Data processing error: File reconstruction error: Internal Writer Error: Background writer channel closed
+Fatal Python error: init_importlib: can't import _frozen_importlib
+Python runtime state: preinitialized
+SystemError: /builddir/build/BUILD/Python-3.9.25/Objects/codeobject.c:141: bad argument to internal function
+
+Current thread 0x00007f70c2915840 (most recent call first):
+<no Python frame>
+Segmentation fault (core dumped)
+==> Running proposer/greed on Layer 28
+02:05:28  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=greed | role=proposer
+02:05:28  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:411: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:419: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+02:05:30  WARNING   CUDA extension not installed.
+02:05:30  WARNING   CUDA extension not installed.
+Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]Fetching 5 files:   0%|          | 0/5 [03:24<?, ?it/s]
+Traceback (most recent call last):
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 587, in <module>
+    main()
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 495, in main
+    model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 4900, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 1200, in _get_resolved_checkpoint_files
+    checkpoint_files, sharded_metadata = get_checkpoint_shard_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 1084, in get_checkpoint_shard_files
+    cached_filenames = cached_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 567, in cached_files
+    raise e
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 494, in cached_files
+    snapshot_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/_snapshot_download.py", line 332, in snapshot_download
+    thread_map(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/contrib/concurrent.py", line 69, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/contrib/concurrent.py", line 51, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, chunksize=chunksize), **kwargs))
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 609, in result_iterator
+    yield fs.pop().result()
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 446, in result
+    return self.__get_result()
+  File "/usr/lib64/python3.9/concurrent/futures/_base.py", line 391, in __get_result
+    raise self._exception
+  File "/usr/lib64/python3.9/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/_snapshot_download.py", line 306, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1175, in _hf_hub_download_to_cache_dir
+    _download_to_tmp_and_move(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py", line 1742, in _download_to_tmp_and_move
+    http_get(
+OSError: [Errno 122] Disk quota exceeded
+Segmentation fault (core dumped)
+==> Running proposer/fairness_norm on Layer 28
+02:09:44  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=fairness_norm | role=proposer
+02:09:44  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:411: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:419: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+02:09:46  WARNING   CUDA extension not installed.
+02:09:46  WARNING   CUDA extension not installed.
+Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]Fetching 5 files:   0%|          | 0/5 [00:51<?, ?it/s]
+Traceback (most recent call last):
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 587, in <module>
+    main()
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/lightweight_gridsearch_ultimatum.py", line 495, in main
+    model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/models/auto/auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 4900, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/modeling_utils.py", line 1200, in _get_resolved_checkpoint_files
+    checkpoint_files, sharded_metadata = get_checkpoint_shard_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 1084, in get_checkpoint_shard_files
+    cached_filenames = cached_files(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 567, in cached_files
+    raise e
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/transformers/utils/hub.py", line 494, in cached_files
+    snapshot_download(
+  File "/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
