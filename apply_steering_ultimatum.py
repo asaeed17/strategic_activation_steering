@@ -79,7 +79,7 @@ POOL_SIZES = [
 ]
 
 # Threshold sweep for --rulebased responder mode: what fraction of pool goes to the responder
-RESPONDER_THRESHOLDS = [0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90]
+RESPONDER_THRESHOLDS = [0.20, 0.40, 0.60, 0.80]
 
 _OFFER_RE  = re.compile(r"OFFER\s*=\s*(\d+)\s*,\s*(\d+)", re.IGNORECASE)
 _ACCEPT_RE = re.compile(r"\bACCEPT\b", re.IGNORECASE)
@@ -270,9 +270,9 @@ def run_responder_game_rulebased(
     max_new_tokens: int = 150,
     temperature: float = 0.3,
 ) -> List[Dict]:
-    """Rule-based proposer sweeps offers (10–90% to responder); steered/baseline LLM responds.
+    """Rule-based proposer sweeps offers (20–80% to responder); steered/baseline LLM responds.
 
-    Returns one result dict per threshold, so n_games pools × 9 thresholds = 9×n_games results total.
+    Returns one result dict per threshold, so n_games pools × 4 thresholds = 4×n_games results total.
     Each result includes 'responder_pct' (the offer expressed as % of pool to responder).
     """
     if thresholds is None:
@@ -458,8 +458,8 @@ def run_all_games(
     If rulebased=True:
       - proposer role: steered/baseline LLM proposes; deterministic rule-based responder
         accepts iff responder_share/pool >= accept_threshold (default 0.35).
-      - responder role: rule-based proposer sweeps 10/20/.../90% offers to the responder
-        for each pool; LLM decides accept/reject at each threshold. Returns 9×n_games results.
+      - responder role: rule-based proposer sweeps 20/40/60/80% offers to the responder
+        for each pool; LLM decides accept/reject at each threshold. Returns 4×n_games results.
     """
     if pools is None:
         pools = [POOL_SIZES[i % len(POOL_SIZES)] for i in range(n_games)]
@@ -590,7 +590,7 @@ def parse_args() -> argparse.Namespace:
                    help="Rule-based proposer: keep this fraction of the pool.")
     p.add_argument("--rulebased", action="store_true",
                    help="Use rule-based opponents. Proposer role: rule-based responder (35%% threshold). "
-                        "Responder role: rule-based proposer sweeps 10-90%% offers.")
+                        "Responder role: rule-based proposer sweeps 20-80%% offers.")
     p.add_argument("--fixed_pool",      type=int,   default=None,
                    help="Fix all games to this pool size (e.g. 100). Reduces payoff variance.")
     p.add_argument("--seed",            type=int,   default=42)
