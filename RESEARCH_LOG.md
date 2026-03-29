@@ -448,25 +448,25 @@ L10 has 2-3x the demand effect of L12 for empathy. L12 acceptance is slightly hi
 
 **Round 5 expanded empathy DG (4 additional configs, α=3 and α=10):**
 
-| Layer | Alpha | DG Δ demand | d      | p      | DG baseline |
-| ----- | ----- | ----------- | ------ | ------ | ----------- |
-| 10    | 3     | **-25.0pp** | -3.06  | <0.001 | 77.4%†      |
-| 10    | 7     | -0.5pp      | -0.12  | 0.226  | 59.2%       |
-| 10    | 10    | **-13.5pp** | -1.15  | <0.001 | 77.3%†      |
-| 12    | 3     | **-18.6pp** | -1.64  | <0.001 | 77.4%†      |
-| 12    | 7     | -1.1pp      | -0.24  | 0.020  | 59.2%       |
-| 12    | 10    | **-22.8pp** | -2.68  | <0.001 | 77.3%†      |
+| Layer | Alpha | DG Δ demand | d     | p      | DG baseline |
+| ----- | ----- | ----------- | ----- | ------ | ----------- |
+| 10    | 3     | **-25.0pp** | -3.06 | <0.001 | 77.4%†      |
+| 10    | 7     | -0.5pp      | -0.12 | 0.226  | 59.2%       |
+| 10    | 10    | **-13.5pp** | -1.15 | <0.001 | 77.3%†      |
+| 12    | 3     | **-18.6pp** | -1.64 | <0.001 | 77.4%†      |
+| 12    | 7     | -1.1pp      | -0.24 | 0.020  | 59.2%       |
+| 12    | 10    | **-22.8pp** | -2.68 | <0.001 | 77.3%†      |
 
-†**Baseline discrepancy warning:** The α=7 configs (Round 4, AWS T4, 4-bit NF4 quantized) have baselines of ~59%. The α={3,10} configs (Round 5, UCL lab RTX 3090 Ti, bfloat16 unquantized) have baselines of ~77%. The model's baseline DG demand is highly sensitive to numerical precision. **Within-config paired deltas are valid** (each compares steered vs baseline under identical conditions), but **cross-alpha dose-response is confounded** by the precision change. We cannot conclude the non-monotonic pattern (α=3 huge, α=7 null, α=10 huge) is real without rerunning all alphas under identical conditions.
+†**Baseline discrepancy warning:** The α=7 configs (Round 4, 4-bit NF4 quantized) have baselines of ~59%. The α={3,10} configs (Round 5, UCL lab RTX 3090 Ti, bfloat16 unquantized) have baselines of ~77%. The model's baseline DG demand is highly sensitive to numerical precision. **Within-config paired deltas are valid** (each compares steered vs baseline under identical conditions), but **cross-alpha dose-response is confounded** by the precision change. We cannot conclude the non-monotonic pattern (α=3 huge, α=7 null, α=10 huge) is real without rerunning all alphas under identical conditions.
 
 **What we CAN claim:** (1) The "blanket nullification" narrative from 2 configs was premature — empathy can produce large DG effects at some alpha/precision combinations. (2) The paired deltas show empathy steering REDUCES demand in DG (negative d), which is the OPPOSITE direction from UG (positive d). This is directionally more like the firmness L10 reversal than a clean null. (3) The nullification at α=7 under quantized conditions is robust (confirmed by TOST equivalence: L10 p_tost=7.5e-24, L12 p_tost=5.9e-14, both bounded within ±5pp).
 
 **Revised three-pattern interpretation:**
 
-| Pattern       | Where           | Meaning                                                      |
-| ------------- | --------------- | ------------------------------------------------------------ |
-| **Reversal**  | Firmness L10    | Context-dependent style (aggression → fairness in DG)        |
-| **Persistence** | Firmness L12  | Context-independent disposition ("take more")                |
+| Pattern                    | Where           | Meaning                                                                                                            |
+| -------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Reversal**               | Firmness L10    | Context-dependent style (aggression → fairness in DG)                                                              |
+| **Persistence**            | Firmness L12    | Context-independent disposition ("take more")                                                                      |
 | **Reversal (conditional)** | Empathy L10+L12 | Reverses in DG at some alphas, null at others. Precision-sensitive. Pattern unclear — needs consistent replication |
 
 The clean three-way taxonomy (reversal/persistence/nullification) is weakened. Empathy in DG may be a noisier version of the firmness L10 reversal rather than a categorically different pattern. The original "empathy needs adversarial context" interpretation is no longer supported as stated.
@@ -507,10 +507,10 @@ The clean three-way taxonomy (reversal/persistence/nullification) is weakened. E
 
 **Question:** Teammate data shows d=-3.05 at L14 for empathy. Does this replicate in our clean setup?
 
-| Dimension | Layer | Alpha | Demand Shift | d     | p      | Acceptance        | Payoff Δ  |
-| --------- | ----- | ----- | ------------ | ----- | ------ | ----------------- | --------- |
-| Firmness  | 14    | 7     | +14.2pp      | 0.57  | <0.001 | 84.5% vs 85.6%   | +10.5pp   |
-| Empathy   | 14    | 7     | +3.3pp       | 0.14  | 0.171  | 86.7% vs 85.7%   | +3.7pp    |
+| Dimension | Layer | Alpha | Demand Shift | d    | p      | Acceptance     | Payoff Δ |
+| --------- | ----- | ----- | ------------ | ---- | ------ | -------------- | -------- |
+| Firmness  | 14    | 7     | +14.2pp      | 0.57 | <0.001 | 84.5% vs 85.6% | +10.5pp  |
+| Empathy   | 14    | 7     | +3.3pp       | 0.14 | 0.171  | 86.7% vs 85.7% | +3.7pp   |
 
 **Firmness L14 α=7:** Significant but noisy (d=0.57, std_delta=24.75pp). Compare: L10 d=1.38, L12 d=1.21. L14 is weaker but not dead — effect attenuates with layer depth. High variance suggests some games steered strongly, others not at all.
 
@@ -520,8 +520,8 @@ The clean three-way taxonomy (reversal/persistence/nullification) is weakened. E
 
 **Layer gradient (firmness UG, α=7):**
 
-| Layer | d    | Interpretation              |
-| ----- | ---- | --------------------------- |
+| Layer | d    | Interpretation                |
+| ----- | ---- | ----------------------------- |
 | 10    | 1.38 | Strongest (context-sensitive) |
 | 12    | 1.21 | Strong (context-independent)  |
 | 14    | 0.57 | Moderate (attenuated)         |
@@ -536,18 +536,18 @@ Effects attenuate but don't disappear at L14 for firmness. This is consistent wi
 
 **Results:**
 
-| Config                  | Demand Δ  | Accept (steered) | Accept (baseline) | Payoff Δ     |
-| ----------------------- | --------- | ---------------- | ----------------- | ------------ |
-| TV baseline (no steer)  | —         | 91.0%            | —                 | —            |
-| TV firmness L12 α=7     | +13.0pp   | **54.5%**        | 90.9%             | **-11.5pp**  |
-| TV empathy L10 α=+7     | +11.6pp   | **45.5%**        | 90.9%             | **-19.1pp**  |
+| Config                 | Demand Δ | Accept (steered) | Accept (baseline) | Payoff Δ    |
+| ---------------------- | -------- | ---------------- | ----------------- | ----------- |
+| TV baseline (no steer) | —        | 91.0%            | —                 | —           |
+| TV firmness L12 α=7    | +13.0pp  | **54.5%**        | 90.9%             | **-11.5pp** |
+| TV empathy L10 α=+7    | +11.6pp  | **45.5%**        | 90.9%             | **-19.1pp** |
 
 **Comparison with numbers-only mode (same configs):**
 
-| Config            | Numbers-Only Accept | Text-Visible Accept | Numbers-Only Payoff Δ | Text-Visible Payoff Δ |
-| ----------------- | ------------------- | ------------------- | --------------------- | --------------------- |
-| Firmness L12 α=7  | 88.9%               | **54.5%**           | **+13.1pp**           | **-11.5pp**           |
-| Empathy L10 α=+7  | 94.9%               | **45.5%**           | **+17.0pp**           | **-19.1pp**           |
+| Config           | Numbers-Only Accept | Text-Visible Accept | Numbers-Only Payoff Δ | Text-Visible Payoff Δ |
+| ---------------- | ------------------- | ------------------- | --------------------- | --------------------- |
+| Firmness L12 α=7 | 88.9%               | **54.5%**           | **+13.1pp**           | **-11.5pp**           |
+| Empathy L10 α=+7 | 94.9%               | **45.5%**           | **+17.0pp**           | **-19.1pp**           |
 
 **Finding: Steered text is massively counterproductive.** Demand shifts are similar (~13pp firmness, ~12pp empathy), so steering still changes what the model asks for. But acceptance rates crash by 34-49pp when the responder can read the reasoning. All payoff gains reverse to losses.
 
@@ -628,11 +628,11 @@ All 24 UG configs show significant demand shifts (p < 0.001 after BH-FDR correct
 
 The UG/DG comparison reveals context-dependence, but the taxonomy is less clean than initially proposed:
 
-| Pattern         | Where         | UG effect | DG effect          | Meaning                                    |
-| --------------- | ------------- | --------- | ------------------ | ------------------------------------------ |
-| **Reversal**    | Firmness L10  | +16pp     | -5.8pp             | Context-dependent style (aggression ↔ fairness) |
-| **Persistence** | Firmness L12  | +13pp     | +15pp              | Context-independent disposition ("take more") |
-| **Reversal (conditional)** | Empathy L10+L12 | +5 to +11pp | Null at α=7, large negative at α={3,10}† | Precision/alpha-sensitive; partially reverses |
+| Pattern                    | Where           | UG effect   | DG effect                                | Meaning                                         |
+| -------------------------- | --------------- | ----------- | ---------------------------------------- | ----------------------------------------------- |
+| **Reversal**               | Firmness L10    | +16pp       | -5.8pp                                   | Context-dependent style (aggression ↔ fairness) |
+| **Persistence**            | Firmness L12    | +13pp       | +15pp                                    | Context-independent disposition ("take more")   |
+| **Reversal (conditional)** | Empathy L10+L12 | +5 to +11pp | Null at α=7, large negative at α={3,10}† | Precision/alpha-sensitive; partially reverses   |
 
 †The empathy DG results at α={3,10} used different model precision (bfloat16 vs quantized), introducing a baseline confound. Within-config paired deltas are valid but cross-alpha patterns are unreliable. See Section 9, Round 4 for details.
 
@@ -820,7 +820,7 @@ Activation steering reliably changes what an LLM proposes in strategic interacti
 | `validation/orthogonal_projection.py`   | Control dimension projection                               |
 | `run_acceptance_curve.py`               | Phase B acceptance curve sweep                             |
 | `analysis/phase_c_analytical_payoff.py` | Phase C framing decomposition                              |
-| `analysis/statistical_hardening.py`     | Bootstrap CIs, TOST, BH-FDR, dose-response monotonicity   |
+| `analysis/statistical_hardening.py`     | Bootstrap CIs, TOST, BH-FDR, dose-response monotonicity    |
 | `run_sprint_empathy_dg.sh`              | Empathy DG thin cells (4 configs)                          |
 | `run_sprint_l14.sh`                     | L14 adjudication (2 configs)                               |
 | `run_sprint_text_vis.sh`                | Text-visibility control (3 configs)                        |
