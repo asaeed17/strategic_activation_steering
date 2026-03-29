@@ -18,17 +18,18 @@ When the user asks about results, hypotheses, or experimental context, consult t
 
 **Phase 1 (complete):** CraigslistBargains. Behavioral changes real (27x hedge suppression) but outcomes not significant (p=0.87). Task too noisy. See RESEARCH_LOG Section 2.
 
-**Phase 2 (complete):** Ultimatum Game experiments. 8,500+ games across 4 rounds + acceptance curve + analytical decomposition. See RESEARCH_LOG Sections 7-11.
+**Phase 2 (complete):** Ultimatum Game experiments. 10,000+ games across 6 rounds + acceptance curve + analytical decomposition + text-visibility control. See RESEARCH_LOG Sections 7-11.
 
 **Main findings (Phase 2):**
-1. **Steering reliably shifts behavior** — all 24 UG configs significant (p<0.001, d=0.37-1.54), perfect monotonic dose-response.
-2. **Dimension×layer×context interaction** — firmness L10 reverses in DG (-5.8pp), firmness L12 persists (+15pp), empathy nullifies at both layers (~0pp). Three distinct patterns: reversal, persistence, nullification.
-3. **Empathy vector encodes activation, not valence** — both positive and negative alpha increase demand. Sign modulates tone (acceptance rate), not direction. Best payoff: empathy L10 α=+7 (+17pp). Effect requires adversarial context (vanishes in DG).
-4. **RLHF creates bidirectional fairness enforcement** — acceptance curve is non-monotonic. Rejects BOTH unfair offers (20% to responder: 70% accept) AND generous offers (80% to responder: 75% accept). Detects $1 inequality on odd pools (86% rejection). Baseline sits in the worst spot (50% demand).
-5. **Steering works through numbers, not framing (in single-turn)** — framing effect ≈ 0pp because responder only sees parsed OFFER numbers. Multi-turn needed to test communication effects.
+1. **Steering reliably shifts behavior** — all 24 UG configs significant (p<0.001, d=0.37-1.54), near-perfect dose-response. L14 attenuates (firmness d=0.57, empathy NS).
+2. **Dimension×layer×context interaction** — firmness L10 reverses in DG (-5.8pp), firmness L12 persists (+15pp). Empathy DG pattern uncertain: null at α=7 (TOST confirmed) but large effects at other alphas under different model precision (confounded — needs replication).
+3. **Empathy vector encodes activation, not valence** — both positive and negative alpha increase demand in UG. Sign modulates tone (acceptance rate), not direction. Best payoff: empathy L10 α=+7 (+17pp) in numbers-only mode.
+4. **RLHF creates bidirectional fairness enforcement** — acceptance curve is non-monotonic. Rejects BOTH unfair and generous offers. Baseline sits at 50% demand — the worst spot.
+5. **Framing is massively negative when text visible** — numbers-only: framing ≈ 0pp. Text-visible: acceptance crashes by 34-49pp, all payoff gains reverse. "Steering improves payoff" is bounded to numbers-only settings.
 6. **General pairs >> game-specific pairs** — 16pp effect vs ~0pp for firmness at L10.
+7. **Teammate's L14 peak NOT replicated** — empathy L14 d=0.14 (NS) vs their d=-3.05. Design differences explain discrepancy.
 
-**Current status:** Paper writing. Teammate working on multi-turn extension (alternating offers). 32B scaling experiment in progress. Instance stopped.
+**Current status:** Paper writing. One blocking experiment remains: rerun empathy DG under consistent conditions to resolve precision confound. Teammate working on multi-turn and 32B.
 
 **Key design choices:** Paired design, variable pools ($37-$157), temp=0, Qwen 7B, general-domain pairs, mean difference extraction, 100 games per config, BH-FDR correction. See RESEARCH_LOG Section 4 for rationale.
 
