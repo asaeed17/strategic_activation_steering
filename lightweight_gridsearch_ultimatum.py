@@ -436,7 +436,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--rulebased", action="store_true",
                    help="Use rule-based opponents instead of LLM baseline. "
                         "Proposer role: deterministic responder (35%% threshold). "
-                        "Responder role: sweeps 10-90%% offers across each pool.")
+                        "Responder role: sweeps 20-80%% offers across each pool.")
     return p.parse_args()
 
 
