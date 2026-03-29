@@ -123,10 +123,17 @@ def build_proposer_system(pool: int = DEFAULT_POOL, game: str = "ultimatum") -> 
     )
 
 
-def build_responder_system(proposer_share: int, responder_share: int, pool: int = DEFAULT_POOL) -> str:
-    return (
-        f"You are Player B in an Ultimatum Game.\n"
-        f"\n"
+def build_responder_system(
+    proposer_share: int, responder_share: int, pool: int = DEFAULT_POOL,
+    proposer_text: Optional[str] = None,
+) -> str:
+    text = "You are Player B in an Ultimatum Game.\n\n"
+    if proposer_text:
+        text += (
+            f"Player A said:\n"
+            f'"{proposer_text}"\n\n'
+        )
+    text += (
         f"Player A has proposed: they get ${proposer_share}, you get ${responder_share}.\n"
         f"The total pool is ${pool}.\n"
         f"\n"
@@ -137,6 +144,7 @@ def build_responder_system(proposer_share: int, responder_share: int, pool: int 
         f"Respond with 1-2 sentences explaining your reasoning, then end with:\n"
         f"ACCEPT or REJECT\n"
     )
+    return text
 
 
 # ---------------------------------------------------------------------------
@@ -315,10 +323,12 @@ def _run_single_game(
     max_new_tokens: int = 200,
     fixed_offer: Optional[Tuple[int, int]] = None,
     game: str = "ultimatum",
+    text_visible: bool = False,
 ) -> Dict:
     """Run a single UG or Dictator Game. If fixed_offer is set, skip proposer
     generation and use the given offer (for paired responder experiments).
-    If game=='dictator', skip responder entirely and auto-accept the offer."""
+    If game=='dictator', skip responder entirely and auto-accept the offer.
+    If text_visible, the responder sees the proposer's full reasoning text."""
 
     if fixed_offer is not None:
         proposer_share, responder_share = fixed_offer
@@ -377,7 +387,10 @@ def _run_single_game(
         }
 
     # Build responder prompt
-    responder_sys = build_responder_system(proposer_share, responder_share, pool)
+    responder_sys = build_responder_system(
+        proposer_share, responder_share, pool,
+        proposer_text=proposer_text if text_visible else None,
+    )
     if responder_enhancement and responder_enhancement in RESPONDER_ENHANCEMENTS:
         responder_sys += RESPONDER_ENHANCEMENTS[responder_enhancement]
 
@@ -446,6 +459,7 @@ def run_paired_game(
     temperature: float = 0.0,
     max_new_tokens: int = 200,
     game: str = "ultimatum",
+    text_visible: bool = False,
 ) -> Dict:
     """Run a paired game: steered condition + baseline condition on the same pool.
 
@@ -470,6 +484,7 @@ def run_paired_game(
             temperature=temperature,
             max_new_tokens=max_new_tokens,
             game=game,
+            text_visible=text_visible,
         )
         # Baseline proposer (same pool, no steering)
         baseline_result = _run_single_game(
@@ -482,6 +497,7 @@ def run_paired_game(
             temperature=temperature,
             max_new_tokens=max_new_tokens,
             game=game,
+            text_visible=text_visible,
         )
 
     elif steered_role == "responder":
@@ -518,6 +534,7 @@ def run_paired_game(
             max_new_tokens=max_new_tokens,
             fixed_offer=offer,
             game=game,
+            text_visible=text_visible,
         )
     else:
         raise ValueError(f"steered_role must be 'proposer' or 'responder', got '{steered_role}'")
@@ -542,6 +559,7 @@ def run_baseline_game(
     temperature: float = 0.0,
     max_new_tokens: int = 200,
     game: str = "ultimatum",
+    text_visible: bool = False,
 ) -> Dict:
     result = _run_single_game(
         model, tokenizer, pool,
@@ -551,6 +569,7 @@ def run_baseline_game(
         temperature=temperature,
         max_new_tokens=max_new_tokens,
         game=game,
+        text_visible=text_visible,
     )
     return {"game_id": None, "pool": pool, "result": result}
 
@@ -830,6 +849,8 @@ def parse_args() -> argparse.Namespace:
                    help="Optional prompt enhancement for responder.")
     p.add_argument("--output_dir", default="results/ultimatum/",
                    help="Save results JSON to this directory.")
+    p.add_argument("--text_visible", action="store_true",
+                   help="Responder sees proposer's full reasoning text (not just parsed OFFER numbers).")
     p.add_argument("--verbose", "-v", action="store_true")
     return p.parse_args()
 
@@ -910,6 +931,7 @@ def main() -> None:
         "vectors_dir": args.vectors_dir,
         "proposer_enhancement": args.proposer_enhancement,
         "responder_enhancement": args.responder_enhancement,
+        "text_visible": args.text_visible,
         "timestamp": datetime.now().isoformat(),
     }
 
@@ -938,6 +960,7 @@ def main() -> None:
                 temperature=args.temperature,
                 max_new_tokens=args.max_new_tokens,
                 game=args.game,
+                text_visible=args.text_visible,
             )
             result["game_id"] = i
             games.append(result)
@@ -963,6 +986,7 @@ def main() -> None:
                 temperature=args.temperature,
                 max_new_tokens=args.max_new_tokens,
                 game=args.game,
+                text_visible=args.text_visible,
             )
             result["game_id"] = i
             games.append(result)
@@ -997,6 +1021,7 @@ def main() -> None:
                 temperature=args.temperature,
                 max_new_tokens=args.max_new_tokens,
                 game=args.game,
+                text_visible=args.text_visible,
             )
             games.append({"game_id": i, "pool": pool, "result": result})
             r = result
@@ -1036,14 +1061,17 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     game_prefix = "dg_" if args.game == "dictator" else ""
+    tv_prefix = "tv_" if args.text_visible else ""
     if is_baseline:
-        filename = f"{game_prefix}baseline_{args.model}_n{args.n_games}.json"
+        filename = f"{tv_prefix}{game_prefix}baseline_{args.model}_n{args.n_games}.json"
     else:
         parts = [args.dimension, args.steered_role]
         parts.append(f"L{'_'.join(str(l) for l in args.layers)}")
         parts.append(f"a{args.alpha}")
         if is_paired:
             parts.append("paired")
+        if args.text_visible:
+            parts.append("tv")
         parts.append(f"n{args.n_games}")
         filename = game_prefix + "_".join(parts) + ".json"
 
