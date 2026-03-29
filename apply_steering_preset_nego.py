@@ -101,7 +101,10 @@ class SteeringHook:
 
 
 def get_transformer_layers(model):
-    return model.model.layers
+    inner = model.model
+    if hasattr(inner, 'layers'):
+        return inner.layers
+    return inner.model.layers
 
 
 # ---------------------------------------------------------------------------
