@@ -12,24 +12,27 @@ COMP0087 Statistical NLP group project (UCL, due 2026-04-17). Activation steerin
 
 When the user asks about results, hypotheses, or experimental context, consult the research log first. When new experiments complete, add the results to the log in the same format.
 
-## Project Status (2026-03-28)
+## Project Status (2026-03-29)
 
 > **For detailed findings, exact numbers, and per-config results, see `RESEARCH_LOG.md`.**
 
 **Phase 1 (complete):** CraigslistBargains. Behavioral changes real (27x hedge suppression) but outcomes not significant (p=0.87). Task too noisy. See RESEARCH_LOG Section 2.
 
-**Phase 2 (complete):** Ultimatum Game confirmatory experiments. 7,600+ paired games across 3 rounds. See RESEARCH_LOG Sections 7-9.
+**Phase 2 (complete):** Ultimatum Game experiments. 8,500+ games across 4 rounds + acceptance curve + analytical decomposition. See RESEARCH_LOG Sections 7-11.
 
 **Main findings (Phase 2):**
 1. **Steering reliably shifts behavior** — all 24 UG configs significant (p<0.001, d=0.37-1.54), perfect monotonic dose-response.
-2. **L10 is context-dependent, L12 is context-independent** — firmness L10 reverses direction between UG (+16pp) and DG (-5.8pp). L12 is consistent (+13pp UG, +15pp DG). Novel mechanistic claim.
-3. **Empathy vector is unidirectional for demand** — both positive and negative alpha increase demand. Sign modulates tone (acceptance rate), not direction. Best payoff: empathy L10 α=+7 (+17pp).
-4. **Baseline model is strategically suboptimal** — rejects 16% of near-equal splits due to RLHF fairness signaling. Any steering improves payoff by disrupting this.
-5. **General pairs >> game-specific pairs** — 16pp effect vs ~0pp for firmness at L10.
+2. **Dimension×layer×context interaction** — firmness L10 reverses in DG (-5.8pp), firmness L12 persists (+15pp), empathy nullifies at both layers (~0pp). Three distinct patterns: reversal, persistence, nullification.
+3. **Empathy vector encodes activation, not valence** — both positive and negative alpha increase demand. Sign modulates tone (acceptance rate), not direction. Best payoff: empathy L10 α=+7 (+17pp). Effect requires adversarial context (vanishes in DG).
+4. **RLHF creates bidirectional fairness enforcement** — acceptance curve is non-monotonic. Rejects BOTH unfair offers (20% to responder: 70% accept) AND generous offers (80% to responder: 75% accept). Detects $1 inequality on odd pools (86% rejection). Baseline sits in the worst spot (50% demand).
+5. **Steering works through numbers, not framing (in single-turn)** — framing effect ≈ 0pp because responder only sees parsed OFFER numbers. Multi-turn needed to test communication effects.
+6. **General pairs >> game-specific pairs** — 16pp effect vs ~0pp for firmness at L10.
 
-**Current status:** Paper writing. All experiments complete. Instance stopped.
+**Current status:** Paper writing. Teammate working on multi-turn extension (alternating offers). 32B scaling experiment in progress. Instance stopped.
 
 **Key design choices:** Paired design, variable pools ($37-$157), temp=0, Qwen 7B, general-domain pairs, mean difference extraction, 100 games per config, BH-FDR correction. See RESEARCH_LOG Section 4 for rationale.
+
+**Teammate divergences to track:** Different prompt ("Your aim: earn as much as you can"), rule-based responder mode, 32B model. Results not directly comparable to confirmatory — different baselines, no true pairing. See RESEARCH_LOG Section 10.
 
 ## Commands
 
