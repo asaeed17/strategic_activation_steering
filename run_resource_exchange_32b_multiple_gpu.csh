@@ -51,8 +51,8 @@ set MACHINES = ( \
     wigeon-l \
 )
 
-set LAYERS       = ( 10 )
-set ALPHAS       = ( 3 7 10 )
+set LAYERS       = ( 28 32 36 )
+set ALPHAS       = ( -15 -5 5 15 )
 set N_GAMES      = 50
 set MODEL        = "qwen2.5-32b-gptq"
 set VECTORS_DIR  = "vectors/ultimatum_10dim_20pairs_general_matched/negotiation"
@@ -170,7 +170,6 @@ local_run:
                     --steered_player 1 \
                     --n_games       $N_GAMES \
                     --paired \
-                    --rulebased \
                     --quantize \
                     --vectors_dir   "${VECTORS_DIR}" \
                     --output_dir    "${OUT_DIR}"
