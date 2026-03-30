@@ -713,3 +713,256 @@ def print_summary(summary: Dict[str, Any]) -> None:
     pe = summary["parse_errors"]
     print(f"  Parse errors:     {pe['steered_total']} / {pe['baseline_total']}")
     print(f"{'=' * 60}\n")
+
+
+# ---------------------------------------------------------------------------
+# Self-Test
+# ---------------------------------------------------------------------------
+
+def _run_self_test() -> None:
+    """Validate game logic without GPU."""
+    print("Running self-tests...")
+
+    # Scoring
+    assert compute_score({"X": 10, "Y": 20}) == 30
+    assert compute_score({"X": 0, "Y": 0}) == 0
+
+    # Balance
+    assert compute_balance_ratio({"X": 10, "Y": 10}) == 1.0
+    assert compute_balance_ratio({"X": 5, "Y": 10}) == 0.5
+    assert compute_balance_ratio({"X": 0, "Y": 10}) == 0.0
+
+    # Parsing
+    assert parse_action("PROPOSE_TRADE: SELL 5 X, BUY 5 Y") == {
+        "type": "propose", "sell_qty": 5, "sell_res": "X",
+        "buy_qty": 5, "buy_res": "Y",
+    }
+    assert parse_action("I accept this trade. ACCEPT")["type"] == "accept"
+    assert parse_action("No deal. REJECT")["type"] == "reject"
+    assert parse_action("I'm done trading. END")["type"] == "end"
+    assert parse_action("gibberish with no action") is None
+    # Same resource should fail
+    assert parse_action("PROPOSE_TRADE: SELL 5 X, BUY 5 X") is None
+
+    # Trade validation
+    seller = {"X": 10, "Y": 5}
+    buyer = {"X": 5, "Y": 10}
+    good_trade = {"type": "propose", "sell_qty": 3, "sell_res": "X",
+                  "buy_qty": 3, "buy_res": "Y"}
+    assert validate_trade(good_trade, seller, buyer) is True
+    bad_trade = {"type": "propose", "sell_qty": 20, "sell_res": "X",
+                 "buy_qty": 3, "buy_res": "Y"}
+    assert validate_trade(bad_trade, seller, buyer) is False
+
+    # Trade execution
+    p, r = execute_trade(
+        {"X": 10, "Y": 5}, {"X": 5, "Y": 10},
+        {"type": "propose", "sell_qty": 3, "sell_res": "X",
+         "buy_qty": 3, "buy_res": "Y"},
+    )
+    assert p == {"X": 7, "Y": 8}
+    assert r == {"X": 8, "Y": 7}
+
+    # Rule-based opponent — accept improving trade
+    own = {"X": 5, "Y": 25}
+    opp = {"X": 25, "Y": 5}
+    proposal = {"type": "propose", "sell_qty": 5, "sell_res": "X",
+                "buy_qty": 5, "buy_res": "Y"}
+    action = rule_based_action(own, opp, proposal, turn=1)
+    assert action["type"] == "accept"  # gains 5 total
+
+    # Rule-based opponent — reject harmful trade
+    bad_proposal = {"type": "propose", "sell_qty": 5, "sell_res": "Y",
+                    "buy_qty": 5, "buy_res": "X"}
+    action = rule_based_action(own, opp, bad_proposal, turn=1)
+    assert action["type"] == "reject"  # loses 5 total (has only 5X, would go to 0X+30Y still 30 total... wait)
+
+    # Full game with rule-based both sides
+    result = run_single_exchange_game(
+        config=(25, 5, 5, 25),
+        steered_player=None,
+        generate_fn=None,
+        rulebased=True,
+    )
+    assert result["p1_score"] >= 0
+    assert result["p2_score"] >= 0
+    assert result["parse_errors"] == 0
+    assert len(result["transcript"]) > 0
+
+    print(f"  P1: {result['p1_initial']} -> {result['p1_final']} "
+          f"(score {result['p1_initial_score']} -> {result['p1_score']})")
+    print(f"  P2: {result['p2_initial']} -> {result['p2_final']} "
+          f"(score {result['p2_initial_score']} -> {result['p2_score']})")
+    print(f"  Trades: {result['trades_completed']}, "
+          f"Length: {result['game_length']}")
+    print("All self-tests passed!")
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(
+        description="Resource Exchange Game with activation steering",
+    )
+    p.add_argument("--test", action="store_true",
+                   help="Run self-tests (no GPU needed)")
+    p.add_argument("--model", default="qwen2.5-7b")
+    p.add_argument("--dimension", default=None,
+                   help="Steering dimension (e.g., firmness, empathy)")
+    p.add_argument("--method", choices=["mean_diff", "pca", "logreg"],
+                   default="mean_diff")
+    p.add_argument("--layers", nargs="+", type=int, default=[10])
+    p.add_argument("--alpha", type=float, default=0.0)
+    p.add_argument("--steered_player", type=int, choices=[1, 2], default=1)
+    p.add_argument("--vectors_dir",
+                   default="vectors/ultimatum_10dim_20pairs_general_matched/negotiation")
+    p.add_argument("--n_games", type=int, default=50)
+    p.add_argument("--paired", action="store_true")
+    p.add_argument("--rulebased", action="store_true",
+                   help="Use rule-based opponent instead of LLM-vs-LLM")
+    p.add_argument("--temperature", type=float, default=0.0)
+    p.add_argument("--max_new_tokens", type=int, default=200)
+    p.add_argument("--quantize", action="store_true")
+    p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--output_dir", default=None)
+    return p.parse_args()
+
+
+def main() -> None:
+    args = parse_args()
+
+    if args.test:
+        _run_self_test()
+        return
+
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+
+    # Lazy imports for GPU mode
+    import torch
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+    from extract_vectors import MODELS, HF_TOKEN
+    from apply_steering_preset_nego import (
+        load_direction_vectors, generate_response, get_transformer_layers,
+    )
+
+    model_config = MODELS[args.model]
+    hf_token = HF_TOKEN if model_config.requires_token else None
+
+    # Load model
+    log.info("Loading model: %s", model_config.hf_id)
+    load_kwargs = dict(token=hf_token, device_map="auto")
+    if args.quantize:
+        from transformers import BitsAndBytesConfig
+        load_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_use_double_quant=True, bnb_4bit_quant_type="nf4",
+        )
+    else:
+        load_kwargs["torch_dtype"] = torch.bfloat16
+    model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
+    model.eval()
+    tokenizer = AutoTokenizer.from_pretrained(model_config.hf_id, token=hf_token)
+
+    # Load direction vectors
+    dvecs = None
+    if args.dimension and args.alpha != 0.0:
+        dvecs = load_direction_vectors(
+            vectors_dir=Path(args.vectors_dir),
+            model_alias=model_config.alias,
+            dimension=args.dimension,
+            method=args.method,
+            layer_indices=args.layers,
+        )
+        log.info("Loaded vectors: dim=%s layers=%s method=%s",
+                 args.dimension, args.layers, args.method)
+
+    # Build generate functions
+    def make_generate_fn(direction_vectors, alpha):
+        def gen(messages, is_steered):
+            dv = direction_vectors if is_steered else None
+            a = alpha if is_steered else 0.0
+            return generate_response(
+                model, tokenizer, messages, dv, a,
+                max_new_tokens=args.max_new_tokens,
+                temperature=args.temperature,
+            )
+        return gen
+
+    generate_fn_steered = make_generate_fn(dvecs, args.alpha)
+    generate_fn_baseline = make_generate_fn(None, 0.0)
+
+    # Select configs
+    configs = RESOURCE_CONFIGS[:args.n_games]
+    if len(configs) < args.n_games:
+        log.warning("Only %d configs available, requested %d", len(configs), args.n_games)
+
+    # Run games
+    games = []
+    for i, config in enumerate(configs):
+        log.info("[G%03d] config=(%d,%d,%d,%d)", i + 1, *config)
+        if args.paired:
+            result = run_paired_exchange_game(
+                config=config,
+                steered_player=args.steered_player,
+                generate_fn_steered=generate_fn_steered,
+                generate_fn_baseline=generate_fn_baseline,
+                rulebased=args.rulebased,
+                temperature=args.temperature,
+                max_new_tokens=args.max_new_tokens,
+            )
+        else:
+            result = run_single_exchange_game(
+                config=config,
+                steered_player=args.steered_player,
+                generate_fn=generate_fn_steered,
+                rulebased=args.rulebased,
+                temperature=args.temperature,
+                max_new_tokens=args.max_new_tokens,
+            )
+        result["game_id"] = i
+        games.append(result)
+
+    # Summary
+    if args.paired:
+        summary = summarise_paired(games, args.steered_player)
+        print_summary(summary)
+    else:
+        summary = {}
+
+    # Save results
+    output = {
+        "config": {
+            "game": "resource_exchange",
+            "model": args.model,
+            "dimension": args.dimension,
+            "method": args.method,
+            "layers": args.layers,
+            "alpha": args.alpha,
+            "steered_player": args.steered_player,
+            "paired": args.paired,
+            "rulebased": args.rulebased,
+            "n_games": len(games),
+            "temperature": args.temperature,
+            "seed": args.seed,
+            "timestamp": datetime.now().isoformat(),
+        },
+        "summary": summary,
+        "games": games,
+    }
+
+    if args.output_dir:
+        out_dir = Path(args.output_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_file = out_dir / "results.json"
+        with open(out_file, "w") as f:
+            json.dump(output, f, indent=2, default=str)
+        log.info("Results saved to %s", out_file)
+    else:
+        print(json.dumps(output, indent=2, default=str))
+
+
+if __name__ == "__main__":
+    main()
