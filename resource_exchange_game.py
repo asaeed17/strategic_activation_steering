@@ -136,3 +136,64 @@ def compute_balance_ratio(resources: Dict[str, int]) -> float:
     if max(vals) == 0:
         return 0.0
     return min(vals) / max(vals)
+
+
+# ---------------------------------------------------------------------------
+# Action Parsing
+# ---------------------------------------------------------------------------
+
+_PROPOSE_RE = re.compile(
+    r"PROPOSE_TRADE\s*:\s*SELL\s+(\d+)\s+(X|Y)\s*,\s*BUY\s+(\d+)\s+(X|Y)",
+    re.IGNORECASE,
+)
+_ACCEPT_RE = re.compile(r"\bACCEPT\b", re.IGNORECASE)
+_REJECT_RE = re.compile(r"\bREJECT\b", re.IGNORECASE)
+_END_RE = re.compile(r"\bEND\b", re.IGNORECASE)
+
+
+def parse_action(text: str) -> Optional[Dict[str, Any]]:
+    """Parse LLM output into an action dict.
+
+    Returns one of:
+        {"type": "propose", "sell_qty": int, "sell_res": str,
+         "buy_qty": int, "buy_res": str}
+        {"type": "accept"}
+        {"type": "reject"}
+        {"type": "end"}
+        None  (parse failure)
+    """
+    # Check PROPOSE_TRADE first (most specific pattern)
+    m = _PROPOSE_RE.search(text)
+    if m:
+        sell_qty, sell_res, buy_qty, buy_res = (
+            int(m.group(1)), m.group(2).upper(),
+            int(m.group(3)), m.group(4).upper(),
+        )
+        if sell_res == buy_res:
+            return None  # cannot trade same resource
+        return {
+            "type": "propose",
+            "sell_qty": sell_qty,
+            "sell_res": sell_res,
+            "buy_qty": buy_qty,
+            "buy_res": buy_res,
+        }
+
+    # For ACCEPT/REJECT/END, take the last match (same logic as UG's
+    # parse_response which picks whichever appears last when both present)
+    last_action = None
+    last_pos = -1
+    for pattern, action_type in [
+        (_ACCEPT_RE, "accept"),
+        (_REJECT_RE, "reject"),
+        (_END_RE, "end"),
+    ]:
+        for match in pattern.finditer(text):
+            if match.start() > last_pos:
+                last_pos = match.start()
+                last_action = action_type
+
+    if last_action:
+        return {"type": last_action}
+
+    return None
