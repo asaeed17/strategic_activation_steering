@@ -568,3 +568,148 @@ def run_single_exchange_game(
         "steered_player": steered_player,
         "transcript": transcript,
     }
+
+
+# ---------------------------------------------------------------------------
+# Paired Design
+# ---------------------------------------------------------------------------
+
+def run_paired_exchange_game(
+    config: Tuple[int, int, int, int],
+    steered_player: int,
+    generate_fn_steered=None,
+    generate_fn_baseline=None,
+    rulebased: bool = True,
+    temperature: float = 0.0,
+    max_new_tokens: int = 200,
+) -> Dict[str, Any]:
+    """Run paired game: steered + baseline on same resource config.
+
+    Returns {"steered": {...}, "baseline": {...}, "config": ...}.
+    """
+    steered_result = run_single_exchange_game(
+        config=config,
+        steered_player=steered_player,
+        generate_fn=generate_fn_steered,
+        rulebased=rulebased,
+        temperature=temperature,
+        max_new_tokens=max_new_tokens,
+    )
+    baseline_result = run_single_exchange_game(
+        config=config,
+        steered_player=None,
+        generate_fn=generate_fn_baseline,
+        rulebased=rulebased,
+        temperature=temperature,
+        max_new_tokens=max_new_tokens,
+    )
+    return {
+        "config": config,
+        "steered": steered_result,
+        "baseline": baseline_result,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Summary Statistics
+# ---------------------------------------------------------------------------
+
+def summarise_paired(
+    games: List[Dict[str, Any]],
+    steered_player: int,
+) -> Dict[str, Any]:
+    """Compute paired statistics across games."""
+    score_key = f"p{steered_player}_score"
+
+    steered_scores = []
+    baseline_scores = []
+    steered_trades = []
+    baseline_trades = []
+    steered_lengths = []
+    baseline_lengths = []
+    steered_balances = []
+    baseline_balances = []
+    steered_parse_errors = 0
+    baseline_parse_errors = 0
+
+    for g in games:
+        s = g["steered"]
+        b = g["baseline"]
+        steered_scores.append(s[score_key])
+        baseline_scores.append(b[score_key])
+        steered_trades.append(s["trades_completed"])
+        baseline_trades.append(b["trades_completed"])
+        steered_lengths.append(s["game_length"])
+        baseline_lengths.append(b["game_length"])
+        steered_balances.append(s[f"p{steered_player}_balance"])
+        baseline_balances.append(b[f"p{steered_player}_balance"])
+        steered_parse_errors += s["parse_errors"]
+        baseline_parse_errors += b["parse_errors"]
+
+    ss = np.array(steered_scores, dtype=float)
+    bs = np.array(baseline_scores, dtype=float)
+    deltas = ss - bs
+
+    n = len(deltas)
+    mean_delta = float(np.mean(deltas))
+    std_delta = float(np.std(deltas, ddof=1)) if n > 1 else 0.0
+
+    # Paired t-test
+    if std_delta > 0 and n > 1:
+        from scipy import stats
+        t_stat, p_value = stats.ttest_rel(ss, bs)
+        cohens_d = mean_delta / std_delta
+    else:
+        t_stat, p_value, cohens_d = None, None, None
+
+    return {
+        "n_games": n,
+        "steered_player": steered_player,
+        "score_delta": {
+            "steered_mean": float(np.mean(ss)),
+            "baseline_mean": float(np.mean(bs)),
+            "mean_delta": mean_delta,
+            "std_delta": std_delta,
+            "t_statistic": t_stat,
+            "p_value": p_value,
+            "cohens_d": cohens_d,
+        },
+        "trades": {
+            "steered_mean": float(np.mean(steered_trades)),
+            "baseline_mean": float(np.mean(baseline_trades)),
+        },
+        "game_length": {
+            "steered_mean": float(np.mean(steered_lengths)),
+            "baseline_mean": float(np.mean(baseline_lengths)),
+        },
+        "balance": {
+            "steered_mean": float(np.mean(steered_balances)),
+            "baseline_mean": float(np.mean(baseline_balances)),
+        },
+        "parse_errors": {
+            "steered_total": steered_parse_errors,
+            "baseline_total": baseline_parse_errors,
+        },
+    }
+
+
+def print_summary(summary: Dict[str, Any]) -> None:
+    """Pretty-print summary statistics."""
+    sd = summary["score_delta"]
+    print(f"\n{'=' * 60}")
+    print(f"Resource Exchange — Paired Summary (n={summary['n_games']})")
+    print(f"{'=' * 60}")
+    print(f"  Steered player:  P{summary['steered_player']}")
+    print(f"  Score (steered):  {sd['steered_mean']:.1f}")
+    print(f"  Score (baseline): {sd['baseline_mean']:.1f}")
+    print(f"  Delta:            {sd['mean_delta']:+.2f} (d={sd['cohens_d']:.3f})"
+          if sd['cohens_d'] is not None else f"  Delta:            {sd['mean_delta']:+.2f}")
+    if sd["p_value"] is not None:
+        print(f"  p-value:          {sd['p_value']:.4f}")
+    tr = summary["trades"]
+    print(f"  Trades (S/B):     {tr['steered_mean']:.1f} / {tr['baseline_mean']:.1f}")
+    gl = summary["game_length"]
+    print(f"  Length (S/B):     {gl['steered_mean']:.1f} / {gl['baseline_mean']:.1f}")
+    pe = summary["parse_errors"]
+    print(f"  Parse errors:     {pe['steered_total']} / {pe['baseline_total']}")
+    print(f"{'=' * 60}\n")
