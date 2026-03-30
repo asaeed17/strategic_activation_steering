@@ -1,13 +1,13 @@
 #!/bin/csh
-# run_gridsearch_ultimatum_ayman_32b.csh
+# run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh
 # Grid search over negotiation dimensions using the Ultimatum Game.
 # Qwen 2.5-32B GPTQ-Int4, rule-based opponent, fully reproducible.
 #
 # Two modes:
-#   Dispatch:  csh run_gridsearch_ultimatum_ayman_32b.csh <username>
+#   Dispatch:  csh run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh <username>
 #              SSHes into free GPU machines and launches one layer per machine.
 #
-#   Local:     csh run_gridsearch_ultimatum_ayman_32b.csh <layer_number>
+#   Local:     csh run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh <layer_number>
 #              Runs the gridsearch for that layer on the current machine.
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -91,8 +91,8 @@ dispatch:
 
                 set LOG = "${PROJECT_DIR}/logs/gridsearch_32b_${UCL_USER}_L${layer}.log"
 
-                ssh $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} \
-                    "cd ${PROJECT_DIR} && nohup csh run_gridsearch_ultimatum_ayman_32b.csh ${layer} >& ${LOG} &"
+                ssh -f $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} \
+                    "cd ${PROJECT_DIR} && nohup /bin/bash -c 'csh run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh ${layer}' > ${LOG} 2>&1 &"
 
                 set found = 1
                 @ machine_idx++
