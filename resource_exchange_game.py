@@ -841,6 +841,10 @@ def main() -> None:
     random.seed(args.seed)
     np.random.seed(args.seed)
 
+    import os
+    if "HF_HOME" not in os.environ:
+        os.environ["HF_HOME"] = str(Path(__file__).resolve().parent / ".hf_cache")
+
     # Lazy imports for GPU mode
     import torch
     from transformers import AutoTokenizer, AutoModelForCausalLM
