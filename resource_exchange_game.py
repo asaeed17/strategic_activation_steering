@@ -399,3 +399,172 @@ def format_action(action: Dict[str, Any]) -> str:
             f"BUY {action['buy_qty']} {action['buy_res']}"
         )
     return action["type"].upper()
+
+
+# ---------------------------------------------------------------------------
+# Game Loop
+# ---------------------------------------------------------------------------
+
+def _make_resources(config: Tuple[int, int, int, int], player: int) -> Dict[str, int]:
+    """Extract player resources from a config tuple (p1_x, p1_y, p2_x, p2_y)."""
+    if player == 1:
+        return {"X": config[0], "Y": config[1]}
+    return {"X": config[2], "Y": config[3]}
+
+
+def run_single_exchange_game(
+    config: Tuple[int, int, int, int],
+    steered_player: Optional[int],
+    generate_fn=None,
+    rulebased: bool = True,
+    temperature: float = 0.0,
+    max_new_tokens: int = 200,
+) -> Dict[str, Any]:
+    """Run one resource exchange game.
+
+    Args:
+        config: (p1_x, p1_y, p2_x, p2_y) initial resources.
+        steered_player: 1 or 2 (which player is steered), or None for baseline.
+        generate_fn: Callable(messages, is_steered) -> str. If None, must be rulebased.
+        rulebased: If True, the non-steered player uses rule_based_action.
+        temperature: For LLM generation.
+        max_new_tokens: For LLM generation.
+
+    Returns:
+        Result dict with game transcript, final resources, scores, metrics.
+    """
+    p1_res = _make_resources(config, 1)
+    p2_res = _make_resources(config, 2)
+    p1_initial = dict(p1_res)
+    p2_initial = dict(p2_res)
+
+    # Conversation histories (separate for each player)
+    p1_messages = [{"role": "system", "content": build_player_system(1, p1_res, p2_res)}]
+    p2_messages = [{"role": "system", "content": build_player_system(2, p2_res, p1_res)}]
+
+    transcript = []
+    trades_completed = 0
+    pending_proposal = None
+    proposing_player = None
+    game_ended = False
+    parse_errors = 0
+
+    for turn in range(MAX_ROUNDS):
+        # Alternate: player 1 goes on even turns, player 2 on odd
+        active_player = 1 if turn % 2 == 0 else 2
+        active_res = p1_res if active_player == 1 else p2_res
+        opponent_res = p2_res if active_player == 1 else p1_res
+        active_messages = p1_messages if active_player == 1 else p2_messages
+        is_steered = (active_player == steered_player)
+
+        # Determine if responding to a proposal or initiating
+        if proposing_player is not None and proposing_player != active_player:
+            # Responding to opponent's proposal
+            turn_prompt = build_turn_prompt(
+                active_player, active_res, opponent_res, turn,
+                pending_proposal=pending_proposal,
+            )
+        else:
+            # Own initiative
+            turn_prompt = build_turn_prompt(
+                active_player, active_res, opponent_res, turn,
+            )
+
+        # Generate action
+        use_rulebased = rulebased and not is_steered
+        if use_rulebased:
+            if proposing_player is not None and proposing_player != active_player:
+                action = rule_based_action(
+                    active_res, opponent_res, pending_proposal, turn,
+                )
+            else:
+                action = rule_based_action(active_res, opponent_res, None, turn)
+            text = format_action(action)
+        else:
+            if generate_fn is None:
+                raise ValueError("generate_fn required for LLM players")
+            active_messages.append({"role": "user", "content": turn_prompt})
+            text = generate_fn(active_messages, is_steered)
+            active_messages.append({"role": "assistant", "content": text})
+            action = parse_action(text)
+            if action is None:
+                parse_errors += 1
+                transcript.append({
+                    "turn": turn,
+                    "player": active_player,
+                    "text": text,
+                    "action": None,
+                    "parse_error": True,
+                })
+                pending_proposal = None
+                proposing_player = None
+                continue
+
+        metrics = extract_behavioral_metrics(text) if not use_rulebased else {}
+
+        turn_record = {
+            "turn": turn,
+            "player": active_player,
+            "text": text,
+            "action": action,
+            "parse_error": False,
+            "resources_before": dict(active_res),
+            "metrics": metrics,
+        }
+
+        # Process action
+        if action["type"] == "propose":
+            if not validate_trade(action, active_res, opponent_res):
+                turn_record["invalid_trade"] = True
+                pending_proposal = None
+                proposing_player = None
+            else:
+                pending_proposal = action
+                proposing_player = active_player
+
+        elif action["type"] == "accept":
+            if pending_proposal is not None and proposing_player != active_player:
+                # Execute the trade
+                prop_res = p1_res if proposing_player == 1 else p2_res
+                resp_res = p1_res if active_player == 1 else p2_res
+                new_prop, new_resp = execute_trade(prop_res, resp_res, pending_proposal)
+                if proposing_player == 1:
+                    p1_res, p2_res = new_prop, new_resp
+                else:
+                    p2_res, p1_res = new_prop, new_resp
+                trades_completed += 1
+                turn_record["trade_executed"] = True
+            pending_proposal = None
+            proposing_player = None
+
+        elif action["type"] == "reject":
+            pending_proposal = None
+            proposing_player = None
+
+        elif action["type"] == "end":
+            turn_record["game_ended"] = True
+            transcript.append(turn_record)
+            game_ended = True
+            break
+
+        transcript.append(turn_record)
+
+    return {
+        "config": config,
+        "p1_initial": p1_initial,
+        "p2_initial": p2_initial,
+        "p1_final": p1_res,
+        "p2_final": p2_res,
+        "p1_score": compute_score(p1_res),
+        "p2_score": compute_score(p2_res),
+        "p1_initial_score": compute_score(p1_initial),
+        "p2_initial_score": compute_score(p2_initial),
+        "p1_balance": compute_balance_ratio(p1_res),
+        "p2_balance": compute_balance_ratio(p2_res),
+        "trades_completed": trades_completed,
+        "game_length": len(transcript),
+        "game_ended_naturally": game_ended,
+        "parse_errors": parse_errors,
+        "steered_player": steered_player,
+        "transcript": transcript,
+    }
