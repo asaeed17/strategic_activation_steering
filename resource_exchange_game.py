@@ -324,3 +324,78 @@ def rule_based_action(
     if best_proposal is not None:
         return best_proposal
     return {"type": "end"}
+
+
+# ---------------------------------------------------------------------------
+# Prompt Builders
+# ---------------------------------------------------------------------------
+
+_PLAYER_NAMES = {1: "RED", 2: "BLUE"}
+
+
+def build_player_system(
+    player_id: int,
+    own_resources: Dict[str, int],
+    opponent_resources: Dict[str, int],
+) -> str:
+    """System prompt for a player in the Resource Exchange Game."""
+    name = _PLAYER_NAMES[player_id]
+    opp_name = _PLAYER_NAMES[3 - player_id]
+    return (
+        f"You are Player {name} in a Resource Exchange Game.\n\n"
+        f"You start with: {own_resources['X']} X and {own_resources['Y']} Y.\n"
+        f"Player {opp_name} starts with: {opponent_resources['X']} X "
+        f"and {opponent_resources['Y']} Y.\n\n"
+        f"Goal: Acquire as many total resources as possible. "
+        f"More resources in general are always better.\n\n"
+        f"Actions (choose exactly one per turn):\n"
+        f"  PROPOSE_TRADE: SELL <qty> <X or Y>, BUY <qty> <X or Y>\n"
+        f"    You give away <qty> of one resource and receive <qty> of the other.\n"
+        f"  ACCEPT — Accept the opponent's last trade proposal.\n"
+        f"  REJECT — Reject the opponent's last trade proposal.\n"
+        f"  END — End the game. No more trades.\n\n"
+        f"Rules:\n"
+        f"  - Up to {MAX_ROUNDS} rounds. You alternate turns with Player {opp_name}.\n"
+        f"  - You can only ACCEPT or REJECT when responding to a proposal.\n"
+        f"  - You can only PROPOSE_TRADE or END on your own initiative.\n"
+        f"  - You cannot sell more resources than you currently have.\n\n"
+        f"Respond with 1-2 sentences explaining your reasoning, "
+        f"then end with your action on a new line.\n"
+    )
+
+
+def build_turn_prompt(
+    player_id: int,
+    own_resources: Dict[str, int],
+    opponent_resources: Dict[str, int],
+    turn: int,
+    pending_proposal: Optional[Dict[str, Any]] = None,
+) -> str:
+    """Per-turn user prompt showing current state."""
+    own_score = compute_score(own_resources)
+    opp_name = _PLAYER_NAMES[3 - player_id]
+    lines = [
+        f"Round {turn + 1}/{MAX_ROUNDS}.",
+        f"Your current resources: {own_resources['X']} X and {own_resources['Y']} Y "
+        f"(total: {own_score}).",
+    ]
+    if pending_proposal is not None and pending_proposal["type"] == "propose":
+        lines.append(
+            f"\nPlayer {opp_name} proposes: "
+            f"SELL {pending_proposal['sell_qty']} {pending_proposal['sell_res']}, "
+            f"BUY {pending_proposal['buy_qty']} {pending_proposal['buy_res']}.\n"
+            f"Do you ACCEPT or REJECT?"
+        )
+    else:
+        lines.append("\nYour turn. Propose a trade or END the game.")
+    return "\n".join(lines)
+
+
+def format_action(action: Dict[str, Any]) -> str:
+    """Format an action dict as the text the player would output."""
+    if action["type"] == "propose":
+        return (
+            f"PROPOSE_TRADE: SELL {action['sell_qty']} {action['sell_res']}, "
+            f"BUY {action['buy_qty']} {action['buy_res']}"
+        )
+    return action["type"].upper()
