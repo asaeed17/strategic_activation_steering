@@ -197,3 +197,59 @@ def parse_action(text: str) -> Optional[Dict[str, Any]]:
         return {"type": last_action}
 
     return None
+
+
+# ---------------------------------------------------------------------------
+# Trade Validation & Execution
+# ---------------------------------------------------------------------------
+
+def validate_trade(
+    proposal: Dict[str, Any],
+    seller_resources: Dict[str, int],
+    buyer_resources: Dict[str, int],
+) -> bool:
+    """Check that the proposer can sell and the counterparty can buy."""
+    if proposal["type"] != "propose":
+        return False
+    sell_res, sell_qty = proposal["sell_res"], proposal["sell_qty"]
+    buy_res, buy_qty = proposal["buy_res"], proposal["buy_qty"]
+    if sell_qty <= 0 or buy_qty <= 0:
+        return False
+    if seller_resources.get(sell_res, 0) < sell_qty:
+        return False
+    if buyer_resources.get(buy_res, 0) < buy_qty:
+        return False
+    return True
+
+
+def execute_trade(
+    proposer_resources: Dict[str, int],
+    responder_resources: Dict[str, int],
+    proposal: Dict[str, Any],
+) -> Tuple[Dict[str, int], Dict[str, int]]:
+    """Apply an accepted trade. Returns updated (proposer, responder) resources."""
+    p = dict(proposer_resources)
+    r = dict(responder_resources)
+    p[proposal["sell_res"]] -= proposal["sell_qty"]
+    r[proposal["sell_res"]] += proposal["sell_qty"]
+    p[proposal["buy_res"]] += proposal["buy_qty"]
+    r[proposal["buy_res"]] -= proposal["buy_qty"]
+    return p, r
+
+
+def extract_behavioral_metrics(text: str) -> Dict[str, Any]:
+    """Extract behavioral metrics from LLM response text."""
+    words = text.split()
+    hedge_pattern = re.compile(
+        r"\b(maybe|perhaps|might|could|I think|probably|possibly)\b",
+        re.IGNORECASE,
+    )
+    fairness_pattern = re.compile(
+        r"\b(fair|equal|both|reasonable|mutual|together|balanced)\b",
+        re.IGNORECASE,
+    )
+    return {
+        "word_count": len(words),
+        "hedge_count": len(hedge_pattern.findall(text)),
+        "fairness_count": len(fairness_pattern.findall(text)),
+    }
