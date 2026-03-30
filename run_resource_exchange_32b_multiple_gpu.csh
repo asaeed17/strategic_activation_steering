@@ -170,7 +170,6 @@ local_run:
                     --steered_player 1 \
                     --n_games       $N_GAMES \
                     --paired \
-                    --quantize \
                     --vectors_dir   "${VECTORS_DIR}" \
                     --output_dir    "${OUT_DIR}"
             endif
