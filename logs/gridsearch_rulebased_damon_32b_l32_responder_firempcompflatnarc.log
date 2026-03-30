@@ -1,0 +1,446 @@
+GPU 0 is in use
+if: Expression Syntax.
+==> Running responder/firmness on Layer 32
+14:02:44  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=firmness | role=responder
+14:02:44  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:411: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:419: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+14:02:47  WARNING   CUDA extension not installed.
+14:02:47  WARNING   CUDA extension not installed.
+WARNING - Exllamav2 kernel is not installed, reset disable_exllamav2 to True. This may because you installed auto_gptq using a pre-build wheel on Windows, in which exllama_kernels are not compiled. To use exllama_kernels to further speedup inference, you can re-install auto_gptq from source.
+14:02:47  WARNING   Exllamav2 kernel is not installed, reset disable_exllamav2 to True. This may because you installed auto_gptq using a pre-build wheel on Windows, in which exllama_kernels are not compiled. To use exllama_kernels to further speedup inference, you can re-install auto_gptq from source.
+WARNING - CUDA kernels for auto_gptq are not installed, this will result in very slow inference speed. This may because:
+1. You disabled CUDA extensions compilation by setting BUILD_CUDA_EXT=0 when install auto_gptq from source.
+2. You are using pytorch without CUDA support.
+3. CUDA and nvcc are not installed in your device.
+14:02:47  WARNING   CUDA kernels for auto_gptq are not installed, this will result in very slow inference speed. This may because:
+1. You disabled CUDA extensions compilation by setting BUILD_CUDA_EXT=0 when install auto_gptq from source.
+2. You are using pytorch without CUDA support.
+3. CUDA and nvcc are not installed in your device.
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+WARNING - ignoring unknown parameter in config.json: batch_size.
+14:02:47  WARNING   ignoring unknown parameter in config.json: batch_size.
+WARNING - ignoring unknown parameter in config.json: block_name_to_quantize.
+14:02:47  WARNING   ignoring unknown parameter in config.json: block_name_to_quantize.
+WARNING - ignoring unknown parameter in config.json: cache_block_outputs.
+14:02:47  WARNING   ignoring unknown parameter in config.json: cache_block_outputs.
+WARNING - ignoring unknown parameter in config.json: dataset.
+14:02:47  WARNING   ignoring unknown parameter in config.json: dataset.
+WARNING - ignoring unknown parameter in config.json: exllama_config.
+14:02:47  WARNING   ignoring unknown parameter in config.json: exllama_config.
+WARNING - ignoring unknown parameter in config.json: max_input_length.
+14:02:47  WARNING   ignoring unknown parameter in config.json: max_input_length.
+WARNING - ignoring unknown parameter in config.json: model_seqlen.
+14:02:47  WARNING   ignoring unknown parameter in config.json: model_seqlen.
+WARNING - ignoring unknown parameter in config.json: module_name_preceding_first_block.
+14:02:47  WARNING   ignoring unknown parameter in config.json: module_name_preceding_first_block.
+WARNING - ignoring unknown parameter in config.json: modules_in_block_to_quantize.
+14:02:47  WARNING   ignoring unknown parameter in config.json: modules_in_block_to_quantize.
+WARNING - ignoring unknown parameter in config.json: pad_token_id.
+14:02:47  WARNING   ignoring unknown parameter in config.json: pad_token_id.
+WARNING - ignoring unknown parameter in config.json: quant_method.
+14:02:47  WARNING   ignoring unknown parameter in config.json: quant_method.
+WARNING - ignoring unknown parameter in config.json: tokenizer.
+14:02:47  WARNING   ignoring unknown parameter in config.json: tokenizer.
+WARNING - ignoring unknown parameter in config.json: use_cuda_fp16.
+14:02:47  WARNING   ignoring unknown parameter in config.json: use_cuda_fp16.
+WARNING - ignoring unknown parameter in config.json: use_exllama.
+14:02:47  WARNING   ignoring unknown parameter in config.json: use_exllama.
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO - The layer lm_head is not quantized.
+14:02:48  INFO      The layer lm_head is not quantized.
+14:05:53  INFO      number_of_layers=64
+14:05:53  INFO      Computing baseline (alpha=0, 50 games, rulebased)...
+14:08:03  INFO      [G001] pool=$065  threshold_sweep  accepted=4/4  α=+0.0
+14:09:57  INFO      [G002] pool=$063  threshold_sweep  accepted=4/4  α=+0.0
+14:12:16  INFO      [G003] pool=$059  threshold_sweep  accepted=4/4  α=+0.0
+14:14:04  INFO      [G004] pool=$050  threshold_sweep  accepted=4/4  α=+0.0
+14:15:34  INFO      [G005] pool=$041  threshold_sweep  accepted=4/4  α=+0.0
+14:18:04  INFO      [G006] pool=$089  threshold_sweep  accepted=4/4  α=+0.0
+14:19:46  INFO      [G007] pool=$066  threshold_sweep  accepted=4/4  α=+0.0
+14:22:11  INFO      [G008] pool=$048  threshold_sweep  accepted=4/4  α=+0.0
+14:24:10  INFO      [G009] pool=$071  threshold_sweep  accepted=4/4  α=+0.0
+14:26:10  INFO      [G010] pool=$056  threshold_sweep  accepted=4/4  α=+0.0
+14:28:22  INFO      [G011] pool=$073  threshold_sweep  accepted=4/4  α=+0.0
+14:30:22  INFO      [G012] pool=$061  threshold_sweep  accepted=4/4  α=+0.0
+14:32:31  INFO      [G013] pool=$051  threshold_sweep  accepted=4/4  α=+0.0
+14:34:39  INFO      [G014] pool=$040  threshold_sweep  accepted=4/4  α=+0.0
+14:36:54  INFO      [G015] pool=$081  threshold_sweep  accepted=4/4  α=+0.0
+14:39:33  INFO      [G016] pool=$080  threshold_sweep  accepted=4/4  α=+0.0
+14:41:35  INFO      [G017] pool=$049  threshold_sweep  accepted=4/4  α=+0.0
+14:43:36  INFO      [G018] pool=$064  threshold_sweep  accepted=4/4  α=+0.0
+14:45:50  INFO      [G019] pool=$077  threshold_sweep  accepted=4/4  α=+0.0
+14:47:43  INFO      [G020] pool=$037  threshold_sweep  accepted=4/4  α=+0.0
+14:49:34  INFO      [G021] pool=$086  threshold_sweep  accepted=4/4  α=+0.0
+14:52:22  INFO      [G022] pool=$058  threshold_sweep  accepted=4/4  α=+0.0
+14:54:17  INFO      [G023] pool=$075  threshold_sweep  accepted=4/4  α=+0.0
+14:57:03  INFO      [G024] pool=$092  threshold_sweep  accepted=4/4  α=+0.0
+14:59:01  INFO      [G025] pool=$083  threshold_sweep  accepted=4/4  α=+0.0
+15:01:19  INFO      [G026] pool=$072  threshold_sweep  accepted=4/4  α=+0.0
+15:03:35  INFO      [G027] pool=$070  threshold_sweep  accepted=4/4  α=+0.0
+15:06:02  INFO      [G028] pool=$060  threshold_sweep  accepted=4/4  α=+0.0
+15:08:10  INFO      [G029] pool=$062  threshold_sweep  accepted=4/4  α=+0.0
+15:10:07  INFO      [G030] pool=$085  threshold_sweep  accepted=4/4  α=+0.0
+15:12:39  INFO      [G031] pool=$090  threshold_sweep  accepted=4/4  α=+0.0
+15:14:48  INFO      [G032] pool=$078  threshold_sweep  accepted=4/4  α=+0.0
+15:16:41  INFO      [G033] pool=$074  threshold_sweep  accepted=4/4  α=+0.0
+15:19:01  INFO      [G034] pool=$087  threshold_sweep  accepted=4/4  α=+0.0
+15:21:12  INFO      [G035] pool=$052  threshold_sweep  accepted=4/4  α=+0.0
+15:24:11  INFO      [G036] pool=$093  threshold_sweep  accepted=4/4  α=+0.0
+15:26:29  INFO      [G037] pool=$091  threshold_sweep  accepted=4/4  α=+0.0
+15:28:16  INFO      [G038] pool=$039  threshold_sweep  accepted=4/4  α=+0.0
+15:30:06  INFO      [G039] pool=$068  threshold_sweep  accepted=4/4  α=+0.0
+15:32:41  INFO      [G040] pool=$079  threshold_sweep  accepted=4/4  α=+0.0
+15:34:25  INFO      [G041] pool=$042  threshold_sweep  accepted=4/4  α=+0.0
+15:36:44  INFO      [G042] pool=$076  threshold_sweep  accepted=4/4  α=+0.0
+15:38:45  INFO      [G043] pool=$043  threshold_sweep  accepted=4/4  α=+0.0
+15:40:57  INFO      [G044] pool=$047  threshold_sweep  accepted=4/4  α=+0.0
+15:42:48  INFO      [G045] pool=$054  threshold_sweep  accepted=4/4  α=+0.0
+15:44:49  INFO      [G046] pool=$055  threshold_sweep  accepted=4/4  α=+0.0
+15:47:16  INFO      [G047] pool=$057  threshold_sweep  accepted=4/4  α=+0.0
+15:49:00  INFO      [G048] pool=$038  threshold_sweep  accepted=4/4  α=+0.0
+15:51:03  INFO      [G049] pool=$044  threshold_sweep  accepted=4/4  α=+0.0
+15:53:30  INFO      [G050] pool=$082  threshold_sweep  accepted=4/4  α=+0.0
+15:53:30  INFO      Baseline computed.
+15:53:30  INFO      Stage 2 (coarse alpha search): alphas=[-5.0, 5.0, 15.0]
+15:53:30  INFO        -> Optimizing for Expected Direction: Decrease metric
+15:55:48  INFO      [G001] pool=$065  threshold_sweep  accepted=4/4  α=-5.0
+15:57:37  INFO      [G002] pool=$063  threshold_sweep  accepted=4/4  α=-5.0
+15:59:16  INFO      [G003] pool=$059  threshold_sweep  accepted=4/4  α=-5.0
+16:01:14  INFO      [G004] pool=$050  threshold_sweep  accepted=4/4  α=-5.0
+16:02:45  INFO      [G005] pool=$041  threshold_sweep  accepted=4/4  α=-5.0
+16:05:01  INFO      [G006] pool=$089  threshold_sweep  accepted=4/4  α=-5.0
+16:07:09  INFO      [G007] pool=$066  threshold_sweep  accepted=4/4  α=-5.0
+16:09:18  INFO      [G008] pool=$048  threshold_sweep  accepted=4/4  α=-5.0
+16:10:53  INFO      [G009] pool=$071  threshold_sweep  accepted=4/4  α=-5.0
+16:13:33  INFO      [G010] pool=$056  threshold_sweep  accepted=4/4  α=-5.0
+16:15:52  INFO      [G011] pool=$073  threshold_sweep  accepted=4/4  α=-5.0
+16:17:42  INFO      [G012] pool=$061  threshold_sweep  accepted=4/4  α=-5.0
+16:19:56  INFO      [G013] pool=$051  threshold_sweep  accepted=4/4  α=-5.0
+16:21:27  INFO      [G014] pool=$040  threshold_sweep  accepted=4/4  α=-5.0
+16:23:49  INFO      [G015] pool=$081  threshold_sweep  accepted=4/4  α=-5.0
+16:26:06  INFO      [G016] pool=$080  threshold_sweep  accepted=4/4  α=-5.0
+16:27:58  INFO      [G017] pool=$049  threshold_sweep  accepted=4/4  α=-5.0
+16:29:51  INFO      [G018] pool=$064  threshold_sweep  accepted=4/4  α=-5.0
+16:32:11  INFO      [G019] pool=$077  threshold_sweep  accepted=4/4  α=-5.0
+16:34:16  INFO      [G020] pool=$037  threshold_sweep  accepted=4/4  α=-5.0
+16:36:34  INFO      [G021] pool=$086  threshold_sweep  accepted=4/4  α=-5.0
+16:38:45  INFO      [G022] pool=$058  threshold_sweep  accepted=4/4  α=-5.0
+16:40:56  INFO      [G023] pool=$075  threshold_sweep  accepted=4/4  α=-5.0
+16:43:20  INFO      [G024] pool=$092  threshold_sweep  accepted=4/4  α=-5.0
+16:45:10  INFO      [G025] pool=$083  threshold_sweep  accepted=4/4  α=-5.0
+16:47:10  INFO      [G026] pool=$072  threshold_sweep  accepted=4/4  α=-5.0
+16:49:17  INFO      [G027] pool=$070  threshold_sweep  accepted=4/4  α=-5.0
+16:51:31  INFO      [G028] pool=$060  threshold_sweep  accepted=4/4  α=-5.0
+16:53:41  INFO      [G029] pool=$062  threshold_sweep  accepted=4/4  α=-5.0
+16:55:24  INFO      [G030] pool=$085  threshold_sweep  accepted=4/4  α=-5.0
+16:58:04  INFO      [G031] pool=$090  threshold_sweep  accepted=4/4  α=-5.0
+17:00:02  INFO      [G032] pool=$078  threshold_sweep  accepted=4/4  α=-5.0
+17:02:19  INFO      [G033] pool=$074  threshold_sweep  accepted=4/4  α=-5.0
+17:04:25  INFO      [G034] pool=$087  threshold_sweep  accepted=4/4  α=-5.0
+17:06:31  INFO      [G035] pool=$052  threshold_sweep  accepted=4/4  α=-5.0
+17:08:17  INFO      [G036] pool=$093  threshold_sweep  accepted=4/4  α=-5.0
+17:10:42  INFO      [G037] pool=$091  threshold_sweep  accepted=4/4  α=-5.0
+17:13:18  INFO      [G038] pool=$039  threshold_sweep  accepted=4/4  α=-5.0
+17:15:05  INFO      [G039] pool=$068  threshold_sweep  accepted=4/4  α=-5.0
+17:16:46  INFO      [G040] pool=$079  threshold_sweep  accepted=4/4  α=-5.0
+17:18:53  INFO      [G041] pool=$042  threshold_sweep  accepted=4/4  α=-5.0
+17:21:13  INFO      [G042] pool=$076  threshold_sweep  accepted=4/4  α=-5.0
+17:23:17  INFO      [G043] pool=$043  threshold_sweep  accepted=4/4  α=-5.0
+17:25:08  INFO      [G044] pool=$047  threshold_sweep  accepted=4/4  α=-5.0
+17:26:46  INFO      [G045] pool=$054  threshold_sweep  accepted=4/4  α=-5.0
+17:28:57  INFO      [G046] pool=$055  threshold_sweep  accepted=4/4  α=-5.0
+17:30:40  INFO      [G047] pool=$057  threshold_sweep  accepted=4/4  α=-5.0
+17:32:21  INFO      [G048] pool=$038  threshold_sweep  accepted=4/4  α=-5.0
+17:34:36  INFO      [G049] pool=$044  threshold_sweep  accepted=4/4  α=-5.0
+17:36:32  INFO      [G050] pool=$082  threshold_sweep  accepted=4/4  α=-5.0
+17:36:32  INFO        alpha=-5.0 | fitness=-0.00 | valid=100% | raw=100.00
+17:39:03  INFO      [G001] pool=$065  threshold_sweep  accepted=4/4  α=+5.0
+17:41:15  INFO      [G002] pool=$063  threshold_sweep  accepted=4/4  α=+5.0
+17:43:10  INFO      [G003] pool=$059  threshold_sweep  accepted=4/4  α=+5.0
+17:45:01  INFO      [G004] pool=$050  threshold_sweep  accepted=4/4  α=+5.0
+17:46:35  INFO      [G005] pool=$041  threshold_sweep  accepted=4/4  α=+5.0
+17:48:44  INFO      [G006] pool=$089  threshold_sweep  accepted=4/4  α=+5.0
+17:50:32  INFO      [G007] pool=$066  threshold_sweep  accepted=4/4  α=+5.0
+17:52:10  INFO      [G008] pool=$048  threshold_sweep  accepted=4/4  α=+5.0
+17:53:54  INFO      [G009] pool=$071  threshold_sweep  accepted=4/4  α=+5.0
+17:55:49  INFO      [G010] pool=$056  threshold_sweep  accepted=4/4  α=+5.0
+17:57:49  INFO      [G011] pool=$073  threshold_sweep  accepted=4/4  α=+5.0
+17:59:59  INFO      [G012] pool=$061  threshold_sweep  accepted=4/4  α=+5.0
+18:02:00  INFO      [G013] pool=$051  threshold_sweep  accepted=4/4  α=+5.0
+18:03:45  INFO      [G014] pool=$040  threshold_sweep  accepted=4/4  α=+5.0
+18:05:47  INFO      [G015] pool=$081  threshold_sweep  accepted=4/4  α=+5.0
+18:07:21  INFO      [G016] pool=$080  threshold_sweep  accepted=4/4  α=+5.0
+18:09:13  INFO      [G017] pool=$049  threshold_sweep  accepted=4/4  α=+5.0
+18:11:07  INFO      [G018] pool=$064  threshold_sweep  accepted=4/4  α=+5.0
+18:12:55  INFO      [G019] pool=$077  threshold_sweep  accepted=4/4  α=+5.0
+18:15:38  INFO      [G020] pool=$037  threshold_sweep  accepted=4/4  α=+5.0
+18:17:34  INFO      [G021] pool=$086  threshold_sweep  accepted=4/4  α=+5.0
+18:19:33  INFO      [G022] pool=$058  threshold_sweep  accepted=4/4  α=+5.0
+18:21:18  INFO      [G023] pool=$075  threshold_sweep  accepted=4/4  α=+5.0
+18:23:45  INFO      [G024] pool=$092  threshold_sweep  accepted=4/4  α=+5.0
+18:26:01  INFO      [G025] pool=$083  threshold_sweep  accepted=4/4  α=+5.0
+18:27:38  INFO      [G026] pool=$072  threshold_sweep  accepted=4/4  α=+5.0
+18:29:24  INFO      [G027] pool=$070  threshold_sweep  accepted=4/4  α=+5.0
+18:31:57  INFO      [G028] pool=$060  threshold_sweep  accepted=4/4  α=+5.0
+18:33:59  INFO      [G029] pool=$062  threshold_sweep  accepted=4/4  α=+5.0
+18:35:55  INFO      [G030] pool=$085  threshold_sweep  accepted=4/4  α=+5.0
+18:38:32  INFO      [G031] pool=$090  threshold_sweep  accepted=4/4  α=+5.0
+18:40:46  INFO      [G032] pool=$078  threshold_sweep  accepted=4/4  α=+5.0
+18:42:31  INFO      [G033] pool=$074  threshold_sweep  accepted=4/4  α=+5.0
+18:44:32  INFO      [G034] pool=$087  threshold_sweep  accepted=4/4  α=+5.0
+18:46:36  INFO      [G035] pool=$052  threshold_sweep  accepted=4/4  α=+5.0
+18:48:44  INFO      [G036] pool=$093  threshold_sweep  accepted=4/4  α=+5.0
+18:51:00  INFO      [G037] pool=$091  threshold_sweep  accepted=3/4  α=+5.0
+18:52:44  INFO      [G038] pool=$039  threshold_sweep  accepted=4/4  α=+5.0
+18:54:39  INFO      [G039] pool=$068  threshold_sweep  accepted=4/4  α=+5.0
+18:56:40  INFO      [G040] pool=$079  threshold_sweep  accepted=4/4  α=+5.0
+18:58:56  INFO      [G041] pool=$042  threshold_sweep  accepted=4/4  α=+5.0
+19:00:48  INFO      [G042] pool=$076  threshold_sweep  accepted=4/4  α=+5.0
+19:02:36  INFO      [G043] pool=$043  threshold_sweep  accepted=4/4  α=+5.0
+19:05:18  INFO      [G044] pool=$047  threshold_sweep  accepted=4/4  α=+5.0
+19:07:27  INFO      [G045] pool=$054  threshold_sweep  accepted=4/4  α=+5.0
+19:09:21  INFO      [G046] pool=$055  threshold_sweep  accepted=4/4  α=+5.0
+19:11:12  INFO      [G047] pool=$057  threshold_sweep  accepted=4/4  α=+5.0
+19:13:19  INFO      [G048] pool=$038  threshold_sweep  accepted=4/4  α=+5.0
+19:15:18  INFO      [G049] pool=$044  threshold_sweep  accepted=4/4  α=+5.0
+19:17:21  INFO      [G050] pool=$082  threshold_sweep  accepted=4/4  α=+5.0
+19:17:21  INFO        alpha=+5.0 | fitness=+0.50 | valid=100% | raw=99.50
+19:20:06  INFO      [G001] pool=$065  threshold_sweep  accepted=4/4  α=+15.0
+19:21:35  INFO      [G002] pool=$063  threshold_sweep  accepted=4/4  α=+15.0
+19:23:33  INFO      [G003] pool=$059  threshold_sweep  accepted=4/4  α=+15.0
+19:25:16  INFO      [G004] pool=$050  threshold_sweep  accepted=4/4  α=+15.0
+19:26:45  INFO      [G005] pool=$041  threshold_sweep  accepted=4/4  α=+15.0
+19:29:12  INFO      [G006] pool=$089  threshold_sweep  accepted=4/4  α=+15.0
+19:31:18  INFO      [G007] pool=$066  threshold_sweep  accepted=4/4  α=+15.0
+19:33:22  INFO      [G008] pool=$048  threshold_sweep  accepted=4/4  α=+15.0
+19:35:21  INFO      [G009] pool=$071  threshold_sweep  accepted=4/4  α=+15.0
+19:37:38  INFO      [G010] pool=$056  threshold_sweep  accepted=4/4  α=+15.0
+19:39:03  INFO      [G011] pool=$073  threshold_sweep  accepted=4/4  α=+15.0
+19:40:59  INFO      [G012] pool=$061  threshold_sweep  accepted=4/4  α=+15.0
+19:43:02  INFO      [G013] pool=$051  threshold_sweep  accepted=4/4  α=+15.0
+19:44:28  INFO      [G014] pool=$040  threshold_sweep  accepted=4/4  α=+15.0
+19:46:20  INFO      [G015] pool=$081  threshold_sweep  accepted=4/4  α=+15.0
+19:48:52  INFO      [G016] pool=$080  threshold_sweep  accepted=4/4  α=+15.0
+19:50:41  INFO      [G017] pool=$049  threshold_sweep  accepted=4/4  α=+15.0
+19:52:37  INFO      [G018] pool=$064  threshold_sweep  accepted=4/4  α=+15.0
+19:54:34  INFO      [G019] pool=$077  threshold_sweep  accepted=4/4  α=+15.0
+19:56:54  INFO      [G020] pool=$037  threshold_sweep  accepted=4/4  α=+15.0
+19:58:46  INFO      [G021] pool=$086  threshold_sweep  accepted=4/4  α=+15.0
+20:00:33  INFO      [G022] pool=$058  threshold_sweep  accepted=4/4  α=+15.0
+20:02:44  INFO      [G023] pool=$075  threshold_sweep  accepted=4/4  α=+15.0
+20:05:38  INFO      [G024] pool=$092  threshold_sweep  accepted=4/4  α=+15.0
+20:07:51  INFO      [G025] pool=$083  threshold_sweep  accepted=4/4  α=+15.0
+20:10:12  INFO      [G026] pool=$072  threshold_sweep  accepted=4/4  α=+15.0
+20:12:21  INFO      [G027] pool=$070  threshold_sweep  accepted=4/4  α=+15.0
+20:14:55  INFO      [G028] pool=$060  threshold_sweep  accepted=4/4  α=+15.0
+20:17:05  INFO      [G029] pool=$062  threshold_sweep  accepted=4/4  α=+15.0
+20:19:00  INFO      [G030] pool=$085  threshold_sweep  accepted=4/4  α=+15.0
+20:21:28  INFO      [G031] pool=$090  threshold_sweep  accepted=4/4  α=+15.0
+20:23:41  INFO      [G032] pool=$078  threshold_sweep  accepted=4/4  α=+15.0
+20:25:29  INFO      [G033] pool=$074  threshold_sweep  accepted=4/4  α=+15.0
+20:28:13  INFO      [G034] pool=$087  threshold_sweep  accepted=4/4  α=+15.0
+20:29:58  INFO      [G035] pool=$052  threshold_sweep  accepted=4/4  α=+15.0
+20:32:57  INFO      [G036] pool=$093  threshold_sweep  accepted=4/4  α=+15.0
+20:34:52  INFO      [G037] pool=$091  threshold_sweep  accepted=4/4  α=+15.0
+20:37:02  INFO      [G038] pool=$039  threshold_sweep  accepted=4/4  α=+15.0
+20:39:03  INFO      [G039] pool=$068  threshold_sweep  accepted=4/4  α=+15.0
+20:40:56  INFO      [G040] pool=$079  threshold_sweep  accepted=4/4  α=+15.0
+20:43:04  INFO      [G041] pool=$042  threshold_sweep  accepted=4/4  α=+15.0
+20:44:58  INFO      [G042] pool=$076  threshold_sweep  accepted=4/4  α=+15.0
+20:47:31  INFO      [G043] pool=$043  threshold_sweep  accepted=3/4  α=+15.0
+20:49:29  INFO      [G044] pool=$047  threshold_sweep  accepted=4/4  α=+15.0
+20:51:50  INFO      [G045] pool=$054  threshold_sweep  accepted=4/4  α=+15.0
+20:53:37  INFO      [G046] pool=$055  threshold_sweep  accepted=4/4  α=+15.0
+20:55:43  INFO      [G047] pool=$057  threshold_sweep  accepted=4/4  α=+15.0
+20:57:49  INFO      [G048] pool=$038  threshold_sweep  accepted=4/4  α=+15.0
+21:00:20  INFO      [G049] pool=$044  threshold_sweep  accepted=4/4  α=+15.0
+21:01:52  INFO      [G050] pool=$082  threshold_sweep  accepted=4/4  α=+15.0
+21:01:52  INFO        alpha=+15.0 | fitness=+0.50 | valid=100% | raw=99.50
+21:01:52  INFO      Stage 2 best: alpha=+5.0  fitness=+0.50  beats_baseline=True
+21:01:52  INFO      Final eval: alpha=+5.0  layers=[32]
+21:03:44  INFO      [G001] pool=$065  threshold_sweep  accepted=4/4  α=+5.0
+21:06:08  INFO      [G002] pool=$063  threshold_sweep  accepted=4/4  α=+5.0
+21:08:32  INFO      [G003] pool=$059  threshold_sweep  accepted=4/4  α=+5.0
+21:10:21  INFO      [G004] pool=$050  threshold_sweep  accepted=4/4  α=+5.0
+21:12:30  INFO      [G005] pool=$041  threshold_sweep  accepted=4/4  α=+5.0
+21:14:13  INFO      [G006] pool=$089  threshold_sweep  accepted=4/4  α=+5.0
+21:15:53  INFO      [G007] pool=$066  threshold_sweep  accepted=4/4  α=+5.0
+21:18:34  INFO      [G008] pool=$048  threshold_sweep  accepted=4/4  α=+5.0
+21:20:31  INFO      [G009] pool=$071  threshold_sweep  accepted=4/4  α=+5.0
+21:22:46  INFO      [G010] pool=$056  threshold_sweep  accepted=4/4  α=+5.0
+21:24:44  INFO      [G011] pool=$073  threshold_sweep  accepted=4/4  α=+5.0
+21:26:17  INFO      [G012] pool=$061  threshold_sweep  accepted=4/4  α=+5.0
+21:28:17  INFO      [G013] pool=$051  threshold_sweep  accepted=4/4  α=+5.0
+21:30:21  INFO      [G014] pool=$040  threshold_sweep  accepted=4/4  α=+5.0
+21:31:53  INFO      [G015] pool=$081  threshold_sweep  accepted=4/4  α=+5.0
+21:33:51  INFO      [G016] pool=$080  threshold_sweep  accepted=4/4  α=+5.0
+21:35:43  INFO      [G017] pool=$049  threshold_sweep  accepted=4/4  α=+5.0
+21:37:35  INFO      [G018] pool=$064  threshold_sweep  accepted=4/4  α=+5.0
+21:39:44  INFO      [G019] pool=$077  threshold_sweep  accepted=4/4  α=+5.0
+21:41:34  INFO      [G020] pool=$037  threshold_sweep  accepted=4/4  α=+5.0
+21:43:08  INFO      [G021] pool=$086  threshold_sweep  accepted=4/4  α=+5.0
+21:45:21  INFO      [G022] pool=$058  threshold_sweep  accepted=4/4  α=+5.0
+21:47:26  INFO      [G023] pool=$075  threshold_sweep  accepted=4/4  α=+5.0
+21:50:10  INFO      [G024] pool=$092  threshold_sweep  accepted=4/4  α=+5.0
+21:51:55  INFO      [G025] pool=$083  threshold_sweep  accepted=4/4  α=+5.0
+21:54:07  INFO      [G026] pool=$072  threshold_sweep  accepted=4/4  α=+5.0
+21:56:15  INFO      [G027] pool=$070  threshold_sweep  accepted=4/4  α=+5.0
+21:58:08  INFO      [G028] pool=$060  threshold_sweep  accepted=4/4  α=+5.0
+21:59:48  INFO      [G029] pool=$062  threshold_sweep  accepted=4/4  α=+5.0
+22:01:54  INFO      [G030] pool=$085  threshold_sweep  accepted=4/4  α=+5.0
+22:04:05  INFO      [G031] pool=$090  threshold_sweep  accepted=4/4  α=+5.0
+22:06:19  INFO      [G032] pool=$078  threshold_sweep  accepted=4/4  α=+5.0
+22:08:46  INFO      [G033] pool=$074  threshold_sweep  accepted=4/4  α=+5.0
+22:10:42  INFO      [G034] pool=$087  threshold_sweep  accepted=4/4  α=+5.0
+22:13:10  INFO      [G035] pool=$052  threshold_sweep  accepted=4/4  α=+5.0
+22:15:48  INFO      [G036] pool=$093  threshold_sweep  accepted=4/4  α=+5.0
+22:18:00  INFO      [G037] pool=$091  threshold_sweep  accepted=4/4  α=+5.0
+22:20:33  INFO      [G038] pool=$039  threshold_sweep  accepted=4/4  α=+5.0
+22:22:16  INFO      [G039] pool=$068  threshold_sweep  accepted=4/4  α=+5.0
+22:24:12  INFO      [G040] pool=$079  threshold_sweep  accepted=4/4  α=+5.0
+22:26:28  INFO      [G041] pool=$042  threshold_sweep  accepted=4/4  α=+5.0
+22:28:51  INFO      [G042] pool=$076  threshold_sweep  accepted=4/4  α=+5.0
+22:30:58  INFO      [G043] pool=$043  threshold_sweep  accepted=4/4  α=+5.0
+22:33:05  INFO      [G044] pool=$047  threshold_sweep  accepted=4/4  α=+5.0
+22:34:46  INFO      [G045] pool=$054  threshold_sweep  accepted=4/4  α=+5.0
+22:36:49  INFO      [G046] pool=$055  threshold_sweep  accepted=4/4  α=+5.0
+22:38:48  INFO      [G047] pool=$057  threshold_sweep  accepted=4/4  α=+5.0
+22:40:35  INFO      [G048] pool=$038  threshold_sweep  accepted=4/4  α=+5.0
+22:42:40  INFO      [G049] pool=$044  threshold_sweep  accepted=4/4  α=+5.0
+22:44:30  INFO      [G050] pool=$082  threshold_sweep  accepted=4/4  α=+5.0
+22:44:31  INFO      Saved: results/ultimatum/llm_vs_rulebased/qwen2.5-32b-gptq_damon_variable_newprompt_l32_responder_firmempcompflatnarc/L32/responder/firmness/final_best.json
+
+======================================================================
+ULTIMATUM GRIDSEARCH  |  model=qwen2.5-32b-gptq  dim=firmness  role=responder
+  n_games=50  coarse_alphas=[-5.0, 5.0, 15.0]  rulebased=True
+======================================================================
+
+=================================================================
+ULTIMATUM GAME — ACTIVATION STEERING
+  Role: RESPONDER   Dimension: firmness   α=+5.0
+  Games: 200   Valid: 200   Parse errors: 0
+=================================================================
+  Accept rate:          100.0%  (200/200)
+  Mean proposer offer:  50.0%  (std 22.4%)
+  Mean proposer payoff: 50.0% of pool
+  Mean responder payoff:50.0% of pool
+=================================================================
+==> Running responder/empathy on Layer 32
+22:45:32  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=empathy | role=responder
+22:45:32  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:411: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:419: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+22:45:33  WARNING   CUDA extension not installed.
+22:45:33  WARNING   CUDA extension not installed.
+WARNING - Exllamav2 kernel is not installed, reset disable_exllamav2 to True. This may because you installed auto_gptq using a pre-build wheel on Windows, in which exllama_kernels are not compiled. To use exllama_kernels to further speedup inference, you can re-install auto_gptq from source.
+22:45:33  WARNING   Exllamav2 kernel is not installed, reset disable_exllamav2 to True. This may because you installed auto_gptq using a pre-build wheel on Windows, in which exllama_kernels are not compiled. To use exllama_kernels to further speedup inference, you can re-install auto_gptq from source.
+WARNING - CUDA kernels for auto_gptq are not installed, this will result in very slow inference speed. This may because:
+1. You disabled CUDA extensions compilation by setting BUILD_CUDA_EXT=0 when install auto_gptq from source.
+2. You are using pytorch without CUDA support.
+3. CUDA and nvcc are not installed in your device.
+22:45:33  WARNING   CUDA kernels for auto_gptq are not installed, this will result in very slow inference speed. This may because:
+1. You disabled CUDA extensions compilation by setting BUILD_CUDA_EXT=0 when install auto_gptq from source.
+2. You are using pytorch without CUDA support.
+3. CUDA and nvcc are not installed in your device.
+/cs/student/projects3/2022/dsurrao/comp0087_snlp_cwk/venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+WARNING - ignoring unknown parameter in config.json: batch_size.
+22:45:34  WARNING   ignoring unknown parameter in config.json: batch_size.
+WARNING - ignoring unknown parameter in config.json: block_name_to_quantize.
+22:45:34  WARNING   ignoring unknown parameter in config.json: block_name_to_quantize.
+WARNING - ignoring unknown parameter in config.json: cache_block_outputs.
+22:45:34  WARNING   ignoring unknown parameter in config.json: cache_block_outputs.
+WARNING - ignoring unknown parameter in config.json: dataset.
+22:45:34  WARNING   ignoring unknown parameter in config.json: dataset.
+WARNING - ignoring unknown parameter in config.json: exllama_config.
+22:45:34  WARNING   ignoring unknown parameter in config.json: exllama_config.
+WARNING - ignoring unknown parameter in config.json: max_input_length.
+22:45:34  WARNING   ignoring unknown parameter in config.json: max_input_length.
+WARNING - ignoring unknown parameter in config.json: model_seqlen.
+22:45:34  WARNING   ignoring unknown parameter in config.json: model_seqlen.
+WARNING - ignoring unknown parameter in config.json: module_name_preceding_first_block.
+22:45:34  WARNING   ignoring unknown parameter in config.json: module_name_preceding_first_block.
+WARNING - ignoring unknown parameter in config.json: modules_in_block_to_quantize.
+22:45:34  WARNING   ignoring unknown parameter in config.json: modules_in_block_to_quantize.
+WARNING - ignoring unknown parameter in config.json: pad_token_id.
+22:45:34  WARNING   ignoring unknown parameter in config.json: pad_token_id.
+WARNING - ignoring unknown parameter in config.json: quant_method.
+22:45:34  WARNING   ignoring unknown parameter in config.json: quant_method.
+WARNING - ignoring unknown parameter in config.json: tokenizer.
+22:45:34  WARNING   ignoring unknown parameter in config.json: tokenizer.
+WARNING - ignoring unknown parameter in config.json: use_cuda_fp16.
+22:45:34  WARNING   ignoring unknown parameter in config.json: use_cuda_fp16.
+WARNING - ignoring unknown parameter in config.json: use_exllama.
+22:45:34  WARNING   ignoring unknown parameter in config.json: use_exllama.
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO - The layer lm_head is not quantized.
+22:45:35  INFO      The layer lm_head is not quantized.
+22:45:40  INFO      number_of_layers=64
+22:45:40  INFO      Computing baseline (alpha=0, 50 games, rulebased)...
+22:47:44  INFO      [G001] pool=$065  threshold_sweep  accepted=4/4  α=+0.0
+22:49:18  INFO      [G002] pool=$063  threshold_sweep  accepted=4/4  α=+0.0
+22:51:07  INFO      [G003] pool=$059  threshold_sweep  accepted=4/4  α=+0.0
+22:53:06  INFO      [G004] pool=$050  threshold_sweep  accepted=4/4  α=+0.0
+22:54:52  INFO      [G005] pool=$041  threshold_sweep  accepted=4/4  α=+0.0
+22:56:33  INFO      [G006] pool=$089  threshold_sweep  accepted=4/4  α=+0.0
+22:58:37  INFO      [G007] pool=$066  threshold_sweep  accepted=4/4  α=+0.0
+23:00:21  INFO      [G008] pool=$048  threshold_sweep  accepted=4/4  α=+0.0
+23:02:11  INFO      [G009] pool=$071  threshold_sweep  accepted=4/4  α=+0.0
+23:04:10  INFO      [G010] pool=$056  threshold_sweep  accepted=4/4  α=+0.0
+23:06:28  INFO      [G011] pool=$073  threshold_sweep  accepted=4/4  α=+0.0
+23:08:39  INFO      [G012] pool=$061  threshold_sweep  accepted=4/4  α=+0.0
+23:10:23  INFO      [G013] pool=$051  threshold_sweep  accepted=4/4  α=+0.0
+23:12:12  INFO      [G014] pool=$040  threshold_sweep  accepted=4/4  α=+0.0
+23:14:21  INFO      [G015] pool=$081  threshold_sweep  accepted=4/4  α=+0.0
+23:16:41  INFO      [G016] pool=$080  threshold_sweep  accepted=4/4  α=+0.0
+23:18:34  INFO      [G017] pool=$049  threshold_sweep  accepted=4/4  α=+0.0
+23:20:39  INFO      [G018] pool=$064  threshold_sweep  accepted=4/4  α=+0.0
+23:22:44  INFO      [G019] pool=$077  threshold_sweep  accepted=4/4  α=+0.0
+23:24:21  INFO      [G020] pool=$037  threshold_sweep  accepted=4/4  α=+0.0
+23:25:52  INFO      [G021] pool=$086  threshold_sweep  accepted=4/4  α=+0.0
+23:28:21  INFO      [G022] pool=$058  threshold_sweep  accepted=4/4  α=+0.0
+23:30:21  INFO      [G023] pool=$075  threshold_sweep  accepted=4/4  α=+0.0
+23:33:04  INFO      [G024] pool=$092  threshold_sweep  accepted=4/4  α=+0.0
+23:35:07  INFO      [G025] pool=$083  threshold_sweep  accepted=4/4  α=+0.0
+23:36:55  INFO      [G026] pool=$072  threshold_sweep  accepted=4/4  α=+0.0
+23:39:24  INFO      [G027] pool=$070  threshold_sweep  accepted=4/4  α=+0.0
+23:42:10  INFO      [G028] pool=$060  threshold_sweep  accepted=4/4  α=+0.0
+23:43:51  INFO      [G029] pool=$062  threshold_sweep  accepted=4/4  α=+0.0
+23:45:56  INFO      [G030] pool=$085  threshold_sweep  accepted=4/4  α=+0.0
+23:48:18  INFO      [G031] pool=$090  threshold_sweep  accepted=4/4  α=+0.0
+23:49:52  INFO      [G032] pool=$078  threshold_sweep  accepted=4/4  α=+0.0
+23:51:26  INFO      [G033] pool=$074  threshold_sweep  accepted=4/4  α=+0.0
+23:53:15  INFO      [G034] pool=$087  threshold_sweep  accepted=4/4  α=+0.0
+23:55:30  INFO      [G035] pool=$052  threshold_sweep  accepted=4/4  α=+0.0
+23:57:56  INFO      [G036] pool=$093  threshold_sweep  accepted=4/4  α=+0.0
+23:59:46  INFO      [G037] pool=$091  threshold_sweep  accepted=4/4  α=+0.0
+00:01:32  INFO      [G038] pool=$039  threshold_sweep  accepted=4/4  α=+0.0
+00:03:29  INFO      [G039] pool=$068  threshold_sweep  accepted=4/4  α=+0.0
+00:05:44  INFO      [G040] pool=$079  threshold_sweep  accepted=4/4  α=+0.0
+00:07:37  INFO      [G041] pool=$042  threshold_sweep  accepted=4/4  α=+0.0
+00:09:50  INFO      [G042] pool=$076  threshold_sweep  accepted=4/4  α=+0.0
+00:11:55  INFO      [G043] pool=$043  threshold_sweep  accepted=4/4  α=+0.0
+00:14:12  INFO      [G044] pool=$047  threshold_sweep  accepted=4/4  α=+0.0
+00:16:02  INFO      [G045] pool=$054  threshold_sweep  accepted=4/4  α=+0.0
+00:17:59  INFO      [G046] pool=$055  threshold_sweep  accepted=4/4  α=+0.0
+00:20:08  INFO      [G047] pool=$057  threshold_sweep  accepted=4/4  α=+0.0
+00:22:15  INFO      [G048] pool=$038  threshold_sweep  accepted=4/4  α=+0.0
+00:24:24  INFO      [G049] pool=$044  threshold_sweep  accepted=4/4  α=+0.0
+00:26:06  INFO      [G050] pool=$082  threshold_sweep  accepted=4/4  α=+0.0
+00:26:06  INFO      Baseline computed.
+00:26:06  INFO      Stage 2 (coarse alpha search): alphas=[-5.0, 5.0, 15.0]
+00:26:06  INFO        -> Optimizing for Expected Direction: Increase metric
+00:28:36  INFO      [G001] pool=$065  threshold_sweep  accepted=4/4  α=-5.0
+00:30:14  INFO      [G002] pool=$063  threshold_sweep  accepted=4/4  α=-5.0
+00:32:13  INFO      [G003] pool=$059  threshold_sweep  accepted=4/4  α=-5.0
+00:34:22  INFO      [G004] pool=$050  threshold_sweep  accepted=4/4  α=-5.0
