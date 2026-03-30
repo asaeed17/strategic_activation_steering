@@ -858,16 +858,28 @@ def main() -> None:
 
     # Load model
     log.info("Loading model: %s", model_config.hf_id)
-    load_kwargs = dict(token=hf_token, device_map="auto")
-    if args.quantize:
-        from transformers import BitsAndBytesConfig
-        load_kwargs["quantization_config"] = BitsAndBytesConfig(
-            load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16,
-            bnb_4bit_use_double_quant=True, bnb_4bit_quant_type="nf4",
+    if model_config.is_gptq:
+        from auto_gptq import AutoGPTQForCausalLM
+        n_gpus = torch.cuda.device_count()
+        max_memory = {i: "22GiB" for i in range(n_gpus)}
+        model = AutoGPTQForCausalLM.from_quantized(
+            model_config.hf_id,
+            use_safetensors=True,
+            device_map="auto",
+            max_memory=max_memory,
+            trust_remote_code=False,
         )
     else:
-        load_kwargs["torch_dtype"] = torch.bfloat16
-    model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
+        load_kwargs = dict(token=hf_token, device_map="auto")
+        if args.quantize:
+            from transformers import BitsAndBytesConfig
+            load_kwargs["quantization_config"] = BitsAndBytesConfig(
+                load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16,
+                bnb_4bit_use_double_quant=True, bnb_4bit_quant_type="nf4",
+            )
+        else:
+            load_kwargs["torch_dtype"] = torch.bfloat16
+        model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
     model.eval()
     tokenizer = AutoTokenizer.from_pretrained(model_config.hf_id, token=hf_token)
 
