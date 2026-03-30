@@ -253,3 +253,74 @@ def extract_behavioral_metrics(text: str) -> Dict[str, Any]:
         "hedge_count": len(hedge_pattern.findall(text)),
         "fairness_count": len(fairness_pattern.findall(text)),
     }
+
+
+# ---------------------------------------------------------------------------
+# Rule-Based Opponent
+# ---------------------------------------------------------------------------
+
+def rule_based_action(
+    own_resources: Dict[str, int],
+    opponent_resources: Dict[str, int],
+    pending_proposal: Optional[Dict[str, Any]],
+    turn: int,
+) -> Dict[str, Any]:
+    """Deterministic greedy opponent.
+
+    - If a pending proposal exists: ACCEPT if it increases own score, REJECT otherwise.
+    - On own initiative: propose the trade that maximises own score gain
+      (sell the resource we have most of, buy the one we have least of).
+    - END if no beneficial trade exists or if turn >= MAX_ROUNDS - 1.
+    """
+    own_score = compute_score(own_resources)
+
+    # Respond to pending proposal
+    if pending_proposal is not None and pending_proposal["type"] == "propose":
+        # From our perspective: opponent proposed to sell us something and buy from us
+        # We are the responder: we give buy_res and receive sell_res
+        hypothetical_own = dict(own_resources)
+        hypothetical_own[pending_proposal["sell_res"]] = (
+            hypothetical_own.get(pending_proposal["sell_res"], 0)
+            + pending_proposal["sell_qty"]
+        )
+        hypothetical_own[pending_proposal["buy_res"]] = (
+            hypothetical_own.get(pending_proposal["buy_res"], 0)
+            - pending_proposal["buy_qty"]
+        )
+        # Check feasibility
+        if hypothetical_own[pending_proposal["buy_res"]] < 0:
+            return {"type": "reject"}
+        if compute_score(hypothetical_own) > own_score:
+            return {"type": "accept"}
+        return {"type": "reject"}
+
+    # Own initiative: find best trade to propose
+    if turn >= MAX_ROUNDS - 1:
+        return {"type": "end"}
+
+    best_proposal = None
+    best_gain = 0
+    for sell_res in RESOURCE_TYPES:
+        for buy_res in RESOURCE_TYPES:
+            if sell_res == buy_res:
+                continue
+            max_sell = own_resources.get(sell_res, 0)
+            max_buy = opponent_resources.get(buy_res, 0)
+            for qty in range(1, min(max_sell, max_buy) + 1):
+                hyp = dict(own_resources)
+                hyp[sell_res] -= qty
+                hyp[buy_res] += qty
+                gain = compute_score(hyp) - own_score
+                if gain > best_gain:
+                    best_gain = gain
+                    best_proposal = {
+                        "type": "propose",
+                        "sell_qty": qty,
+                        "sell_res": sell_res,
+                        "buy_qty": qty,
+                        "buy_res": buy_res,
+                    }
+
+    if best_proposal is not None:
+        return best_proposal
+    return {"type": "end"}
