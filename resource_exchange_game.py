@@ -942,6 +942,31 @@ def main() -> None:
         result["game_id"] = i
         games.append(result)
 
+        # Per-game logging
+        if args.paired:
+            s = result["steered"]
+            b = result["baseline"]
+            sp = args.steered_player
+            log.info(
+                "[G%03d] steered P%d: %dX/%dY (score %d, trades %d) | "
+                "baseline P%d: %dX/%dY (score %d, trades %d)",
+                i + 1, sp,
+                s[f"p{sp}_final"]["X"], s[f"p{sp}_final"]["Y"],
+                s[f"p{sp}_score"], s["trades_completed"],
+                sp,
+                b[f"p{sp}_final"]["X"], b[f"p{sp}_final"]["Y"],
+                b[f"p{sp}_score"], b["trades_completed"],
+            )
+        else:
+            sp = args.steered_player or 1
+            log.info(
+                "[G%03d] P%d: %dX/%dY (score %d, trades %d, len %d)",
+                i + 1, sp,
+                result[f"p{sp}_final"]["X"], result[f"p{sp}_final"]["Y"],
+                result[f"p{sp}_score"], result["trades_completed"],
+                result["game_length"],
+            )
+
     # Summary
     if args.paired:
         summary = summarise_paired(games, args.steered_player)
