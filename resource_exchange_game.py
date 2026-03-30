@@ -290,7 +290,7 @@ def rule_based_action(
         # Check feasibility
         if hypothetical_own[pending_proposal["buy_res"]] < 0:
             return {"type": "reject"}
-        if compute_score(hypothetical_own) > own_score:
+        if compute_score(hypothetical_own) >= own_score:
             return {"type": "accept"}
         return {"type": "reject"}
 
@@ -298,28 +298,28 @@ def rule_based_action(
     if turn >= MAX_ROUNDS - 1:
         return {"type": "end"}
 
+    # Propose an equal trade of the resource we have most of for the one
+    # we have least of. This is always score-neutral (total unchanged) but
+    # improves balance — and the opponent will accept if also score-neutral.
     best_proposal = None
-    best_gain = 0
-    for sell_res in RESOURCE_TYPES:
-        for buy_res in RESOURCE_TYPES:
-            if sell_res == buy_res:
-                continue
-            max_sell = own_resources.get(sell_res, 0)
-            max_buy = opponent_resources.get(buy_res, 0)
-            for qty in range(1, min(max_sell, max_buy) + 1):
-                hyp = dict(own_resources)
-                hyp[sell_res] -= qty
-                hyp[buy_res] += qty
-                gain = compute_score(hyp) - own_score
-                if gain > best_gain:
-                    best_gain = gain
-                    best_proposal = {
-                        "type": "propose",
-                        "sell_qty": qty,
-                        "sell_res": sell_res,
-                        "buy_qty": qty,
-                        "buy_res": buy_res,
-                    }
+    own_vals = [(res, own_resources.get(res, 0)) for res in RESOURCE_TYPES]
+    own_vals.sort(key=lambda x: -x[1])  # descending
+    sell_res, sell_have = own_vals[0]
+    buy_res, buy_have = own_vals[-1]
+    if sell_res != buy_res and sell_have > buy_have:
+        # Trade up to half the difference to move toward balance
+        trade_qty = min(
+            (sell_have - buy_have) // 2,
+            opponent_resources.get(buy_res, 0),
+        )
+        if trade_qty > 0:
+            best_proposal = {
+                "type": "propose",
+                "sell_qty": trade_qty,
+                "sell_res": sell_res,
+                "buy_qty": trade_qty,
+                "buy_res": buy_res,
+            }
 
     if best_proposal is not None:
         return best_proposal
@@ -763,19 +763,20 @@ def _run_self_test() -> None:
     assert p == {"X": 7, "Y": 8}
     assert r == {"X": 8, "Y": 7}
 
-    # Rule-based opponent — accept improving trade
+    # Rule-based opponent — accept improving trade (unequal: give 3, receive 5)
     own = {"X": 5, "Y": 25}
     opp = {"X": 25, "Y": 5}
+    # Opponent proposes to sell 5 X and buy 3 Y → we receive 5X, give 3Y → net +2
     proposal = {"type": "propose", "sell_qty": 5, "sell_res": "X",
-                "buy_qty": 5, "buy_res": "Y"}
+                "buy_qty": 3, "buy_res": "Y"}
     action = rule_based_action(own, opp, proposal, turn=1)
-    assert action["type"] == "accept"  # gains 5 total
+    assert action["type"] == "accept", f"Expected accept, got {action}"
 
-    # Rule-based opponent — reject harmful trade
-    bad_proposal = {"type": "propose", "sell_qty": 5, "sell_res": "Y",
-                    "buy_qty": 5, "buy_res": "X"}
+    # Rule-based opponent — reject harmful trade (give 5, receive 3 → net -2)
+    bad_proposal = {"type": "propose", "sell_qty": 3, "sell_res": "X",
+                    "buy_qty": 5, "buy_res": "Y"}
     action = rule_based_action(own, opp, bad_proposal, turn=1)
-    assert action["type"] == "reject"  # loses 5 total (has only 5X, would go to 0X+30Y still 30 total... wait)
+    assert action["type"] == "reject", f"Expected reject, got {action}"
 
     # Full game with rule-based both sides
     result = run_single_exchange_game(
