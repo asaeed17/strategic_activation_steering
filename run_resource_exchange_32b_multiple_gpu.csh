@@ -51,8 +51,8 @@ set MACHINES = ( \
     wigeon-l \
 )
 
-set LAYERS       = ( 28 32 36 )
-set ALPHAS       = ( -15 -5 5 15 )
+set LAYERS       = ( 28 )
+set ALPHAS       = ( 5 15 )
 set N_GAMES      = 50
 set MODEL        = "qwen2.5-32b-gptq"
 set VECTORS_DIR  = "vectors/ultimatum_10dim_20pairs_general_matched/negotiation"
