@@ -629,6 +629,14 @@ def summarise_paired(
     baseline_balances = []
     steered_parse_errors = 0
     baseline_parse_errors = 0
+    steered_accepted = 0
+    baseline_accepted = 0
+    steered_word_counts = []
+    baseline_word_counts = []
+    steered_hedge_counts = []
+    baseline_hedge_counts = []
+    steered_fairness_counts = []
+    baseline_fairness_counts = []
 
     for g in games:
         s = g["steered"]
@@ -643,6 +651,22 @@ def summarise_paired(
         baseline_balances.append(b[f"p{steered_player}_balance"])
         steered_parse_errors += s["parse_errors"]
         baseline_parse_errors += b["parse_errors"]
+        if s["trades_completed"] > 0:
+            steered_accepted += 1
+        if b["trades_completed"] > 0:
+            baseline_accepted += 1
+
+        # Aggregate behavioral metrics from transcript
+        for result, wc_list, hc_list, fc_list in [
+            (s, steered_word_counts, steered_hedge_counts, steered_fairness_counts),
+            (b, baseline_word_counts, baseline_hedge_counts, baseline_fairness_counts),
+        ]:
+            for t in result.get("transcript", []):
+                m = t.get("metrics", {})
+                if m:
+                    wc_list.append(m.get("word_count", 0))
+                    hc_list.append(m.get("hedge_count", 0))
+                    fc_list.append(m.get("fairness_count", 0))
 
     ss = np.array(steered_scores, dtype=float)
     bs = np.array(baseline_scores, dtype=float)
@@ -684,9 +708,21 @@ def summarise_paired(
             "steered_mean": float(np.mean(steered_balances)),
             "baseline_mean": float(np.mean(baseline_balances)),
         },
+        "acceptance_rate": {
+            "steered": steered_accepted / n if n else 0,
+            "baseline": baseline_accepted / n if n else 0,
+        },
         "parse_errors": {
             "steered_total": steered_parse_errors,
             "baseline_total": baseline_parse_errors,
+        },
+        "behavioral_metrics": {
+            "steered_mean_word_count": float(np.mean(steered_word_counts)) if steered_word_counts else 0,
+            "baseline_mean_word_count": float(np.mean(baseline_word_counts)) if baseline_word_counts else 0,
+            "steered_mean_hedge_count": float(np.mean(steered_hedge_counts)) if steered_hedge_counts else 0,
+            "baseline_mean_hedge_count": float(np.mean(baseline_hedge_counts)) if baseline_hedge_counts else 0,
+            "steered_mean_fairness_count": float(np.mean(steered_fairness_counts)) if steered_fairness_counts else 0,
+            "baseline_mean_fairness_count": float(np.mean(baseline_fairness_counts)) if baseline_fairness_counts else 0,
         },
     }
 
