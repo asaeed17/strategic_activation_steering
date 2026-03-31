@@ -147,8 +147,7 @@ _PROPOSE_RE = re.compile(
     re.IGNORECASE,
 )
 _ACCEPT_RE = re.compile(r"\bACCEPT\b", re.IGNORECASE)
-_REJECT_RE = re.compile(r"\bREJECT\b", re.IGNORECASE)
-_END_RE = re.compile(r"\bEND\b", re.IGNORECASE)
+_NONE_RE = re.compile(r"\bNONE\b", re.IGNORECASE)
 
 
 def parse_action(text: str) -> Optional[Dict[str, Any]]:
@@ -179,14 +178,13 @@ def parse_action(text: str) -> Optional[Dict[str, Any]]:
             "receive_res": receive_res,
         }
 
-    # For ACCEPT/REJECT/END, take the last match (same logic as UG's
+    # For ACCEPT/NONE, take the last match (same logic as UG's
     # parse_response which picks whichever appears last when both present)
     last_action = None
     last_pos = -1
     for pattern, action_type in [
         (_ACCEPT_RE, "accept"),
-        (_REJECT_RE, "reject"),
-        (_END_RE, "end"),
+        (_NONE_RE, "none"),
     ]:
         for match in pattern.finditer(text):
             if match.start() > last_pos:
@@ -275,9 +273,8 @@ def rule_based_action(
     """Deterministic greedy opponent.
 
     - If a pending proposal exists: ACCEPT if it increases or maintains own score.
-    - On own initiative: propose a slightly lopsided trade in own favour
-      (give N of abundant resource, receive N+1 of scarce resource).
-    - END if no beneficial trade exists or if turn >= MAX_ROUNDS - 1.
+    - On own initiative: propose a slightly lopsided trade in own favour.
+    - NONE if no beneficial trade or proposals exhausted.
     """
     own_score = compute_score(own_resources)
 
@@ -295,18 +292,12 @@ def rule_based_action(
         )
         # Check feasibility
         if hypothetical_own[pending_proposal["receive_res"]] < 0:
-            return {"type": "reject"}
+            return {"type": "none"}
         if compute_score(hypothetical_own) >= own_score:
             return {"type": "accept"}
-        return {"type": "reject"}
+        return {"type": "none"}
 
-    # Own initiative: find best trade to propose
-    if turn >= MAX_ROUNDS - 1:
-        return {"type": "end"}
-
-    # Propose a trade: give resource we have most of, receive resource we
-    # have least of. Try to get slightly more than we give (greedy).
-    best_proposal = None
+    # Own initiative: propose a trade (give abundant, receive scarce)
     own_vals = [(res, own_resources.get(res, 0)) for res in RESOURCE_TYPES]
     own_vals.sort(key=lambda x: -x[1])  # descending
     give_res, give_have = own_vals[0]
@@ -317,9 +308,9 @@ def rule_based_action(
             give_have,
         )
         # Ask for 1 more than we give (greedy but plausible)
-        receive_qty = min(give_qty + 1, opponent_resources.get(receive_res, 0))
+        receive_qty = give_qty + 1
         if give_qty > 0 and receive_qty > 0:
-            best_proposal = {
+            return {
                 "type": "propose",
                 "give_qty": give_qty,
                 "give_res": give_res,
@@ -327,9 +318,7 @@ def rule_based_action(
                 "receive_res": receive_res,
             }
 
-    if best_proposal is not None:
-        return best_proposal
-    return {"type": "end"}
+    return {"type": "none"}
 
 
 # ---------------------------------------------------------------------------
@@ -525,15 +514,13 @@ def run_single_exchange_game(
         if action["type"] == "propose":
             if not validate_trade(action, active_res, opponent_res):
                 turn_record["invalid_trade"] = True
-                pending_proposal = None
-                proposing_player = None
             else:
                 pending_proposal = action
                 proposing_player = active_player
 
         elif action["type"] == "accept":
             if pending_proposal is not None and proposing_player != active_player:
-                # Execute the trade
+                # Execute the accepted trade (only trade that executes in the game)
                 prop_res = p1_res if proposing_player == 1 else p2_res
                 resp_res = p1_res if active_player == 1 else p2_res
                 new_prop, new_resp = execute_trade(prop_res, resp_res, pending_proposal)
@@ -543,18 +530,12 @@ def run_single_exchange_game(
                     p2_res, p1_res = new_prop, new_resp
                 trades_completed += 1
                 turn_record["trade_executed"] = True
-            pending_proposal = None
-            proposing_player = None
+                transcript.append(turn_record)
+                game_ended = True
+                break
 
-        elif action["type"] == "reject":
-            pending_proposal = None
-            proposing_player = None
-
-        elif action["type"] == "end":
-            turn_record["game_ended"] = True
-            transcript.append(turn_record)
-            game_ended = True
-            break
+        elif action["type"] == "none":
+            pass  # do nothing, turn passes
 
         transcript.append(turn_record)
 
