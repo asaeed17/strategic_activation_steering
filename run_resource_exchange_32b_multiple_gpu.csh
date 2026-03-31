@@ -1,14 +1,14 @@
 #!/bin/csh
 # run_resource_exchange_32b_multiple_gpu.csh
 # Resource Exchange Game with activation steering across multiple GPU machines.
-# Qwen 2.5-32B GPTQ-Int4, rule-based opponent.
+# Qwen 2.5-32B GPTQ-Int4, LLM-vs-LLM.
 #
 # Two modes:
 #   Dispatch:  csh run_resource_exchange_32b_multiple_gpu.csh <username>
-#              SSHes into free GPU machines and launches one dimension per machine.
+#              SSHes into free GPU machines and launches one layer per machine.
 #
-#   Local:     csh run_resource_exchange_32b_multiple_gpu.csh <dimension>
-#              Runs the resource exchange game for that dimension on the current machine.
+#   Local:     csh run_resource_exchange_32b_multiple_gpu.csh <layer_number>
+#              Runs all dims x alphas for that layer on the current machine.
 
 # ═══════════════════════════════════════════════════════════════════════
 # EDIT THESE
@@ -16,7 +16,6 @@
 set DIMS = ( \
     firmness \
     empathy \
-    anchoring \
     spite \
     narcissism \
 )
@@ -46,9 +45,9 @@ set MACHINES = ( \
     wigeon-l \
 )
 
-set LAYERS       = ( 28 )
-set ALPHAS       = ( 5 15 )
-set N_GAMES      = 50
+set LAYERS       = ( 23 28 41 )
+set ALPHAS       = ( 20 50 )
+set N_GAMES      = 20
 set MODEL        = "qwen2.5-32b-gptq"
 set VECTORS_DIR  = "vectors/ultimatum_10dim_20pairs_general_matched/negotiation"
 # ═══════════════════════════════════════════════════════════════════════
@@ -56,29 +55,20 @@ set VECTORS_DIR  = "vectors/ultimatum_10dim_20pairs_general_matched/negotiation"
 if ( $#argv < 1 ) then
     echo "Usage:"
     echo "  Dispatch: csh $0 <username>"
-    echo "  Local:    csh $0 <dimension>"
+    echo "  Local:    csh $0 <layer_number>"
     exit 1
 endif
 
-# Detect mode: if arg matches a known dimension, run locally. Otherwise, dispatch.
-echo "$argv[1]" | grep -q '^[a-z_]*$'
+# Detect mode: if arg is a number, run locally. Otherwise, dispatch.
+echo "$argv[1]" | grep -q '^[0-9][0-9]*$'
 if ( $status == 0 ) then
-    # Could be a dimension or a username — check if it's a known dimension
-    set is_dim = 0
-    foreach d ( $DIMS )
-        if ( "$argv[1]" == "$d" ) then
-            set is_dim = 1
-            break
-        endif
-    end
-    if ( $is_dim == 1 ) then
-        goto local_run
-    endif
+    goto local_run
+else
+    goto dispatch
 endif
-goto dispatch
 
 # ═══════════════════════════════════════════════════════════════════════
-# DISPATCH MODE
+# DISPATCH MODE — one layer per free machine
 # ═══════════════════════════════════════════════════════════════════════
 dispatch:
     set UCL_USER    = "$argv[1]"
@@ -88,16 +78,17 @@ dispatch:
     set SSH_OPTS    = "-o ConnectTimeout=10 -o StrictHostKeyChecking=no -o BatchMode=yes"
 
     echo "============================================================"
-    echo "Resource Exchange Dispatch: ${#DIMS} dims across ${#MACHINES} machines"
+    echo "Resource Exchange Dispatch: ${#LAYERS} layers across ${#MACHINES} machines"
     echo "User: ${UCL_USER}"
+    echo "Layers: ${LAYERS}"
     echo "Dims: ${DIMS}"
-    echo "Layers: ${LAYERS}  Alphas: ${ALPHAS}"
+    echo "Alphas: ${ALPHAS}  N_games: ${N_GAMES}"
     echo "============================================================"
     echo ""
 
     set machine_idx = 1
 
-    foreach dim ( $DIMS )
+    foreach layer ( $LAYERS )
         set found = 0
 
         while ( $machine_idx <= $#MACHINES )
@@ -106,12 +97,12 @@ dispatch:
             set raw = `ssh $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} "nvidia-smi --query-compute-apps=pid --format=csv,noheader | wc -l" |& grep '^[0-9]' | tr -d ' '`
 
             if ( "$raw" == "0" ) then
-                echo "==> ${dim} -> ${machine} (GPU free)"
+                echo "==> Layer ${layer} -> ${machine} (GPU free)"
 
-                set LOG = "${PROJECT_DIR}/logs/resource_exchange_32b_${UCL_USER}_${dim}.log"
+                set LOG = "${PROJECT_DIR}/logs/resource_exchange_32b_${UCL_USER}_L${layer}.log"
 
                 ssh -f $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} \
-                    "/bin/bash -c 'cd ${PROJECT_DIR} && nohup csh run_resource_exchange_32b_multiple_gpu.csh ${dim} > ${LOG} 2>&1 &'"
+                    "/bin/bash -c 'cd ${PROJECT_DIR} && nohup csh run_resource_exchange_32b_multiple_gpu.csh ${layer} > ${LOG} 2>&1 &'"
 
                 set found = 1
                 @ machine_idx++
@@ -125,22 +116,22 @@ dispatch:
         end
 
         if ( $found == 0 ) then
-            echo "==> WARNING: No free machine for ${dim}"
+            echo "==> WARNING: No free machine for Layer ${layer}"
         endif
     end
 
     echo ""
     echo "============================================================"
     echo "Dispatch complete. Check logs at:"
-    echo "  ${PROJECT_DIR}/logs/resource_exchange_32b_${UCL_USER}_*.log"
+    echo "  ${PROJECT_DIR}/logs/resource_exchange_32b_${UCL_USER}_L*.log"
     echo "============================================================"
     exit 0
 
 # ═══════════════════════════════════════════════════════════════════════
-# LOCAL MODE — Run resource exchange for a single dimension
+# LOCAL MODE — Run all dims x alphas for a single layer
 # ═══════════════════════════════════════════════════════════════════════
 local_run:
-    set DIM = "$argv[1]"
+    set LAYER = "$argv[1]"
 
     # This is only in Ayman's script — everyone else just activates the environment first
     source /cs/student/projects1/2022/aymakhan/.venv/bin/activate.csh
@@ -148,19 +139,19 @@ local_run:
 
     set OUT_BASE = "results/resource_exchange/${MODEL}"
 
-    foreach layer ( $LAYERS )
+    foreach dim ( $DIMS )
         foreach alpha ( $ALPHAS )
-            set OUT_DIR = "${OUT_BASE}/${DIM}_P1_L${layer}_a${alpha}"
+            set OUT_DIR = "${OUT_BASE}/${dim}_P1_L${LAYER}_a${alpha}"
 
             if ( -f "${OUT_DIR}/results.json" ) then
-                echo "==> Skipping ${DIM} L${layer} a${alpha} (already complete)"
+                echo "==> Skipping ${dim} L${LAYER} a${alpha} (already complete)"
             else
-                echo "==> Running ${DIM} L${layer} alpha=${alpha}"
+                echo "==> Running ${dim} L${LAYER} alpha=${alpha}"
 
                 python resource_exchange_game.py \
                     --model         "${MODEL}" \
-                    --dimension     "${DIM}" \
-                    --layers        $layer \
+                    --dimension     "${dim}" \
+                    --layers        $LAYER \
                     --alpha         $alpha \
                     --steered_player 1 \
                     --n_games       $N_GAMES \
@@ -171,5 +162,5 @@ local_run:
         end
     end
 
-    echo "==> All configs complete for ${DIM}."
+    echo "==> All configs complete for Layer ${LAYER}."
     exit 0
