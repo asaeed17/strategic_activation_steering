@@ -866,6 +866,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--quantize", action="store_true")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--output_dir", default=None)
+    p.add_argument("--baseline_file", default=None,
+                   help="Path to precomputed baseline results JSON. "
+                        "If provided, baseline games are loaded instead of rerun.")
+    p.add_argument("--save_baseline", default=None,
+                   help="Path to save baseline results JSON for reuse.")
     return p.parse_args()
 
 
@@ -954,20 +959,66 @@ def main() -> None:
     if len(configs) < args.n_games:
         log.warning("Only %d configs available, requested %d", len(configs), args.n_games)
 
-    # Run games
-    games = []
-    for i, config in enumerate(configs):
-        log.info("[G%03d] config=(%d,%d,%d,%d)", i + 1, *config)
-        if args.paired:
-            result = run_paired_exchange_game(
+    # Load or compute baseline results (run once, reuse for all steered configs)
+    baseline_results = {}
+    if args.baseline_file and Path(args.baseline_file).exists():
+        log.info("Loading precomputed baseline from %s", args.baseline_file)
+        with open(args.baseline_file) as f:
+            baseline_data = json.load(f)
+        for bg in baseline_data["games"]:
+            key = tuple(bg["config"])
+            baseline_results[key] = bg["result"]
+        log.info("Loaded %d baseline games", len(baseline_results))
+    elif args.paired:
+        log.info("Computing baseline games (unsteered vs unsteered)...")
+        for i, config in enumerate(configs):
+            baseline_result = run_single_exchange_game(
                 config=config,
-                steered_player=args.steered_player,
-                generate_fn_steered=generate_fn_steered,
-                generate_fn_baseline=generate_fn_baseline,
+                steered_player=None,
+                generate_fn=generate_fn_baseline,
                 rulebased=args.rulebased,
                 temperature=args.temperature,
                 max_new_tokens=args.max_new_tokens,
             )
+            baseline_results[config] = baseline_result
+            sp = args.steered_player or 1
+            log.info(
+                "[B%03d] baseline P%d: %dX/%dY (score %d, trades %d)",
+                i + 1, sp,
+                baseline_result[f"p{sp}_final"]["X"],
+                baseline_result[f"p{sp}_final"]["Y"],
+                baseline_result[f"p{sp}_score"],
+                baseline_result["trades_completed"],
+            )
+        # Save baseline for reuse
+        if args.save_baseline:
+            bl_path = Path(args.save_baseline)
+            bl_path.parent.mkdir(parents=True, exist_ok=True)
+            bl_out = {"games": [{"config": list(k), "result": v}
+                                for k, v in baseline_results.items()]}
+            with open(bl_path, "w") as f:
+                json.dump(bl_out, f, indent=2, default=str)
+            log.info("Saved baseline to %s", bl_path)
+
+    # Run steered games
+    games = []
+    for i, config in enumerate(configs):
+        log.info("[G%03d] config=(%d,%d,%d,%d)", i + 1, *config)
+        if args.paired:
+            # Run steered game only; reuse precomputed baseline
+            steered_result = run_single_exchange_game(
+                config=config,
+                steered_player=args.steered_player,
+                generate_fn=generate_fn_steered,
+                rulebased=args.rulebased,
+                temperature=args.temperature,
+                max_new_tokens=args.max_new_tokens,
+            )
+            result = {
+                "config": config,
+                "steered": steered_result,
+                "baseline": baseline_results.get(config, {}),
+            }
         else:
             result = run_single_exchange_game(
                 config=config,
