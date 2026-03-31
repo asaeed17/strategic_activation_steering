@@ -16,14 +16,9 @@
 set DIMS = ( \
     firmness \
     empathy \
-    composure \
     anchoring \
-    greed \
-    fairness_norm \
-    flattery \
-    narcissism \
     spite \
-    undecidedness \
+    narcissism \
 )
 
 set MACHINES = ( \
@@ -51,8 +46,8 @@ set MACHINES = ( \
     wigeon-l \
 )
 
-set LAYERS       = ( 28 32 36 )
-set ALPHAS       = ( -15 -5 5 15 )
+set LAYERS       = ( 28 )
+set ALPHAS       = ( 5 15 )
 set N_GAMES      = 50
 set MODEL        = "qwen2.5-32b-gptq"
 set VECTORS_DIR  = "vectors/ultimatum_10dim_20pairs_general_matched/negotiation"
@@ -116,7 +111,7 @@ dispatch:
                 set LOG = "${PROJECT_DIR}/logs/resource_exchange_32b_${UCL_USER}_${dim}.log"
 
                 ssh -f $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} \
-                    "cd ${PROJECT_DIR} && nohup /bin/bash -c 'csh run_resource_exchange_32b_multiple_gpu.csh ${dim}' > ${LOG} 2>&1 &"
+                    "/bin/bash -c 'cd ${PROJECT_DIR} && nohup csh run_resource_exchange_32b_multiple_gpu.csh ${dim} > ${LOG} 2>&1 &'"
 
                 set found = 1
                 @ machine_idx++
@@ -170,7 +165,6 @@ local_run:
                     --steered_player 1 \
                     --n_games       $N_GAMES \
                     --paired \
-                    --quantize \
                     --vectors_dir   "${VECTORS_DIR}" \
                     --output_dir    "${OUT_DIR}"
             endif

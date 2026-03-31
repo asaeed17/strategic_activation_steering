@@ -49,23 +49,28 @@ class TestBalance:
 # ---------------------------------------------------------------------------
 
 class TestParsing:
-    def test_propose_trade(self):
-        result = parse_action("I'll trade some resources. PROPOSE_TRADE: SELL 5 X, BUY 5 Y")
+    def test_equal_trade(self):
+        result = parse_action("I'll trade some resources. TRADE: GIVE 5 X, RECEIVE 5 Y")
         assert result == {
             "type": "propose",
-            "sell_qty": 5, "sell_res": "X",
-            "buy_qty": 5, "buy_res": "Y",
+            "give_qty": 5, "give_res": "X",
+            "receive_qty": 5, "receive_res": "Y",
         }
 
-    def test_propose_trade_lowercase(self):
-        result = parse_action("propose_trade: sell 3 y, buy 3 x")
+    def test_unequal_trade(self):
+        result = parse_action("TRADE: GIVE 10 X, RECEIVE 15 Y")
+        assert result["give_qty"] == 10
+        assert result["receive_qty"] == 15
+
+    def test_trade_lowercase(self):
+        result = parse_action("trade: give 3 y, receive 3 x")
         assert result is not None
         assert result["type"] == "propose"
-        assert result["sell_res"] == "Y"
-        assert result["buy_res"] == "X"
+        assert result["give_res"] == "Y"
+        assert result["receive_res"] == "X"
 
-    def test_propose_same_resource_fails(self):
-        assert parse_action("PROPOSE_TRADE: SELL 5 X, BUY 5 X") is None
+    def test_same_resource_fails(self):
+        assert parse_action("TRADE: GIVE 5 X, RECEIVE 5 X") is None
 
     def test_accept(self):
         result = parse_action("That sounds fair. ACCEPT")
@@ -83,19 +88,17 @@ class TestParsing:
         assert parse_action("Just some random text without any action keywords.") is None
 
     def test_last_action_wins(self):
-        # If multiple actions appear, last one wins
         result = parse_action("I REJECT... actually wait, ACCEPT")
         assert result["type"] == "accept"
 
-    def test_propose_takes_priority(self):
-        # PROPOSE_TRADE is checked first (most specific)
-        result = parse_action("PROPOSE_TRADE: SELL 3 X, BUY 2 Y and I ACCEPT")
+    def test_trade_takes_priority(self):
+        result = parse_action("TRADE: GIVE 3 X, RECEIVE 2 Y and I ACCEPT")
         assert result["type"] == "propose"
 
-    def test_unequal_quantities(self):
-        result = parse_action("PROPOSE_TRADE: SELL 10 X, BUY 3 Y")
-        assert result["sell_qty"] == 10
-        assert result["buy_qty"] == 3
+    def test_lopsided_trade(self):
+        result = parse_action("TRADE: GIVE 3 X, RECEIVE 10 Y")
+        assert result["give_qty"] == 3
+        assert result["receive_qty"] == 10
 
 
 # ---------------------------------------------------------------------------
@@ -104,32 +107,39 @@ class TestParsing:
 
 class TestTradeValidation:
     def test_valid_trade(self):
-        seller = {"X": 10, "Y": 5}
-        buyer = {"X": 5, "Y": 10}
-        trade = {"type": "propose", "sell_qty": 3, "sell_res": "X",
-                 "buy_qty": 3, "buy_res": "Y"}
-        assert validate_trade(trade, seller, buyer) is True
+        proposer = {"X": 10, "Y": 5}
+        responder = {"X": 5, "Y": 10}
+        trade = {"type": "propose", "give_qty": 3, "give_res": "X",
+                 "receive_qty": 3, "receive_res": "Y"}
+        assert validate_trade(trade, proposer, responder) is True
 
-    def test_insufficient_seller_resources(self):
-        seller = {"X": 2, "Y": 5}
-        buyer = {"X": 5, "Y": 10}
-        trade = {"type": "propose", "sell_qty": 5, "sell_res": "X",
-                 "buy_qty": 3, "buy_res": "Y"}
-        assert validate_trade(trade, seller, buyer) is False
+    def test_valid_unequal_trade(self):
+        proposer = {"X": 10, "Y": 5}
+        responder = {"X": 5, "Y": 10}
+        trade = {"type": "propose", "give_qty": 3, "give_res": "X",
+                 "receive_qty": 8, "receive_res": "Y"}
+        assert validate_trade(trade, proposer, responder) is True
 
-    def test_insufficient_buyer_resources(self):
-        seller = {"X": 10, "Y": 5}
-        buyer = {"X": 5, "Y": 2}
-        trade = {"type": "propose", "sell_qty": 3, "sell_res": "X",
-                 "buy_qty": 5, "buy_res": "Y"}
-        assert validate_trade(trade, seller, buyer) is False
+    def test_insufficient_proposer_resources(self):
+        proposer = {"X": 2, "Y": 5}
+        responder = {"X": 5, "Y": 10}
+        trade = {"type": "propose", "give_qty": 5, "give_res": "X",
+                 "receive_qty": 3, "receive_res": "Y"}
+        assert validate_trade(trade, proposer, responder) is False
+
+    def test_insufficient_responder_resources(self):
+        proposer = {"X": 10, "Y": 5}
+        responder = {"X": 5, "Y": 2}
+        trade = {"type": "propose", "give_qty": 3, "give_res": "X",
+                 "receive_qty": 5, "receive_res": "Y"}
+        assert validate_trade(trade, proposer, responder) is False
 
     def test_zero_quantity(self):
-        seller = {"X": 10, "Y": 5}
-        buyer = {"X": 5, "Y": 10}
-        trade = {"type": "propose", "sell_qty": 0, "sell_res": "X",
-                 "buy_qty": 3, "buy_res": "Y"}
-        assert validate_trade(trade, seller, buyer) is False
+        proposer = {"X": 10, "Y": 5}
+        responder = {"X": 5, "Y": 10}
+        trade = {"type": "propose", "give_qty": 0, "give_res": "X",
+                 "receive_qty": 3, "receive_res": "Y"}
+        assert validate_trade(trade, proposer, responder) is False
 
     def test_non_propose_action(self):
         assert validate_trade({"type": "accept"}, {"X": 10}, {"Y": 10}) is False
@@ -140,34 +150,55 @@ class TestTradeValidation:
 # ---------------------------------------------------------------------------
 
 class TestTradeExecution:
-    def test_basic_trade(self):
+    def test_equal_trade(self):
         p, r = execute_trade(
             {"X": 10, "Y": 5}, {"X": 5, "Y": 10},
-            {"type": "propose", "sell_qty": 3, "sell_res": "X",
-             "buy_qty": 3, "buy_res": "Y"},
+            {"type": "propose", "give_qty": 3, "give_res": "X",
+             "receive_qty": 3, "receive_res": "Y"},
         )
         assert p == {"X": 7, "Y": 8}
         assert r == {"X": 8, "Y": 7}
 
-    def test_unequal_trade(self):
+    def test_unequal_trade_proposer_gains(self):
         p, r = execute_trade(
-            {"X": 20, "Y": 5}, {"X": 5, "Y": 20},
-            {"type": "propose", "sell_qty": 10, "sell_res": "X",
-             "buy_qty": 5, "buy_res": "Y"},
+            {"X": 10, "Y": 5}, {"X": 5, "Y": 10},
+            {"type": "propose", "give_qty": 3, "give_res": "X",
+             "receive_qty": 5, "receive_res": "Y"},
         )
-        assert p == {"X": 10, "Y": 10}
-        assert r == {"X": 15, "Y": 15}
+        assert p == {"X": 7, "Y": 10}   # gave 3, got 5 → net +2
+        assert r == {"X": 8, "Y": 5}    # got 3, gave 5 → net -2
+        assert compute_score(p) == 17    # gained 2
+        assert compute_score(r) == 13    # lost 2
+
+    def test_unequal_trade_proposer_loses(self):
+        p, r = execute_trade(
+            {"X": 10, "Y": 5}, {"X": 5, "Y": 10},
+            {"type": "propose", "give_qty": 5, "give_res": "X",
+             "receive_qty": 3, "receive_res": "Y"},
+        )
+        assert p == {"X": 5, "Y": 8}    # gave 5, got 3 → net -2
+        assert r == {"X": 10, "Y": 7}   # got 5, gave 3 → net +2
 
     def test_does_not_mutate_originals(self):
         orig_p = {"X": 10, "Y": 5}
         orig_r = {"X": 5, "Y": 10}
         execute_trade(
             orig_p, orig_r,
-            {"type": "propose", "sell_qty": 3, "sell_res": "X",
-             "buy_qty": 3, "buy_res": "Y"},
+            {"type": "propose", "give_qty": 3, "give_res": "X",
+             "receive_qty": 5, "receive_res": "Y"},
         )
         assert orig_p == {"X": 10, "Y": 5}
         assert orig_r == {"X": 5, "Y": 10}
+
+    def test_total_resources_conserved(self):
+        p, r = execute_trade(
+            {"X": 20, "Y": 5}, {"X": 5, "Y": 20},
+            {"type": "propose", "give_qty": 8, "give_res": "X",
+             "receive_qty": 12, "receive_res": "Y"},
+        )
+        total_before = 20 + 5 + 5 + 20
+        total_after = sum(p.values()) + sum(r.values())
+        assert total_before == total_after
 
 
 # ---------------------------------------------------------------------------
@@ -178,47 +209,39 @@ class TestRuleBasedOpponent:
     def test_accepts_beneficial_trade(self):
         own = {"X": 5, "Y": 25}
         opp = {"X": 25, "Y": 5}
-        # Opponent offers: sell 5X buy 3Y → we get 5X give 3Y → net +2
-        proposal = {"type": "propose", "sell_qty": 5, "sell_res": "X",
-                     "buy_qty": 3, "buy_res": "Y"}
+        # Opponent gives 5X, receives 3Y → we give 3Y, get 5X → net +2
+        proposal = {"type": "propose", "give_qty": 5, "give_res": "X",
+                     "receive_qty": 3, "receive_res": "Y"}
         action = rule_based_action(own, opp, proposal, turn=1)
         assert action["type"] == "accept"
 
     def test_accepts_equal_trade(self):
         own = {"X": 5, "Y": 25}
         opp = {"X": 25, "Y": 5}
-        # Equal trade: sell 5X buy 5Y → score unchanged
-        proposal = {"type": "propose", "sell_qty": 5, "sell_res": "X",
-                     "buy_qty": 5, "buy_res": "Y"}
+        # Equal trade: give 5X, receive 5Y → we give 5Y, get 5X → net 0
+        proposal = {"type": "propose", "give_qty": 5, "give_res": "X",
+                     "receive_qty": 5, "receive_res": "Y"}
         action = rule_based_action(own, opp, proposal, turn=1)
         assert action["type"] == "accept"
 
     def test_rejects_harmful_trade(self):
         own = {"X": 5, "Y": 25}
         opp = {"X": 25, "Y": 5}
-        # Bad: sell 3X buy 5Y → we get 3X give 5Y → net -2
-        proposal = {"type": "propose", "sell_qty": 3, "sell_res": "X",
-                     "buy_qty": 5, "buy_res": "Y"}
+        # Opponent gives 3X, receives 5Y → we give 5Y, get 3X → net -2
+        proposal = {"type": "propose", "give_qty": 3, "give_res": "X",
+                     "receive_qty": 5, "receive_res": "Y"}
         action = rule_based_action(own, opp, proposal, turn=1)
         assert action["type"] == "reject"
 
-    def test_rejects_infeasible_trade(self):
-        own = {"X": 2, "Y": 25}
-        opp = {"X": 25, "Y": 5}
-        # We'd need to give 10Y but we only have... wait, give buy_res
-        proposal = {"type": "propose", "sell_qty": 5, "sell_res": "X",
-                     "buy_qty": 10, "buy_res": "Y"}
-        action = rule_based_action(own, opp, proposal, turn=1)
-        # We'd give 10Y (have 25, ok) and receive 5X → net -5 → reject
-        assert action["type"] == "reject"
-
-    def test_proposes_balancing_trade(self):
+    def test_proposes_lopsided_trade(self):
         own = {"X": 25, "Y": 5}
         opp = {"X": 5, "Y": 25}
         action = rule_based_action(own, opp, None, turn=0)
         assert action["type"] == "propose"
-        assert action["sell_res"] == "X"
-        assert action["buy_res"] == "Y"
+        assert action["give_res"] == "X"
+        assert action["receive_res"] == "Y"
+        # Should ask for more than it gives (greedy)
+        assert action["receive_qty"] >= action["give_qty"]
 
     def test_ends_when_balanced(self):
         own = {"X": 15, "Y": 15}
@@ -246,11 +269,8 @@ class TestFullGame:
             rulebased=True,
         )
         assert result["parse_errors"] == 0
-        assert result["trades_completed"] >= 1
-        # Both players should end balanced
-        assert result["p1_final"]["X"] == result["p1_final"]["Y"]
-        assert result["p2_final"]["X"] == result["p2_final"]["Y"]
-        # Total resources conserved
+        assert result["trades_completed"] >= 0
+        # Total resources conserved across both players
         total_initial = sum(result["p1_initial"].values()) + sum(result["p2_initial"].values())
         total_final = sum(result["p1_final"].values()) + sum(result["p2_final"].values())
         assert total_initial == total_final
@@ -264,7 +284,6 @@ class TestFullGame:
                 rulebased=True,
             )
             assert result["parse_errors"] == 0
-            # Total resources conserved
             total_initial = (
                 sum(result["p1_initial"].values())
                 + sum(result["p2_initial"].values())

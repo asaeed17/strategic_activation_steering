@@ -143,7 +143,7 @@ def compute_balance_ratio(resources: Dict[str, int]) -> float:
 # ---------------------------------------------------------------------------
 
 _PROPOSE_RE = re.compile(
-    r"PROPOSE_TRADE\s*:\s*SELL\s+(\d+)\s+(X|Y)\s*,\s*BUY\s+(\d+)\s+(X|Y)",
+    r"TRADE\s*:\s*GIVE\s+(\d+)\s+(X|Y)\s*,\s*RECEIVE\s+(\d+)\s+(X|Y)",
     re.IGNORECASE,
 )
 _ACCEPT_RE = re.compile(r"\bACCEPT\b", re.IGNORECASE)
@@ -155,28 +155,28 @@ def parse_action(text: str) -> Optional[Dict[str, Any]]:
     """Parse LLM output into an action dict.
 
     Returns one of:
-        {"type": "propose", "sell_qty": int, "sell_res": str,
-         "buy_qty": int, "buy_res": str}
+        {"type": "propose", "give_qty": int, "give_res": str,
+         "receive_qty": int, "receive_res": str}
         {"type": "accept"}
         {"type": "reject"}
         {"type": "end"}
         None  (parse failure)
     """
-    # Check PROPOSE_TRADE first (most specific pattern)
+    # Check TRADE first (most specific pattern)
     m = _PROPOSE_RE.search(text)
     if m:
-        sell_qty, sell_res, buy_qty, buy_res = (
+        give_qty, give_res, receive_qty, receive_res = (
             int(m.group(1)), m.group(2).upper(),
             int(m.group(3)), m.group(4).upper(),
         )
-        if sell_res == buy_res:
+        if give_res == receive_res:
             return None  # cannot trade same resource
         return {
             "type": "propose",
-            "sell_qty": sell_qty,
-            "sell_res": sell_res,
-            "buy_qty": buy_qty,
-            "buy_res": buy_res,
+            "give_qty": give_qty,
+            "give_res": give_res,
+            "receive_qty": receive_qty,
+            "receive_res": receive_res,
         }
 
     # For ACCEPT/REJECT/END, take the last match (same logic as UG's
@@ -205,19 +205,19 @@ def parse_action(text: str) -> Optional[Dict[str, Any]]:
 
 def validate_trade(
     proposal: Dict[str, Any],
-    seller_resources: Dict[str, int],
-    buyer_resources: Dict[str, int],
+    proposer_resources: Dict[str, int],
+    responder_resources: Dict[str, int],
 ) -> bool:
-    """Check that the proposer can sell and the counterparty can buy."""
+    """Check that the proposer has enough to give and the responder has enough to give back."""
     if proposal["type"] != "propose":
         return False
-    sell_res, sell_qty = proposal["sell_res"], proposal["sell_qty"]
-    buy_res, buy_qty = proposal["buy_res"], proposal["buy_qty"]
-    if sell_qty <= 0 or buy_qty <= 0:
+    give_res, give_qty = proposal["give_res"], proposal["give_qty"]
+    receive_res, receive_qty = proposal["receive_res"], proposal["receive_qty"]
+    if give_qty <= 0 or receive_qty <= 0:
         return False
-    if seller_resources.get(sell_res, 0) < sell_qty:
+    if proposer_resources.get(give_res, 0) < give_qty:
         return False
-    if buyer_resources.get(buy_res, 0) < buy_qty:
+    if responder_resources.get(receive_res, 0) < receive_qty:
         return False
     return True
 
@@ -227,13 +227,20 @@ def execute_trade(
     responder_resources: Dict[str, int],
     proposal: Dict[str, Any],
 ) -> Tuple[Dict[str, int], Dict[str, int]]:
-    """Apply an accepted trade. Returns updated (proposer, responder) resources."""
+    """Apply an accepted trade. Returns updated (proposer, responder) resources.
+
+    Proposer gives give_qty of give_res, receives receive_qty of receive_res.
+    Responder gives receive_qty of receive_res, receives give_qty of give_res.
+    Quantities can be unequal — this is how players gain/lose total resources.
+    """
     p = dict(proposer_resources)
     r = dict(responder_resources)
-    p[proposal["sell_res"]] -= proposal["sell_qty"]
-    r[proposal["sell_res"]] += proposal["sell_qty"]
-    p[proposal["buy_res"]] += proposal["buy_qty"]
-    r[proposal["buy_res"]] -= proposal["buy_qty"]
+    # Proposer gives
+    p[proposal["give_res"]] -= proposal["give_qty"]
+    r[proposal["give_res"]] += proposal["give_qty"]
+    # Proposer receives
+    p[proposal["receive_res"]] += proposal["receive_qty"]
+    r[proposal["receive_res"]] -= proposal["receive_qty"]
     return p, r
 
 
@@ -267,28 +274,27 @@ def rule_based_action(
 ) -> Dict[str, Any]:
     """Deterministic greedy opponent.
 
-    - If a pending proposal exists: ACCEPT if it increases own score, REJECT otherwise.
-    - On own initiative: propose the trade that maximises own score gain
-      (sell the resource we have most of, buy the one we have least of).
+    - If a pending proposal exists: ACCEPT if it increases or maintains own score.
+    - On own initiative: propose a slightly lopsided trade in own favour
+      (give N of abundant resource, receive N+1 of scarce resource).
     - END if no beneficial trade exists or if turn >= MAX_ROUNDS - 1.
     """
     own_score = compute_score(own_resources)
 
     # Respond to pending proposal
     if pending_proposal is not None and pending_proposal["type"] == "propose":
-        # From our perspective: opponent proposed to sell us something and buy from us
-        # We are the responder: we give buy_res and receive sell_res
+        # From responder's perspective: we give receive_res and get give_res
         hypothetical_own = dict(own_resources)
-        hypothetical_own[pending_proposal["sell_res"]] = (
-            hypothetical_own.get(pending_proposal["sell_res"], 0)
-            + pending_proposal["sell_qty"]
+        hypothetical_own[pending_proposal["give_res"]] = (
+            hypothetical_own.get(pending_proposal["give_res"], 0)
+            + pending_proposal["give_qty"]
         )
-        hypothetical_own[pending_proposal["buy_res"]] = (
-            hypothetical_own.get(pending_proposal["buy_res"], 0)
-            - pending_proposal["buy_qty"]
+        hypothetical_own[pending_proposal["receive_res"]] = (
+            hypothetical_own.get(pending_proposal["receive_res"], 0)
+            - pending_proposal["receive_qty"]
         )
         # Check feasibility
-        if hypothetical_own[pending_proposal["buy_res"]] < 0:
+        if hypothetical_own[pending_proposal["receive_res"]] < 0:
             return {"type": "reject"}
         if compute_score(hypothetical_own) >= own_score:
             return {"type": "accept"}
@@ -298,27 +304,27 @@ def rule_based_action(
     if turn >= MAX_ROUNDS - 1:
         return {"type": "end"}
 
-    # Propose an equal trade of the resource we have most of for the one
-    # we have least of. This is always score-neutral (total unchanged) but
-    # improves balance — and the opponent will accept if also score-neutral.
+    # Propose a trade: give resource we have most of, receive resource we
+    # have least of. Try to get slightly more than we give (greedy).
     best_proposal = None
     own_vals = [(res, own_resources.get(res, 0)) for res in RESOURCE_TYPES]
     own_vals.sort(key=lambda x: -x[1])  # descending
-    sell_res, sell_have = own_vals[0]
-    buy_res, buy_have = own_vals[-1]
-    if sell_res != buy_res and sell_have > buy_have:
-        # Trade up to half the difference to move toward balance
-        trade_qty = min(
-            (sell_have - buy_have) // 2,
-            opponent_resources.get(buy_res, 0),
+    give_res, give_have = own_vals[0]
+    receive_res, receive_have = own_vals[-1]
+    if give_res != receive_res and give_have > receive_have:
+        give_qty = min(
+            (give_have - receive_have) // 2,
+            give_have,
         )
-        if trade_qty > 0:
+        # Ask for 1 more than we give (greedy but plausible)
+        receive_qty = min(give_qty + 1, opponent_resources.get(receive_res, 0))
+        if give_qty > 0 and receive_qty > 0:
             best_proposal = {
                 "type": "propose",
-                "sell_qty": trade_qty,
-                "sell_res": sell_res,
-                "buy_qty": trade_qty,
-                "buy_res": buy_res,
+                "give_qty": give_qty,
+                "give_res": give_res,
+                "receive_qty": receive_qty,
+                "receive_res": receive_res,
             }
 
     if best_proposal is not None:
@@ -349,16 +355,18 @@ def build_player_system(
         f"Goal: Acquire as many total resources as possible. "
         f"More resources in general are always better.\n\n"
         f"Actions (choose exactly one per turn):\n"
-        f"  PROPOSE_TRADE: SELL <qty> <X or Y>, BUY <qty> <X or Y>\n"
-        f"    You give away <qty> of one resource and receive <qty> of the other.\n"
+        f"  TRADE: GIVE <qty> <X or Y>, RECEIVE <qty> <X or Y>\n"
+        f"    You give away some of one resource and receive some of the other.\n"
+        f"    The quantities do NOT have to be equal.\n"
         f"  ACCEPT — Accept the opponent's last trade proposal.\n"
         f"  REJECT — Reject the opponent's last trade proposal.\n"
         f"  END — End the game. No more trades.\n\n"
         f"Rules:\n"
         f"  - Up to {MAX_ROUNDS} rounds. You alternate turns with Player {opp_name}.\n"
         f"  - You can only ACCEPT or REJECT when responding to a proposal.\n"
-        f"  - You can only PROPOSE_TRADE or END on your own initiative.\n"
-        f"  - You cannot sell more resources than you currently have.\n\n"
+        f"  - You can only propose a TRADE or END on your own initiative.\n"
+        f"  - You cannot give more resources than you currently have.\n"
+        f"  - Your opponent cannot give more than they have.\n\n"
         f"Respond with 1-2 sentences explaining your reasoning, "
         f"then end with your action on a new line.\n"
     )
@@ -382,8 +390,10 @@ def build_turn_prompt(
     if pending_proposal is not None and pending_proposal["type"] == "propose":
         lines.append(
             f"\nPlayer {opp_name} proposes: "
-            f"SELL {pending_proposal['sell_qty']} {pending_proposal['sell_res']}, "
-            f"BUY {pending_proposal['buy_qty']} {pending_proposal['buy_res']}.\n"
+            f"GIVE {pending_proposal['give_qty']} {pending_proposal['give_res']}, "
+            f"RECEIVE {pending_proposal['receive_qty']} {pending_proposal['receive_res']}.\n"
+            f"(You would give {pending_proposal['receive_qty']} {pending_proposal['receive_res']} "
+            f"and receive {pending_proposal['give_qty']} {pending_proposal['give_res']}.)\n"
             f"Do you ACCEPT or REJECT?"
         )
     else:
@@ -395,8 +405,8 @@ def format_action(action: Dict[str, Any]) -> str:
     """Format an action dict as the text the player would output."""
     if action["type"] == "propose":
         return (
-            f"PROPOSE_TRADE: SELL {action['sell_qty']} {action['sell_res']}, "
-            f"BUY {action['buy_qty']} {action['buy_res']}"
+            f"TRADE: GIVE {action['give_qty']} {action['give_res']}, "
+            f"RECEIVE {action['receive_qty']} {action['receive_res']}"
         )
     return action["type"].upper()
 
@@ -733,48 +743,53 @@ def _run_self_test() -> None:
     assert compute_balance_ratio({"X": 0, "Y": 10}) == 0.0
 
     # Parsing
-    assert parse_action("PROPOSE_TRADE: SELL 5 X, BUY 5 Y") == {
-        "type": "propose", "sell_qty": 5, "sell_res": "X",
-        "buy_qty": 5, "buy_res": "Y",
+    assert parse_action("TRADE: GIVE 5 X, RECEIVE 5 Y") == {
+        "type": "propose", "give_qty": 5, "give_res": "X",
+        "receive_qty": 5, "receive_res": "Y",
+    }
+    assert parse_action("TRADE: GIVE 10 X, RECEIVE 15 Y") == {
+        "type": "propose", "give_qty": 10, "give_res": "X",
+        "receive_qty": 15, "receive_res": "Y",
     }
     assert parse_action("I accept this trade. ACCEPT")["type"] == "accept"
     assert parse_action("No deal. REJECT")["type"] == "reject"
     assert parse_action("I'm done trading. END")["type"] == "end"
     assert parse_action("gibberish with no action") is None
     # Same resource should fail
-    assert parse_action("PROPOSE_TRADE: SELL 5 X, BUY 5 X") is None
+    assert parse_action("TRADE: GIVE 5 X, RECEIVE 5 X") is None
 
     # Trade validation
-    seller = {"X": 10, "Y": 5}
-    buyer = {"X": 5, "Y": 10}
-    good_trade = {"type": "propose", "sell_qty": 3, "sell_res": "X",
-                  "buy_qty": 3, "buy_res": "Y"}
-    assert validate_trade(good_trade, seller, buyer) is True
-    bad_trade = {"type": "propose", "sell_qty": 20, "sell_res": "X",
-                 "buy_qty": 3, "buy_res": "Y"}
-    assert validate_trade(bad_trade, seller, buyer) is False
+    proposer = {"X": 10, "Y": 5}
+    responder = {"X": 5, "Y": 10}
+    good_trade = {"type": "propose", "give_qty": 3, "give_res": "X",
+                  "receive_qty": 3, "receive_res": "Y"}
+    assert validate_trade(good_trade, proposer, responder) is True
+    bad_trade = {"type": "propose", "give_qty": 20, "give_res": "X",
+                 "receive_qty": 3, "receive_res": "Y"}
+    assert validate_trade(bad_trade, proposer, responder) is False
 
-    # Trade execution
+    # Trade execution (unequal: give 3X, receive 5Y → proposer gains 2 net)
     p, r = execute_trade(
         {"X": 10, "Y": 5}, {"X": 5, "Y": 10},
-        {"type": "propose", "sell_qty": 3, "sell_res": "X",
-         "buy_qty": 3, "buy_res": "Y"},
+        {"type": "propose", "give_qty": 3, "give_res": "X",
+         "receive_qty": 5, "receive_res": "Y"},
     )
-    assert p == {"X": 7, "Y": 8}
-    assert r == {"X": 8, "Y": 7}
+    assert p == {"X": 7, "Y": 10}   # gave 3X, got 5Y → net +2
+    assert r == {"X": 8, "Y": 5}    # got 3X, gave 5Y → net -2
 
-    # Rule-based opponent — accept improving trade (unequal: give 3, receive 5)
+    # Rule-based opponent — accept improving trade
     own = {"X": 5, "Y": 25}
     opp = {"X": 25, "Y": 5}
-    # Opponent proposes to sell 5 X and buy 3 Y → we receive 5X, give 3Y → net +2
-    proposal = {"type": "propose", "sell_qty": 5, "sell_res": "X",
-                "buy_qty": 3, "buy_res": "Y"}
+    # Opponent proposes: GIVE 5 X, RECEIVE 3 Y → we give 3Y, get 5X → net +2
+    proposal = {"type": "propose", "give_qty": 5, "give_res": "X",
+                "receive_qty": 3, "receive_res": "Y"}
     action = rule_based_action(own, opp, proposal, turn=1)
     assert action["type"] == "accept", f"Expected accept, got {action}"
 
-    # Rule-based opponent — reject harmful trade (give 5, receive 3 → net -2)
-    bad_proposal = {"type": "propose", "sell_qty": 3, "sell_res": "X",
-                    "buy_qty": 5, "buy_res": "Y"}
+    # Rule-based opponent — reject harmful trade
+    # Opponent proposes: GIVE 3 X, RECEIVE 5 Y → we give 5Y, get 3X → net -2
+    bad_proposal = {"type": "propose", "give_qty": 3, "give_res": "X",
+                    "receive_qty": 5, "receive_res": "Y"}
     action = rule_based_action(own, opp, bad_proposal, turn=1)
     assert action["type"] == "reject", f"Expected reject, got {action}"
 
@@ -858,16 +873,28 @@ def main() -> None:
 
     # Load model
     log.info("Loading model: %s", model_config.hf_id)
-    load_kwargs = dict(token=hf_token, device_map="auto")
-    if args.quantize:
-        from transformers import BitsAndBytesConfig
-        load_kwargs["quantization_config"] = BitsAndBytesConfig(
-            load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16,
-            bnb_4bit_use_double_quant=True, bnb_4bit_quant_type="nf4",
+    if model_config.is_gptq:
+        from auto_gptq import AutoGPTQForCausalLM
+        n_gpus = torch.cuda.device_count()
+        max_memory = {i: "22GiB" for i in range(n_gpus)}
+        model = AutoGPTQForCausalLM.from_quantized(
+            model_config.hf_id,
+            use_safetensors=True,
+            device_map="auto",
+            max_memory=max_memory,
+            trust_remote_code=False,
         )
     else:
-        load_kwargs["torch_dtype"] = torch.bfloat16
-    model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
+        load_kwargs = dict(token=hf_token, device_map="auto")
+        if args.quantize:
+            from transformers import BitsAndBytesConfig
+            load_kwargs["quantization_config"] = BitsAndBytesConfig(
+                load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16,
+                bnb_4bit_use_double_quant=True, bnb_4bit_quant_type="nf4",
+            )
+        else:
+            load_kwargs["torch_dtype"] = torch.bfloat16
+        model = AutoModelForCausalLM.from_pretrained(model_config.hf_id, **load_kwargs)
     model.eval()
     tokenizer = AutoTokenizer.from_pretrained(model_config.hf_id, token=hf_token)
 
@@ -929,6 +956,31 @@ def main() -> None:
             )
         result["game_id"] = i
         games.append(result)
+
+        # Per-game logging
+        if args.paired:
+            s = result["steered"]
+            b = result["baseline"]
+            sp = args.steered_player
+            log.info(
+                "[G%03d] steered P%d: %dX/%dY (score %d, trades %d) | "
+                "baseline P%d: %dX/%dY (score %d, trades %d)",
+                i + 1, sp,
+                s[f"p{sp}_final"]["X"], s[f"p{sp}_final"]["Y"],
+                s[f"p{sp}_score"], s["trades_completed"],
+                sp,
+                b[f"p{sp}_final"]["X"], b[f"p{sp}_final"]["Y"],
+                b[f"p{sp}_score"], b["trades_completed"],
+            )
+        else:
+            sp = args.steered_player or 1
+            log.info(
+                "[G%03d] P%d: %dX/%dY (score %d, trades %d, len %d)",
+                i + 1, sp,
+                result[f"p{sp}_final"]["X"], result[f"p{sp}_final"]["Y"],
+                result[f"p{sp}_score"], result["trades_completed"],
+                result["game_length"],
+            )
 
     # Summary
     if args.paired:
