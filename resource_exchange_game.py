@@ -569,183 +569,67 @@ def run_single_exchange_game(
 
 
 # ---------------------------------------------------------------------------
-# Paired Design
-# ---------------------------------------------------------------------------
-
-def run_paired_exchange_game(
-    config: Tuple[int, int, int, int],
-    steered_player: int,
-    generate_fn_steered=None,
-    generate_fn_baseline=None,
-    rulebased: bool = True,
-    temperature: float = 0.0,
-    max_new_tokens: int = 200,
-) -> Dict[str, Any]:
-    """Run paired game: steered + baseline on same resource config.
-
-    Returns {"steered": {...}, "baseline": {...}, "config": ...}.
-    """
-    steered_result = run_single_exchange_game(
-        config=config,
-        steered_player=steered_player,
-        generate_fn=generate_fn_steered,
-        rulebased=rulebased,
-        temperature=temperature,
-        max_new_tokens=max_new_tokens,
-    )
-    baseline_result = run_single_exchange_game(
-        config=config,
-        steered_player=None,
-        generate_fn=generate_fn_baseline,
-        rulebased=rulebased,
-        temperature=temperature,
-        max_new_tokens=max_new_tokens,
-    )
-    return {
-        "config": config,
-        "steered": steered_result,
-        "baseline": baseline_result,
-    }
-
-
-# ---------------------------------------------------------------------------
 # Summary Statistics
 # ---------------------------------------------------------------------------
 
-def summarise_paired(
+def summarise(
     games: List[Dict[str, Any]],
-    steered_player: int,
+    player: int = 1,
 ) -> Dict[str, Any]:
-    """Compute paired statistics across games."""
-    score_key = f"p{steered_player}_score"
-
-    steered_scores = []
-    baseline_scores = []
-    steered_trades = []
-    baseline_trades = []
-    steered_lengths = []
-    baseline_lengths = []
-    steered_balances = []
-    baseline_balances = []
-    steered_parse_errors = 0
-    baseline_parse_errors = 0
-    steered_accepted = 0
-    baseline_accepted = 0
-    steered_word_counts = []
-    baseline_word_counts = []
-    steered_hedge_counts = []
-    baseline_hedge_counts = []
-    steered_fairness_counts = []
-    baseline_fairness_counts = []
+    """Compute summary statistics for a single run."""
+    scores = []
+    trades = []
+    lengths = []
+    balances = []
+    total_parse_errors = 0
+    accepted = 0
+    word_counts = []
+    hedge_counts = []
+    fairness_counts = []
 
     for g in games:
-        s = g["steered"]
-        b = g["baseline"]
-        steered_scores.append(s[score_key])
-        baseline_scores.append(b[score_key])
-        steered_trades.append(s["trades_completed"])
-        baseline_trades.append(b["trades_completed"])
-        steered_lengths.append(s["game_length"])
-        baseline_lengths.append(b["game_length"])
-        steered_balances.append(s[f"p{steered_player}_balance"])
-        baseline_balances.append(b[f"p{steered_player}_balance"])
-        steered_parse_errors += s["parse_errors"]
-        baseline_parse_errors += b["parse_errors"]
-        if s["trades_completed"] > 0:
-            steered_accepted += 1
-        if b["trades_completed"] > 0:
-            baseline_accepted += 1
+        scores.append(g[f"p{player}_score"])
+        trades.append(g["trades_completed"])
+        lengths.append(g["game_length"])
+        balances.append(g[f"p{player}_balance"])
+        total_parse_errors += g["parse_errors"]
+        if g["trades_completed"] > 0:
+            accepted += 1
+        for t in g.get("transcript", []):
+            m = t.get("metrics", {})
+            if m:
+                word_counts.append(m.get("word_count", 0))
+                hedge_counts.append(m.get("hedge_count", 0))
+                fairness_counts.append(m.get("fairness_count", 0))
 
-        # Aggregate behavioral metrics from transcript
-        for result, wc_list, hc_list, fc_list in [
-            (s, steered_word_counts, steered_hedge_counts, steered_fairness_counts),
-            (b, baseline_word_counts, baseline_hedge_counts, baseline_fairness_counts),
-        ]:
-            for t in result.get("transcript", []):
-                m = t.get("metrics", {})
-                if m:
-                    wc_list.append(m.get("word_count", 0))
-                    hc_list.append(m.get("hedge_count", 0))
-                    fc_list.append(m.get("fairness_count", 0))
-
-    ss = np.array(steered_scores, dtype=float)
-    bs = np.array(baseline_scores, dtype=float)
-    deltas = ss - bs
-
-    n = len(deltas)
-    mean_delta = float(np.mean(deltas))
-    std_delta = float(np.std(deltas, ddof=1)) if n > 1 else 0.0
-
-    # Paired t-test
-    if std_delta > 0 and n > 1:
-        from scipy import stats
-        t_stat, p_value = stats.ttest_rel(ss, bs)
-        cohens_d = mean_delta / std_delta
-    else:
-        t_stat, p_value, cohens_d = None, None, None
-
+    n = len(games)
     return {
         "n_games": n,
-        "steered_player": steered_player,
-        "score_delta": {
-            "steered_mean": float(np.mean(ss)),
-            "baseline_mean": float(np.mean(bs)),
-            "mean_delta": mean_delta,
-            "std_delta": std_delta,
-            "t_statistic": t_stat,
-            "p_value": p_value,
-            "cohens_d": cohens_d,
-        },
-        "trades": {
-            "steered_mean": float(np.mean(steered_trades)),
-            "baseline_mean": float(np.mean(baseline_trades)),
-        },
-        "game_length": {
-            "steered_mean": float(np.mean(steered_lengths)),
-            "baseline_mean": float(np.mean(baseline_lengths)),
-        },
-        "balance": {
-            "steered_mean": float(np.mean(steered_balances)),
-            "baseline_mean": float(np.mean(baseline_balances)),
-        },
-        "acceptance_rate": {
-            "steered": steered_accepted / n if n else 0,
-            "baseline": baseline_accepted / n if n else 0,
-        },
-        "parse_errors": {
-            "steered_total": steered_parse_errors,
-            "baseline_total": baseline_parse_errors,
-        },
-        "behavioral_metrics": {
-            "steered_mean_word_count": float(np.mean(steered_word_counts)) if steered_word_counts else 0,
-            "baseline_mean_word_count": float(np.mean(baseline_word_counts)) if baseline_word_counts else 0,
-            "steered_mean_hedge_count": float(np.mean(steered_hedge_counts)) if steered_hedge_counts else 0,
-            "baseline_mean_hedge_count": float(np.mean(baseline_hedge_counts)) if baseline_hedge_counts else 0,
-            "steered_mean_fairness_count": float(np.mean(steered_fairness_counts)) if steered_fairness_counts else 0,
-            "baseline_mean_fairness_count": float(np.mean(baseline_fairness_counts)) if baseline_fairness_counts else 0,
-        },
+        "player": player,
+        "mean_score": float(np.mean(scores)) if scores else 0,
+        "std_score": float(np.std(scores, ddof=1)) if len(scores) > 1 else 0,
+        "mean_trades": float(np.mean(trades)) if trades else 0,
+        "mean_game_length": float(np.mean(lengths)) if lengths else 0,
+        "mean_balance": float(np.mean(balances)) if balances else 0,
+        "acceptance_rate": accepted / n if n else 0,
+        "total_parse_errors": total_parse_errors,
+        "mean_word_count": float(np.mean(word_counts)) if word_counts else 0,
+        "mean_hedge_count": float(np.mean(hedge_counts)) if hedge_counts else 0,
+        "mean_fairness_count": float(np.mean(fairness_counts)) if fairness_counts else 0,
     }
 
 
 def print_summary(summary: Dict[str, Any]) -> None:
     """Pretty-print summary statistics."""
-    sd = summary["score_delta"]
     print(f"\n{'=' * 60}")
-    print(f"Resource Exchange — Paired Summary (n={summary['n_games']})")
+    print(f"Resource Exchange — Summary (n={summary['n_games']})")
     print(f"{'=' * 60}")
-    print(f"  Steered player:  P{summary['steered_player']}")
-    print(f"  Score (steered):  {sd['steered_mean']:.1f}")
-    print(f"  Score (baseline): {sd['baseline_mean']:.1f}")
-    print(f"  Delta:            {sd['mean_delta']:+.2f} (d={sd['cohens_d']:.3f})"
-          if sd['cohens_d'] is not None else f"  Delta:            {sd['mean_delta']:+.2f}")
-    if sd["p_value"] is not None:
-        print(f"  p-value:          {sd['p_value']:.4f}")
-    tr = summary["trades"]
-    print(f"  Trades (S/B):     {tr['steered_mean']:.1f} / {tr['baseline_mean']:.1f}")
-    gl = summary["game_length"]
-    print(f"  Length (S/B):     {gl['steered_mean']:.1f} / {gl['baseline_mean']:.1f}")
-    pe = summary["parse_errors"]
-    print(f"  Parse errors:     {pe['steered_total']} / {pe['baseline_total']}")
+    print(f"  Mean score:       {summary['mean_score']:.1f} (+/- {summary['std_score']:.1f})")
+    print(f"  Mean trades:      {summary['mean_trades']:.1f}")
+    print(f"  Mean game length: {summary['mean_game_length']:.1f}")
+    print(f"  Acceptance rate:  {summary['acceptance_rate']:.0%}")
+    print(f"  Parse errors:     {summary['total_parse_errors']}")
+    print(f"  Mean word count:  {summary['mean_word_count']:.1f}")
     print(f"{'=' * 60}\n")
 
 
@@ -858,7 +742,6 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--vectors_dir",
                    default="vectors/ultimatum_10dim_20pairs_general_matched/negotiation")
     p.add_argument("--n_games", type=int, default=50)
-    p.add_argument("--paired", action="store_true")
     p.add_argument("--rulebased", action="store_true",
                    help="Use rule-based opponent instead of LLM-vs-LLM")
     p.add_argument("--temperature", type=float, default=0.0)
@@ -866,11 +749,6 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--quantize", action="store_true")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--output_dir", default=None)
-    p.add_argument("--baseline_file", default=None,
-                   help="Path to precomputed baseline results JSON. "
-                        "If provided, baseline games are loaded instead of rerun.")
-    p.add_argument("--save_baseline", default=None,
-                   help="Path to save baseline results JSON for reuse.")
     return p.parse_args()
 
 
@@ -939,133 +817,49 @@ def main() -> None:
         log.info("Loaded vectors: dim=%s layers=%s method=%s",
                  args.dimension, args.layers, args.method)
 
-    # Build generate functions
-    def make_generate_fn(direction_vectors, alpha):
-        def gen(messages, is_steered):
-            dv = direction_vectors if is_steered else None
-            a = alpha if is_steered else 0.0
-            return generate_response(
-                model, tokenizer, messages, dv, a,
-                max_new_tokens=args.max_new_tokens,
-                temperature=args.temperature,
-            )
-        return gen
-
-    generate_fn_steered = make_generate_fn(dvecs, args.alpha)
-    generate_fn_baseline = make_generate_fn(None, 0.0)
+    # Build generate function
+    def generate_fn(messages, is_steered):
+        dv = dvecs if is_steered else None
+        a = args.alpha if is_steered else 0.0
+        return generate_response(
+            model, tokenizer, messages, dv, a,
+            max_new_tokens=args.max_new_tokens,
+            temperature=args.temperature,
+        )
 
     # Select configs
     configs = RESOURCE_CONFIGS[:args.n_games]
     if len(configs) < args.n_games:
         log.warning("Only %d configs available, requested %d", len(configs), args.n_games)
 
-    # Load or compute baseline results (run once, reuse for all steered configs)
-    baseline_results = {}
-    if args.baseline_file and Path(args.baseline_file).exists():
-        log.info("Loading precomputed baseline from %s", args.baseline_file)
-        with open(args.baseline_file) as f:
-            baseline_data = json.load(f)
-        for bg in baseline_data["games"]:
-            key = tuple(bg["config"])
-            baseline_results[key] = bg["result"]
-        log.info("Loaded %d baseline games", len(baseline_results))
-    elif args.paired:
-        log.info("Computing baseline games (unsteered vs unsteered)...")
-        for i, config in enumerate(configs):
-            baseline_result = run_single_exchange_game(
-                config=config,
-                steered_player=None,
-                generate_fn=generate_fn_baseline,
-                rulebased=args.rulebased,
-                temperature=args.temperature,
-                max_new_tokens=args.max_new_tokens,
-            )
-            baseline_results[config] = baseline_result
-            sp = args.steered_player or 1
-            log.info(
-                "[B%03d] baseline P%d: %dX/%dY (score %d, trades %d)",
-                i + 1, sp,
-                baseline_result[f"p{sp}_final"]["X"],
-                baseline_result[f"p{sp}_final"]["Y"],
-                baseline_result[f"p{sp}_score"],
-                baseline_result["trades_completed"],
-            )
-        # Save baseline for reuse
-        if args.save_baseline:
-            bl_path = Path(args.save_baseline)
-            bl_path.parent.mkdir(parents=True, exist_ok=True)
-            bl_out = {"games": [{"config": list(k), "result": v}
-                                for k, v in baseline_results.items()]}
-            with open(bl_path, "w") as f:
-                json.dump(bl_out, f, indent=2, default=str)
-            log.info("Saved baseline to %s", bl_path)
-            # If no dimension specified, we're just computing baseline — exit
-            if not args.dimension:
-                log.info("Baseline-only mode complete.")
-                return
-
-    # Run steered games
+    # Run games
+    steered_player = args.steered_player if args.dimension else None
     games = []
     for i, config in enumerate(configs):
         log.info("[G%03d] config=(%d,%d,%d,%d)", i + 1, *config)
-        if args.paired:
-            # Run steered game only; reuse precomputed baseline
-            steered_result = run_single_exchange_game(
-                config=config,
-                steered_player=args.steered_player,
-                generate_fn=generate_fn_steered,
-                rulebased=args.rulebased,
-                temperature=args.temperature,
-                max_new_tokens=args.max_new_tokens,
-            )
-            result = {
-                "config": config,
-                "steered": steered_result,
-                "baseline": baseline_results.get(config, {}),
-            }
-        else:
-            result = run_single_exchange_game(
-                config=config,
-                steered_player=args.steered_player,
-                generate_fn=generate_fn_steered,
-                rulebased=args.rulebased,
-                temperature=args.temperature,
-                max_new_tokens=args.max_new_tokens,
-            )
+        result = run_single_exchange_game(
+            config=config,
+            steered_player=steered_player,
+            generate_fn=generate_fn,
+            rulebased=args.rulebased,
+            temperature=args.temperature,
+            max_new_tokens=args.max_new_tokens,
+        )
         result["game_id"] = i
         games.append(result)
 
-        # Per-game logging
-        if args.paired:
-            s = result["steered"]
-            b = result["baseline"]
-            sp = args.steered_player
-            log.info(
-                "[G%03d] dim=%s a=%s steered P%d: %dX/%dY (score %d, trades %d) | "
-                "baseline P%d: %dX/%dY (score %d, trades %d)",
-                i + 1, args.dimension, args.alpha, sp,
-                s[f"p{sp}_final"]["X"], s[f"p{sp}_final"]["Y"],
-                s[f"p{sp}_score"], s["trades_completed"],
-                sp,
-                b[f"p{sp}_final"]["X"], b[f"p{sp}_final"]["Y"],
-                b[f"p{sp}_score"], b["trades_completed"],
-            )
-        else:
-            sp = args.steered_player or 1
-            log.info(
-                "[G%03d] P%d: %dX/%dY (score %d, trades %d, len %d)",
-                i + 1, sp,
-                result[f"p{sp}_final"]["X"], result[f"p{sp}_final"]["Y"],
-                result[f"p{sp}_score"], result["trades_completed"],
-                result["game_length"],
-            )
+        sp = args.steered_player
+        log.info(
+            "[G%03d] dim=%s a=%s P%d: %dX/%dY (score %d, trades %d, len %d)",
+            i + 1, args.dimension or "baseline", args.alpha, sp,
+            result[f"p{sp}_final"]["X"], result[f"p{sp}_final"]["Y"],
+            result[f"p{sp}_score"], result["trades_completed"],
+            result["game_length"],
+        )
 
     # Summary
-    if args.paired:
-        summary = summarise_paired(games, args.steered_player)
-        print_summary(summary)
-    else:
-        summary = {}
+    summary = summarise(games, args.steered_player)
+    print_summary(summary)
 
     # Save results
     output = {
@@ -1077,7 +871,6 @@ def main() -> None:
             "layers": args.layers,
             "alpha": args.alpha,
             "steered_player": args.steered_player,
-            "paired": args.paired,
             "rulebased": args.rulebased,
             "n_games": len(games),
             "variable_configs": True,
