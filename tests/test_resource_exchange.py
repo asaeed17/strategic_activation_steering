@@ -9,9 +9,11 @@ from resource_exchange_game import (
     execute_trade,
     rule_based_action,
     run_single_exchange_game,
+    build_player_system,
     extract_behavioral_metrics,
     RESOURCE_CONFIGS,
     MAX_ROUNDS,
+    MAX_PROPOSALS,
 )
 
 
@@ -76,19 +78,15 @@ class TestParsing:
         result = parse_action("That sounds fair. ACCEPT")
         assert result["type"] == "accept"
 
-    def test_reject(self):
-        result = parse_action("No, I don't want that. REJECT")
-        assert result["type"] == "reject"
-
-    def test_end(self):
-        result = parse_action("I'm satisfied with my resources. END")
-        assert result["type"] == "end"
+    def test_none(self):
+        result = parse_action("I'll pass this turn. NONE")
+        assert result["type"] == "none"
 
     def test_no_action(self):
         assert parse_action("Just some random text without any action keywords.") is None
 
     def test_last_action_wins(self):
-        result = parse_action("I REJECT... actually wait, ACCEPT")
+        result = parse_action("NONE... actually wait, ACCEPT")
         assert result["type"] == "accept"
 
     def test_trade_takes_priority(self):
@@ -99,6 +97,16 @@ class TestParsing:
         result = parse_action("TRADE: GIVE 3 X, RECEIVE 10 Y")
         assert result["give_qty"] == 3
         assert result["receive_qty"] == 10
+
+    def test_reject_not_recognised(self):
+        """REJECT is not a valid action in NegotiationArena-style game."""
+        result = parse_action("REJECT")
+        assert result is None
+
+    def test_end_not_recognised(self):
+        """END is not a valid action in NegotiationArena-style game."""
+        result = parse_action("END")
+        assert result is None
 
 
 # ---------------------------------------------------------------------------
@@ -165,10 +173,10 @@ class TestTradeExecution:
             {"type": "propose", "give_qty": 3, "give_res": "X",
              "receive_qty": 5, "receive_res": "Y"},
         )
-        assert p == {"X": 7, "Y": 10}   # gave 3, got 5 → net +2
-        assert r == {"X": 8, "Y": 5}    # got 3, gave 5 → net -2
-        assert compute_score(p) == 17    # gained 2
-        assert compute_score(r) == 13    # lost 2
+        assert p == {"X": 7, "Y": 10}
+        assert r == {"X": 8, "Y": 5}
+        assert compute_score(p) == 17
+        assert compute_score(r) == 13
 
     def test_unequal_trade_proposer_loses(self):
         p, r = execute_trade(
@@ -176,8 +184,8 @@ class TestTradeExecution:
             {"type": "propose", "give_qty": 5, "give_res": "X",
              "receive_qty": 3, "receive_res": "Y"},
         )
-        assert p == {"X": 5, "Y": 8}    # gave 5, got 3 → net -2
-        assert r == {"X": 10, "Y": 7}   # got 5, gave 3 → net +2
+        assert p == {"X": 5, "Y": 8}
+        assert r == {"X": 10, "Y": 7}
 
     def test_does_not_mutate_originals(self):
         orig_p = {"X": 10, "Y": 5}
@@ -209,7 +217,6 @@ class TestRuleBasedOpponent:
     def test_accepts_beneficial_trade(self):
         own = {"X": 5, "Y": 25}
         opp = {"X": 25, "Y": 5}
-        # Opponent gives 5X, receives 3Y → we give 3Y, get 5X → net +2
         proposal = {"type": "propose", "give_qty": 5, "give_res": "X",
                      "receive_qty": 3, "receive_res": "Y"}
         action = rule_based_action(own, opp, proposal, turn=1)
@@ -218,20 +225,18 @@ class TestRuleBasedOpponent:
     def test_accepts_equal_trade(self):
         own = {"X": 5, "Y": 25}
         opp = {"X": 25, "Y": 5}
-        # Equal trade: give 5X, receive 5Y → we give 5Y, get 5X → net 0
         proposal = {"type": "propose", "give_qty": 5, "give_res": "X",
                      "receive_qty": 5, "receive_res": "Y"}
         action = rule_based_action(own, opp, proposal, turn=1)
         assert action["type"] == "accept"
 
-    def test_rejects_harmful_trade(self):
+    def test_rejects_harmful_trade_with_none(self):
         own = {"X": 5, "Y": 25}
         opp = {"X": 25, "Y": 5}
-        # Opponent gives 3X, receives 5Y → we give 5Y, get 3X → net -2
         proposal = {"type": "propose", "give_qty": 3, "give_res": "X",
                      "receive_qty": 5, "receive_res": "Y"}
         action = rule_based_action(own, opp, proposal, turn=1)
-        assert action["type"] == "reject"
+        assert action["type"] == "none"
 
     def test_proposes_lopsided_trade(self):
         own = {"X": 25, "Y": 5}
@@ -240,20 +245,30 @@ class TestRuleBasedOpponent:
         assert action["type"] == "propose"
         assert action["give_res"] == "X"
         assert action["receive_res"] == "Y"
-        # Should ask for more than it gives (greedy)
         assert action["receive_qty"] >= action["give_qty"]
 
-    def test_ends_when_balanced(self):
+    def test_none_when_balanced(self):
         own = {"X": 15, "Y": 15}
         opp = {"X": 15, "Y": 15}
         action = rule_based_action(own, opp, None, turn=0)
-        assert action["type"] == "end"
+        assert action["type"] == "none"
 
-    def test_ends_at_max_rounds(self):
-        own = {"X": 25, "Y": 5}
-        opp = {"X": 5, "Y": 25}
-        action = rule_based_action(own, opp, None, turn=MAX_ROUNDS - 1)
-        assert action["type"] == "end"
+
+# ---------------------------------------------------------------------------
+# Private Information
+# ---------------------------------------------------------------------------
+
+class TestPrivateInfo:
+    def test_prompt_does_not_contain_opponent_resources(self):
+        prompt = build_player_system(1, {"X": 25, "Y": 5})
+        assert "no knowledge" in prompt.lower()
+        assert "25 X and 5 Y" in prompt  # own resources shown
+        # Should NOT contain opponent's resources
+        assert "5 X and 25 Y" not in prompt
+
+    def test_prompt_allows_voluntary_disclosure(self):
+        prompt = build_player_system(1, {"X": 25, "Y": 5})
+        assert "disclose" in prompt.lower()
 
 
 # ---------------------------------------------------------------------------
@@ -269,8 +284,6 @@ class TestFullGame:
             rulebased=True,
         )
         assert result["parse_errors"] == 0
-        assert result["trades_completed"] >= 0
-        # Total resources conserved across both players
         total_initial = sum(result["p1_initial"].values()) + sum(result["p2_initial"].values())
         total_final = sum(result["p1_final"].values()) + sum(result["p2_final"].values())
         assert total_initial == total_final
@@ -293,6 +306,15 @@ class TestFullGame:
                 + sum(result["p2_final"].values())
             )
             assert total_initial == total_final
+
+    def test_game_length_within_bounds(self):
+        result = run_single_exchange_game(
+            config=(25, 5, 5, 25),
+            steered_player=None,
+            generate_fn=None,
+            rulebased=True,
+        )
+        assert result["game_length"] <= MAX_ROUNDS
 
 
 # ---------------------------------------------------------------------------
@@ -328,3 +350,15 @@ class TestResourceConfigs:
 
     def test_minimum_configs(self):
         assert len(RESOURCE_CONFIGS) >= 50
+
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+class TestConstants:
+    def test_max_rounds(self):
+        assert MAX_ROUNDS == 8
+
+    def test_max_proposals(self):
+        assert MAX_PROPOSALS == 3
