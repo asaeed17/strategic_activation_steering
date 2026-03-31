@@ -999,6 +999,10 @@ def main() -> None:
             with open(bl_path, "w") as f:
                 json.dump(bl_out, f, indent=2, default=str)
             log.info("Saved baseline to %s", bl_path)
+            # If no dimension specified, we're just computing baseline — exit
+            if not args.dimension:
+                log.info("Baseline-only mode complete.")
+                return
 
     # Run steered games
     games = []
