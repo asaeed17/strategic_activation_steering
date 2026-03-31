@@ -121,18 +121,29 @@ dispatch:
     echo "Alphas: ${ALPHAS}  N_games: ${N_GAMES}"
     echo "============================================================"
 
-    # Step 1: Check if baseline exists on remote
+    # Step 1: Dispatch baseline to first free machine
     echo ""
-    echo "Step 1: Checking baseline..."
-    set bl_exists = `ssh $SSH_OPTS -l $UCL_USER -J $JUMP_HOST aylesbury-l.${DOMAIN} "test -f ${PROJECT_DIR}/${BASELINE_DIR}/results.json && echo yes || echo no" |& grep -E 'yes|no'`
-
-    if ( "$bl_exists" != "yes" ) then
-        echo "  Baseline not found. Run 'csh $0 baseline' on a GPU machine first."
-        echo "  Or SSH into a machine and run:"
-        echo "    cd ${PROJECT_DIR} && csh run_resource_exchange_32b_multiple_gpu.csh baseline"
-        exit 1
-    else
-        echo "  Baseline exists."
+    echo "Step 1: Dispatching baseline..."
+    set bl_dispatched = 0
+    set machine_idx = 1
+    while ( $machine_idx <= $#MACHINES )
+        set machine = $MACHINES[$machine_idx]
+        set raw = `ssh $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} "nvidia-smi --query-compute-apps=pid --format=csv,noheader | wc -l" |& grep '^[0-9]' | tr -d ' '`
+        if ( "$raw" == "0" ) then
+            set BL_LOG = "${PROJECT_DIR}/logs/resource_exchange_32b_${UCL_USER}_baseline.log"
+            echo "==> Baseline -> ${machine} (GPU free)"
+            ssh -f $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} \
+                "/bin/bash -c 'cd ${PROJECT_DIR} && nohup csh run_resource_exchange_32b_multiple_gpu.csh baseline > ${BL_LOG} 2>&1 &'"
+            set bl_dispatched = 1
+            @ machine_idx++
+            sleep 2
+            break
+        endif
+        @ machine_idx++
+        sleep 1
+    end
+    if ( $bl_dispatched == 0 ) then
+        echo "==> WARNING: No free machine for baseline"
     endif
 
     # Step 2: Dispatch one layer per free machine
