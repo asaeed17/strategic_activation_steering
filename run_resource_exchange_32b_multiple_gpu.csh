@@ -16,14 +16,9 @@
 set DIMS = ( \
     firmness \
     empathy \
-    composure \
     anchoring \
-    greed \
-    fairness_norm \
-    flattery \
-    narcissism \
     spite \
-    undecidedness \
+    narcissism \
 )
 
 set MACHINES = ( \
