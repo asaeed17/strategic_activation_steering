@@ -92,7 +92,7 @@ dispatch:
                 set LOG = "${PROJECT_DIR}/logs/gridsearch_32b_${UCL_USER}_L${layer}.log"
 
                 ssh -f $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} \
-                    "cd ${PROJECT_DIR} && nohup /bin/bash -c 'csh run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh ${layer}' > ${LOG} 2>&1 &"
+                    "/bin/bash -c 'cd ${PROJECT_DIR} && nohup csh run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh ${layer} > ${LOG} 2>&1 &'"
 
                 set found = 1
                 @ machine_idx++
