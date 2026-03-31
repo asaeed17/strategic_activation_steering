@@ -138,7 +138,27 @@ local_run:
     setenv HF_HOME .hf_cache
 
     set OUT_BASE = "results/resource_exchange/${MODEL}"
+    set BASELINE_FILE = "${OUT_BASE}/baseline_L${LAYER}.json"
 
+    # Step 1: Compute baseline once (if not already saved)
+    if ( ! -f "${BASELINE_FILE}" ) then
+        echo "==> Computing baseline for Layer ${LAYER} (once for all dims/alphas)"
+
+        python resource_exchange_game.py \
+            --model         "${MODEL}" \
+            --layers        $LAYER \
+            --alpha         0 \
+            --steered_player 1 \
+            --n_games       $N_GAMES \
+            --paired \
+            --vectors_dir   "${VECTORS_DIR}" \
+            --save_baseline "${BASELINE_FILE}" \
+            --output_dir    "${OUT_BASE}/baseline_L${LAYER}"
+    else
+        echo "==> Baseline already computed: ${BASELINE_FILE}"
+    endif
+
+    # Step 2: Run steered configs, reusing baseline
     foreach dim ( $DIMS )
         foreach alpha ( $ALPHAS )
             set OUT_DIR = "${OUT_BASE}/${dim}_P1_L${LAYER}_a${alpha}"
@@ -157,6 +177,7 @@ local_run:
                     --n_games       $N_GAMES \
                     --paired \
                     --vectors_dir   "${VECTORS_DIR}" \
+                    --baseline_file "${BASELINE_FILE}" \
                     --output_dir    "${OUT_DIR}"
             endif
         end
