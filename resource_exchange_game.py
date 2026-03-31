@@ -52,7 +52,8 @@ log = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 RESOURCE_TYPES = ["X", "Y"]
-MAX_ROUNDS = 8
+MAX_ROUNDS = 8           # 8 total turns (4 per player), matching NegotiationArena
+MAX_PROPOSALS = 3        # max proposals per player before forced to ACCEPT or NONE
 
 # Variable resource configs (analogous to POOL_SIZES in ultimatum_game.py).
 # Each entry: (p1_x, p1_y, p2_x, p2_y). Complementary asymmetric bundles
@@ -448,6 +449,7 @@ def run_single_exchange_game(
     proposing_player = None
     game_ended = False
     parse_errors = 0
+    proposals_made = {1: 0, 2: 0}
 
     for turn in range(MAX_ROUNDS):
         # Alternate: player 1 goes on even turns, player 2 on odd
@@ -512,11 +514,17 @@ def run_single_exchange_game(
 
         # Process action
         if action["type"] == "propose":
-            if not validate_trade(action, active_res, opponent_res):
+            if proposals_made[active_player] >= MAX_PROPOSALS:
+                # Exceeded proposal limit — treat as NONE
+                action = {"type": "none"}
+                turn_record["action"] = action
+                turn_record["proposal_limit_hit"] = True
+            elif not validate_trade(action, active_res, opponent_res):
                 turn_record["invalid_trade"] = True
             else:
                 pending_proposal = action
                 proposing_player = active_player
+                proposals_made[active_player] += 1
 
         elif action["type"] == "accept":
             if pending_proposal is not None and proposing_player != active_player:
