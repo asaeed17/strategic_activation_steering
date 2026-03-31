@@ -5,14 +5,13 @@
 #
 # Three modes:
 #   Dispatch:  csh run_resource_exchange_32b_multiple_gpu.csh <username>
-#              Computes baseline once, then SSHes into free GPU machines
-#              and launches one layer per machine (reusing saved baseline).
+#              Runs baseline first (blocking), then dispatches one layer per machine.
 #
 #   Baseline:  csh run_resource_exchange_32b_multiple_gpu.csh baseline
-#              Computes baseline only and saves to disk.
+#              Runs baseline only (unsteered vs unsteered).
 #
 #   Local:     csh run_resource_exchange_32b_multiple_gpu.csh <layer_number>
-#              Runs all dims x alphas for that layer, loading saved baseline.
+#              Runs all dims x alphas for that layer on the current machine.
 
 # ═══════════════════════════════════════════════════════════════════════
 # EDIT THESE
@@ -76,20 +75,20 @@ else
 endif
 
 # ═══════════════════════════════════════════════════════════════════════
-# BASELINE MODE — compute once, reused by all layers
+# BASELINE MODE — run once, results used for comparison during analysis
 # ═══════════════════════════════════════════════════════════════════════
 run_baseline:
     source /cs/student/projects1/2022/aymakhan/.venv/bin/activate.csh
     setenv HF_HOME .hf_cache
 
-    set BASELINE_FILE = "results/resource_exchange/${MODEL}/baseline.json"
+    set OUT_DIR = "results/resource_exchange/${MODEL}/baseline"
 
-    if ( -f "${BASELINE_FILE}" ) then
-        echo "==> Baseline already exists: ${BASELINE_FILE}"
+    if ( -f "${OUT_DIR}/results.json" ) then
+        echo "==> Baseline already exists: ${OUT_DIR}/results.json"
         exit 0
     endif
 
-    echo "==> Computing baseline (unsteered vs unsteered, ${N_GAMES} games)..."
+    echo "==> Running baseline (unsteered vs unsteered, ${N_GAMES} games)..."
 
     python resource_exchange_game.py \
         --model         "${MODEL}" \
@@ -97,15 +96,14 @@ run_baseline:
         --alpha         0 \
         --steered_player 1 \
         --n_games       $N_GAMES \
-        --paired \
         --vectors_dir   "${VECTORS_DIR}" \
-        --save_baseline "${BASELINE_FILE}"
+        --output_dir    "${OUT_DIR}"
 
-    echo "==> Baseline saved to ${BASELINE_FILE}"
+    echo "==> Baseline complete."
     exit 0
 
 # ═══════════════════════════════════════════════════════════════════════
-# DISPATCH MODE — compute baseline first, then dispatch layers
+# DISPATCH MODE — run baseline first, then dispatch layers
 # ═══════════════════════════════════════════════════════════════════════
 dispatch:
     set UCL_USER    = "$argv[1]"
@@ -113,7 +111,7 @@ dispatch:
     set DOMAIN      = "cs.ucl.ac.uk"
     set PROJECT_DIR = "/cs/student/projects1/2022/${UCL_USER}/comp0087_snlp_cwk"
     set SSH_OPTS    = "-o ConnectTimeout=10 -o StrictHostKeyChecking=no -o BatchMode=yes"
-    set BASELINE_FILE = "results/resource_exchange/${MODEL}/baseline.json"
+    set BASELINE_DIR = "results/resource_exchange/${MODEL}/baseline"
 
     echo "============================================================"
     echo "Resource Exchange Dispatch"
@@ -123,35 +121,18 @@ dispatch:
     echo "Alphas: ${ALPHAS}  N_games: ${N_GAMES}"
     echo "============================================================"
 
-    # Step 1: Compute baseline on first free machine (if not already done)
+    # Step 1: Check if baseline exists on remote
     echo ""
     echo "Step 1: Checking baseline..."
-    set baseline_exists = `ssh $SSH_OPTS -l $UCL_USER -J $JUMP_HOST aylesbury-l.${DOMAIN} "test -f ${PROJECT_DIR}/${BASELINE_FILE} && echo yes || echo no" |& grep -E 'yes|no'`
+    set bl_exists = `ssh $SSH_OPTS -l $UCL_USER -J $JUMP_HOST aylesbury-l.${DOMAIN} "test -f ${PROJECT_DIR}/${BASELINE_DIR}/results.json && echo yes || echo no" |& grep -E 'yes|no'`
 
-    if ( "$baseline_exists" != "yes" ) then
-        echo "  Baseline not found. Computing on first free machine..."
-        set machine_idx = 1
-        set bl_done = 0
-        while ( $machine_idx <= $#MACHINES )
-            set machine = $MACHINES[$machine_idx]
-            set raw = `ssh $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} "nvidia-smi --query-compute-apps=pid --format=csv,noheader | wc -l" |& grep '^[0-9]' | tr -d ' '`
-            if ( "$raw" == "0" ) then
-                echo "  Computing baseline on ${machine}..."
-                ssh $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} \
-                    "/bin/bash -c 'cd ${PROJECT_DIR} && source /cs/student/projects1/2022/${UCL_USER}/.venv/bin/activate && export HF_HOME=.hf_cache && python resource_exchange_game.py --model ${MODEL} --layers 1 --alpha 0 --steered_player 1 --n_games ${N_GAMES} --paired --vectors_dir ${VECTORS_DIR} --save_baseline ${BASELINE_FILE} 2>&1'" 2>&1
-                set bl_done = 1
-                break
-            endif
-            @ machine_idx++
-            sleep 1
-        end
-        if ( $bl_done == 0 ) then
-            echo "  ERROR: No free machine for baseline. Try again later."
-            exit 1
-        endif
-        echo "  Baseline computed."
+    if ( "$bl_exists" != "yes" ) then
+        echo "  Baseline not found. Run 'csh $0 baseline' on a GPU machine first."
+        echo "  Or SSH into a machine and run:"
+        echo "    cd ${PROJECT_DIR} && csh run_resource_exchange_32b_multiple_gpu.csh baseline"
+        exit 1
     else
-        echo "  Baseline already exists."
+        echo "  Baseline exists."
     endif
 
     # Step 2: Dispatch one layer per free machine
@@ -199,7 +180,7 @@ dispatch:
     exit 0
 
 # ═══════════════════════════════════════════════════════════════════════
-# LOCAL MODE — Run all dims x alphas for a single layer
+# LOCAL MODE — Run all dims x alphas for a single layer (steered only)
 # ═══════════════════════════════════════════════════════════════════════
 local_run:
     set LAYER = "$argv[1]"
@@ -209,12 +190,6 @@ local_run:
     setenv HF_HOME .hf_cache
 
     set OUT_BASE = "results/resource_exchange/${MODEL}"
-    set BASELINE_FILE = "${OUT_BASE}/baseline.json"
-
-    if ( ! -f "${BASELINE_FILE}" ) then
-        echo "ERROR: Baseline not found at ${BASELINE_FILE}. Run 'csh $0 baseline' first."
-        exit 1
-    endif
 
     foreach dim ( $DIMS )
         foreach alpha ( $ALPHAS )
@@ -232,9 +207,7 @@ local_run:
                     --alpha         $alpha \
                     --steered_player 1 \
                     --n_games       $N_GAMES \
-                    --paired \
                     --vectors_dir   "${VECTORS_DIR}" \
-                    --baseline_file "${BASELINE_FILE}" \
                     --output_dir    "${OUT_DIR}"
             endif
         end
