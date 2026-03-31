@@ -342,7 +342,6 @@ _PLAYER_NAMES = {1: "RED", 2: "BLUE"}
 def build_player_system(
     player_id: int,
     own_resources: Dict[str, int],
-    opponent_resources: Dict[str, int],
 ) -> str:
     """System prompt for a player in the Resource Exchange Game."""
     name = _PLAYER_NAMES[player_id]
@@ -350,23 +349,23 @@ def build_player_system(
     return (
         f"You are Player {name} in a Resource Exchange Game.\n\n"
         f"You start with: {own_resources['X']} X and {own_resources['Y']} Y.\n"
-        f"Player {opp_name} starts with: {opponent_resources['X']} X "
-        f"and {opponent_resources['Y']} Y.\n\n"
+        f"You have no knowledge about Player {opp_name}'s resources.\n"
+        f"You can decide if you want to disclose your resources in your message.\n\n"
         f"Goal: Acquire as many total resources as possible. "
         f"More resources in general are always better.\n\n"
         f"Actions (choose exactly one per turn):\n"
         f"  TRADE: GIVE <qty> <X or Y>, RECEIVE <qty> <X or Y>\n"
         f"    You give away some of one resource and receive some of the other.\n"
         f"    The quantities do NOT have to be equal.\n"
+        f"    You can only trade integer amounts, not decimals.\n"
         f"  ACCEPT — Accept the opponent's last trade proposal.\n"
-        f"  REJECT — Reject the opponent's last trade proposal.\n"
-        f"  END — End the game. No more trades.\n\n"
+        f"  NONE — Pass this turn without proposing or accepting.\n\n"
         f"Rules:\n"
-        f"  - Up to {MAX_ROUNDS} rounds. You alternate turns with Player {opp_name}.\n"
-        f"  - You can only ACCEPT or REJECT when responding to a proposal.\n"
-        f"  - You can only propose a TRADE or END on your own initiative.\n"
-        f"  - You cannot give more resources than you currently have.\n"
-        f"  - Your opponent cannot give more than they have.\n\n"
+        f"  - Up to {MAX_ROUNDS} total turns (alternating with Player {opp_name}).\n"
+        f"  - You can only ACCEPT when responding to a proposal.\n"
+        f"  - If you ACCEPT, the trade executes and the game ends.\n"
+        f"  - If nobody accepts by the end, no trade occurs and both keep initial resources.\n"
+        f"  - You cannot give more resources than you currently have.\n\n"
         f"Respond with 1-2 sentences explaining your reasoning, "
         f"then end with your action on a new line.\n"
     )
@@ -375,11 +374,11 @@ def build_player_system(
 def build_turn_prompt(
     player_id: int,
     own_resources: Dict[str, int],
-    opponent_resources: Dict[str, int],
     turn: int,
-    pending_proposal: Optional[Dict[str, Any]] = None,
+    opponent_message: Optional[str] = None,
+    opponent_action: Optional[Dict[str, Any]] = None,
 ) -> str:
-    """Per-turn user prompt showing current state."""
+    """Per-turn user prompt showing current state and opponent's public message."""
     own_score = compute_score(own_resources)
     opp_name = _PLAYER_NAMES[3 - player_id]
     lines = [
@@ -387,17 +386,19 @@ def build_turn_prompt(
         f"Your current resources: {own_resources['X']} X and {own_resources['Y']} Y "
         f"(total: {own_score}).",
     ]
-    if pending_proposal is not None and pending_proposal["type"] == "propose":
+    if opponent_message:
+        lines.append(f"\nPlayer {opp_name} says: {opponent_message}")
+    if opponent_action is not None and opponent_action["type"] == "propose":
         lines.append(
             f"\nPlayer {opp_name} proposes: "
-            f"GIVE {pending_proposal['give_qty']} {pending_proposal['give_res']}, "
-            f"RECEIVE {pending_proposal['receive_qty']} {pending_proposal['receive_res']}.\n"
-            f"(You would give {pending_proposal['receive_qty']} {pending_proposal['receive_res']} "
-            f"and receive {pending_proposal['give_qty']} {pending_proposal['give_res']}.)\n"
-            f"Do you ACCEPT or REJECT?"
+            f"GIVE {opponent_action['give_qty']} {opponent_action['give_res']}, "
+            f"RECEIVE {opponent_action['receive_qty']} {opponent_action['receive_res']}.\n"
+            f"(You would give {opponent_action['receive_qty']} {opponent_action['receive_res']} "
+            f"and receive {opponent_action['give_qty']} {opponent_action['give_res']}.)\n"
+            f"Do you ACCEPT, propose a new TRADE, or NONE?"
         )
     else:
-        lines.append("\nYour turn. Propose a trade or END the game.")
+        lines.append("\nYour turn. Propose a TRADE, or NONE to pass.")
     return "\n".join(lines)
 
 
@@ -449,8 +450,8 @@ def run_single_exchange_game(
     p2_initial = dict(p2_res)
 
     # Conversation histories (separate for each player)
-    p1_messages = [{"role": "system", "content": build_player_system(1, p1_res, p2_res)}]
-    p2_messages = [{"role": "system", "content": build_player_system(2, p2_res, p1_res)}]
+    p1_messages = [{"role": "system", "content": build_player_system(1, p1_res)}]
+    p2_messages = [{"role": "system", "content": build_player_system(2, p2_res)}]
 
     transcript = []
     trades_completed = 0
@@ -469,15 +470,13 @@ def run_single_exchange_game(
 
         # Determine if responding to a proposal or initiating
         if proposing_player is not None and proposing_player != active_player:
-            # Responding to opponent's proposal
             turn_prompt = build_turn_prompt(
-                active_player, active_res, opponent_res, turn,
-                pending_proposal=pending_proposal,
+                active_player, active_res, turn,
+                opponent_action=pending_proposal,
             )
         else:
-            # Own initiative
             turn_prompt = build_turn_prompt(
-                active_player, active_res, opponent_res, turn,
+                active_player, active_res, turn,
             )
 
         # Generate action
