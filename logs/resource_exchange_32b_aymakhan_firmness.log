@@ -1,0 +1,342 @@
+GPU 0 is in use
+if: Expression Syntax.
+prompt: Undefined variable.
+==> Running firmness L28 alpha=5
+02:23:21  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+/cs/student/projects1/2022/aymakhan/.venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:411: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
+/cs/student/projects1/2022/aymakhan/.venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:419: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/cs/student/projects1/2022/aymakhan/.venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+02:23:22  WARNING   CUDA extension not installed.
+02:23:22  WARNING   CUDA extension not installed.
+WARNING - Exllamav2 kernel is not installed, reset disable_exllamav2 to True. This may because you installed auto_gptq using a pre-build wheel on Windows, in which exllama_kernels are not compiled. To use exllama_kernels to further speedup inference, you can re-install auto_gptq from source.
+02:23:23  WARNING   Exllamav2 kernel is not installed, reset disable_exllamav2 to True. This may because you installed auto_gptq using a pre-build wheel on Windows, in which exllama_kernels are not compiled. To use exllama_kernels to further speedup inference, you can re-install auto_gptq from source.
+WARNING - CUDA kernels for auto_gptq are not installed, this will result in very slow inference speed. This may because:
+1. You disabled CUDA extensions compilation by setting BUILD_CUDA_EXT=0 when install auto_gptq from source.
+2. You are using pytorch without CUDA support.
+3. CUDA and nvcc are not installed in your device.
+02:23:23  WARNING   CUDA kernels for auto_gptq are not installed, this will result in very slow inference speed. This may because:
+1. You disabled CUDA extensions compilation by setting BUILD_CUDA_EXT=0 when install auto_gptq from source.
+2. You are using pytorch without CUDA support.
+3. CUDA and nvcc are not installed in your device.
+/cs/student/projects1/2022/aymakhan/.venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+WARNING - ignoring unknown parameter in config.json: batch_size.
+02:23:23  WARNING   ignoring unknown parameter in config.json: batch_size.
+WARNING - ignoring unknown parameter in config.json: block_name_to_quantize.
+02:23:23  WARNING   ignoring unknown parameter in config.json: block_name_to_quantize.
+WARNING - ignoring unknown parameter in config.json: cache_block_outputs.
+02:23:23  WARNING   ignoring unknown parameter in config.json: cache_block_outputs.
+WARNING - ignoring unknown parameter in config.json: dataset.
+02:23:23  WARNING   ignoring unknown parameter in config.json: dataset.
+WARNING - ignoring unknown parameter in config.json: exllama_config.
+02:23:23  WARNING   ignoring unknown parameter in config.json: exllama_config.
+WARNING - ignoring unknown parameter in config.json: max_input_length.
+02:23:23  WARNING   ignoring unknown parameter in config.json: max_input_length.
+WARNING - ignoring unknown parameter in config.json: model_seqlen.
+02:23:23  WARNING   ignoring unknown parameter in config.json: model_seqlen.
+WARNING - ignoring unknown parameter in config.json: module_name_preceding_first_block.
+02:23:23  WARNING   ignoring unknown parameter in config.json: module_name_preceding_first_block.
+WARNING - ignoring unknown parameter in config.json: modules_in_block_to_quantize.
+02:23:23  WARNING   ignoring unknown parameter in config.json: modules_in_block_to_quantize.
+WARNING - ignoring unknown parameter in config.json: pad_token_id.
+02:23:23  WARNING   ignoring unknown parameter in config.json: pad_token_id.
+WARNING - ignoring unknown parameter in config.json: quant_method.
+02:23:23  WARNING   ignoring unknown parameter in config.json: quant_method.
+WARNING - ignoring unknown parameter in config.json: tokenizer.
+02:23:23  WARNING   ignoring unknown parameter in config.json: tokenizer.
+WARNING - ignoring unknown parameter in config.json: use_cuda_fp16.
+02:23:23  WARNING   ignoring unknown parameter in config.json: use_cuda_fp16.
+WARNING - ignoring unknown parameter in config.json: use_exllama.
+02:23:23  WARNING   ignoring unknown parameter in config.json: use_exllama.
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO - The layer lm_head is not quantized.
+02:23:24  INFO      The layer lm_head is not quantized.
+02:23:30  INFO      Loaded vectors: dim=firmness layers=[28] method=mean_diff
+02:23:30  INFO      [G001] config=(25,5,5,25)
+02:31:44  INFO      [G001] steered P1: 15X/15Y (score 30, trades 3) | baseline P1: 10X/20Y (score 30, trades 2)
+02:31:44  INFO      [G002] config=(20,10,10,20)
+02:37:19  INFO      [G002] steered P1: 15X/15Y (score 30, trades 1) | baseline P1: 15X/15Y (score 30, trades 1)
+02:37:19  INFO      [G003] config=(30,5,5,30)
+02:45:37  INFO      [G003] steered P1: 20X/15Y (score 35, trades 1) | baseline P1: 20X/15Y (score 35, trades 1)
+02:45:37  INFO      [G004] config=(15,5,5,15)
+02:55:23  INFO      [G004] steered P1: 10X/15Y (score 25, trades 1) | baseline P1: 7X/20Y (score 27, trades 4)
+02:55:23  INFO      [G005] config=(20,5,5,20)
+03:03:53  INFO      [G005] steered P1: 15X/15Y (score 30, trades 1) | baseline P1: 15X/15Y (score 30, trades 1)
+03:03:53  INFO      [G006] config=(25,10,10,25)
+03:12:19  INFO      [G006] steered P1: 15X/20Y (score 35, trades 3) | baseline P1: 20X/15Y (score 35, trades 4)
+03:12:19  INFO      [G007] config=(30,10,10,30)
+03:18:58  INFO      [G007] steered P1: 25X/15Y (score 40, trades 2) | baseline P1: 25X/15Y (score 40, trades 2)
+03:18:58  INFO      [G008] config=(15,10,10,15)
+03:28:09  INFO      [G008] steered P1: 15X/10Y (score 25, trades 2) | baseline P1: 14X/12Y (score 26, trades 2)
+03:28:09  INFO      [G009] config=(35,5,5,35)
+03:36:43  INFO      [G009] steered P1: 20X/20Y (score 40, trades 2) | baseline P1: 20X/20Y (score 40, trades 2)
+03:36:43  INFO      [G010] config=(40,5,5,40)
+03:45:18  INFO      [G010] steered P1: 25X/20Y (score 45, trades 2) | baseline P1: 25X/20Y (score 45, trades 2)
+03:45:18  INFO      [G011] config=(18,12,12,18)
+03:52:43  INFO      [G011] steered P1: 17X/18Y (score 35, trades 3) | baseline P1: 17X/17Y (score 34, trades 3)
+03:52:43  INFO      [G012] config=(22,8,8,22)
+03:59:00  INFO      [G012] steered P1: 17X/15Y (score 32, trades 1) | baseline P1: 12X/18Y (score 30, trades 2)
+03:59:00  INFO      [G013] config=(16,14,14,16)
+04:04:20  INFO      [G013] steered P1: 16X/16Y (score 32, trades 2) | baseline P1: 16X/16Y (score 32, trades 2)
+04:04:20  INFO      [G014] config=(28,7,7,28)
+04:11:47  INFO      [G014] steered P1: 18X/17Y (score 35, trades 2) | baseline P1: 18X/17Y (score 35, trades 2)
+04:11:47  INFO      [G015] config=(24,6,6,24)
+04:20:12  INFO      [G015] steered P1: 24X/6Y (score 30, trades 0) | baseline P1: 12X/18Y (score 30, trades 2)
+04:20:12  INFO      [G016] config=(10,3,3,10)
+04:28:35  INFO      [G016] steered P1: 7X/8Y (score 15, trades 1) | baseline P1: 7X/8Y (score 15, trades 1)
+04:28:35  INFO      [G017] config=(12,4,4,12)
+04:36:53  INFO      [G017] steered P1: 8X/8Y (score 16, trades 1) | baseline P1: 8X/8Y (score 16, trades 1)
+04:36:53  INFO      [G018] config=(8,2,2,8)
+04:43:48  INFO      [G018] steered P1: 5X/7Y (score 12, trades 1) | baseline P1: 5X/7Y (score 12, trades 1)
+04:43:48  INFO      [G019] config=(35,10,10,35)
+04:51:55  INFO      [G019] steered P1: 30X/30Y (score 60, trades 3) | baseline P1: 40X/20Y (score 60, trades 2)
+04:51:55  INFO      [G020] config=(40,10,10,40)
+05:01:09  INFO      [G020] steered P1: 30X/20Y (score 50, trades 1) | baseline P1: 30X/20Y (score 50, trades 1)
+05:01:09  INFO      [G021] config=(25,10,5,20)
+05:09:32  INFO      [G021] steered P1: 20X/20Y (score 40, trades 1) | baseline P1: 25X/15Y (score 40, trades 2)
+05:09:32  INFO      [G022] config=(30,5,10,25)
+05:18:02  INFO      [G022] steered P1: 17X/20Y (score 37, trades 2) | baseline P1: 20X/15Y (score 35, trades 1)
+05:18:02  INFO      [G023] config=(20,15,10,10)
+05:27:10  INFO      [G023] steered P1: 15X/20Y (score 35, trades 1) | baseline P1: 20X/15Y (score 35, trades 2)
+05:27:10  INFO      [G024] config=(15,5,10,25)
+05:36:50  INFO      [G024] steered P1: 10X/15Y (score 25, trades 1) | baseline P1: 20X/10Y (score 30, trades 3)
+05:36:50  INFO      [G025] config=(25,5,10,20)
+05:47:13  INFO      [G025] steered P1: 25X/5Y (score 30, trades 2) | baseline P1: 15X/15Y (score 30, trades 1)
+05:47:13  INFO      [G026] config=(5,25,25,5)
+05:55:26  INFO      [G026] steered P1: 15X/15Y (score 30, trades 1) | baseline P1: 15X/15Y (score 30, trades 1)
+05:55:26  INFO      [G027] config=(10,20,20,10)
+06:01:07  INFO      [G027] steered P1: 20X/10Y (score 30, trades 1) | baseline P1: 15X/20Y (score 35, trades 2)
+06:01:07  INFO      [G028] config=(5,30,30,5)
+06:05:41  INFO      [G028] steered P1: 20X/20Y (score 40, trades 1) | baseline P1: 20X/20Y (score 40, trades 1)
+06:05:41  INFO      [G029] config=(10,25,25,10)
+06:14:12  INFO      [G029] steered P1: 20X/15Y (score 35, trades 1) | baseline P1: 20X/15Y (score 35, trades 1)
+06:14:12  INFO      [G030] config=(5,15,15,5)
+06:22:40  INFO      [G030] steered P1: 13X/8Y (score 21, trades 2) | baseline P1: 13X/6Y (score 19, trades 2)
+06:22:40  INFO      [G031] config=(15,15,15,15)
+06:29:35  INFO      [G031] steered P1: 16X/16Y (score 32, trades 2) | baseline P1: 21X/12Y (score 33, trades 3)
+06:29:35  INFO      [G032] config=(20,20,20,20)
+06:39:30  INFO      [G032] steered P1: 26X/17Y (score 43, trades 3) | baseline P1: 23X/21Y (score 44, trades 4)
+06:39:30  INFO      [G033] config=(14,16,16,14)
+06:48:55  INFO      [G033] steered P1: 16X/18Y (score 34, trades 2) | baseline P1: 16X/16Y (score 32, trades 2)
+06:48:55  INFO      [G034] config=(13,17,17,13)
+06:57:15  INFO      [G034] steered P1: 20X/12Y (score 32, trades 1) | baseline P1: 16X/19Y (score 35, trades 4)
+06:57:15  INFO      [G035] config=(12,18,18,12)
+07:05:12  INFO      [G035] steered P1: 18X/12Y (score 30, trades 3) | baseline P1: 18X/12Y (score 30, trades 1)
+07:05:12  INFO      [G036] config=(30,2,2,30)
+07:14:33  INFO      [G036] steered P1: 15X/17Y (score 32, trades 2) | baseline P1: 15X/17Y (score 32, trades 2)
+07:14:33  INFO      [G037] config=(35,3,3,35)
+07:24:05  INFO      [G037] steered P1: 25X/23Y (score 48, trades 3) | baseline P1: 20X/18Y (score 38, trades 2)
+07:24:05  INFO      [G038] config=(28,2,2,28)
+07:34:11  INFO      [G038] steered P1: 18X/12Y (score 30, trades 1) | baseline P1: 18X/12Y (score 30, trades 1)
+07:34:11  INFO      [G039] config=(40,3,3,40)
+07:43:02  INFO      [G039] steered P1: 30X/13Y (score 43, trades 3) | baseline P1: 20X/23Y (score 43, trades 4)
+07:43:02  INFO      [G040] config=(25,2,2,25)
+07:52:51  INFO      [G040] steered P1: 17X/13Y (score 30, trades 3) | baseline P1: 17X/13Y (score 30, trades 3)
+07:52:51  INFO      [G041] config=(19,7,7,19)
+08:00:57  INFO      [G041] steered P1: 14X/12Y (score 26, trades 1) | baseline P1: 12X/16Y (score 28, trades 2)
+08:00:57  INFO      [G042] config=(23,9,9,23)
+08:07:58  INFO      [G042] steered P1: 13X/21Y (score 34, trades 3) | baseline P1: 13X/21Y (score 34, trades 3)
+08:07:58  INFO      [G043] config=(27,11,11,27)
+08:14:42  INFO      [G043] steered P1: 15X/23Y (score 38, trades 3) | baseline P1: 15X/23Y (score 38, trades 3)
+08:14:42  INFO      [G044] config=(17,6,6,17)
+08:22:04  INFO      [G044] steered P1: 11X/15Y (score 26, trades 4) | baseline P1: 8X/15Y (score 23, trades 2)
+08:22:04  INFO      [G045] config=(21,3,3,21)
+08:31:38  INFO      [G045] steered P1: 8X/18Y (score 26, trades 2) | baseline P1: 9X/15Y (score 24, trades 3)
+08:31:38  INFO      [G046] config=(6,2,2,6)
+08:39:28  INFO      [G046] steered P1: 5X/7Y (score 12, trades 3) | baseline P1: 4X/6Y (score 10, trades 1)
+08:39:28  INFO      [G047] config=(7,3,3,7)
+08:46:41  INFO      [G047] steered P1: 4X/8Y (score 12, trades 2) | baseline P1: 8X/4Y (score 12, trades 2)
+08:46:41  INFO      [G048] config=(9,1,1,9)
+08:55:24  INFO      [G048] steered P1: 9X/3Y (score 12, trades 3) | baseline P1: 3X/8Y (score 11, trades 2)
+08:55:24  INFO      [G049] config=(5,3,3,5)
+09:04:11  INFO      [G049] steered P1: 4X/7Y (score 11, trades 3) | baseline P1: 8X/4Y (score 12, trades 4)
+09:04:11  INFO      [G050] config=(11,4,4,11)
+09:13:06  INFO      [G050] steered P1: 6X/10Y (score 16, trades 2) | baseline P1: 5X/11Y (score 16, trades 3)
+09:13:07  INFO      Results saved to results/resource_exchange/qwen2.5-32b-gptq/firmness_P1_L28_a5/results.json
+
+============================================================
+Resource Exchange — Paired Summary (n=50)
+============================================================
+  Steered player:  P1
+  Score (steered):  30.8
+  Score (baseline): 30.7
+  Delta:            +0.12 (d=0.059)
+  p-value:          0.6803
+  Trades (S/B):     1.9 / 2.1
+  Length (S/B):     7.2 / 7.3
+  Parse errors:     0 / 0
+============================================================
+
+==> Running firmness L28 alpha=15
+09:13:30  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+/cs/student/projects1/2022/aymakhan/.venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:411: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
+/cs/student/projects1/2022/aymakhan/.venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:419: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  def backward(ctx, grad_output):
+/cs/student/projects1/2022/aymakhan/.venv/lib64/python3.9/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+09:13:31  WARNING   CUDA extension not installed.
+09:13:31  WARNING   CUDA extension not installed.
+WARNING - Exllamav2 kernel is not installed, reset disable_exllamav2 to True. This may because you installed auto_gptq using a pre-build wheel on Windows, in which exllama_kernels are not compiled. To use exllama_kernels to further speedup inference, you can re-install auto_gptq from source.
+09:13:31  WARNING   Exllamav2 kernel is not installed, reset disable_exllamav2 to True. This may because you installed auto_gptq using a pre-build wheel on Windows, in which exllama_kernels are not compiled. To use exllama_kernels to further speedup inference, you can re-install auto_gptq from source.
+WARNING - CUDA kernels for auto_gptq are not installed, this will result in very slow inference speed. This may because:
+1. You disabled CUDA extensions compilation by setting BUILD_CUDA_EXT=0 when install auto_gptq from source.
+2. You are using pytorch without CUDA support.
+3. CUDA and nvcc are not installed in your device.
+09:13:31  WARNING   CUDA kernels for auto_gptq are not installed, this will result in very slow inference speed. This may because:
+1. You disabled CUDA extensions compilation by setting BUILD_CUDA_EXT=0 when install auto_gptq from source.
+2. You are using pytorch without CUDA support.
+3. CUDA and nvcc are not installed in your device.
+/cs/student/projects1/2022/aymakhan/.venv/lib64/python3.9/site-packages/huggingface_hub/file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+WARNING - ignoring unknown parameter in config.json: batch_size.
+09:13:31  WARNING   ignoring unknown parameter in config.json: batch_size.
+WARNING - ignoring unknown parameter in config.json: block_name_to_quantize.
+09:13:31  WARNING   ignoring unknown parameter in config.json: block_name_to_quantize.
+WARNING - ignoring unknown parameter in config.json: cache_block_outputs.
+09:13:31  WARNING   ignoring unknown parameter in config.json: cache_block_outputs.
+WARNING - ignoring unknown parameter in config.json: dataset.
+09:13:31  WARNING   ignoring unknown parameter in config.json: dataset.
+WARNING - ignoring unknown parameter in config.json: exllama_config.
+09:13:31  WARNING   ignoring unknown parameter in config.json: exllama_config.
+WARNING - ignoring unknown parameter in config.json: max_input_length.
+09:13:31  WARNING   ignoring unknown parameter in config.json: max_input_length.
+WARNING - ignoring unknown parameter in config.json: model_seqlen.
+09:13:31  WARNING   ignoring unknown parameter in config.json: model_seqlen.
+WARNING - ignoring unknown parameter in config.json: module_name_preceding_first_block.
+09:13:31  WARNING   ignoring unknown parameter in config.json: module_name_preceding_first_block.
+WARNING - ignoring unknown parameter in config.json: modules_in_block_to_quantize.
+09:13:31  WARNING   ignoring unknown parameter in config.json: modules_in_block_to_quantize.
+WARNING - ignoring unknown parameter in config.json: pad_token_id.
+09:13:31  WARNING   ignoring unknown parameter in config.json: pad_token_id.
+WARNING - ignoring unknown parameter in config.json: quant_method.
+09:13:31  WARNING   ignoring unknown parameter in config.json: quant_method.
+WARNING - ignoring unknown parameter in config.json: tokenizer.
+09:13:31  WARNING   ignoring unknown parameter in config.json: tokenizer.
+WARNING - ignoring unknown parameter in config.json: use_cuda_fp16.
+09:13:31  WARNING   ignoring unknown parameter in config.json: use_cuda_fp16.
+WARNING - ignoring unknown parameter in config.json: use_exllama.
+09:13:31  WARNING   ignoring unknown parameter in config.json: use_exllama.
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO - The layer lm_head is not quantized.
+09:13:32  INFO      The layer lm_head is not quantized.
+09:13:38  INFO      Loaded vectors: dim=firmness layers=[28] method=mean_diff
+09:13:38  INFO      [G001] config=(25,5,5,25)
+09:21:51  INFO      [G001] steered P1: 10X/20Y (score 30, trades 2) | baseline P1: 10X/20Y (score 30, trades 2)
+09:21:51  INFO      [G002] config=(20,10,10,20)
+09:27:49  INFO      [G002] steered P1: 18X/13Y (score 31, trades 2) | baseline P1: 15X/15Y (score 30, trades 1)
+09:27:49  INFO      [G003] config=(30,5,5,30)
+09:36:40  INFO      [G003] steered P1: 20X/15Y (score 35, trades 1) | baseline P1: 20X/15Y (score 35, trades 1)
+09:36:40  INFO      [G004] config=(15,5,5,15)
+09:45:07  INFO      [G004] steered P1: 20X/10Y (score 30, trades 2) | baseline P1: 7X/20Y (score 27, trades 4)
+09:45:07  INFO      [G005] config=(20,5,5,20)
+09:53:27  INFO      [G005] steered P1: 12X/20Y (score 32, trades 2) | baseline P1: 15X/15Y (score 30, trades 1)
+09:53:27  INFO      [G006] config=(25,10,10,25)
+10:00:52  INFO      [G006] steered P1: 25X/25Y (score 50, trades 3) | baseline P1: 20X/15Y (score 35, trades 4)
+10:00:52  INFO      [G007] config=(30,10,10,30)
+10:07:33  INFO      [G007] steered P1: 25X/15Y (score 40, trades 2) | baseline P1: 25X/15Y (score 40, trades 2)
+10:07:33  INFO      [G008] config=(15,10,10,15)
+10:16:53  INFO      [G008] steered P1: 10X/15Y (score 25, trades 1) | baseline P1: 14X/12Y (score 26, trades 2)
+10:16:53  INFO      [G009] config=(35,5,5,35)
+10:25:18  INFO      [G009] steered P1: 20X/25Y (score 45, trades 2) | baseline P1: 20X/20Y (score 40, trades 2)
+10:25:18  INFO      [G010] config=(40,5,5,40)
+10:33:11  INFO      [G010] steered P1: 20X/23Y (score 43, trades 2) | baseline P1: 25X/20Y (score 45, trades 2)
+10:33:11  INFO      [G011] config=(18,12,12,18)
+10:40:49  INFO      [G011] steered P1: 18X/14Y (score 32, trades 2) | baseline P1: 17X/17Y (score 34, trades 3)
+10:40:49  INFO      [G012] config=(22,8,8,22)
+10:47:02  INFO      [G012] steered P1: 17X/16Y (score 33, trades 1) | baseline P1: 12X/18Y (score 30, trades 2)
+10:47:02  INFO      [G013] config=(16,14,14,16)
+10:54:45  INFO      [G013] steered P1: 18X/16Y (score 34, trades 4) | baseline P1: 16X/16Y (score 32, trades 2)
+10:54:45  INFO      [G014] config=(28,7,7,28)
+11:02:43  INFO      [G014] steered P1: 16X/20Y (score 36, trades 3) | baseline P1: 18X/17Y (score 35, trades 2)
+11:02:43  INFO      [G015] config=(24,6,6,24)
+11:11:40  INFO      [G015] steered P1: 18X/12Y (score 30, trades 1) | baseline P1: 12X/18Y (score 30, trades 2)
+11:11:40  INFO      [G016] config=(10,3,3,10)
+11:20:28  INFO      [G016] steered P1: 6X/10Y (score 16, trades 1) | baseline P1: 7X/8Y (score 15, trades 1)
+11:20:28  INFO      [G017] config=(12,4,4,12)
+11:28:46  INFO      [G017] steered P1: 8X/8Y (score 16, trades 1) | baseline P1: 8X/8Y (score 16, trades 1)
+11:28:46  INFO      [G018] config=(8,2,2,8)
+11:36:24  INFO      [G018] steered P1: 4X/6Y (score 10, trades 1) | baseline P1: 5X/7Y (score 12, trades 1)
+11:36:24  INFO      [G019] config=(35,10,10,35)
+11:44:45  INFO      [G019] steered P1: 25X/20Y (score 45, trades 1) | baseline P1: 40X/20Y (score 60, trades 2)
+11:44:45  INFO      [G020] config=(40,10,10,40)
+11:53:16  INFO      [G020] steered P1: 30X/20Y (score 50, trades 4) | baseline P1: 30X/20Y (score 50, trades 1)
+11:53:16  INFO      [G021] config=(25,10,5,20)
+12:03:05  INFO      [G021] steered P1: 15X/20Y (score 35, trades 3) | baseline P1: 25X/15Y (score 40, trades 2)
+12:03:05  INFO      [G022] config=(30,5,10,25)
+12:11:22  INFO      [G022] steered P1: 20X/15Y (score 35, trades 1) | baseline P1: 20X/15Y (score 35, trades 1)
+12:11:22  INFO      [G023] config=(20,15,10,10)
+12:19:41  INFO      [G023] steered P1: 20X/15Y (score 35, trades 0) | baseline P1: 20X/15Y (score 35, trades 2)
+12:19:41  INFO      [G024] config=(15,5,10,25)
+12:28:35  INFO      [G024] steered P1: 10X/15Y (score 25, trades 1) | baseline P1: 20X/10Y (score 30, trades 3)
+12:28:35  INFO      [G025] config=(25,5,10,20)
+12:38:34  INFO      [G025] steered P1: 20X/15Y (score 35, trades 3) | baseline P1: 15X/15Y (score 30, trades 1)
+12:38:34  INFO      [G026] config=(5,25,25,5)
+12:46:55  INFO      [G026] steered P1: 15X/15Y (score 30, trades 1) | baseline P1: 15X/15Y (score 30, trades 1)
+12:46:55  INFO      [G027] config=(10,20,20,10)
+12:54:21  INFO      [G027] steered P1: 15X/20Y (score 35, trades 2) | baseline P1: 15X/20Y (score 35, trades 2)
+12:54:21  INFO      [G028] config=(5,30,30,5)
+12:59:58  INFO      [G028] steered P1: 15X/20Y (score 35, trades 1) | baseline P1: 20X/20Y (score 40, trades 1)
+12:59:58  INFO      [G029] config=(10,25,25,10)
+13:08:16  INFO      [G029] steered P1: 20X/15Y (score 35, trades 1) | baseline P1: 20X/15Y (score 35, trades 1)
+13:08:16  INFO      [G030] config=(5,15,15,5)
+13:18:01  INFO      [G030] steered P1: 10X/10Y (score 20, trades 1) | baseline P1: 13X/6Y (score 19, trades 2)
+13:18:01  INFO      [G031] config=(15,15,15,15)
+13:25:08  INFO      [G031] steered P1: 17X/17Y (score 34, trades 2) | baseline P1: 21X/12Y (score 33, trades 3)
+13:25:08  INFO      [G032] config=(20,20,20,20)
+13:34:04  INFO      [G032] steered P1: 15X/26Y (score 41, trades 1) | baseline P1: 23X/21Y (score 44, trades 4)
+13:34:04  INFO      [G033] config=(14,16,16,14)
+13:42:12  INFO      [G033] steered P1: 16X/18Y (score 34, trades 2) | baseline P1: 16X/16Y (score 32, trades 2)
+13:42:12  INFO      [G034] config=(13,17,17,13)
+13:51:13  INFO      [G034] steered P1: 20X/12Y (score 32, trades 1) | baseline P1: 16X/19Y (score 35, trades 4)
+13:51:13  INFO      [G035] config=(12,18,18,12)
+14:00:07  INFO      [G035] steered P1: 15X/17Y (score 32, trades 3) | baseline P1: 18X/12Y (score 30, trades 1)
+14:00:07  INFO      [G036] config=(30,2,2,30)
+14:08:34  INFO      [G036] steered P1: 20X/12Y (score 32, trades 1) | baseline P1: 15X/17Y (score 32, trades 2)
+14:08:34  INFO      [G037] config=(35,3,3,35)
+14:17:22  INFO      [G037] steered P1: 15X/28Y (score 43, trades 2) | baseline P1: 20X/18Y (score 38, trades 2)
+14:17:22  INFO      [G038] config=(28,2,2,28)
+14:27:00  INFO      [G038] steered P1: 18X/18Y (score 36, trades 3) | baseline P1: 18X/12Y (score 30, trades 1)
+14:27:00  INFO      [G039] config=(40,3,3,40)
+14:35:49  INFO      [G039] steered P1: 30X/13Y (score 43, trades 4) | baseline P1: 20X/23Y (score 43, trades 4)
+14:35:49  INFO      [G040] config=(25,2,2,25)
+14:45:20  INFO      [G040] steered P1: 15X/12Y (score 27, trades 3) | baseline P1: 17X/13Y (score 30, trades 3)
+14:45:20  INFO      [G041] config=(19,7,7,19)
+14:53:53  INFO      [G041] steered P1: 14X/12Y (score 26, trades 1) | baseline P1: 12X/16Y (score 28, trades 2)
+14:53:53  INFO      [G042] config=(23,9,9,23)
+15:00:53  INFO      [G042] steered P1: 13X/21Y (score 34, trades 3) | baseline P1: 13X/21Y (score 34, trades 3)
+15:00:53  INFO      [G043] config=(27,11,11,27)
+15:07:53  INFO      [G043] steered P1: 28X/16Y (score 44, trades 2) | baseline P1: 15X/23Y (score 38, trades 3)
+15:07:53  INFO      [G044] config=(17,6,6,17)
+15:17:09  INFO      [G044] steered P1: 18X/6Y (score 24, trades 2) | baseline P1: 8X/15Y (score 23, trades 2)
+15:17:09  INFO      [G045] config=(21,3,3,21)
+15:26:41  INFO      [G045] steered P1: 6X/22Y (score 28, trades 3) | baseline P1: 9X/15Y (score 24, trades 3)
+15:26:41  INFO      [G046] config=(6,2,2,6)
+15:34:30  INFO      [G046] steered P1: 7X/4Y (score 11, trades 2) | baseline P1: 4X/6Y (score 10, trades 1)
+15:34:30  INFO      [G047] config=(7,3,3,7)
+15:42:08  INFO      [G047] steered P1: 8X/4Y (score 12, trades 2) | baseline P1: 8X/4Y (score 12, trades 2)
+15:42:08  INFO      [G048] config=(9,1,1,9)
+15:51:26  INFO      [G048] steered P1: 5X/6Y (score 11, trades 2) | baseline P1: 3X/8Y (score 11, trades 2)
+15:51:26  INFO      [G049] config=(5,3,3,5)
+16:00:25  INFO      [G049] steered P1: 4X/7Y (score 11, trades 3) | baseline P1: 8X/4Y (score 12, trades 4)
+16:00:25  INFO      [G050] config=(11,4,4,11)
+16:08:40  INFO      [G050] steered P1: 10X/8Y (score 18, trades 3) | baseline P1: 5X/11Y (score 16, trades 3)
+16:08:40  INFO      Results saved to results/resource_exchange/qwen2.5-32b-gptq/firmness_P1_L28_a15/results.json
+
+============================================================
+Resource Exchange — Paired Summary (n=50)
+============================================================
+  Steered player:  P1
+  Score (steered):  31.1
+  Score (baseline): 30.7
+  Delta:            +0.40 (d=0.101)
+  p-value:          0.4789
+  Trades (S/B):     1.9 / 2.1
+  Length (S/B):     7.4 / 7.3
+  Parse errors:     0 / 0
+============================================================
+
+==> All configs complete for firmness.
