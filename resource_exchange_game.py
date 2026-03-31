@@ -986,9 +986,9 @@ def main() -> None:
             b = result["baseline"]
             sp = args.steered_player
             log.info(
-                "[G%03d] steered P%d: %dX/%dY (score %d, trades %d) | "
+                "[G%03d] dim=%s a=%s steered P%d: %dX/%dY (score %d, trades %d) | "
                 "baseline P%d: %dX/%dY (score %d, trades %d)",
-                i + 1, sp,
+                i + 1, args.dimension, args.alpha, sp,
                 s[f"p{sp}_final"]["X"], s[f"p{sp}_final"]["Y"],
                 s[f"p{sp}_score"], s["trades_completed"],
                 sp,
