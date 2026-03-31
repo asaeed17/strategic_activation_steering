@@ -776,8 +776,7 @@ def _run_self_test() -> None:
         "receive_qty": 15, "receive_res": "Y",
     }
     assert parse_action("I accept this trade. ACCEPT")["type"] == "accept"
-    assert parse_action("No deal. REJECT")["type"] == "reject"
-    assert parse_action("I'm done trading. END")["type"] == "end"
+    assert parse_action("I'll pass. NONE")["type"] == "none"
     assert parse_action("gibberish with no action") is None
     # Same resource should fail
     assert parse_action("TRADE: GIVE 5 X, RECEIVE 5 X") is None
@@ -815,7 +814,7 @@ def _run_self_test() -> None:
     bad_proposal = {"type": "propose", "give_qty": 3, "give_res": "X",
                     "receive_qty": 5, "receive_res": "Y"}
     action = rule_based_action(own, opp, bad_proposal, turn=1)
-    assert action["type"] == "reject", f"Expected reject, got {action}"
+    assert action["type"] == "none", f"Expected none, got {action}"
 
     # Full game with rule-based both sides
     result = run_single_exchange_game(
