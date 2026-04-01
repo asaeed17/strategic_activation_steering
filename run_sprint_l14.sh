@@ -5,7 +5,7 @@
 set -euo pipefail
 
 VECTORS=vectors/ultimatum_10dim_20pairs_general_matched/negotiation
-OUTDIR=results/ultimatum/confirmatory_v2/l14
+OUTDIR=results/ultimatum/llm_vs_llm/l14
 COMMON="--model qwen2.5-7b --vectors_dir $VECTORS --steered_role proposer \
   --n_games 100 --variable_pools --paired --temperature 0.0 --game ultimatum"
 
