@@ -70,9 +70,9 @@ POOL_SIZES_24 = [
     100, 103, 107, 113, 127, 131, 137, 139, 149, 151, 157,
 ]
 
-# 100 structurally diverse pools ($37-$157): primes, evens, odds, mult-of-5/10.
+# 200 structurally diverse pools ($37-$273): primes, evens, odds, mult-of-5/10.
 # Avoids primes-only bias (blocks 50/50 splits, unusual tokenization).
-# One game per pool at temp=0 gives honest n=100 for paired tests.
+# One game per pool at temp=0 gives honest n=200 for paired tests.
 POOL_SIZES = [
     37, 38, 39, 40, 41, 42, 43, 44, 47, 48,
     49, 50, 51, 52, 54, 55, 56, 57, 58, 59,
@@ -84,6 +84,16 @@ POOL_SIZES = [
     119, 120, 123, 124, 126, 128, 131, 132, 133, 135,
     136, 137, 138, 139, 140, 141, 142, 143, 144, 145,
     147, 148, 149, 150, 151, 153, 154, 155, 156, 157,
+    158, 159, 160, 161, 162, 163, 165, 166, 167, 168,
+    169, 170, 171, 172, 173, 174, 175, 176, 177, 178,
+    179, 180, 181, 182, 183, 185, 186, 187, 188, 189,
+    190, 191, 192, 193, 194, 195, 196, 197, 198, 199,
+    200, 201, 202, 203, 205, 206, 207, 208, 209, 210,
+    211, 212, 213, 215, 216, 217, 218, 219, 220, 221,
+    222, 223, 225, 226, 227, 228, 229, 230, 231, 233,
+    235, 237, 238, 239, 240, 241, 242, 243, 245, 246,
+    247, 248, 249, 250, 251, 253, 255, 257, 258, 259,
+    260, 261, 262, 263, 265, 267, 269, 270, 271, 273,
 ]
 
 # ---------------------------------------------------------------------------
@@ -304,6 +314,59 @@ def generate_steered(
 
     new_tokens = out_ids[0, inputs["input_ids"].shape[1]:]
     return tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
+
+
+# ---------------------------------------------------------------------------
+# Batch generation with steering hooks
+# ---------------------------------------------------------------------------
+
+def generate_steered_batch(
+    model,
+    tokenizer,
+    messages_list: List[List[Dict]],
+    direction_vectors: Optional[Dict[int, np.ndarray]],
+    alpha: float,
+    max_new_tokens: int = 200,
+    temperature: float = 0.0,
+) -> List[str]:
+    """Batch version of generate_steered. Processes multiple prompts in one
+    forward pass. Uses left-padding so all sequences align on the right."""
+    device = next(model.parameters()).device
+    formatted = [
+        tokenizer.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+        for msgs in messages_list
+    ]
+    inputs = tokenizer(formatted, return_tensors="pt", padding=True).to(device)
+    input_len = inputs["input_ids"].shape[1]
+
+    hooks: List[SteeringHook] = []
+    if direction_vectors and alpha != 0.0:
+        layers = get_transformer_layers(model)
+        for layer_idx, vec in direction_vectors.items():
+            if layer_idx >= len(layers):
+                continue
+            dt = torch.tensor(vec, dtype=torch.float32, device=device)
+            h = SteeringHook(direction=dt, alpha=alpha)
+            h.register(layers[layer_idx])
+            hooks.append(h)
+
+    try:
+        with torch.no_grad():
+            out_ids = model.generate(
+                **inputs,
+                max_new_tokens=max_new_tokens,
+                do_sample=temperature > 0.0,
+                temperature=temperature if temperature > 0.0 else 1.0,
+                pad_token_id=tokenizer.eos_token_id,
+            )
+    finally:
+        for h in hooks:
+            h.remove()
+
+    return [
+        tokenizer.decode(out_ids[i, input_len:], skip_special_tokens=True).strip()
+        for i in range(len(messages_list))
+    ]
 
 
 # ---------------------------------------------------------------------------
@@ -546,6 +609,169 @@ def run_paired_game(
         "baseline": baseline_result,
         "parse_error": None,
     }
+
+
+# ---------------------------------------------------------------------------
+# Batch paired game (proposer steering only)
+# ---------------------------------------------------------------------------
+
+def run_paired_proposer_batch(
+    model,
+    tokenizer,
+    pools: List[int],
+    direction_vectors: Dict[int, np.ndarray],
+    alpha: float,
+    proposer_enhancement: Optional[str] = None,
+    responder_enhancement: Optional[str] = None,
+    temperature: float = 0.0,
+    max_new_tokens: int = 200,
+    game: str = "ultimatum",
+    text_visible: bool = False,
+) -> List[Dict]:
+    """Batch version of run_paired_game for proposer steering.
+    Runs 4 batched generate calls per batch:
+      1. steered proposer (all pools)
+      2. baseline proposer (all pools)
+      3. steered responders (valid games only)
+      4. baseline responders (valid games only)
+    Falls back to sequential generate_steered for individual parse-error retries.
+    """
+    def build_proposer_msgs(pool):
+        sys = build_proposer_system(pool, game=game)
+        if proposer_enhancement and proposer_enhancement in PROPOSER_ENHANCEMENTS:
+            sys += PROPOSER_ENHANCEMENTS[proposer_enhancement]
+        return [
+            {"role": "system", "content": sys},
+            {"role": "user", "content": "Make your offer."},
+        ]
+
+    def build_responder_msgs(ps, rs, pool, prop_text):
+        sys = build_responder_system(
+            ps, rs, pool, proposer_text=prop_text if text_visible else None
+        )
+        if responder_enhancement and responder_enhancement in RESPONDER_ENHANCEMENTS:
+            sys += RESPONDER_ENHANCEMENTS[responder_enhancement]
+        return [
+            {"role": "system", "content": sys},
+            {"role": "user", "content": (
+                f"Player A offers: they get ${ps}, you get ${rs}. "
+                f"What is your decision?"
+            )},
+        ]
+
+    prop_msgs = [build_proposer_msgs(p) for p in pools]
+
+    # --- 1+2: batch generate proposer outputs ---
+    steered_prop_texts = generate_steered_batch(
+        model, tokenizer, prop_msgs, direction_vectors, alpha, max_new_tokens, temperature
+    )
+    baseline_prop_texts = generate_steered_batch(
+        model, tokenizer, prop_msgs, None, 0.0, max_new_tokens, temperature
+    )
+
+    # Parse offers; retry individually on failure
+    steered_offers, baseline_offers = [], []
+    for i, pool in enumerate(pools):
+        s_off = parse_offer(steered_prop_texts[i], pool)
+        if s_off is None:
+            retry = generate_steered(model, tokenizer, prop_msgs[i], direction_vectors,
+                                     alpha, max_new_tokens, temperature)
+            steered_prop_texts[i] = retry
+            s_off = parse_offer(retry, pool)
+        steered_offers.append(s_off)
+
+        b_off = parse_offer(baseline_prop_texts[i], pool)
+        if b_off is None:
+            retry = generate_steered(model, tokenizer, prop_msgs[i], None,
+                                     0.0, max_new_tokens, temperature)
+            baseline_prop_texts[i] = retry
+            b_off = parse_offer(retry, pool)
+        baseline_offers.append(b_off)
+
+    # Dictator game: skip responder
+    if game == "dictator":
+        results = []
+        for i, pool in enumerate(pools):
+            def _dg_result(offer, text):
+                if offer is None:
+                    return {"agreed": False, "proposer_share": None, "responder_share": None,
+                            "response": None, "proposer_payoff": 0, "responder_payoff": 0,
+                            "parse_error": "proposer", "proposer_text": text,
+                            "responder_text": None, "pool": pool,
+                            "proposer_metrics": extract_behavioral_metrics(text),
+                            "responder_metrics": extract_behavioral_metrics("")}
+                ps, rs = offer
+                return {"agreed": True, "proposer_share": ps, "responder_share": rs,
+                        "response": "accept", "proposer_payoff": ps, "responder_payoff": rs,
+                        "parse_error": None, "proposer_text": text,
+                        "responder_text": "[dictator game: auto-accept]", "pool": pool,
+                        "proposer_metrics": extract_behavioral_metrics(text),
+                        "responder_metrics": extract_behavioral_metrics("")}
+            results.append({
+                "game_id": None, "pool": pool,
+                "steered": _dg_result(steered_offers[i], steered_prop_texts[i]),
+                "baseline": _dg_result(baseline_offers[i], baseline_prop_texts[i]),
+                "parse_error": None,
+            })
+        return results
+
+    # --- 3+4: batch generate responder outputs ---
+    # Build responder messages only for games with valid offers
+    s_resp_items: List[Tuple[int, List[Dict]]] = []
+    b_resp_items: List[Tuple[int, List[Dict]]] = []
+    for i, pool in enumerate(pools):
+        if steered_offers[i] is not None:
+            ps, rs = steered_offers[i]
+            s_resp_items.append((i, build_responder_msgs(ps, rs, pool, steered_prop_texts[i])))
+        if baseline_offers[i] is not None:
+            pb, rb = baseline_offers[i]
+            b_resp_items.append((i, build_responder_msgs(pb, rb, pool, baseline_prop_texts[i])))
+
+    s_resp_texts_raw = generate_steered_batch(
+        model, tokenizer, [m for _, m in s_resp_items], None, 0.0, max_new_tokens, temperature
+    ) if s_resp_items else []
+    b_resp_texts_raw = generate_steered_batch(
+        model, tokenizer, [m for _, m in b_resp_items], None, 0.0, max_new_tokens, temperature
+    ) if b_resp_items else []
+
+    s_resp_by_idx = {idx: (text, msg) for (idx, msg), text in zip(s_resp_items, s_resp_texts_raw)}
+    b_resp_by_idx = {idx: (text, msg) for (idx, msg), text in zip(b_resp_items, b_resp_texts_raw)}
+
+    # Assemble results
+    results = []
+    for i, pool in enumerate(pools):
+        def _make_result(offer, prop_text, resp_by_idx):
+            if offer is None:
+                return {"agreed": False, "proposer_share": None, "responder_share": None,
+                        "response": None, "proposer_payoff": 0, "responder_payoff": 0,
+                        "parse_error": "proposer", "proposer_text": prop_text,
+                        "responder_text": None, "pool": pool,
+                        "proposer_metrics": extract_behavioral_metrics(prop_text),
+                        "responder_metrics": extract_behavioral_metrics("")}
+            ps, rs = offer
+            resp_text, resp_msgs = resp_by_idx[i]
+            decision = parse_response(resp_text)
+            if decision is None:
+                resp_text = generate_steered(model, tokenizer, resp_msgs, None, 0.0,
+                                             max_new_tokens, temperature)
+                decision = parse_response(resp_text)
+            accepted = decision == "accept" if decision else False
+            return {"agreed": accepted, "proposer_share": ps, "responder_share": rs,
+                    "response": decision,
+                    "proposer_payoff": ps if accepted else 0,
+                    "responder_payoff": rs if accepted else 0,
+                    "parse_error": None if decision else "responder",
+                    "proposer_text": prop_text, "responder_text": resp_text, "pool": pool,
+                    "proposer_metrics": extract_behavioral_metrics(prop_text),
+                    "responder_metrics": extract_behavioral_metrics(resp_text)}
+
+        results.append({
+            "game_id": None, "pool": pool,
+            "steered": _make_result(steered_offers[i], steered_prop_texts[i], s_resp_by_idx),
+            "baseline": _make_result(baseline_offers[i], baseline_prop_texts[i], b_resp_by_idx),
+            "parse_error": None,
+        })
+    return results
 
 
 # ---------------------------------------------------------------------------
@@ -851,6 +1077,10 @@ def parse_args() -> argparse.Namespace:
                    help="Save results JSON to this directory.")
     p.add_argument("--text_visible", action="store_true",
                    help="Responder sees proposer's full reasoning text (not just parsed OFFER numbers).")
+    p.add_argument("--batch_size", type=int, default=1,
+                   help="Number of games to process in a single batched forward pass. "
+                        "Only applies to paired proposer experiments. "
+                        "Values of 4-8 typically give best throughput on a single GPU.")
     p.add_argument("--verbose", "-v", action="store_true")
     return p.parse_args()
 
@@ -901,9 +1131,22 @@ def main() -> None:
     else:
         load_kwargs["torch_dtype"] = dtype_map[args.dtype]
 
-    model = AutoModelForCausalLM.from_pretrained(cfg.hf_id, **load_kwargs)
+    # Flash Attention 2: faster attention kernel (requires flash-attn package)
+    try:
+        model = AutoModelForCausalLM.from_pretrained(
+            cfg.hf_id, **load_kwargs, attn_implementation="flash_attention_2"
+        )
+        log.info("Flash Attention 2 enabled.")
+    except (ImportError, ValueError):
+        model = AutoModelForCausalLM.from_pretrained(cfg.hf_id, **load_kwargs)
+        log.info("Flash Attention 2 not available, using default attention.")
     model.eval()
     log.info("Model loaded. Device: %s", next(model.parameters()).device)
+
+    # torch.compile: fuses ops for ~10-30% speedup (skipped for quantized models)
+    if not args.quantize:
+        model = torch.compile(model)
+        log.info("torch.compile() applied.")
 
     # --- Prepare pool sizes ---
     if args.variable_pools:
@@ -951,7 +1194,38 @@ def main() -> None:
     games = []
     t0 = time.time()
 
-    for i in range(args.n_games):
+    use_batch = args.batch_size > 1 and is_paired and args.steered_role == "proposer"
+    if use_batch:
+        log.info("Batch mode: batch_size=%d (paired proposer only)", args.batch_size)
+        for batch_start in range(0, args.n_games, args.batch_size):
+            batch_pools = pools[batch_start:batch_start + args.batch_size]
+            batch_results = run_paired_proposer_batch(
+                model, tokenizer, batch_pools,
+                direction_vectors=dvecs,
+                alpha=args.alpha,
+                proposer_enhancement=args.proposer_enhancement,
+                responder_enhancement=args.responder_enhancement,
+                temperature=args.temperature,
+                max_new_tokens=args.max_new_tokens,
+                game=args.game,
+                text_visible=args.text_visible,
+            )
+            for j, result in enumerate(batch_results):
+                i = batch_start + j
+                result["game_id"] = i
+                games.append(result)
+                s, b, pool = result["steered"], result["baseline"], result["pool"]
+                if result.get("parse_error"):
+                    print(f"  Game {i+1:3d}: PARSE_ERROR  pool=${pool}")
+                else:
+                    s_pct = s["proposer_share"] / pool * 100 if s["proposer_share"] is not None else 0
+                    b_pct = b["proposer_share"] / pool * 100 if b["proposer_share"] is not None else 0
+                    s_dec = "ACC" if s["agreed"] else "REJ" if s["response"] else "ERR"
+                    b_dec = "ACC" if b["agreed"] else "REJ" if b["response"] else "ERR"
+                    print(f"  Game {i+1:3d}: steered={s_pct:.0f}%({s_dec}) "
+                          f"baseline={b_pct:.0f}%({b_dec})  pool=${pool}")
+
+    for i in range(args.n_games if not use_batch else 0):
         pool = pools[i]
 
         if is_baseline:
