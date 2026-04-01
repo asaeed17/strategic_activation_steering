@@ -352,11 +352,13 @@ def build_player_system(
         f"  NONE — Pass this turn without proposing or accepting.\n\n"
         f"Rules:\n"
         f"  - Up to {MAX_ROUNDS} total turns (alternating with Player {opp_name}).\n"
+        f"  - You are allowed at most {MAX_PROPOSALS} proposals of your own. "
+        f"After that you can only ACCEPT or NONE.\n"
         f"  - You can only ACCEPT when responding to a proposal.\n"
         f"  - If you ACCEPT, the trade executes and the game ends.\n"
         f"  - If nobody accepts by the end, no trade occurs and both keep initial resources.\n"
         f"  - You cannot give more resources than you currently have.\n\n"
-        f"Respond with 1-2 sentences explaining your reasoning, "
+        f"Respond with a 1-2 sentence message to the other player, "
         f"then end with your action on a new line.\n"
     )
 
@@ -400,6 +402,37 @@ def format_action(action: Dict[str, Any]) -> str:
             f"RECEIVE {action['receive_qty']} {action['receive_res']}"
         )
     return action["type"].upper()
+
+
+def extract_message(text: str) -> str:
+    """Extract public message from player output (strips action line).
+
+    Players output 1-2 sentences followed by an action keyword on the last
+    line.  The message portion (everything before the action line) is what
+    the opponent sees next turn.
+    """
+    lines = text.strip().split("\n")
+    for i in range(len(lines) - 1, -1, -1):
+        if (_PROPOSE_RE.search(lines[i]) or
+                _ACCEPT_RE.search(lines[i]) or
+                _NONE_RE.search(lines[i])):
+            if i > 0:
+                return "\n".join(lines[:i]).strip()
+            break
+    return text.strip()
+
+
+def rule_based_message(action: Dict[str, Any]) -> str:
+    """Generate a brief public message for a rule-based player's action."""
+    if action["type"] == "propose":
+        return (
+            f"I'd like to propose a trade: {action['give_qty']} "
+            f"{action['give_res']} for {action['receive_qty']} "
+            f"{action['receive_res']}."
+        )
+    elif action["type"] == "accept":
+        return "That works for me. I accept."
+    return "I'll pass this turn."
 
 
 # ---------------------------------------------------------------------------
@@ -450,6 +483,7 @@ def run_single_exchange_game(
     game_ended = False
     parse_errors = 0
     proposals_made = {1: 0, 2: 0}
+    last_message = {1: None, 2: None}
 
     for turn in range(MAX_ROUNDS):
         # Alternate: player 1 goes on even turns, player 2 on odd
@@ -460,14 +494,17 @@ def run_single_exchange_game(
         is_steered = (active_player == steered_player)
 
         # Determine if responding to a proposal or initiating
+        opponent_msg = last_message[3 - active_player]
         if proposing_player is not None and proposing_player != active_player:
             turn_prompt = build_turn_prompt(
                 active_player, active_res, turn,
+                opponent_message=opponent_msg,
                 opponent_action=pending_proposal,
             )
         else:
             turn_prompt = build_turn_prompt(
                 active_player, active_res, turn,
+                opponent_message=opponent_msg,
             )
 
         # Generate action
@@ -500,12 +537,19 @@ def run_single_exchange_game(
                 proposing_player = None
                 continue
 
+        # Update public message for opponent to see next turn
+        if use_rulebased:
+            last_message[active_player] = rule_based_message(action)
+        else:
+            last_message[active_player] = extract_message(text)
+
         metrics = extract_behavioral_metrics(text) if not use_rulebased else {}
 
         turn_record = {
             "turn": turn,
             "player": active_player,
             "text": text,
+            "message": last_message[active_player],
             "action": action,
             "parse_error": False,
             "resources_before": dict(active_res),
