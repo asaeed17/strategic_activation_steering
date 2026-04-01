@@ -158,8 +158,7 @@ def parse_action(text: str) -> Optional[Dict[str, Any]]:
         {"type": "propose", "give_qty": int, "give_res": str,
          "receive_qty": int, "receive_res": str}
         {"type": "accept"}
-        {"type": "reject"}
-        {"type": "end"}
+        {"type": "none"}
         None  (parse failure)
     """
     # Check TRADE first (most specific pattern)
@@ -202,21 +201,21 @@ def parse_action(text: str) -> Optional[Dict[str, Any]]:
 # Trade Validation & Execution
 # ---------------------------------------------------------------------------
 
-def validate_trade(
+def validate_proposal(
     proposal: Dict[str, Any],
     proposer_resources: Dict[str, int],
-    responder_resources: Dict[str, int],
 ) -> bool:
-    """Check that the proposer has enough to give and the responder has enough to give back."""
+    """Check that the proposer has enough to give.
+
+    Does NOT check responder resources — that is private information the
+    proposer should not have access to. Responder feasibility is checked
+    at ACCEPT time instead.
+    """
     if proposal["type"] != "propose":
         return False
-    give_res, give_qty = proposal["give_res"], proposal["give_qty"]
-    receive_res, receive_qty = proposal["receive_res"], proposal["receive_qty"]
-    if give_qty <= 0 or receive_qty <= 0:
+    if proposal["give_qty"] <= 0 or proposal["receive_qty"] <= 0:
         return False
-    if proposer_resources.get(give_res, 0) < give_qty:
-        return False
-    if responder_resources.get(receive_res, 0) < receive_qty:
+    if proposer_resources.get(proposal["give_res"], 0) < proposal["give_qty"]:
         return False
     return True
 
@@ -563,7 +562,7 @@ def run_single_exchange_game(
                 action = {"type": "none"}
                 turn_record["action"] = action
                 turn_record["proposal_limit_hit"] = True
-            elif not validate_trade(action, active_res, opponent_res):
+            elif not validate_proposal(action, active_res):
                 turn_record["invalid_trade"] = True
             else:
                 pending_proposal = action
@@ -572,19 +571,25 @@ def run_single_exchange_game(
 
         elif action["type"] == "accept":
             if pending_proposal is not None and proposing_player != active_player:
-                # Execute the accepted trade (only trade that executes in the game)
-                prop_res = p1_res if proposing_player == 1 else p2_res
-                resp_res = p1_res if active_player == 1 else p2_res
-                new_prop, new_resp = execute_trade(prop_res, resp_res, pending_proposal)
-                if proposing_player == 1:
-                    p1_res, p2_res = new_prop, new_resp
+                # Check responder can afford their side of the trade
+                resp_res_check = p1_res if active_player == 1 else p2_res
+                if resp_res_check.get(pending_proposal["receive_res"], 0) < pending_proposal["receive_qty"]:
+                    # Responder can't afford — trade fails, turn passes
+                    turn_record["accept_failed"] = True
                 else:
-                    p2_res, p1_res = new_prop, new_resp
-                trades_completed += 1
-                turn_record["trade_executed"] = True
-                transcript.append(turn_record)
-                game_ended = True
-                break
+                    # Execute the accepted trade
+                    prop_res = p1_res if proposing_player == 1 else p2_res
+                    resp_res = p1_res if active_player == 1 else p2_res
+                    new_prop, new_resp = execute_trade(prop_res, resp_res, pending_proposal)
+                    if proposing_player == 1:
+                        p1_res, p2_res = new_prop, new_resp
+                    else:
+                        p2_res, p1_res = new_prop, new_resp
+                    trades_completed += 1
+                    turn_record["trade_executed"] = True
+                    transcript.append(turn_record)
+                    game_ended = True
+                    break
 
         elif action["type"] == "none":
             pass  # do nothing, turn passes
@@ -709,15 +714,18 @@ def _run_self_test() -> None:
     # Same resource should fail
     assert parse_action("TRADE: GIVE 5 X, RECEIVE 5 X") is None
 
-    # Trade validation
+    # Proposal validation (only checks proposer, not responder)
     proposer = {"X": 10, "Y": 5}
-    responder = {"X": 5, "Y": 10}
     good_trade = {"type": "propose", "give_qty": 3, "give_res": "X",
                   "receive_qty": 3, "receive_res": "Y"}
-    assert validate_trade(good_trade, proposer, responder) is True
+    assert validate_proposal(good_trade, proposer) is True
     bad_trade = {"type": "propose", "give_qty": 20, "give_res": "X",
                  "receive_qty": 3, "receive_res": "Y"}
-    assert validate_trade(bad_trade, proposer, responder) is False
+    assert validate_proposal(bad_trade, proposer) is False
+    # Responder can't afford — but proposal is still valid (private info)
+    big_ask = {"type": "propose", "give_qty": 3, "give_res": "X",
+               "receive_qty": 50, "receive_res": "Y"}
+    assert validate_proposal(big_ask, proposer) is True
 
     # Trade execution (unequal: give 3X, receive 5Y → proposer gains 2 net)
     p, r = execute_trade(

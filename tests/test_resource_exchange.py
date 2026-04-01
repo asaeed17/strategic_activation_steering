@@ -5,7 +5,7 @@ from resource_exchange_game import (
     compute_score,
     compute_balance_ratio,
     parse_action,
-    validate_trade,
+    validate_proposal,
     execute_trade,
     rule_based_action,
     run_single_exchange_game,
@@ -71,21 +71,22 @@ class TestParsing:
         assert parse_action("TRADE: GIVE 3 X, RECEIVE 2 Y ACCEPT")["type"] == "propose"
 
 
-class TestTradeValidation:
+class TestProposalValidation:
     def test_valid(self):
         t = {"type": "propose", "give_qty": 3, "give_res": "X",
              "receive_qty": 3, "receive_res": "Y"}
-        assert validate_trade(t, {"X": 10, "Y": 5}, {"X": 5, "Y": 10})
+        assert validate_proposal(t, {"X": 10, "Y": 5})
 
     def test_insufficient_proposer(self):
         t = {"type": "propose", "give_qty": 15, "give_res": "X",
              "receive_qty": 3, "receive_res": "Y"}
-        assert not validate_trade(t, {"X": 10, "Y": 5}, {"X": 5, "Y": 10})
+        assert not validate_proposal(t, {"X": 10, "Y": 5})
 
-    def test_insufficient_responder(self):
+    def test_responder_not_checked(self):
+        """Proposal is valid even if responder can't afford — private info."""
         t = {"type": "propose", "give_qty": 3, "give_res": "X",
-             "receive_qty": 15, "receive_res": "Y"}
-        assert not validate_trade(t, {"X": 10, "Y": 5}, {"X": 5, "Y": 10})
+             "receive_qty": 50, "receive_res": "Y"}
+        assert validate_proposal(t, {"X": 10, "Y": 5})
 
 
 class TestTradeExecution:
