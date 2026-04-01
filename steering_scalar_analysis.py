@@ -878,7 +878,8 @@ def print_game_summary(results: List[Dict]):
 
     print()
     print("  Columns: BL = baseline (no steering), ST = steered, Cpd = compound payoff (acc × offer %)")
-    print(f"  Dimensions: {dims_sorted}   Layer: {LAYER_GAME}")
+    layer_used = results[0].get("layer", "?") if results else "?"
+    print(f"  Dimensions: {dims_sorted}   Layer: {layer_used}")
     print(f"  Methods: A=additive (current), B=norm_preserving, C=angular")
 
 
@@ -888,6 +889,14 @@ def print_game_summary(results: List[Dict]):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--model", type=str, default=MODEL_KEY,
+                        help=f"Model key from MODELS registry (default: {MODEL_KEY})")
+    parser.add_argument("--eval-layers", nargs="+", type=int, default=None,
+                        help="Layers to analyse geometrically (default: [10,12,14] for 7B, auto-scaled for others)")
+    parser.add_argument("--alpha-max", type=int, default=50,
+                        help="Absolute max for alpha sweep (default: 50; use e.g. 1500 for 32B)")
+    parser.add_argument("--alpha-step", type=int, default=1,
+                        help="Step size for alpha sweep (default: 1; use e.g. 10 for wide sweeps)")
     parser.add_argument("--skip-games", action="store_true",
                         help="Skip Part 4 (no UG games; only geometric analysis)")
     parser.add_argument("--n-games", type=int, default=DEFAULT_N_GAMES,
@@ -896,8 +905,8 @@ def main():
                         help="Dimensions to run games on")
     parser.add_argument("--alphas-game", nargs="+", type=float, default=ALPHAS_GAME,
                         help="Alphas to use in Part 4 games")
-    parser.add_argument("--layer", type=int, default=LAYER_GAME,
-                        help="Layer for Part 4 game experiments")
+    parser.add_argument("--layer", type=int, default=None,
+                        help="Layer for Part 4 game experiments (default: LAYER_GAME, auto-scaled for non-7B models)")
     parser.add_argument("--output", type=str, default=None,
                         help="Save Part 4 game results to JSON file")
     parser.add_argument("--quantize", action="store_true", default=True,
@@ -907,13 +916,15 @@ def main():
 
     t0 = time.time()
 
+    alphas_sweep = list(range(-args.alpha_max, args.alpha_max + 1, args.alpha_step))
+
     # ── Model alias ────────────────────────────────────────────────────────
-    model_info  = MODELS[MODEL_KEY]
+    model_info  = MODELS[args.model]
     model_alias = model_info.alias   # e.g. "qwen2.5-7b"
 
     print(f"\n{'═'*70}")
     print(f"{BLD}  Activation Steering Scalar Analysis{RST}")
-    print(f"  Model  : {MODEL_KEY}  ({model_alias})")
+    print(f"  Model  : {args.model}  ({model_alias})")
     print(f"  Variant: {VARIANT}")
     print(f"  Method : {METHOD}")
     print(f"{'═'*70}")
@@ -931,12 +942,41 @@ def main():
     model_kwargs = dict(trust_remote_code=True, device_map="auto")
     if HF_TOKEN:
         model_kwargs["token"] = HF_TOKEN
-    if args.quantize and torch.cuda.is_available():
-        from transformers import BitsAndBytesConfig
-        model_kwargs["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
-    model = AutoModelForCausalLM.from_pretrained(hf_id, **model_kwargs)
+    if args.model.endswith("-gptq"):
+        # GPTQ models are already quantized; use auto-gptq loader to avoid
+        # optimum version bugs with BitsAndBytesConfig stacking.
+        from auto_gptq import AutoGPTQForCausalLM
+        _gptq_wrapper = AutoGPTQForCausalLM.from_quantized(
+            hf_id, use_safetensors=True, device="cuda:0",
+            trust_remote_code=True,
+            **({"token": HF_TOKEN} if HF_TOKEN else {}),
+        )
+        # auto-gptq wraps the model; unwrap to standard HF CausalLM so that
+        # get_transformer_layers() and hook registration work identically.
+        model = _gptq_wrapper.model
+    else:
+        if args.quantize and torch.cuda.is_available():
+            from transformers import BitsAndBytesConfig
+            model_kwargs["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
+        model = AutoModelForCausalLM.from_pretrained(hf_id, **model_kwargs)
     model.eval()
-    print(f"  Model loaded on {device}. n_layers = {len(get_transformer_layers(model))}")
+    n_layers = len(get_transformer_layers(model))
+    print(f"  Model loaded on {device}. n_layers = {n_layers}")
+
+    # ── Resolve layer lists (auto-scale relative to 7B baseline of 28 layers) ─
+    if args.eval_layers is not None:
+        layers_eval = args.eval_layers
+    else:
+        # Scale 7B reference layers [10, 12, 14] (out of 28) proportionally
+        ref_layers   = [10, 12, 14]
+        ref_n_layers = 28
+        layers_eval  = [round(l / ref_n_layers * n_layers) for l in ref_layers]
+        if n_layers != ref_n_layers:
+            print(f"  Auto-scaled eval layers: {ref_layers} (7B/28) → {layers_eval} ({model_alias}/{n_layers})")
+
+    layer_game = args.layer if args.layer is not None else round(LAYER_GAME / 28 * n_layers) if n_layers != 28 else LAYER_GAME
+    if n_layers != 28 and args.layer is None:
+        print(f"  Auto-scaled game layer : {LAYER_GAME} (7B/28) → {layer_game} ({model_alias}/{n_layers})")
 
     # ── Calibration texts ──────────────────────────────────────────────────
     calib_texts = [
@@ -952,23 +992,23 @@ def main():
     print(f"{BLD}PART 1 — Geometric Analysis of Activation Norms{RST}")
     print(f"{'═'*70}")
     calib_stats = calibrate_activation_norms(
-        model, tokenizer, LAYERS_EVAL, calib_texts, device
+        model, tokenizer, layers_eval, calib_texts, device
     )
 
     # Run full geo analysis for a representative subset of dimensions
     DIMS_GEO = ["firmness", "empathy", "flattery"]
     geo_results = run_geometric_analysis(
-        calib_stats, model_alias, DIMS_GEO, LAYERS_EVAL, ALPHAS_SWEEP
+        calib_stats, model_alias, DIMS_GEO, layers_eval, alphas_sweep
     )
 
     # Print concise table at ALPHAS_STANDARD
     print(f"\n{BLD}Activation norm statistics per layer:{RST}")
-    for l in LAYERS_EVAL:
+    for l in layers_eval:
         s = calib_stats.get(l, {})
         print(f"  Layer {l:2d}: E[‖h‖] = {s.get('mean_norm',0):.2f}  ±  {s.get('std_norm',0):.2f}")
 
     # ── Save geo results to JSON for the plotter ──────────────────────────
-    geo_export_path = ROOT / "results" / "scalar_analysis_geo.json"
+    geo_export_path = ROOT / "results" / f"scalar_analysis_geo_{model_alias}_a{args.alpha_max}.json"
     geo_export_path.parent.mkdir(parents=True, exist_ok=True)
     geo_export = {}
     for dim, layer_data in geo_results.items():
@@ -988,17 +1028,17 @@ def main():
     print(f"\n  [Saved geo results to {geo_export_path}]")
 
     # ── Part 2: Scalar justification ───────────────────────────────────────
-    print_scalar_justification(geo_results, DIMS_GEO, LAYERS_EVAL)
+    print_scalar_justification(geo_results, DIMS_GEO, layers_eval)
 
-    # Full sweep for firmness/L10 to show safe boundary
-    print_full_sweep_table(geo_results, "firmness", LAYER_GAME, ALPHAS_SWEEP)
-    print_full_sweep_table(geo_results, "empathy",  LAYER_GAME, ALPHAS_SWEEP)
+    # Full sweep for firmness/layer_game to show safe boundary
+    print_full_sweep_table(geo_results, "firmness", layer_game, alphas_sweep)
+    print_full_sweep_table(geo_results, "empathy",  layer_game, alphas_sweep)
 
     # ── Part 3: Three methods geometry ─────────────────────────────────────
     print_method_comparison(
         calib_stats, model_alias,
         dims=DIMS_GEO,
-        layers=LAYERS_EVAL,
+        layers=layers_eval,
         alphas=ALPHAS_STANDARD,
     )
 
@@ -1018,7 +1058,7 @@ def main():
         print(f"\n{'═'*70}")
         print(f"{BLD}PART 4 — Mini Ultimatum Game Comparison{RST}")
         print(f"  Dimensions: {args.dims}")
-        print(f"  Layer     : {args.layer}")
+        print(f"  Layer     : {layer_game}")
         print(f"  Alphas    : {args.alphas_game}")
         print(f"  Methods   : additive, norm_preserving, angular")
         print(f"  N games   : {args.n_games} per config")
@@ -1029,7 +1069,7 @@ def main():
             calib_stats=calib_stats,
             model_alias=model_alias,
             dims=args.dims,
-            layer=args.layer,
+            layer=layer_game,
             alphas=args.alphas_game,
             methods=["additive", "norm_preserving", "angular"],
             n_games=args.n_games,

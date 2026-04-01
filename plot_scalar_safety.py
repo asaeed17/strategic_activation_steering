@@ -767,6 +767,18 @@ def main():
         default=[1, 2, 3, 4, 5, 6],
         help="Which figures to produce (default: all 1–6)",
     )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=None,
+        help="Directory to save figures (default: results/scalar_safety_plots/)",
+    )
+    parser.add_argument(
+        "--xlim",
+        type=float,
+        default=None,
+        help="Clip x-axis to ±xlim in all plots (e.g. --xlim 200 to zoom in)",
+    )
     args = parser.parse_args()
 
     if not args.json.exists():
@@ -774,6 +786,8 @@ def main():
         print("Run first:  python steering_scalar_analysis.py --skip-games")
         sys.exit(1)
 
+    if args.output_dir is not None:
+        OUT_DIR = args.output_dir
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     show = not args.no_show
 
@@ -785,6 +799,10 @@ def main():
           f"layers={sorted(int(l) for l in next(iter(geo.values())).keys())}  |  "
           f"alphas: [{min(r['alpha'] for r in records):.0f}, "
           f"{max(r['alpha'] for r in records):.0f}]")
+
+    if args.xlim is not None:
+        records = [r for r in records if abs(r["alpha"]) <= args.xlim]
+        print(f"  x-axis clipped to ±{args.xlim}  →  {len(records):,} records remaining")
 
     calib_mean = np.mean([v["mean_norm"] for v in calib.values()])
     print(f"  Calibration E[‖h‖] ≈ {calib_mean:.1f}")
