@@ -24,7 +24,7 @@ from collections import defaultdict
 # ── Config ──────────────────────────────────────────────────────────────
 BASE_DIR = Path("/Users/moiz/Documents/code/comp0087_snlp_cwk")
 UG_DIR = BASE_DIR / "results/ultimatum/confirmatory/ug"
-UG_V2_DIR = BASE_DIR / "results/ultimatum/confirmatory_v2/ug_pos_empathy"
+UG_V2_DIR = BASE_DIR / "results/ultimatum/llm_vs_llm/ug_pos_empathy"
 OUTPUT_FILE = BASE_DIR / "results/ultimatum/phase_c_analytical_payoff.json"
 
 BIN_WIDTH = 5  # percentage points per bin

@@ -26,9 +26,9 @@ from scipy import stats
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 UG_DIR = PROJECT_ROOT / "results" / "ultimatum" / "confirmatory" / "ug"
-UG_POS_EMPATHY_DIR = PROJECT_ROOT / "results" / "ultimatum" / "confirmatory_v2" / "ug_pos_empathy"
-DG_FIRMNESS_DIR = PROJECT_ROOT / "results" / "ultimatum" / "confirmatory_v2" / "dg"
-DG_EMPATHY_DIR = PROJECT_ROOT / "results" / "ultimatum" / "confirmatory_v2" / "dg_empathy"
+UG_POS_EMPATHY_DIR = PROJECT_ROOT / "results" / "ultimatum" / "llm_vs_llm" / "ug_pos_empathy"
+DG_FIRMNESS_DIR = PROJECT_ROOT / "results" / "ultimatum" / "llm_vs_llm" / "dg"
+DG_EMPATHY_DIR = PROJECT_ROOT / "results" / "ultimatum" / "llm_vs_llm" / "dg_empathy"
 ACCEPTANCE_CURVE_FILE = PROJECT_ROOT / "results" / "ultimatum" / "acceptance_curve" / "acceptance_curve.json"
 PHASE_C_FILE = PROJECT_ROOT / "results" / "ultimatum" / "phase_c_analytical_payoff.json"
 
