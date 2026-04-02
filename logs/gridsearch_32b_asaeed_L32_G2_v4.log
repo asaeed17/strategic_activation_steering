@@ -1,0 +1,125 @@
+==> Layer 32, Group 2: empathy
+==> Skipping proposer/empathy on Layer 32 (already complete)
+==> Running responder/empathy on Layer 32
+13:23:13  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=empathy | role=responder
+13:23:13  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:410: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:418: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  @custom_bwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+13:23:18  WARNING   CUDA extension not installed.
+13:23:18  WARNING   CUDA extension not installed.
+`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+13:23:20  INFO      We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:35<02:20, 35.07s/it]Loading checkpoint shards:  40%|████      | 2/5 [01:10<01:45, 35.20s/it]Loading checkpoint shards:  60%|██████    | 3/5 [01:45<01:10, 35.09s/it]Loading checkpoint shards:  80%|████████  | 4/5 [02:20<00:35, 35.07s/it]Loading checkpoint shards: 100%|██████████| 5/5 [02:51<00:00, 33.64s/it]Loading checkpoint shards: 100%|██████████| 5/5 [02:51<00:00, 34.29s/it]
+13:26:11  INFO      number_of_layers=64
+13:26:11  INFO      Computing baseline (alpha=0, 50 games, rulebased)...
+13:29:28  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+0.0
+13:32:09  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+0.0
+13:35:01  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=+0.0
+13:37:57  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=+0.0
+13:41:13  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=+0.0
+13:44:03  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=+0.0
+13:46:53  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=+0.0
+13:49:23  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=+0.0
+13:52:08  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=+0.0
+13:55:11  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=+0.0
+13:58:00  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=+0.0
+14:01:05  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=+0.0
+14:04:39  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=+0.0
+14:07:35  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=+0.0
+14:10:05  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=+0.0
+14:12:55  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=+0.0
+14:15:30  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=+0.0
+14:18:14  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=+0.0
+14:20:42  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=+0.0
+14:23:17  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=+0.0
+14:26:04  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=+0.0
+14:28:51  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=+0.0
+14:31:38  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=+0.0
+14:35:01  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=+0.0
+14:37:48  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=+0.0
+14:40:38  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=+0.0
+14:43:19  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=+0.0
+14:47:32  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=+0.0
+14:50:05  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=+0.0
+14:52:48  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=+0.0
+14:55:42  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=+0.0
+14:58:26  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=+0.0
+15:00:51  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=+0.0
+15:04:07  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=+0.0
+15:06:57  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=+0.0
+15:10:10  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=+0.0
+15:12:56  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=+0.0
+15:16:41  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=+0.0
+15:19:18  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=+0.0
+15:21:53  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=+0.0
+15:24:42  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=+0.0
+15:27:27  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=+0.0
+15:30:42  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=+0.0
+15:34:18  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=+0.0
+15:37:19  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=+0.0
+15:40:06  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=+0.0
+15:43:08  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=+0.0
+15:46:22  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=+0.0
+15:49:30  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=+0.0
+15:52:01  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=+0.0
+15:52:01  INFO      Baseline computed.
+15:52:01  INFO      Stage 2 (coarse alpha search): alphas=[-5.0, 5.0, 15.0]
+15:52:01  INFO        -> Optimizing for Expected Direction: Increase metric
+15:55:43  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=-5.0
+15:58:49  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=-5.0
+16:01:46  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=-5.0
+16:04:30  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=-5.0
+16:08:07  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=-5.0
+16:11:27  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=-5.0
+16:14:27  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=-5.0
+16:17:11  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=-5.0
+16:19:37  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=-5.0
+16:22:36  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=-5.0
+16:25:21  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=-5.0
+16:28:15  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=-5.0
+16:31:10  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=-5.0
+16:33:57  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=-5.0
+16:36:45  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=-5.0
+16:39:14  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=-5.0
+16:41:56  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=-5.0
+16:44:37  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=-5.0
+16:47:58  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=-5.0
+16:50:38  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=-5.0
+16:53:01  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=-5.0
+16:55:35  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=-5.0
+16:58:59  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=-5.0
+17:01:49  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=-5.0
+17:04:36  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=-5.0
+17:07:15  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=-5.0
+17:10:09  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=-5.0
+17:13:29  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=-5.0
+17:16:06  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=-5.0
+17:18:50  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=-5.0
+17:21:41  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=-5.0
+17:24:21  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=-5.0
+17:27:16  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=-5.0
+17:30:26  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=-5.0
+17:33:11  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=-5.0
+17:35:54  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=-5.0
+17:39:13  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=-5.0
+17:42:35  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=-5.0
+17:45:38  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=-5.0
+17:48:31  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=-5.0
+17:51:57  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=-5.0
+17:55:09  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=-5.0
+17:57:55  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=-5.0
+18:01:15  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=-5.0
+18:04:03  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=-5.0
+18:06:37  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=-5.0
+18:09:51  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=-5.0
+18:12:32  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=-5.0
+18:15:31  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=-5.0
+18:17:46  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=-5.0
+18:17:46  INFO        alpha=-5.0 | fitness=+0.00 | valid=100% | raw=100.00
+18:20:53  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+5.0
+18:23:37  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+5.0

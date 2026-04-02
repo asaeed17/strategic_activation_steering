@@ -79,7 +79,7 @@ POOL_SIZES = [
 ]
 
 # Threshold sweep for --rulebased responder mode: what fraction of pool goes to the responder
-RESPONDER_THRESHOLDS = [0.20, 0.40, 0.60, 0.80]
+RESPONDER_THRESHOLDS = [0.10, 0.15, 0.20, 0.40, 0.60, 0.80]
 
 _OFFER_RE  = re.compile(r"OFFER\s*=\s*(\d+)\s*,\s*(\d+)", re.IGNORECASE)
 _ACCEPT_RE = re.compile(r"\bACCEPT\b", re.IGNORECASE)

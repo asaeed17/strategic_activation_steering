@@ -482,14 +482,12 @@ def main() -> None:
         tokenizer.pad_token = tokenizer.eos_token
 
     if model_config.is_gptq:
-        from auto_gptq import AutoGPTQForCausalLM
-        n_gpus = torch.cuda.device_count()
-        max_memory = {i: "22GiB" for i in range(n_gpus)}
-        model = AutoGPTQForCausalLM.from_quantized(
+        from transformers import AutoModelForCausalLM as _AutoModel
+        model = _AutoModel.from_pretrained(
             model_config.hf_id,
-            use_safetensors=True,
             device_map="auto",
-            max_memory=max_memory,
+            torch_dtype=torch.float16,
+            low_cpu_mem_usage=True,
             trust_remote_code=False,
         )
     else:
