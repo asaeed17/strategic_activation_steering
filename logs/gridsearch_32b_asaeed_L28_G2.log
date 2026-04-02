@@ -1,0 +1,1621 @@
+==> Layer 28, Group 2: greed fairness_norm flattery
+==> Running proposer/greed on Layer 28
+05:43:27  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=greed | role=proposer
+05:43:27  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:410: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:418: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  @custom_bwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+05:43:32  WARNING   CUDA extension not installed.
+05:43:32  WARNING   CUDA extension not installed.
+`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+05:43:34  INFO      We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [04:11<16:46, 251.52s/it]Loading checkpoint shards:  40%|████      | 2/5 [08:45<13:13, 264.59s/it]Loading checkpoint shards:  60%|██████    | 3/5 [12:34<08:16, 248.31s/it]Loading checkpoint shards:  80%|████████  | 4/5 [13:24<02:49, 169.96s/it]Loading checkpoint shards: 100%|██████████| 5/5 [13:54<00:00, 119.54s/it]Loading checkpoint shards: 100%|██████████| 5/5 [13:54<00:00, 166.84s/it]
+05:57:29  INFO      number_of_layers=64
+05:57:29  INFO      Computing baseline (alpha=0, 50 games, rulebased)...
+05:58:20  INFO      [G001] pool=$065  offer=33/32 (51%)  ACCEPT  α=+0.0
+05:58:58  INFO      [G002] pool=$063  offer=39/24 (62%)  ACCEPT  α=+0.0
+05:59:37  INFO      [G003] pool=$059  offer=35/24 (59%)  ACCEPT  α=+0.0
+06:00:16  INFO      [G004] pool=$050  offer=30/20 (60%)  ACCEPT  α=+0.0
+06:00:59  INFO      [G005] pool=$041  offer=19/22 (46%)  ACCEPT  α=+0.0
+06:01:43  INFO      [G006] pool=$089  offer=43/46 (48%)  ACCEPT  α=+0.0
+06:02:20  INFO      [G007] pool=$066  offer=40/26 (61%)  ACCEPT  α=+0.0
+06:03:07  INFO      [G008] pool=$048  offer=29/19 (60%)  ACCEPT  α=+0.0
+06:04:03  INFO      [G009] pool=$071  offer=37/34 (52%)  ACCEPT  α=+0.0
+06:04:44  INFO      [G010] pool=$056  offer=30/26 (54%)  ACCEPT  α=+0.0
+06:05:35  INFO      [G011] pool=$073  offer=38/35 (52%)  ACCEPT  α=+0.0
+06:06:22  INFO      [G012] pool=$061  offer=34/27 (56%)  ACCEPT  α=+0.0
+06:06:59  INFO      [G013] pool=$051  offer=20/31 (39%)  ACCEPT  α=+0.0
+06:07:42  INFO      [G014] pool=$040  offer=15/25 (38%)  ACCEPT  α=+0.0
+06:08:20  INFO      [G015] pool=$081  offer=30/51 (37%)  ACCEPT  α=+0.0
+06:08:57  INFO      [G016] pool=$080  offer=50/30 (62%)  ACCEPT  α=+0.0
+06:09:33  INFO      [G017] pool=$049  offer=24/25 (49%)  ACCEPT  α=+0.0
+06:10:31  INFO      [G018] pool=$064  offer=40/24 (62%)  ACCEPT  α=+0.0
+06:11:22  INFO      [G019] pool=$077  offer=40/37 (52%)  ACCEPT  α=+0.0
+06:12:07  INFO      [G020] pool=$037  offer=20/17 (54%)  ACCEPT  α=+0.0
+06:12:47  INFO      [G021] pool=$086  offer=34/52 (40%)  ACCEPT  α=+0.0
+06:13:24  INFO      [G022] pool=$058  offer=30/28 (52%)  ACCEPT  α=+0.0
+06:14:09  INFO      [G023] pool=$075  offer=35/40 (47%)  ACCEPT  α=+0.0
+06:14:54  INFO      [G024] pool=$092  offer=45/47 (49%)  ACCEPT  α=+0.0
+06:15:39  INFO      [G025] pool=$083  offer=40/43 (48%)  ACCEPT  α=+0.0
+06:16:22  INFO      [G026] pool=$072  offer=30/42 (42%)  ACCEPT  α=+0.0
+06:17:18  INFO      [G027] pool=$070  offer=40/30 (57%)  ACCEPT  α=+0.0
+06:18:11  INFO      [G028] pool=$060  offer=35/25 (58%)  ACCEPT  α=+0.0
+06:18:56  INFO      [G029] pool=$062  offer=30/32 (48%)  ACCEPT  α=+0.0
+06:19:34  INFO      [G030] pool=$085  offer=34/51 (40%)  ACCEPT  α=+0.0
+06:20:11  INFO      [G031] pool=$090  offer=75/15 (83%)  REJECT  α=+0.0
+06:20:54  INFO      [G032] pool=$078  offer=45/33 (58%)  ACCEPT  α=+0.0
+06:21:51  INFO      [G033] pool=$074  offer=40/34 (54%)  ACCEPT  α=+0.0
+06:22:36  INFO      [G034] pool=$087  offer=42/45 (48%)  ACCEPT  α=+0.0
+06:23:13  INFO      [G035] pool=$052  offer=28/24 (54%)  ACCEPT  α=+0.0
+06:23:58  INFO      [G036] pool=$093  offer=45/48 (48%)  ACCEPT  α=+0.0
+06:24:40  INFO      [G037] pool=$091  offer=50/41 (55%)  ACCEPT  α=+0.0
+06:25:30  INFO      [G038] pool=$039  offer=25/14 (64%)  ACCEPT  α=+0.0
+06:26:14  INFO      [G039] pool=$068  offer=35/33 (51%)  ACCEPT  α=+0.0
+06:26:59  INFO      [G040] pool=$079  offer=38/41 (48%)  ACCEPT  α=+0.0
+06:27:41  INFO      [G041] pool=$042  offer=14/28 (33%)  ACCEPT  α=+0.0
+06:28:31  INFO      [G042] pool=$076  offer=40/36 (53%)  ACCEPT  α=+0.0
+06:29:16  INFO      [G043] pool=$043  offer=21/22 (49%)  ACCEPT  α=+0.0
+06:29:56  INFO      [G044] pool=$047  offer=23/24 (49%)  ACCEPT  α=+0.0
+06:30:38  INFO      [G045] pool=$054  offer=20/34 (37%)  ACCEPT  α=+0.0
+06:31:30  INFO      [G046] pool=$055  offer=28/27 (51%)  ACCEPT  α=+0.0
+06:32:09  INFO      [G047] pool=$057  offer=34/23 (60%)  ACCEPT  α=+0.0
+06:33:00  INFO      [G048] pool=$038  offer=20/18 (53%)  ACCEPT  α=+0.0
+06:33:43  INFO      [G049] pool=$044  offer=15/29 (34%)  ACCEPT  α=+0.0
+06:34:22  INFO      [G050] pool=$082  offer=41/41 (50%)  ACCEPT  α=+0.0
+06:34:22  INFO      Baseline computed.
+06:34:22  INFO      Stage 2 (coarse alpha search): alphas=[-5.0, 5.0, 15.0]
+06:34:22  INFO        -> Optimizing for Expected Direction: Increase metric
+06:35:05  INFO      [G001] pool=$065  offer=33/32 (51%)  ACCEPT  α=-5.0
+06:35:53  INFO      [G002] pool=$063  offer=38/25 (60%)  ACCEPT  α=-5.0
+06:36:36  INFO      [G003] pool=$059  offer=30/29 (51%)  ACCEPT  α=-5.0
+06:37:24  INFO      [G004] pool=$050  offer=25/25 (50%)  ACCEPT  α=-5.0
+06:38:14  INFO      [G005] pool=$041  offer=21/20 (51%)  ACCEPT  α=-5.0
+06:38:54  INFO      [G006] pool=$089  offer=53/36 (60%)  ACCEPT  α=-5.0
+06:39:46  INFO      [G007] pool=$066  offer=34/32 (52%)  ACCEPT  α=-5.0
+06:40:29  INFO      [G008] pool=$048  offer=29/19 (60%)  ACCEPT  α=-5.0
+06:41:12  INFO      [G009] pool=$071  offer=39/32 (55%)  ACCEPT  α=-5.0
+06:42:04  INFO      [G010] pool=$056  offer=30/26 (54%)  ACCEPT  α=-5.0
+06:42:51  INFO      [G011] pool=$073  offer=40/33 (55%)  ACCEPT  α=-5.0
+06:43:43  INFO      [G012] pool=$061  offer=32/29 (52%)  ACCEPT  α=-5.0
+06:44:23  INFO      [G013] pool=$051  offer=26/25 (51%)  ACCEPT  α=-5.0
+06:45:05  INFO      [G014] pool=$040  offer=15/25 (38%)  ACCEPT  α=-5.0
+06:45:49  INFO      [G015] pool=$081  offer=50/31 (62%)  ACCEPT  α=-5.0
+06:46:40  INFO      [G016] pool=$080  offer=45/35 (56%)  ACCEPT  α=-5.0
+06:47:23  INFO      [G017] pool=$049  offer=26/23 (53%)  ACCEPT  α=-5.0
+06:48:14  INFO      [G018] pool=$064  offer=33/31 (52%)  ACCEPT  α=-5.0
+06:49:09  INFO      [G019] pool=$077  offer=45/32 (58%)  ACCEPT  α=-5.0
+06:49:51  INFO      [G020] pool=$037  offer=20/17 (54%)  ACCEPT  α=-5.0
+06:50:28  INFO      [G021] pool=$086  offer=34/52 (40%)  ACCEPT  α=-5.0
+06:51:10  INFO      [G022] pool=$058  offer=30/28 (52%)  ACCEPT  α=-5.0
+06:51:55  INFO      [G023] pool=$075  offer=35/40 (47%)  ACCEPT  α=-5.0
+06:52:32  INFO      [G024] pool=$092  offer=50/42 (54%)  ACCEPT  α=-5.0
+06:53:19  INFO      [G025] pool=$083  offer=50/33 (60%)  ACCEPT  α=-5.0
+06:54:11  INFO      [G026] pool=$072  offer=38/34 (53%)  ACCEPT  α=-5.0
+06:55:07  INFO      [G027] pool=$070  offer=40/30 (57%)  ACCEPT  α=-5.0
+06:55:51  INFO      [G028] pool=$060  offer=32/28 (53%)  ACCEPT  α=-5.0
+06:56:37  INFO      [G029] pool=$062  offer=32/30 (52%)  ACCEPT  α=-5.0
+06:57:22  INFO      [G030] pool=$085  offer=41/44 (48%)  ACCEPT  α=-5.0
+06:58:01  INFO      [G031] pool=$090  offer=60/30 (67%)  REJECT  α=-5.0
+06:58:45  INFO      [G032] pool=$078  offer=30/48 (38%)  ACCEPT  α=-5.0
+06:59:36  INFO      [G033] pool=$074  offer=38/36 (51%)  ACCEPT  α=-5.0
+07:00:14  INFO      [G034] pool=$087  offer=35/52 (40%)  ACCEPT  α=-5.0
+07:00:54  INFO      [G035] pool=$052  offer=24/28 (46%)  ACCEPT  α=-5.0
+07:01:33  INFO      [G036] pool=$093  offer=50/43 (54%)  ACCEPT  α=-5.0
+07:02:11  INFO      [G037] pool=$091  offer=50/41 (55%)  ACCEPT  α=-5.0
+07:02:56  INFO      [G038] pool=$039  offer=18/21 (46%)  ACCEPT  α=-5.0
+07:03:48  INFO      [G039] pool=$068  offer=35/33 (51%)  ACCEPT  α=-5.0
+07:04:26  INFO      [G040] pool=$079  offer=39/40 (49%)  ACCEPT  α=-5.0
+07:05:06  INFO      [G041] pool=$042  offer=28/14 (67%)  REJECT  α=-5.0
+07:05:54  INFO      [G042] pool=$076  offer=45/31 (59%)  ACCEPT  α=-5.0
+07:06:39  INFO      [G043] pool=$043  offer=21/22 (49%)  ACCEPT  α=-5.0
+07:07:31  INFO      [G044] pool=$047  offer=25/22 (53%)  ACCEPT  α=-5.0
+07:08:17  INFO      [G045] pool=$054  offer=36/18 (67%)  REJECT  α=-5.0
+07:09:09  INFO      [G046] pool=$055  offer=30/25 (55%)  ACCEPT  α=-5.0
+07:10:00  INFO      [G047] pool=$057  offer=30/27 (53%)  ACCEPT  α=-5.0
+07:10:50  INFO      [G048] pool=$038  offer=20/18 (53%)  ACCEPT  α=-5.0
+07:11:33  INFO      [G049] pool=$044  offer=23/21 (52%)  ACCEPT  α=-5.0
+07:12:18  INFO      [G050] pool=$082  offer=40/42 (49%)  ACCEPT  α=-5.0
+07:12:18  INFO        alpha=-5.0 | fitness=+1.52 | valid=100% | raw=52.87
+07:12:55  INFO      [G001] pool=$065  offer=25/40 (38%)  ACCEPT  α=+5.0
+07:13:27  INFO      [G002] pool=$063  offer=31/32 (49%)  ACCEPT  α=+5.0
+07:14:07  INFO      [G003] pool=$059  offer=23/36 (39%)  ACCEPT  α=+5.0
+07:14:44  INFO      [G004] pool=$050  offer=15/35 (30%)  ACCEPT  α=+5.0
+07:15:24  INFO      [G005] pool=$041  offer=20/21 (49%)  ACCEPT  α=+5.0
+07:16:04  INFO      [G006] pool=$089  offer=35/54 (39%)  ACCEPT  α=+5.0
+07:16:43  INFO      [G007] pool=$066  offer=32/34 (48%)  ACCEPT  α=+5.0
+07:17:20  INFO      [G008] pool=$048  offer=38/10 (79%)  REJECT  α=+5.0
+07:18:05  INFO      [G009] pool=$071  offer=34/37 (48%)  ACCEPT  α=+5.0
+07:18:46  INFO      [G010] pool=$056  offer=22/34 (39%)  ACCEPT  α=+5.0
+07:19:27  INFO      [G011] pool=$073  offer=35/38 (48%)  ACCEPT  α=+5.0
+07:20:10  INFO      [G012] pool=$061  offer=32/29 (52%)  ACCEPT  α=+5.0
+07:20:50  INFO      [G013] pool=$051  offer=26/25 (51%)  ACCEPT  α=+5.0
+07:21:35  INFO      [G014] pool=$040  offer=18/22 (45%)  ACCEPT  α=+5.0
+07:22:12  INFO      [G015] pool=$081  offer=35/46 (43%)  ACCEPT  α=+5.0
+07:22:49  INFO      [G016] pool=$080  offer=30/50 (38%)  ACCEPT  α=+5.0
+07:23:29  INFO      [G017] pool=$049  offer=15/34 (31%)  ACCEPT  α=+5.0
+07:24:06  INFO      [G018] pool=$064  offer=40/24 (62%)  ACCEPT  α=+5.0
+07:24:49  INFO      [G019] pool=$077  offer=40/37 (52%)  ACCEPT  α=+5.0
+07:25:35  INFO      [G020] pool=$037  offer=20/17 (54%)  ACCEPT  α=+5.0
+07:26:13  INFO      [G021] pool=$086  offer=34/52 (40%)  ACCEPT  α=+5.0
+07:26:50  INFO      [G022] pool=$058  offer=20/38 (34%)  ACCEPT  α=+5.0
+07:27:27  INFO      [G023] pool=$075  offer=45/30 (60%)  ACCEPT  α=+5.0
+07:28:06  INFO      [G024] pool=$092  offer=36/56 (39%)  ACCEPT  α=+5.0
+07:28:44  INFO      [G025] pool=$083  offer=33/50 (40%)  ACCEPT  α=+5.0
+07:29:21  INFO      [G026] pool=$072  offer=28/44 (39%)  ACCEPT  α=+5.0
+07:29:58  INFO      [G027] pool=$070  offer=25/45 (36%)  ACCEPT  α=+5.0
+07:30:48  INFO      [G028] pool=$060  offer=32/28 (53%)  ACCEPT  α=+5.0
+07:31:34  INFO      [G029] pool=$062  offer=30/32 (48%)  ACCEPT  α=+5.0
+07:32:18  INFO      [G030] pool=$085  offer=35/50 (41%)  ACCEPT  α=+5.0
+07:32:55  INFO      [G031] pool=$090  offer=30/60 (33%)  ACCEPT  α=+5.0
+07:33:38  INFO      [G032] pool=$078  offer=47/31 (60%)  ACCEPT  α=+5.0
+07:34:18  INFO      [G033] pool=$074  offer=30/44 (41%)  ACCEPT  α=+5.0
+07:34:55  INFO      [G034] pool=$087  offer=43/44 (49%)  ACCEPT  α=+5.0
+07:35:38  INFO      [G035] pool=$052  offer=27/25 (52%)  ACCEPT  α=+5.0
+07:36:17  INFO      [G036] pool=$093  offer=50/43 (54%)  ACCEPT  α=+5.0
+07:37:03  INFO      [G037] pool=$091  offer=45/46 (49%)  ACCEPT  α=+5.0
+07:37:41  INFO      [G038] pool=$039  offer=20/19 (51%)  ACCEPT  α=+5.0
+07:38:20  INFO      [G039] pool=$068  offer=27/41 (40%)  ACCEPT  α=+5.0
+07:38:58  INFO      [G040] pool=$079  offer=39/40 (49%)  ACCEPT  α=+5.0
+07:39:35  INFO      [G041] pool=$042  offer=14/28 (33%)  ACCEPT  α=+5.0
+07:40:19  INFO      [G042] pool=$076  offer=40/36 (53%)  ACCEPT  α=+5.0
+07:41:05  INFO      [G043] pool=$043  offer=21/22 (49%)  ACCEPT  α=+5.0
+07:41:46  INFO      [G044] pool=$047  offer=28/19 (60%)  ACCEPT  α=+5.0
+07:42:31  INFO      [G045] pool=$054  offer=26/28 (48%)  ACCEPT  α=+5.0
+07:43:16  INFO      [G046] pool=$055  offer=27/28 (49%)  ACCEPT  α=+5.0
+07:43:56  INFO      [G047] pool=$057  offer=28/29 (49%)  ACCEPT  α=+5.0
+07:44:40  INFO      [G048] pool=$038  offer=24/14 (63%)  ACCEPT  α=+5.0
+07:45:20  INFO      [G049] pool=$044  offer=15/29 (34%)  ACCEPT  α=+5.0
+07:46:00  INFO      [G050] pool=$082  offer=30/52 (37%)  ACCEPT  α=+5.0
+07:46:00  INFO        alpha=+5.0 | fitness=-4.96 | valid=100% | raw=46.40
+07:46:38  INFO      [G001] pool=$065  offer=25/40 (38%)  ACCEPT  α=+15.0
+07:47:17  INFO      [G002] pool=$063  offer=25/38 (40%)  ACCEPT  α=+15.0
+07:47:55  INFO      [G003] pool=$059  offer=35/24 (59%)  ACCEPT  α=+15.0
+07:48:32  INFO      [G004] pool=$050  offer=15/35 (30%)  ACCEPT  α=+15.0
+07:49:12  INFO      [G005] pool=$041  offer=19/22 (46%)  ACCEPT  α=+15.0
+07:49:51  INFO      [G006] pool=$089  offer=35/54 (39%)  ACCEPT  α=+15.0
+07:50:31  INFO      [G007] pool=$066  offer=22/44 (33%)  ACCEPT  α=+15.0
+07:51:10  INFO      [G008] pool=$048  offer=18/30 (38%)  ACCEPT  α=+15.0
+07:51:49  INFO      [G009] pool=$071  offer=30/41 (42%)  ACCEPT  α=+15.0
+07:52:29  INFO      [G010] pool=$056  offer=22/34 (39%)  ACCEPT  α=+15.0
+07:53:09  INFO      [G011] pool=$073  offer=30/43 (41%)  ACCEPT  α=+15.0
+07:53:48  INFO      [G012] pool=$061  offer=30/31 (49%)  ACCEPT  α=+15.0
+07:54:28  INFO      [G013] pool=$051  offer=30/21 (59%)  ACCEPT  α=+15.0
+07:55:08  INFO      [G014] pool=$040  offer=15/25 (38%)  ACCEPT  α=+15.0
+07:55:47  INFO      [G015] pool=$081  offer=30/51 (37%)  ACCEPT  α=+15.0
+07:56:26  INFO      [G016] pool=$080  offer=30/50 (38%)  ACCEPT  α=+15.0
+07:57:05  INFO      [G017] pool=$049  offer=35/14 (71%)  REJECT  α=+15.0
+07:57:43  INFO      [G018] pool=$064  offer=25/39 (39%)  ACCEPT  α=+15.0
+07:58:23  INFO      [G019] pool=$077  offer=30/47 (39%)  ACCEPT  α=+15.0
+07:59:02  INFO      [G020] pool=$037  offer=25/12 (68%)  REJECT  α=+15.0
+07:59:36  INFO      [G021] pool=$086  offer=43/43 (50%)  ACCEPT  α=+15.0
+08:00:15  INFO      [G022] pool=$058  offer=20/38 (34%)  ACCEPT  α=+15.0
+08:00:55  INFO      [G023] pool=$075  offer=30/45 (40%)  ACCEPT  α=+15.0
+08:01:35  INFO      [G024] pool=$092  offer=50/42 (54%)  ACCEPT  α=+15.0
+08:02:13  INFO      [G025] pool=$083  offer=50/33 (60%)  ACCEPT  α=+15.0
+08:02:54  INFO      [G026] pool=$072  offer=50/22 (69%)  REJECT  α=+15.0
+08:03:32  INFO      [G027] pool=$070  offer=40/30 (57%)  ACCEPT  α=+15.0
+08:04:10  INFO      [G028] pool=$060  offer=20/40 (33%)  ACCEPT  α=+15.0
+08:04:49  INFO      [G029] pool=$062  offer=24/38 (39%)  ACCEPT  α=+15.0
+08:05:29  INFO      [G030] pool=$085  offer=30/55 (35%)  ACCEPT  α=+15.0
+08:06:08  INFO      [G031] pool=$090  offer=30/60 (33%)  ACCEPT  α=+15.0
+08:06:47  INFO      [G032] pool=$078  offer=30/48 (38%)  ACCEPT  α=+15.0
+08:07:27  INFO      [G033] pool=$074  offer=30/44 (41%)  ACCEPT  α=+15.0
+08:08:06  INFO      [G034] pool=$087  offer=34/53 (39%)  ACCEPT  α=+15.0
+08:08:44  INFO      [G035] pool=$052  offer=20/32 (38%)  ACCEPT  α=+15.0
+08:09:23  INFO      [G036] pool=$093  offer=46/47 (49%)  ACCEPT  α=+15.0
+08:10:03  INFO      [G037] pool=$091  offer=30/61 (33%)  ACCEPT  α=+15.0
+08:10:41  INFO      [G038] pool=$039  offer=25/14 (64%)  ACCEPT  α=+15.0
+08:11:21  INFO      [G039] pool=$068  offer=27/41 (40%)  ACCEPT  α=+15.0
+08:12:00  INFO      [G040] pool=$079  offer=39/40 (49%)  ACCEPT  α=+15.0
+08:12:39  INFO      [G041] pool=$042  offer=14/28 (33%)  ACCEPT  α=+15.0
+08:13:15  INFO      [G042] pool=$076  offer=30/46 (39%)  ACCEPT  α=+15.0
+08:13:54  INFO      [G043] pool=$043  offer=28/15 (65%)  REJECT  α=+15.0
+08:14:33  INFO      [G044] pool=$047  offer=15/32 (32%)  ACCEPT  α=+15.0
+08:15:12  INFO      [G045] pool=$054  offer=36/18 (67%)  REJECT  α=+15.0
+08:15:50  INFO      [G046] pool=$055  offer=35/20 (64%)  ACCEPT  α=+15.0
+08:16:29  INFO      [G047] pool=$057  offer=34/23 (60%)  ACCEPT  α=+15.0
+08:17:08  INFO      [G048] pool=$038  offer=15/23 (39%)  ACCEPT  α=+15.0
+08:17:47  INFO      [G049] pool=$044  offer=30/14 (68%)  REJECT  α=+15.0
+08:18:24  INFO      [G050] pool=$082  offer=41/41 (50%)  ACCEPT  α=+15.0
+08:18:24  INFO        alpha=+15.0 | fitness=-5.36 | valid=100% | raw=45.99
+08:18:24  INFO      Stage 2 best: alpha=-5.0  fitness=+1.52  beats_baseline=True
+08:18:24  INFO      Final eval: alpha=-5.0  layers=[28]
+08:19:07  INFO      [G001] pool=$065  offer=39/26 (60%)  ACCEPT  α=-5.0
+08:19:55  INFO      [G002] pool=$063  offer=38/25 (60%)  ACCEPT  α=-5.0
+08:20:46  INFO      [G003] pool=$059  offer=31/28 (53%)  ACCEPT  α=-5.0
+08:21:35  INFO      [G004] pool=$050  offer=25/25 (50%)  ACCEPT  α=-5.0
+08:22:18  INFO      [G005] pool=$041  offer=22/19 (54%)  ACCEPT  α=-5.0
+08:23:11  INFO      [G006] pool=$089  offer=35/54 (39%)  ACCEPT  α=-5.0
+08:24:01  INFO      [G007] pool=$066  offer=34/32 (52%)  ACCEPT  α=-5.0
+08:24:38  INFO      [G008] pool=$048  offer=25/23 (52%)  ACCEPT  α=-5.0
+08:25:29  INFO      [G009] pool=$071  offer=36/35 (51%)  ACCEPT  α=-5.0
+08:26:13  INFO      [G010] pool=$056  offer=29/27 (52%)  ACCEPT  α=-5.0
+08:27:05  INFO      [G011] pool=$073  offer=38/35 (52%)  ACCEPT  α=-5.0
+08:27:44  INFO      [G012] pool=$061  offer=20/41 (33%)  ACCEPT  α=-5.0
+08:28:30  INFO      [G013] pool=$051  offer=24/27 (47%)  ACCEPT  α=-5.0
+08:29:21  INFO      [G014] pool=$040  offer=22/18 (55%)  ACCEPT  α=-5.0
+08:30:01  INFO      [G015] pool=$081  offer=40/41 (49%)  ACCEPT  α=-5.0
+08:30:40  INFO      [G016] pool=$080  offer=30/50 (38%)  ACCEPT  α=-5.0
+08:31:17  INFO      [G017] pool=$049  offer=25/24 (51%)  ACCEPT  α=-5.0
+08:32:05  INFO      [G018] pool=$064  offer=38/26 (59%)  ACCEPT  α=-5.0
+08:32:55  INFO      [G019] pool=$077  offer=40/37 (52%)  ACCEPT  α=-5.0
+08:33:46  INFO      [G020] pool=$037  offer=20/17 (54%)  ACCEPT  α=-5.0
+08:34:27  INFO      [G021] pool=$086  offer=52/34 (60%)  ACCEPT  α=-5.0
+08:35:18  INFO      [G022] pool=$058  offer=30/28 (52%)  ACCEPT  α=-5.0
+08:36:09  INFO      [G023] pool=$075  offer=40/35 (53%)  ACCEPT  α=-5.0
+08:36:49  INFO      [G024] pool=$092  offer=46/46 (50%)  ACCEPT  α=-5.0
+08:37:27  INFO      [G025] pool=$083  offer=50/33 (60%)  ACCEPT  α=-5.0
+08:38:17  INFO      [G026] pool=$072  offer=38/34 (53%)  ACCEPT  α=-5.0
+08:39:09  INFO      [G027] pool=$070  offer=38/32 (54%)  ACCEPT  α=-5.0
+08:39:51  INFO      [G028] pool=$060  offer=20/40 (33%)  ACCEPT  α=-5.0
+08:40:47  INFO      [G029] pool=$062  offer=38/24 (61%)  ACCEPT  α=-5.0
+08:41:26  INFO      [G030] pool=$085  offer=35/50 (41%)  ACCEPT  α=-5.0
+08:42:03  INFO      [G031] pool=$090  offer=30/60 (33%)  ACCEPT  α=-5.0
+08:42:45  INFO      [G032] pool=$078  offer=40/38 (51%)  ACCEPT  α=-5.0
+08:43:33  INFO      [G033] pool=$074  offer=40/34 (54%)  ACCEPT  α=-5.0
+08:44:10  INFO      [G034] pool=$087  offer=35/52 (40%)  ACCEPT  α=-5.0
+08:44:54  INFO      [G035] pool=$052  offer=28/24 (54%)  ACCEPT  α=-5.0
+08:45:42  INFO      [G036] pool=$093  offer=55/38 (59%)  ACCEPT  α=-5.0
+08:46:34  INFO      [G037] pool=$091  offer=68/23 (75%)  REJECT  α=-5.0
+08:47:24  INFO      [G038] pool=$039  offer=20/19 (51%)  ACCEPT  α=-5.0
+08:48:03  INFO      [G039] pool=$068  offer=34/34 (50%)  ACCEPT  α=-5.0
+08:48:42  INFO      [G040] pool=$079  offer=45/34 (57%)  ACCEPT  α=-5.0
+08:49:33  INFO      [G041] pool=$042  offer=22/20 (52%)  ACCEPT  α=-5.0
+08:50:18  INFO      [G042] pool=$076  offer=40/36 (53%)  ACCEPT  α=-5.0
+08:51:08  INFO      [G043] pool=$043  offer=22/21 (51%)  ACCEPT  α=-5.0
+08:51:59  INFO      [G044] pool=$047  offer=25/22 (53%)  ACCEPT  α=-5.0
+08:52:44  INFO      [G045] pool=$054  offer=32/22 (59%)  ACCEPT  α=-5.0
+08:53:27  INFO      [G046] pool=$055  offer=28/27 (51%)  ACCEPT  α=-5.0
+08:54:19  INFO      [G047] pool=$057  offer=30/27 (53%)  ACCEPT  α=-5.0
+08:55:09  INFO      [G048] pool=$038  offer=20/18 (53%)  ACCEPT  α=-5.0
+08:55:48  INFO      [G049] pool=$044  offer=15/29 (34%)  ACCEPT  α=-5.0
+08:56:27  INFO      [G050] pool=$082  offer=41/41 (50%)  ACCEPT  α=-5.0
+08:56:27  INFO      Saved: results/ultimatum/llm_vs_rulebased/qwen2.5-32b-gptq_ayman_32b_L28/L28/proposer/greed/final_best.json
+
+======================================================================
+ULTIMATUM GRIDSEARCH  |  model=qwen2.5-32b-gptq  dim=greed  role=proposer
+  n_games=50  coarse_alphas=[-5.0, 5.0, 15.0]  rulebased=True
+======================================================================
+
+=================================================================
+ULTIMATUM GAME — ACTIVATION STEERING
+  Role: PROPOSER   Dimension: greed   α=-5.0
+  Games: 50   Valid: 50   Parse errors: 0
+=================================================================
+  Accept rate:          98.0%  (49/50)
+  Mean proposer offer:  51.3%  (std 7.9%)
+  Mean proposer payoff: 49.8% of pool
+  Mean responder payoff:48.2% of pool
+=================================================================
+==> Running proposer/fairness_norm on Layer 28
+08:56:32  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=fairness_norm | role=proposer
+08:56:32  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:410: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:418: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  @custom_bwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+08:56:38  WARNING   CUDA extension not installed.
+08:56:38  WARNING   CUDA extension not installed.
+`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+08:56:40  INFO      We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:00<00:01,  2.52it/s]Loading checkpoint shards:  40%|████      | 2/5 [00:00<00:01,  2.46it/s]Loading checkpoint shards:  60%|██████    | 3/5 [00:01<00:00,  2.44it/s]Loading checkpoint shards:  80%|████████  | 4/5 [00:01<00:00,  2.42it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  2.56it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  2.51it/s]
+08:56:42  INFO      number_of_layers=64
+08:56:42  INFO      Computing baseline (alpha=0, 50 games, rulebased)...
+08:57:27  INFO      [G001] pool=$065  offer=31/34 (48%)  ACCEPT  α=+0.0
+08:58:13  INFO      [G002] pool=$063  offer=40/23 (63%)  ACCEPT  α=+0.0
+08:59:05  INFO      [G003] pool=$059  offer=31/28 (53%)  ACCEPT  α=+0.0
+08:59:44  INFO      [G004] pool=$050  offer=15/35 (30%)  ACCEPT  α=+0.0
+09:00:31  INFO      [G005] pool=$041  offer=22/19 (54%)  ACCEPT  α=+0.0
+09:01:11  INFO      [G006] pool=$089  offer=53/36 (60%)  ACCEPT  α=+0.0
+09:01:54  INFO      [G007] pool=$066  offer=34/32 (52%)  ACCEPT  α=+0.0
+09:02:39  INFO      [G008] pool=$048  offer=25/23 (52%)  ACCEPT  α=+0.0
+09:03:16  INFO      [G009] pool=$071  offer=35/36 (49%)  ACCEPT  α=+0.0
+09:03:56  INFO      [G010] pool=$056  offer=22/34 (39%)  ACCEPT  α=+0.0
+09:04:39  INFO      [G011] pool=$073  offer=38/35 (52%)  ACCEPT  α=+0.0
+09:05:23  INFO      [G012] pool=$061  offer=32/29 (52%)  ACCEPT  α=+0.0
+09:06:04  INFO      [G013] pool=$051  offer=27/24 (53%)  ACCEPT  α=+0.0
+09:06:49  INFO      [G014] pool=$040  offer=23/17 (57%)  ACCEPT  α=+0.0
+09:07:26  INFO      [G015] pool=$081  offer=30/51 (37%)  ACCEPT  α=+0.0
+09:08:03  INFO      [G016] pool=$080  offer=50/30 (62%)  ACCEPT  α=+0.0
+09:08:59  INFO      [G017] pool=$049  offer=27/22 (55%)  ACCEPT  α=+0.0
+09:09:43  INFO      [G018] pool=$064  offer=33/31 (52%)  ACCEPT  α=+0.0
+09:10:38  INFO      [G019] pool=$077  offer=40/37 (52%)  ACCEPT  α=+0.0
+09:11:18  INFO      [G020] pool=$037  offer=18/19 (49%)  ACCEPT  α=+0.0
+09:12:02  INFO      [G021] pool=$086  offer=42/44 (49%)  ACCEPT  α=+0.0
+09:12:41  INFO      [G022] pool=$058  offer=20/38 (34%)  ACCEPT  α=+0.0
+09:13:33  INFO      [G023] pool=$075  offer=40/35 (53%)  ACCEPT  α=+0.0
+09:14:18  INFO      [G024] pool=$092  offer=45/47 (49%)  ACCEPT  α=+0.0
+09:15:03  INFO      [G025] pool=$083  offer=40/43 (48%)  ACCEPT  α=+0.0
+09:15:53  INFO      [G026] pool=$072  offer=38/34 (53%)  ACCEPT  α=+0.0
+09:16:50  INFO      [G027] pool=$070  offer=40/30 (57%)  ACCEPT  α=+0.0
+09:17:32  INFO      [G028] pool=$060  offer=20/40 (33%)  ACCEPT  α=+0.0
+09:18:10  INFO      [G029] pool=$062  offer=30/32 (48%)  ACCEPT  α=+0.0
+09:19:02  INFO      [G030] pool=$085  offer=44/41 (52%)  ACCEPT  α=+0.0
+09:19:40  INFO      [G031] pool=$090  offer=30/60 (33%)  ACCEPT  α=+0.0
+09:20:25  INFO      [G032] pool=$078  offer=37/41 (47%)  ACCEPT  α=+0.0
+09:21:03  INFO      [G033] pool=$074  offer=30/44 (41%)  ACCEPT  α=+0.0
+09:21:47  INFO      [G034] pool=$087  offer=42/45 (48%)  ACCEPT  α=+0.0
+09:22:38  INFO      [G035] pool=$052  offer=28/24 (54%)  ACCEPT  α=+0.0
+09:23:17  INFO      [G036] pool=$093  offer=50/43 (54%)  ACCEPT  α=+0.0
+09:24:02  INFO      [G037] pool=$091  offer=45/46 (49%)  ACCEPT  α=+0.0
+09:24:48  INFO      [G038] pool=$039  offer=20/19 (51%)  ACCEPT  α=+0.0
+09:25:25  INFO      [G039] pool=$068  offer=45/23 (66%)  REJECT  α=+0.0
+09:26:02  INFO      [G040] pool=$079  offer=39/40 (49%)  ACCEPT  α=+0.0
+09:26:47  INFO      [G041] pool=$042  offer=20/22 (48%)  ACCEPT  α=+0.0
+09:27:24  INFO      [G042] pool=$076  offer=30/46 (39%)  ACCEPT  α=+0.0
+09:28:01  INFO      [G043] pool=$043  offer=21/22 (49%)  ACCEPT  α=+0.0
+09:28:40  INFO      [G044] pool=$047  offer=28/19 (60%)  ACCEPT  α=+0.0
+09:29:17  INFO      [G045] pool=$054  offer=20/34 (37%)  ACCEPT  α=+0.0
+09:30:00  INFO      [G046] pool=$055  offer=20/35 (36%)  ACCEPT  α=+0.0
+09:30:45  INFO      [G047] pool=$057  offer=27/30 (47%)  ACCEPT  α=+0.0
+09:31:36  INFO      [G048] pool=$038  offer=20/18 (53%)  ACCEPT  α=+0.0
+09:32:13  INFO      [G049] pool=$044  offer=22/22 (50%)  ACCEPT  α=+0.0
+09:32:55  INFO      [G050] pool=$082  offer=40/42 (49%)  ACCEPT  α=+0.0
+09:32:55  INFO      Baseline computed.
+09:32:55  INFO      Stage 2 (coarse alpha search): alphas=[-5.0, 5.0, 15.0]
+09:32:55  INFO        -> Optimizing for Expected Direction: Decrease metric
+09:33:51  INFO      [G001] pool=$065  offer=36/29 (55%)  ACCEPT  α=-5.0
+09:34:34  INFO      [G002] pool=$063  offer=40/23 (63%)  ACCEPT  α=-5.0
+09:35:16  INFO      [G003] pool=$059  offer=35/24 (59%)  ACCEPT  α=-5.0
+09:35:57  INFO      [G004] pool=$050  offer=20/30 (40%)  ACCEPT  α=-5.0
+09:36:48  INFO      [G005] pool=$041  offer=22/19 (54%)  ACCEPT  α=-5.0
+09:37:28  INFO      [G006] pool=$089  offer=53/36 (60%)  ACCEPT  α=-5.0
+09:38:06  INFO      [G007] pool=$066  offer=22/44 (33%)  ACCEPT  α=-5.0
+09:38:49  INFO      [G008] pool=$048  offer=16/32 (33%)  ACCEPT  α=-5.0
+09:39:34  INFO      [G009] pool=$071  offer=34/37 (48%)  ACCEPT  α=-5.0
+09:40:25  INFO      [G010] pool=$056  offer=30/26 (54%)  ACCEPT  α=-5.0
+09:41:05  INFO      [G011] pool=$073  offer=35/38 (48%)  ACCEPT  α=-5.0
+09:41:49  INFO      [G012] pool=$061  offer=32/29 (52%)  ACCEPT  α=-5.0
+09:42:28  INFO      [G013] pool=$051  offer=26/25 (51%)  ACCEPT  α=-5.0
+09:43:06  INFO      [G014] pool=$040  offer=15/25 (38%)  ACCEPT  α=-5.0
+09:43:43  INFO      [G015] pool=$081  offer=40/41 (49%)  ACCEPT  α=-5.0
+09:44:30  INFO      [G016] pool=$080  offer=60/20 (75%)  REJECT  α=-5.0
+09:45:06  INFO      [G017] pool=$049  offer=25/24 (51%)  ACCEPT  α=-5.0
+09:46:04  INFO      [G018] pool=$064  offer=40/24 (62%)  ACCEPT  α=-5.0
+09:46:41  INFO      [G019] pool=$077  offer=35/42 (45%)  ACCEPT  α=-5.0
+09:47:27  INFO      [G020] pool=$037  offer=17/20 (46%)  ACCEPT  α=-5.0
+09:48:08  INFO      [G021] pool=$086  offer=34/52 (40%)  ACCEPT  α=-5.0
+09:48:53  INFO      [G022] pool=$058  offer=27/31 (47%)  ACCEPT  α=-5.0
+09:49:33  INFO      [G023] pool=$075  offer=30/45 (40%)  ACCEPT  α=-5.0
+09:50:11  INFO      [G024] pool=$092  offer=36/56 (39%)  ACCEPT  α=-5.0
+09:50:52  INFO      [G025] pool=$083  offer=33/50 (40%)  ACCEPT  α=-5.0
+09:51:35  INFO      [G026] pool=$072  offer=24/48 (33%)  ACCEPT  α=-5.0
+09:52:14  INFO      [G027] pool=$070  offer=25/45 (36%)  ACCEPT  α=-5.0
+09:53:05  INFO      [G028] pool=$060  offer=32/28 (53%)  ACCEPT  α=-5.0
+09:53:47  INFO      [G029] pool=$062  offer=30/32 (48%)  ACCEPT  α=-5.0
+09:54:26  INFO      [G030] pool=$085  offer=34/51 (40%)  ACCEPT  α=-5.0
+09:55:03  INFO      [G031] pool=$090  offer=30/60 (33%)  ACCEPT  α=-5.0
+09:55:48  INFO      [G032] pool=$078  offer=37/41 (47%)  ACCEPT  α=-5.0
+09:56:28  INFO      [G033] pool=$074  offer=35/39 (47%)  ACCEPT  α=-5.0
+09:57:19  INFO      [G034] pool=$087  offer=52/35 (60%)  ACCEPT  α=-5.0
+09:58:01  INFO      [G035] pool=$052  offer=28/24 (54%)  ACCEPT  α=-5.0
+09:58:38  INFO      [G036] pool=$093  offer=30/63 (32%)  ACCEPT  α=-5.0
+09:59:17  INFO      [G037] pool=$091  offer=45/46 (49%)  ACCEPT  α=-5.0
+09:59:55  INFO      [G038] pool=$039  offer=25/14 (64%)  ACCEPT  α=-5.0
+10:00:47  INFO      [G039] pool=$068  offer=35/33 (51%)  ACCEPT  α=-5.0
+10:01:32  INFO      [G040] pool=$079  offer=38/41 (48%)  ACCEPT  α=-5.0
+10:02:17  INFO      [G041] pool=$042  offer=20/22 (48%)  ACCEPT  α=-5.0
+10:02:55  INFO      [G042] pool=$076  offer=30/46 (39%)  ACCEPT  α=-5.0
+10:03:40  INFO      [G043] pool=$043  offer=21/22 (49%)  ACCEPT  α=-5.0
+10:04:18  INFO      [G044] pool=$047  offer=28/19 (60%)  ACCEPT  α=-5.0
+10:05:03  INFO      [G045] pool=$054  offer=26/28 (48%)  ACCEPT  α=-5.0
+10:05:48  INFO      [G046] pool=$055  offer=27/28 (49%)  ACCEPT  α=-5.0
+10:06:34  INFO      [G047] pool=$057  offer=29/28 (51%)  ACCEPT  α=-5.0
+10:07:26  INFO      [G048] pool=$038  offer=20/18 (53%)  ACCEPT  α=-5.0
+10:08:05  INFO      [G049] pool=$044  offer=15/29 (34%)  ACCEPT  α=-5.0
+10:08:45  INFO      [G050] pool=$082  offer=50/32 (61%)  ACCEPT  α=-5.0
+10:08:45  INFO        alpha=-5.0 | fitness=+0.95 | valid=100% | raw=48.24
+10:09:29  INFO      [G001] pool=$065  offer=33/32 (51%)  ACCEPT  α=+5.0
+10:10:06  INFO      [G002] pool=$063  offer=39/24 (62%)  ACCEPT  α=+5.0
+10:10:51  INFO      [G003] pool=$059  offer=28/31 (47%)  ACCEPT  α=+5.0
+10:11:30  INFO      [G004] pool=$050  offer=15/35 (30%)  ACCEPT  α=+5.0
+10:12:13  INFO      [G005] pool=$041  offer=22/19 (54%)  ACCEPT  α=+5.0
+10:12:52  INFO      [G006] pool=$089  offer=45/44 (51%)  ACCEPT  α=+5.0
+10:13:38  INFO      [G007] pool=$066  offer=34/32 (52%)  ACCEPT  α=+5.0
+10:14:29  INFO      [G008] pool=$048  offer=25/23 (52%)  ACCEPT  α=+5.0
+10:15:15  INFO      [G009] pool=$071  offer=39/32 (55%)  ACCEPT  α=+5.0
+10:15:52  INFO      [G010] pool=$056  offer=29/27 (52%)  ACCEPT  α=+5.0
+10:16:31  INFO      [G011] pool=$073  offer=35/38 (48%)  ACCEPT  α=+5.0
+10:17:21  INFO      [G012] pool=$061  offer=32/29 (52%)  ACCEPT  α=+5.0
+10:18:00  INFO      [G013] pool=$051  offer=30/21 (59%)  ACCEPT  α=+5.0
+10:18:54  INFO      [G014] pool=$040  offer=23/17 (57%)  ACCEPT  α=+5.0
+10:19:39  INFO      [G015] pool=$081  offer=39/42 (48%)  ACCEPT  α=+5.0
+10:20:22  INFO      [G016] pool=$080  offer=30/50 (38%)  ACCEPT  α=+5.0
+10:21:04  INFO      [G017] pool=$049  offer=27/22 (55%)  ACCEPT  α=+5.0
+10:21:51  INFO      [G018] pool=$064  offer=33/31 (52%)  ACCEPT  α=+5.0
+10:22:29  INFO      [G019] pool=$077  offer=35/42 (45%)  ACCEPT  α=+5.0
+10:23:13  INFO      [G020] pool=$037  offer=20/17 (54%)  ACCEPT  α=+5.0
+10:23:58  INFO      [G021] pool=$086  offer=42/44 (49%)  ACCEPT  α=+5.0
+10:24:45  INFO      [G022] pool=$058  offer=35/23 (60%)  ACCEPT  α=+5.0
+10:25:36  INFO      [G023] pool=$075  offer=40/35 (53%)  ACCEPT  α=+5.0
+10:26:16  INFO      [G024] pool=$092  offer=46/46 (50%)  ACCEPT  α=+5.0
+10:27:03  INFO      [G025] pool=$083  offer=50/33 (60%)  ACCEPT  α=+5.0
+10:27:47  INFO      [G026] pool=$072  offer=38/34 (53%)  ACCEPT  α=+5.0
+10:28:31  INFO      [G027] pool=$070  offer=38/32 (54%)  ACCEPT  α=+5.0
+10:29:22  INFO      [G028] pool=$060  offer=32/28 (53%)  ACCEPT  α=+5.0
+10:30:05  INFO      [G029] pool=$062  offer=32/30 (52%)  ACCEPT  α=+5.0
+10:30:46  INFO      [G030] pool=$085  offer=55/30 (65%)  ACCEPT  α=+5.0
+10:31:30  INFO      [G031] pool=$090  offer=55/35 (61%)  ACCEPT  α=+5.0
+10:32:20  INFO      [G032] pool=$078  offer=40/38 (51%)  ACCEPT  α=+5.0
+10:33:03  INFO      [G033] pool=$074  offer=30/44 (41%)  ACCEPT  α=+5.0
+10:33:42  INFO      [G034] pool=$087  offer=35/52 (40%)  ACCEPT  α=+5.0
+10:34:28  INFO      [G035] pool=$052  offer=28/24 (54%)  ACCEPT  α=+5.0
+10:35:07  INFO      [G036] pool=$093  offer=50/43 (54%)  ACCEPT  α=+5.0
+10:35:48  INFO      [G037] pool=$091  offer=50/41 (55%)  ACCEPT  α=+5.0
+10:36:27  INFO      [G038] pool=$039  offer=25/14 (64%)  ACCEPT  α=+5.0
+10:37:18  INFO      [G039] pool=$068  offer=35/33 (51%)  ACCEPT  α=+5.0
+10:37:55  INFO      [G040] pool=$079  offer=39/40 (49%)  ACCEPT  α=+5.0
+10:38:38  INFO      [G041] pool=$042  offer=22/20 (52%)  ACCEPT  α=+5.0
+10:39:20  INFO      [G042] pool=$076  offer=40/36 (53%)  ACCEPT  α=+5.0
+10:39:59  INFO      [G043] pool=$043  offer=21/22 (49%)  ACCEPT  α=+5.0
+10:40:36  INFO      [G044] pool=$047  offer=15/32 (32%)  ACCEPT  α=+5.0
+10:41:19  INFO      [G045] pool=$054  offer=28/26 (52%)  ACCEPT  α=+5.0
+10:42:03  INFO      [G046] pool=$055  offer=28/27 (51%)  ACCEPT  α=+5.0
+10:42:53  INFO      [G047] pool=$057  offer=34/23 (60%)  ACCEPT  α=+5.0
+10:43:30  INFO      [G048] pool=$038  offer=25/13 (66%)  REJECT  α=+5.0
+10:44:12  INFO      [G049] pool=$044  offer=15/29 (34%)  ACCEPT  α=+5.0
+10:44:50  INFO      [G050] pool=$082  offer=40/42 (49%)  ACCEPT  α=+5.0
+10:44:50  INFO        alpha=+5.0 | fitness=-2.42 | valid=100% | raw=51.60
+10:45:38  INFO      [G001] pool=$065  offer=39/26 (60%)  ACCEPT  α=+15.0
+10:46:24  INFO      [G002] pool=$063  offer=32/31 (51%)  ACCEPT  α=+15.0
+10:47:04  INFO      [G003] pool=$059  offer=29/30 (49%)  ACCEPT  α=+15.0
+10:47:40  INFO      [G004] pool=$050  offer=30/20 (60%)  ACCEPT  α=+15.0
+10:48:23  INFO      [G005] pool=$041  offer=20/21 (49%)  ACCEPT  α=+15.0
+10:49:09  INFO      [G006] pool=$089  offer=53/36 (60%)  ACCEPT  α=+15.0
+10:49:46  INFO      [G007] pool=$066  offer=34/32 (52%)  ACCEPT  α=+15.0
+10:50:29  INFO      [G008] pool=$048  offer=26/22 (54%)  ACCEPT  α=+15.0
+10:51:26  INFO      [G009] pool=$071  offer=40/31 (56%)  ACCEPT  α=+15.0
+10:52:10  INFO      [G010] pool=$056  offer=30/26 (54%)  ACCEPT  α=+15.0
+10:52:51  INFO      [G011] pool=$073  offer=40/33 (55%)  ACCEPT  α=+15.0
+10:53:41  INFO      [G012] pool=$061  offer=32/29 (52%)  ACCEPT  α=+15.0
+10:54:25  INFO      [G013] pool=$051  offer=30/21 (59%)  ACCEPT  α=+15.0
+10:55:07  INFO      [G014] pool=$040  offer=15/25 (38%)  ACCEPT  α=+15.0
+10:55:44  INFO      [G015] pool=$081  offer=50/31 (62%)  ACCEPT  α=+15.0
+10:56:27  INFO      [G016] pool=$080  offer=30/50 (38%)  ACCEPT  α=+15.0
+10:57:13  INFO      [G017] pool=$049  offer=27/22 (55%)  ACCEPT  α=+15.0
+10:57:57  INFO      [G018] pool=$064  offer=33/31 (52%)  ACCEPT  α=+15.0
+10:58:35  INFO      [G019] pool=$077  offer=35/42 (45%)  ACCEPT  α=+15.0
+10:59:12  INFO      [G020] pool=$037  offer=25/12 (68%)  REJECT  α=+15.0
+11:00:02  INFO      [G021] pool=$086  offer=52/34 (60%)  ACCEPT  α=+15.0
+11:00:42  INFO      [G022] pool=$058  offer=20/38 (34%)  ACCEPT  α=+15.0
+11:01:24  INFO      [G023] pool=$075  offer=30/45 (40%)  ACCEPT  α=+15.0
+11:01:56  INFO      [G024] pool=$092  offer=46/46 (50%)  ACCEPT  α=+15.0
+11:02:44  INFO      [G025] pool=$083  offer=50/33 (60%)  ACCEPT  α=+15.0
+11:03:23  INFO      [G026] pool=$072  offer=30/42 (42%)  ACCEPT  α=+15.0
+11:04:04  INFO      [G027] pool=$070  offer=40/30 (57%)  ACCEPT  α=+15.0
+11:04:46  INFO      [G028] pool=$060  offer=35/25 (58%)  ACCEPT  α=+15.0
+11:05:29  INFO      [G029] pool=$062  offer=32/30 (52%)  ACCEPT  α=+15.0
+11:06:07  INFO      [G030] pool=$085  offer=34/51 (40%)  ACCEPT  α=+15.0
+11:06:44  INFO      [G031] pool=$090  offer=45/45 (50%)  ACCEPT  α=+15.0
+11:07:27  INFO      [G032] pool=$078  offer=45/33 (58%)  ACCEPT  α=+15.0
+11:08:05  INFO      [G033] pool=$074  offer=35/39 (47%)  ACCEPT  α=+15.0
+11:08:51  INFO      [G034] pool=$087  offer=52/35 (60%)  ACCEPT  α=+15.0
+11:09:34  INFO      [G035] pool=$052  offer=30/22 (58%)  ACCEPT  α=+15.0
+11:10:22  INFO      [G036] pool=$093  offer=55/38 (59%)  ACCEPT  α=+15.0
+11:11:02  INFO      [G037] pool=$091  offer=45/46 (49%)  ACCEPT  α=+15.0
+11:11:37  INFO      [G038] pool=$039  offer=15/24 (38%)  ACCEPT  α=+15.0
+11:12:16  INFO      [G039] pool=$068  offer=34/34 (50%)  ACCEPT  α=+15.0
+11:12:54  INFO      [G040] pool=$079  offer=39/40 (49%)  ACCEPT  α=+15.0
+11:13:37  INFO      [G041] pool=$042  offer=22/20 (52%)  ACCEPT  α=+15.0
+11:14:21  INFO      [G042] pool=$076  offer=45/31 (59%)  ACCEPT  α=+15.0
+11:14:57  INFO      [G043] pool=$043  offer=22/21 (51%)  ACCEPT  α=+15.0
+11:15:36  INFO      [G044] pool=$047  offer=24/23 (51%)  ACCEPT  α=+15.0
+11:16:12  INFO      [G045] pool=$054  offer=28/26 (52%)  ACCEPT  α=+15.0
+11:16:55  INFO      [G046] pool=$055  offer=28/27 (51%)  ACCEPT  α=+15.0
+11:17:32  INFO      [G047] pool=$057  offer=29/28 (51%)  ACCEPT  α=+15.0
+11:18:20  INFO      [G048] pool=$038  offer=20/18 (53%)  ACCEPT  α=+15.0
+11:19:03  INFO      [G049] pool=$044  offer=23/21 (52%)  ACCEPT  α=+15.0
+11:19:48  INFO      [G050] pool=$082  offer=40/42 (49%)  ACCEPT  α=+15.0
+11:19:48  INFO        alpha=+15.0 | fitness=-2.82 | valid=100% | raw=52.01
+11:19:48  INFO      Stage 2 best: alpha=-5.0  fitness=+0.95  beats_baseline=True
+11:19:48  INFO      Final eval: alpha=-5.0  layers=[28]
+11:20:40  INFO      [G001] pool=$065  offer=33/32 (51%)  ACCEPT  α=-5.0
+11:21:15  INFO      [G002] pool=$063  offer=30/33 (48%)  ACCEPT  α=-5.0
+11:21:54  INFO      [G003] pool=$059  offer=35/24 (59%)  ACCEPT  α=-5.0
+11:22:35  INFO      [G004] pool=$050  offer=20/30 (40%)  ACCEPT  α=-5.0
+11:23:20  INFO      [G005] pool=$041  offer=20/21 (49%)  ACCEPT  α=-5.0
+11:24:01  INFO      [G006] pool=$089  offer=53/36 (60%)  ACCEPT  α=-5.0
+11:24:52  INFO      [G007] pool=$066  offer=34/32 (52%)  ACCEPT  α=-5.0
+11:25:37  INFO      [G008] pool=$048  offer=23/25 (48%)  ACCEPT  α=-5.0
+11:26:20  INFO      [G009] pool=$071  offer=36/35 (51%)  ACCEPT  α=-5.0
+11:27:00  INFO      [G010] pool=$056  offer=20/36 (36%)  ACCEPT  α=-5.0
+11:27:38  INFO      [G011] pool=$073  offer=40/33 (55%)  ACCEPT  α=-5.0
+11:28:30  INFO      [G012] pool=$061  offer=32/29 (52%)  ACCEPT  α=-5.0
+11:29:09  INFO      [G013] pool=$051  offer=20/31 (39%)  ACCEPT  α=-5.0
+11:29:54  INFO      [G014] pool=$040  offer=18/22 (45%)  ACCEPT  α=-5.0
+11:30:33  INFO      [G015] pool=$081  offer=40/41 (49%)  ACCEPT  α=-5.0
+11:31:10  INFO      [G016] pool=$080  offer=30/50 (38%)  ACCEPT  α=-5.0
+11:31:59  INFO      [G017] pool=$049  offer=35/14 (71%)  REJECT  α=-5.0
+11:32:52  INFO      [G018] pool=$064  offer=38/26 (59%)  ACCEPT  α=-5.0
+11:33:37  INFO      [G019] pool=$077  offer=37/40 (48%)  ACCEPT  α=-5.0
+11:34:16  INFO      [G020] pool=$037  offer=18/19 (49%)  ACCEPT  α=-5.0
+11:34:54  INFO      [G021] pool=$086  offer=34/52 (40%)  ACCEPT  α=-5.0
+11:35:39  INFO      [G022] pool=$058  offer=27/31 (47%)  ACCEPT  α=-5.0
+11:36:18  INFO      [G023] pool=$075  offer=45/30 (60%)  ACCEPT  α=-5.0
+11:37:00  INFO      [G024] pool=$092  offer=36/56 (39%)  ACCEPT  α=-5.0
+11:37:45  INFO      [G025] pool=$083  offer=40/43 (48%)  ACCEPT  α=-5.0
+11:38:31  INFO      [G026] pool=$072  offer=46/26 (64%)  ACCEPT  α=-5.0
+11:39:10  INFO      [G027] pool=$070  offer=45/25 (64%)  ACCEPT  α=-5.0
+11:40:02  INFO      [G028] pool=$060  offer=32/28 (53%)  ACCEPT  α=-5.0
+11:40:38  INFO      [G029] pool=$062  offer=30/32 (48%)  ACCEPT  α=-5.0
+11:41:23  INFO      [G030] pool=$085  offer=41/44 (48%)  ACCEPT  α=-5.0
+11:42:08  INFO      [G031] pool=$090  offer=40/50 (44%)  ACCEPT  α=-5.0
+11:43:02  INFO      [G032] pool=$078  offer=45/33 (58%)  ACCEPT  α=-5.0
+11:43:48  INFO      [G033] pool=$074  offer=35/39 (47%)  ACCEPT  α=-5.0
+11:44:24  INFO      [G034] pool=$087  offer=52/35 (60%)  ACCEPT  α=-5.0
+11:45:15  INFO      [G035] pool=$052  offer=28/24 (54%)  ACCEPT  α=-5.0
+11:45:54  INFO      [G036] pool=$093  offer=50/43 (54%)  ACCEPT  α=-5.0
+11:46:39  INFO      [G037] pool=$091  offer=45/46 (49%)  ACCEPT  α=-5.0
+11:47:18  INFO      [G038] pool=$039  offer=20/19 (51%)  ACCEPT  α=-5.0
+11:48:10  INFO      [G039] pool=$068  offer=35/33 (51%)  ACCEPT  α=-5.0
+11:48:55  INFO      [G040] pool=$079  offer=38/41 (48%)  ACCEPT  α=-5.0
+11:49:32  INFO      [G041] pool=$042  offer=14/28 (33%)  ACCEPT  α=-5.0
+11:50:16  INFO      [G042] pool=$076  offer=40/36 (53%)  ACCEPT  α=-5.0
+11:51:01  INFO      [G043] pool=$043  offer=21/22 (49%)  ACCEPT  α=-5.0
+11:51:51  INFO      [G044] pool=$047  offer=25/22 (53%)  ACCEPT  α=-5.0
+11:52:33  INFO      [G045] pool=$054  offer=20/34 (37%)  ACCEPT  α=-5.0
+11:53:16  INFO      [G046] pool=$055  offer=20/35 (36%)  ACCEPT  α=-5.0
+11:53:54  INFO      [G047] pool=$057  offer=34/23 (60%)  ACCEPT  α=-5.0
+11:54:46  INFO      [G048] pool=$038  offer=20/18 (53%)  ACCEPT  α=-5.0
+11:55:25  INFO      [G049] pool=$044  offer=15/29 (34%)  ACCEPT  α=-5.0
+11:56:10  INFO      [G050] pool=$082  offer=40/42 (49%)  ACCEPT  α=-5.0
+11:56:10  INFO      Saved: results/ultimatum/llm_vs_rulebased/qwen2.5-32b-gptq_ayman_32b_L28/L28/proposer/fairness_norm/final_best.json
+
+======================================================================
+ULTIMATUM GRIDSEARCH  |  model=qwen2.5-32b-gptq  dim=fairness_norm  role=proposer
+  n_games=50  coarse_alphas=[-5.0, 5.0, 15.0]  rulebased=True
+======================================================================
+
+=================================================================
+ULTIMATUM GAME — ACTIVATION STEERING
+  Role: PROPOSER   Dimension: fairness_norm   α=-5.0
+  Games: 50   Valid: 50   Parse errors: 0
+=================================================================
+  Accept rate:          98.0%  (49/50)
+  Mean proposer offer:  49.7%  (std 8.2%)
+  Mean proposer payoff: 48.2% of pool
+  Mean responder payoff:49.8% of pool
+=================================================================
+==> Running proposer/flattery on Layer 28
+11:56:14  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=flattery | role=proposer
+11:56:14  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:410: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:418: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  @custom_bwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+11:56:15  WARNING   CUDA extension not installed.
+11:56:15  WARNING   CUDA extension not installed.
+`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+11:56:17  INFO      We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:00<00:01,  2.52it/s]Loading checkpoint shards:  40%|████      | 2/5 [00:00<00:01,  2.46it/s]Loading checkpoint shards:  60%|██████    | 3/5 [00:01<00:00,  2.44it/s]Loading checkpoint shards:  80%|████████  | 4/5 [00:01<00:00,  2.40it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  2.55it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  2.50it/s]
+11:56:19  INFO      number_of_layers=64
+11:56:19  INFO      Computing baseline (alpha=0, 50 games, rulebased)...
+11:57:02  INFO      [G001] pool=$065  offer=25/40 (38%)  ACCEPT  α=+0.0
+11:57:41  INFO      [G002] pool=$063  offer=32/31 (51%)  ACCEPT  α=+0.0
+11:58:18  INFO      [G003] pool=$059  offer=30/29 (51%)  ACCEPT  α=+0.0
+11:59:07  INFO      [G004] pool=$050  offer=30/20 (60%)  ACCEPT  α=+0.0
+11:59:47  INFO      [G005] pool=$041  offer=20/21 (49%)  ACCEPT  α=+0.0
+12:00:33  INFO      [G006] pool=$089  offer=53/36 (60%)  ACCEPT  α=+0.0
+12:01:17  INFO      [G007] pool=$066  offer=34/32 (52%)  ACCEPT  α=+0.0
+12:02:13  INFO      [G008] pool=$048  offer=26/22 (54%)  ACCEPT  α=+0.0
+12:02:52  INFO      [G009] pool=$071  offer=35/36 (49%)  ACCEPT  α=+0.0
+12:03:48  INFO      [G010] pool=$056  offer=30/26 (54%)  ACCEPT  α=+0.0
+12:04:31  INFO      [G011] pool=$073  offer=38/35 (52%)  ACCEPT  α=+0.0
+12:05:15  INFO      [G012] pool=$061  offer=32/29 (52%)  ACCEPT  α=+0.0
+12:05:54  INFO      [G013] pool=$051  offer=26/25 (51%)  ACCEPT  α=+0.0
+12:06:39  INFO      [G014] pool=$040  offer=18/22 (45%)  ACCEPT  α=+0.0
+12:07:29  INFO      [G015] pool=$081  offer=50/31 (62%)  ACCEPT  α=+0.0
+12:08:10  INFO      [G016] pool=$080  offer=50/30 (62%)  ACCEPT  α=+0.0
+12:08:55  INFO      [G017] pool=$049  offer=24/25 (49%)  ACCEPT  α=+0.0
+12:09:38  INFO      [G018] pool=$064  offer=25/39 (39%)  ACCEPT  α=+0.0
+12:10:29  INFO      [G019] pool=$077  offer=40/37 (52%)  ACCEPT  α=+0.0
+12:11:13  INFO      [G020] pool=$037  offer=20/17 (54%)  ACCEPT  α=+0.0
+12:11:50  INFO      [G021] pool=$086  offer=34/52 (40%)  ACCEPT  α=+0.0
+12:12:34  INFO      [G022] pool=$058  offer=30/28 (52%)  ACCEPT  α=+0.0
+12:13:15  INFO      [G023] pool=$075  offer=30/45 (40%)  ACCEPT  α=+0.0
+12:14:00  INFO      [G024] pool=$092  offer=45/47 (49%)  ACCEPT  α=+0.0
+12:14:45  INFO      [G025] pool=$083  offer=40/43 (48%)  ACCEPT  α=+0.0
+12:15:22  INFO      [G026] pool=$072  offer=38/34 (53%)  ACCEPT  α=+0.0
+12:16:02  INFO      [G027] pool=$070  offer=25/45 (36%)  ACCEPT  α=+0.0
+12:16:46  INFO      [G028] pool=$060  offer=32/28 (53%)  ACCEPT  α=+0.0
+12:17:29  INFO      [G029] pool=$062  offer=32/30 (52%)  ACCEPT  α=+0.0
+12:18:14  INFO      [G030] pool=$085  offer=41/44 (48%)  ACCEPT  α=+0.0
+12:18:51  INFO      [G031] pool=$090  offer=60/30 (67%)  REJECT  α=+0.0
+12:19:34  INFO      [G032] pool=$078  offer=40/38 (51%)  ACCEPT  α=+0.0
+12:20:26  INFO      [G033] pool=$074  offer=38/36 (51%)  ACCEPT  α=+0.0
+12:21:04  INFO      [G034] pool=$087  offer=35/52 (40%)  ACCEPT  α=+0.0
+12:21:44  INFO      [G035] pool=$052  offer=24/28 (46%)  ACCEPT  α=+0.0
+12:22:22  INFO      [G036] pool=$093  offer=50/43 (54%)  ACCEPT  α=+0.0
+12:22:59  INFO      [G037] pool=$091  offer=45/46 (49%)  ACCEPT  α=+0.0
+12:23:40  INFO      [G038] pool=$039  offer=25/14 (64%)  ACCEPT  α=+0.0
+12:24:32  INFO      [G039] pool=$068  offer=35/33 (51%)  ACCEPT  α=+0.0
+12:25:17  INFO      [G040] pool=$079  offer=38/41 (48%)  ACCEPT  α=+0.0
+12:26:00  INFO      [G041] pool=$042  offer=22/20 (52%)  ACCEPT  α=+0.0
+12:26:52  INFO      [G042] pool=$076  offer=40/36 (53%)  ACCEPT  α=+0.0
+12:27:35  INFO      [G043] pool=$043  offer=22/21 (51%)  ACCEPT  α=+0.0
+12:28:18  INFO      [G044] pool=$047  offer=25/22 (53%)  ACCEPT  α=+0.0
+12:29:15  INFO      [G045] pool=$054  offer=28/26 (52%)  ACCEPT  α=+0.0
+12:29:54  INFO      [G046] pool=$055  offer=30/25 (55%)  ACCEPT  α=+0.0
+12:30:33  INFO      [G047] pool=$057  offer=34/23 (60%)  ACCEPT  α=+0.0
+12:31:13  INFO      [G048] pool=$038  offer=15/23 (39%)  ACCEPT  α=+0.0
+12:32:01  INFO      [G049] pool=$044  offer=23/21 (52%)  ACCEPT  α=+0.0
+12:32:46  INFO      [G050] pool=$082  offer=40/42 (49%)  ACCEPT  α=+0.0
+12:32:46  INFO      Baseline computed.
+12:32:46  INFO      Stage 2 (coarse alpha search): alphas=[-5.0, 5.0, 15.0]
+12:32:46  INFO        -> Optimizing for Expected Direction: Decrease metric
+12:33:28  INFO      [G001] pool=$065  offer=25/40 (38%)  ACCEPT  α=-5.0
+12:34:13  INFO      [G002] pool=$063  offer=31/32 (49%)  ACCEPT  α=-5.0
+12:34:57  INFO      [G003] pool=$059  offer=30/29 (51%)  ACCEPT  α=-5.0
+12:35:35  INFO      [G004] pool=$050  offer=30/20 (60%)  ACCEPT  α=-5.0
+12:36:14  INFO      [G005] pool=$041  offer=25/16 (61%)  ACCEPT  α=-5.0
+12:37:00  INFO      [G006] pool=$089  offer=53/36 (60%)  ACCEPT  α=-5.0
+12:37:40  INFO      [G007] pool=$066  offer=33/33 (50%)  ACCEPT  α=-5.0
+12:38:19  INFO      [G008] pool=$048  offer=18/30 (38%)  ACCEPT  α=-5.0
+12:39:07  INFO      [G009] pool=$071  offer=40/31 (56%)  ACCEPT  α=-5.0
+12:39:46  INFO      [G010] pool=$056  offer=28/28 (50%)  ACCEPT  α=-5.0
+12:40:33  INFO      [G011] pool=$073  offer=40/33 (55%)  ACCEPT  α=-5.0
+12:41:13  INFO      [G012] pool=$061  offer=30/31 (49%)  ACCEPT  α=-5.0
+12:41:53  INFO      [G013] pool=$051  offer=26/25 (51%)  ACCEPT  α=-5.0
+12:42:43  INFO      [G014] pool=$040  offer=22/18 (55%)  ACCEPT  α=-5.0
+12:43:28  INFO      [G015] pool=$081  offer=39/42 (48%)  ACCEPT  α=-5.0
+12:44:05  INFO      [G016] pool=$080  offer=30/50 (38%)  ACCEPT  α=-5.0
+12:44:50  INFO      [G017] pool=$049  offer=23/26 (47%)  ACCEPT  α=-5.0
+12:45:45  INFO      [G018] pool=$064  offer=40/24 (62%)  ACCEPT  α=-5.0
+12:46:33  INFO      [G019] pool=$077  offer=45/32 (58%)  ACCEPT  α=-5.0
+12:47:16  INFO      [G020] pool=$037  offer=21/16 (57%)  ACCEPT  α=-5.0
+12:48:00  INFO      [G021] pool=$086  offer=43/43 (50%)  ACCEPT  α=-5.0
+12:48:39  INFO      [G022] pool=$058  offer=20/38 (34%)  ACCEPT  α=-5.0
+12:49:31  INFO      [G023] pool=$075  offer=40/35 (53%)  ACCEPT  α=-5.0
+12:50:11  INFO      [G024] pool=$092  offer=46/46 (50%)  ACCEPT  α=-5.0
+12:50:56  INFO      [G025] pool=$083  offer=40/43 (48%)  ACCEPT  α=-5.0
+12:51:39  INFO      [G026] pool=$072  offer=30/42 (42%)  ACCEPT  α=-5.0
+12:52:18  INFO      [G027] pool=$070  offer=25/45 (36%)  ACCEPT  α=-5.0
+12:53:02  INFO      [G028] pool=$060  offer=35/25 (58%)  ACCEPT  α=-5.0
+12:53:47  INFO      [G029] pool=$062  offer=30/32 (48%)  ACCEPT  α=-5.0
+12:54:24  INFO      [G030] pool=$085  offer=35/50 (41%)  ACCEPT  α=-5.0
+12:55:03  INFO      [G031] pool=$090  offer=30/60 (33%)  ACCEPT  α=-5.0
+12:55:43  INFO      [G032] pool=$078  offer=30/48 (38%)  ACCEPT  α=-5.0
+12:56:28  INFO      [G033] pool=$074  offer=30/44 (41%)  ACCEPT  α=-5.0
+12:57:07  INFO      [G034] pool=$087  offer=35/52 (40%)  ACCEPT  α=-5.0
+12:57:57  INFO      [G035] pool=$052  offer=32/20 (62%)  ACCEPT  α=-5.0
+12:58:34  INFO      [G036] pool=$093  offer=47/46 (51%)  ACCEPT  α=-5.0
+12:59:10  INFO      [G037] pool=$091  offer=45/46 (49%)  ACCEPT  α=-5.0
+12:59:50  INFO      [G038] pool=$039  offer=20/19 (51%)  ACCEPT  α=-5.0
+13:00:34  INFO      [G039] pool=$068  offer=37/31 (54%)  ACCEPT  α=-5.0
+13:01:21  INFO      [G040] pool=$079  offer=46/33 (58%)  ACCEPT  α=-5.0
+13:02:06  INFO      [G041] pool=$042  offer=20/22 (48%)  ACCEPT  α=-5.0
+13:02:56  INFO      [G042] pool=$076  offer=40/36 (53%)  ACCEPT  α=-5.0
+13:03:41  INFO      [G043] pool=$043  offer=21/22 (49%)  ACCEPT  α=-5.0
+13:04:26  INFO      [G044] pool=$047  offer=23/24 (49%)  ACCEPT  α=-5.0
+13:05:03  INFO      [G045] pool=$054  offer=22/32 (41%)  ACCEPT  α=-5.0
+13:05:43  INFO      [G046] pool=$055  offer=22/33 (40%)  ACCEPT  α=-5.0
+13:06:22  INFO      [G047] pool=$057  offer=34/23 (60%)  ACCEPT  α=-5.0
+13:06:59  INFO      [G048] pool=$038  offer=15/23 (39%)  ACCEPT  α=-5.0
+13:07:42  INFO      [G049] pool=$044  offer=23/21 (52%)  ACCEPT  α=-5.0
+13:08:29  INFO      [G050] pool=$082  offer=43/39 (52%)  ACCEPT  α=-5.0
+13:08:29  INFO        alpha=-5.0 | fitness=+1.79 | valid=100% | raw=49.10
+13:09:13  INFO      [G001] pool=$065  offer=33/32 (51%)  ACCEPT  α=+5.0
+13:09:56  INFO      [G002] pool=$063  offer=32/31 (51%)  ACCEPT  α=+5.0
+13:10:36  INFO      [G003] pool=$059  offer=28/31 (47%)  ACCEPT  α=+5.0
+13:11:15  INFO      [G004] pool=$050  offer=30/20 (60%)  ACCEPT  α=+5.0
+13:12:11  INFO      [G005] pool=$041  offer=22/19 (54%)  ACCEPT  α=+5.0
+13:12:50  INFO      [G006] pool=$089  offer=45/44 (51%)  ACCEPT  α=+5.0
+13:13:33  INFO      [G007] pool=$066  offer=34/32 (52%)  ACCEPT  α=+5.0
+13:14:18  INFO      [G008] pool=$048  offer=23/25 (48%)  ACCEPT  α=+5.0
+13:14:56  INFO      [G009] pool=$071  offer=35/36 (49%)  ACCEPT  α=+5.0
+13:15:39  INFO      [G010] pool=$056  offer=29/27 (52%)  ACCEPT  α=+5.0
+13:16:24  INFO      [G011] pool=$073  offer=35/38 (48%)  ACCEPT  α=+5.0
+13:17:07  INFO      [G012] pool=$061  offer=32/29 (52%)  ACCEPT  α=+5.0
+13:17:47  INFO      [G013] pool=$051  offer=26/25 (51%)  ACCEPT  α=+5.0
+13:18:29  INFO      [G014] pool=$040  offer=15/25 (38%)  ACCEPT  α=+5.0
+13:19:05  INFO      [G015] pool=$081  offer=49/32 (60%)  ACCEPT  α=+5.0
+13:19:50  INFO      [G016] pool=$080  offer=39/41 (49%)  ACCEPT  α=+5.0
+13:20:35  INFO      [G017] pool=$049  offer=23/26 (47%)  ACCEPT  α=+5.0
+13:21:28  INFO      [G018] pool=$064  offer=38/26 (59%)  ACCEPT  α=+5.0
+13:22:18  INFO      [G019] pool=$077  offer=45/32 (58%)  ACCEPT  α=+5.0
+13:23:03  INFO      [G020] pool=$037  offer=20/17 (54%)  ACCEPT  α=+5.0
+13:23:48  INFO      [G021] pool=$086  offer=42/44 (49%)  ACCEPT  α=+5.0
+13:24:32  INFO      [G022] pool=$058  offer=30/28 (52%)  ACCEPT  α=+5.0
+13:25:24  INFO      [G023] pool=$075  offer=40/35 (53%)  ACCEPT  α=+5.0
+13:26:01  INFO      [G024] pool=$092  offer=60/32 (65%)  REJECT  α=+5.0
+13:26:56  INFO      [G025] pool=$083  offer=39/44 (47%)  ACCEPT  α=+5.0
+13:27:33  INFO      [G026] pool=$072  offer=30/42 (42%)  ACCEPT  α=+5.0
+13:28:18  INFO      [G027] pool=$070  offer=32/38 (46%)  ACCEPT  α=+5.0
+13:29:01  INFO      [G028] pool=$060  offer=20/40 (33%)  ACCEPT  α=+5.0
+13:29:53  INFO      [G029] pool=$062  offer=32/30 (52%)  ACCEPT  α=+5.0
+13:30:34  INFO      [G030] pool=$085  offer=34/51 (40%)  ACCEPT  α=+5.0
+13:31:13  INFO      [G031] pool=$090  offer=55/35 (61%)  ACCEPT  α=+5.0
+13:31:53  INFO      [G032] pool=$078  offer=30/48 (38%)  ACCEPT  α=+5.0
+13:32:39  INFO      [G033] pool=$074  offer=40/34 (54%)  ACCEPT  α=+5.0
+13:33:24  INFO      [G034] pool=$087  offer=42/45 (48%)  ACCEPT  α=+5.0
+13:34:05  INFO      [G035] pool=$052  offer=28/24 (54%)  ACCEPT  α=+5.0
+13:34:50  INFO      [G036] pool=$093  offer=45/48 (48%)  ACCEPT  α=+5.0
+13:35:29  INFO      [G037] pool=$091  offer=50/41 (55%)  ACCEPT  α=+5.0
+13:36:12  INFO      [G038] pool=$039  offer=20/19 (51%)  ACCEPT  α=+5.0
+13:36:50  INFO      [G039] pool=$068  offer=27/41 (40%)  ACCEPT  α=+5.0
+13:37:35  INFO      [G040] pool=$079  offer=38/41 (48%)  ACCEPT  α=+5.0
+13:38:20  INFO      [G041] pool=$042  offer=20/22 (48%)  ACCEPT  α=+5.0
+13:39:04  INFO      [G042] pool=$076  offer=40/36 (53%)  ACCEPT  α=+5.0
+13:39:48  INFO      [G043] pool=$043  offer=22/21 (51%)  ACCEPT  α=+5.0
+13:40:40  INFO      [G044] pool=$047  offer=25/22 (53%)  ACCEPT  α=+5.0
+13:41:17  INFO      [G045] pool=$054  offer=20/34 (37%)  ACCEPT  α=+5.0
+13:42:00  INFO      [G046] pool=$055  offer=28/27 (51%)  ACCEPT  α=+5.0
+13:42:39  INFO      [G047] pool=$057  offer=34/23 (60%)  ACCEPT  α=+5.0
+13:43:19  INFO      [G048] pool=$038  offer=15/23 (39%)  ACCEPT  α=+5.0
+13:44:04  INFO      [G049] pool=$044  offer=21/23 (48%)  ACCEPT  α=+5.0
+13:44:49  INFO      [G050] pool=$082  offer=40/42 (49%)  ACCEPT  α=+5.0
+13:44:49  INFO        alpha=+5.0 | fitness=+0.98 | valid=100% | raw=49.91
+13:45:26  INFO      [G001] pool=$065  offer=25/40 (38%)  ACCEPT  α=+15.0
+13:46:06  INFO      [G002] pool=$063  offer=25/38 (40%)  ACCEPT  α=+15.0
+13:46:51  INFO      [G003] pool=$059  offer=28/31 (47%)  ACCEPT  α=+15.0
+13:47:35  INFO      [G004] pool=$050  offer=28/22 (56%)  ACCEPT  α=+15.0
+13:48:12  INFO      [G005] pool=$041  offer=25/16 (61%)  ACCEPT  α=+15.0
+13:48:50  INFO      [G006] pool=$089  offer=35/54 (39%)  ACCEPT  α=+15.0
+13:49:33  INFO      [G007] pool=$066  offer=34/32 (52%)  ACCEPT  α=+15.0
+13:50:17  INFO      [G008] pool=$048  offer=25/23 (52%)  ACCEPT  α=+15.0
+13:50:54  INFO      [G009] pool=$071  offer=35/36 (49%)  ACCEPT  α=+15.0
+13:51:36  INFO      [G010] pool=$056  offer=29/27 (52%)  ACCEPT  α=+15.0
+13:52:22  INFO      [G011] pool=$073  offer=38/35 (52%)  ACCEPT  α=+15.0
+13:53:05  INFO      [G012] pool=$061  offer=30/31 (49%)  ACCEPT  α=+15.0
+13:53:45  INFO      [G013] pool=$051  offer=26/25 (51%)  ACCEPT  α=+15.0
+13:54:22  INFO      [G014] pool=$040  offer=15/25 (38%)  ACCEPT  α=+15.0
+13:54:57  INFO      [G015] pool=$081  offer=40/41 (49%)  ACCEPT  α=+15.0
+13:55:34  INFO      [G016] pool=$080  offer=52/28 (65%)  ACCEPT  α=+15.0
+13:56:19  INFO      [G017] pool=$049  offer=23/26 (47%)  ACCEPT  α=+15.0
+13:57:12  INFO      [G018] pool=$064  offer=38/26 (59%)  ACCEPT  α=+15.0
+13:57:56  INFO      [G019] pool=$077  offer=35/42 (45%)  ACCEPT  α=+15.0
+13:58:31  INFO      [G020] pool=$037  offer=18/19 (49%)  ACCEPT  α=+15.0
+13:59:10  INFO      [G021] pool=$086  offer=34/52 (40%)  ACCEPT  α=+15.0
+13:59:47  INFO      [G022] pool=$058  offer=35/23 (60%)  ACCEPT  α=+15.0
+14:00:30  INFO      [G023] pool=$075  offer=30/45 (40%)  ACCEPT  α=+15.0
+14:01:07  INFO      [G024] pool=$092  offer=36/56 (39%)  ACCEPT  α=+15.0
+14:01:52  INFO      [G025] pool=$083  offer=40/43 (48%)  ACCEPT  α=+15.0
+14:02:26  INFO      [G026] pool=$072  offer=40/32 (56%)  ACCEPT  α=+15.0
+14:03:02  INFO      [G027] pool=$070  offer=40/30 (57%)  ACCEPT  α=+15.0
+14:03:46  INFO      [G028] pool=$060  offer=32/28 (53%)  ACCEPT  α=+15.0
+14:04:24  INFO      [G029] pool=$062  offer=30/32 (48%)  ACCEPT  α=+15.0
+14:05:10  INFO      [G030] pool=$085  offer=39/46 (46%)  ACCEPT  α=+15.0
+14:05:47  INFO      [G031] pool=$090  offer=30/60 (33%)  ACCEPT  α=+15.0
+14:06:21  INFO      [G032] pool=$078  offer=45/33 (58%)  ACCEPT  α=+15.0
+14:06:58  INFO      [G033] pool=$074  offer=30/44 (41%)  ACCEPT  α=+15.0
+14:07:43  INFO      [G034] pool=$087  offer=42/45 (48%)  ACCEPT  α=+15.0
+14:08:33  INFO      [G035] pool=$052  offer=28/24 (54%)  ACCEPT  α=+15.0
+14:09:13  INFO      [G036] pool=$093  offer=46/47 (49%)  ACCEPT  α=+15.0
+14:09:49  INFO      [G037] pool=$091  offer=64/27 (70%)  REJECT  α=+15.0
+14:10:33  INFO      [G038] pool=$039  offer=20/19 (51%)  ACCEPT  α=+15.0
+14:11:10  INFO      [G039] pool=$068  offer=35/33 (51%)  ACCEPT  α=+15.0
+14:11:55  INFO      [G040] pool=$079  offer=38/41 (48%)  ACCEPT  α=+15.0
+14:12:40  INFO      [G041] pool=$042  offer=20/22 (48%)  ACCEPT  α=+15.0
+14:13:16  INFO      [G042] pool=$076  offer=40/36 (53%)  ACCEPT  α=+15.0
+14:13:54  INFO      [G043] pool=$043  offer=21/22 (49%)  ACCEPT  α=+15.0
+14:14:34  INFO      [G044] pool=$047  offer=23/24 (49%)  ACCEPT  α=+15.0
+14:15:10  INFO      [G045] pool=$054  offer=32/22 (59%)  ACCEPT  α=+15.0
+14:15:54  INFO      [G046] pool=$055  offer=28/27 (51%)  ACCEPT  α=+15.0
+14:16:37  INFO      [G047] pool=$057  offer=29/28 (51%)  ACCEPT  α=+15.0
+14:17:21  INFO      [G048] pool=$038  offer=18/20 (47%)  ACCEPT  α=+15.0
+14:18:00  INFO      [G049] pool=$044  offer=15/29 (34%)  ACCEPT  α=+15.0
+14:18:38  INFO      [G050] pool=$082  offer=30/52 (37%)  ACCEPT  α=+15.0
+14:18:38  INFO        alpha=+15.0 | fitness=+1.68 | valid=100% | raw=49.20
+14:18:38  INFO      Stage 2 best: alpha=-5.0  fitness=+1.79  beats_baseline=True
+14:18:38  INFO      Final eval: alpha=-5.0  layers=[28]
+14:19:17  INFO      [G001] pool=$065  offer=25/40 (38%)  ACCEPT  α=-5.0
+14:20:08  INFO      [G002] pool=$063  offer=32/31 (51%)  ACCEPT  α=-5.0
+14:20:47  INFO      [G003] pool=$059  offer=35/24 (59%)  ACCEPT  α=-5.0
+14:21:32  INFO      [G004] pool=$050  offer=30/20 (60%)  ACCEPT  α=-5.0
+14:22:16  INFO      [G005] pool=$041  offer=22/19 (54%)  ACCEPT  α=-5.0
+14:22:56  INFO      [G006] pool=$089  offer=35/54 (39%)  ACCEPT  α=-5.0
+14:23:46  INFO      [G007] pool=$066  offer=34/32 (52%)  ACCEPT  α=-5.0
+14:24:30  INFO      [G008] pool=$048  offer=29/19 (60%)  ACCEPT  α=-5.0
+14:25:09  INFO      [G009] pool=$071  offer=35/36 (49%)  ACCEPT  α=-5.0
+14:26:00  INFO      [G010] pool=$056  offer=29/27 (52%)  ACCEPT  α=-5.0
+14:26:45  INFO      [G011] pool=$073  offer=30/43 (41%)  ACCEPT  α=-5.0
+14:27:35  INFO      [G012] pool=$061  offer=32/29 (52%)  ACCEPT  α=-5.0
+14:28:30  INFO      [G013] pool=$051  offer=27/24 (53%)  ACCEPT  α=-5.0
+14:29:13  INFO      [G014] pool=$040  offer=15/25 (38%)  ACCEPT  α=-5.0
+14:29:51  INFO      [G015] pool=$081  offer=40/41 (49%)  ACCEPT  α=-5.0
+14:30:28  INFO      [G016] pool=$080  offer=48/32 (60%)  ACCEPT  α=-5.0
+14:31:16  INFO      [G017] pool=$049  offer=35/14 (71%)  REJECT  α=-5.0
+14:32:09  INFO      [G018] pool=$064  offer=38/26 (59%)  ACCEPT  α=-5.0
+14:33:00  INFO      [G019] pool=$077  offer=40/37 (52%)  ACCEPT  α=-5.0
+14:33:40  INFO      [G020] pool=$037  offer=18/19 (49%)  ACCEPT  α=-5.0
+14:34:20  INFO      [G021] pool=$086  offer=34/52 (40%)  ACCEPT  α=-5.0
+14:35:01  INFO      [G022] pool=$058  offer=20/38 (34%)  ACCEPT  α=-5.0
+14:35:43  INFO      [G023] pool=$075  offer=30/45 (40%)  ACCEPT  α=-5.0
+14:36:22  INFO      [G024] pool=$092  offer=46/46 (50%)  ACCEPT  α=-5.0
+14:37:04  INFO      [G025] pool=$083  offer=41/42 (49%)  ACCEPT  α=-5.0
+14:37:41  INFO      [G026] pool=$072  offer=40/32 (56%)  ACCEPT  α=-5.0
+14:38:20  INFO      [G027] pool=$070  offer=25/45 (36%)  ACCEPT  α=-5.0
+14:39:11  INFO      [G028] pool=$060  offer=32/28 (53%)  ACCEPT  α=-5.0
+14:40:02  INFO      [G029] pool=$062  offer=32/30 (52%)  ACCEPT  α=-5.0
+14:40:38  INFO      [G030] pool=$085  offer=34/51 (40%)  ACCEPT  α=-5.0
+14:41:19  INFO      [G031] pool=$090  offer=45/45 (50%)  ACCEPT  α=-5.0
+14:42:01  INFO      [G032] pool=$078  offer=30/48 (38%)  ACCEPT  α=-5.0
+14:42:44  INFO      [G033] pool=$074  offer=38/36 (51%)  ACCEPT  α=-5.0
+14:43:25  INFO      [G034] pool=$087  offer=35/52 (40%)  ACCEPT  α=-5.0
+14:44:15  INFO      [G035] pool=$052  offer=28/24 (54%)  ACCEPT  α=-5.0
+14:44:55  INFO      [G036] pool=$093  offer=55/38 (59%)  ACCEPT  α=-5.0
+14:45:32  INFO      [G037] pool=$091  offer=45/46 (49%)  ACCEPT  α=-5.0
+14:46:13  INFO      [G038] pool=$039  offer=25/14 (64%)  ACCEPT  α=-5.0
+14:46:57  INFO      [G039] pool=$068  offer=35/33 (51%)  ACCEPT  α=-5.0
+14:47:34  INFO      [G040] pool=$079  offer=45/34 (57%)  ACCEPT  α=-5.0
+14:48:20  INFO      [G041] pool=$042  offer=28/14 (67%)  REJECT  α=-5.0
+14:49:00  INFO      [G042] pool=$076  offer=38/38 (50%)  ACCEPT  α=-5.0
+14:49:38  INFO      [G043] pool=$043  offer=22/21 (51%)  ACCEPT  α=-5.0
+14:50:25  INFO      [G044] pool=$047  offer=30/17 (64%)  ACCEPT  α=-5.0
+14:51:05  INFO      [G045] pool=$054  offer=20/34 (37%)  ACCEPT  α=-5.0
+14:51:44  INFO      [G046] pool=$055  offer=20/35 (36%)  ACCEPT  α=-5.0
+14:52:23  INFO      [G047] pool=$057  offer=34/23 (60%)  ACCEPT  α=-5.0
+14:53:02  INFO      [G048] pool=$038  offer=15/23 (39%)  ACCEPT  α=-5.0
+14:53:42  INFO      [G049] pool=$044  offer=15/29 (34%)  ACCEPT  α=-5.0
+14:54:22  INFO      [G050] pool=$082  offer=30/52 (37%)  ACCEPT  α=-5.0
+14:54:22  INFO      Saved: results/ultimatum/llm_vs_rulebased/qwen2.5-32b-gptq_ayman_32b_L28/L28/proposer/flattery/final_best.json
+
+======================================================================
+ULTIMATUM GRIDSEARCH  |  model=qwen2.5-32b-gptq  dim=flattery  role=proposer
+  n_games=50  coarse_alphas=[-5.0, 5.0, 15.0]  rulebased=True
+======================================================================
+
+=================================================================
+ULTIMATUM GAME — ACTIVATION STEERING
+  Role: PROPOSER   Dimension: flattery   α=-5.0
+  Games: 50   Valid: 50   Parse errors: 0
+=================================================================
+  Accept rate:          96.0%  (48/50)
+  Mean proposer offer:  49.6%  (std 9.3%)
+  Mean proposer payoff: 46.8% of pool
+  Mean responder payoff:49.2% of pool
+=================================================================
+==> Running responder/greed on Layer 28
+14:54:25  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=greed | role=responder
+14:54:25  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:410: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:418: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  @custom_bwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+14:54:27  WARNING   CUDA extension not installed.
+14:54:27  WARNING   CUDA extension not installed.
+`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+14:54:28  INFO      We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:00<00:01,  2.57it/s]Loading checkpoint shards:  40%|████      | 2/5 [00:00<00:01,  2.52it/s]Loading checkpoint shards:  60%|██████    | 3/5 [00:01<00:00,  2.49it/s]Loading checkpoint shards:  80%|████████  | 4/5 [00:01<00:00,  2.47it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  2.62it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  2.56it/s]
+14:54:31  INFO      number_of_layers=64
+14:54:31  INFO      Computing baseline (alpha=0, 50 games, rulebased)...
+14:57:14  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+0.0
+15:00:20  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+0.0
+15:03:01  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=+0.0
+15:05:58  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=+0.0
+15:08:57  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=+0.0
+15:12:18  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=+0.0
+15:14:58  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=+0.0
+15:17:37  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=+0.0
+15:20:25  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=+0.0
+15:23:15  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=+0.0
+15:26:02  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=+0.0
+15:29:00  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=+0.0
+15:31:45  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=+0.0
+15:34:18  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=+0.0
+15:37:01  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=+0.0
+15:39:49  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=+0.0
+15:42:26  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=+0.0
+15:45:09  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=+0.0
+15:48:09  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=+0.0
+15:50:29  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=+0.0
+15:52:51  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=+0.0
+15:55:19  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=+0.0
+15:58:01  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=+0.0
+16:00:40  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=+0.0
+16:03:12  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=+0.0
+16:05:55  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=+0.0
+16:08:50  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=+0.0
+16:12:18  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=+0.0
+16:15:18  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=+0.0
+16:18:01  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=+0.0
+16:20:54  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=+0.0
+16:23:20  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=+0.0
+16:26:14  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=+0.0
+16:29:22  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=+0.0
+16:32:00  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=+0.0
+16:35:05  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=+0.0
+16:37:57  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=+0.0
+16:41:23  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=+0.0
+16:43:56  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=+0.0
+16:46:24  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=+0.0
+16:49:08  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=+0.0
+16:52:06  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=+0.0
+16:55:31  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=+0.0
+16:59:23  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=+0.0
+17:02:07  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=+0.0
+17:04:48  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=+0.0
+17:07:37  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=+0.0
+17:10:48  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=+0.0
+17:13:31  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=+0.0
+17:16:00  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=+0.0
+17:16:00  INFO      Baseline computed.
+17:16:00  INFO      Stage 2 (coarse alpha search): alphas=[-5.0, 5.0, 15.0]
+17:16:00  INFO        -> Optimizing for Expected Direction: Decrease metric
+17:18:58  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=-5.0
+17:21:23  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=-5.0
+17:24:07  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=-5.0
+17:26:33  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=-5.0
+17:29:54  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=-5.0
+17:32:44  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=-5.0
+17:35:23  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=-5.0
+17:38:06  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=-5.0
+17:40:49  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=-5.0
+17:44:09  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=-5.0
+17:46:37  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=-5.0
+17:50:05  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=-5.0
+17:53:21  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=-5.0
+17:56:16  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=-5.0
+17:59:10  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=-5.0
+18:01:52  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=-5.0
+18:04:44  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=-5.0
+18:07:43  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=-5.0
+18:10:23  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=-5.0
+18:13:07  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=-5.0
+18:15:45  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=-5.0
+18:18:36  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=-5.0
+18:21:50  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=-5.0
+18:24:45  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=-5.0
+18:27:14  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=-5.0
+18:29:53  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=-5.0
+18:32:28  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=-5.0
+18:35:25  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=-5.0
+18:38:03  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=-5.0
+18:41:05  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=-5.0
+18:43:32  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=-5.0
+18:46:06  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=-5.0
+18:48:55  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=-5.0
+18:51:49  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=-5.0
+18:54:33  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=-5.0
+18:57:45  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=-5.0
+19:00:28  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=-5.0
+19:05:17  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=-5.0
+19:08:10  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=-5.0
+19:10:50  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=-5.0
+19:13:45  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=-5.0
+19:16:37  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=-5.0
+19:19:48  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=-5.0
+19:23:09  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=-5.0
+19:26:00  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=-5.0
+19:29:10  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=-5.0
+19:32:26  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=-5.0
+19:35:21  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=-5.0
+19:38:00  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=-5.0
+19:40:13  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=-5.0
+19:40:13  INFO        alpha=-5.0 | fitness=-0.00 | valid=100% | raw=100.00
+19:43:42  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+5.0
+19:47:04  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+5.0
+19:49:44  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=+5.0
+19:52:18  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=+5.0
+19:55:21  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=+5.0
+19:58:47  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=+5.0
+20:01:32  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=+5.0
+20:03:56  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=+5.0
+20:06:37  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=+5.0
+20:09:39  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=+5.0
+20:12:39  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=+5.0
+20:15:25  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=+5.0
+20:18:27  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=+5.0
+20:21:39  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=+5.0
+20:24:30  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=+5.0
+20:26:53  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=+5.0
+20:29:51  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=+5.0
+20:32:49  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=+5.0
+20:35:25  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=+5.0
+20:37:36  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=+5.0
+20:40:22  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=+5.0
+20:43:17  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=+5.0
+20:45:54  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=+5.0
+20:48:38  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=+5.0
+20:51:12  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=+5.0
+20:53:58  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=+5.0
+20:56:26  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=+5.0
+20:59:42  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=+5.0
+21:02:14  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=+5.0
+21:05:24  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=+5.0
+21:07:59  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=+5.0
+21:10:26  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=+5.0
+21:13:20  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=+5.0
+21:16:20  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=+5.0
+21:19:07  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=+5.0
+21:22:01  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=+5.0
+21:24:55  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=+5.0
+21:28:00  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=+5.0
+21:30:41  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=+5.0
+21:33:25  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=+5.0
+21:36:45  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=+5.0
+21:39:29  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=+5.0
+21:42:45  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=+5.0
+21:46:06  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=+5.0
+21:48:49  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=+5.0
+21:51:27  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=+5.0
+21:54:23  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=+5.0
+21:56:59  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=+5.0
+21:59:45  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=+5.0
+22:02:39  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=+5.0
+22:02:39  INFO        alpha=+5.0 | fitness=-0.00 | valid=100% | raw=100.00
+22:05:34  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+15.0
+22:08:30  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+15.0
+22:11:33  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=+15.0
+22:14:32  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=+15.0
+22:17:09  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=+15.0
+22:20:13  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=+15.0
+22:23:05  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=+15.0
+22:25:55  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=+15.0
+22:28:49  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=+15.0
+22:31:51  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=+15.0
+22:34:54  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=+15.0
+22:37:55  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=+15.0
+22:40:44  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=+15.0
+22:44:40  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=+15.0
+22:47:30  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=+15.0
+22:49:54  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=+15.0
+22:53:12  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=+15.0
+22:56:04  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=+15.0
+22:58:29  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=+15.0
+23:01:04  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=+15.0
+23:03:42  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=+15.0
+23:06:27  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=+15.0
+23:09:13  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=+15.0
+23:12:34  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=+15.0
+23:15:41  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=+15.0
+23:18:24  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=+15.0
+23:21:01  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=+15.0
+23:24:25  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=+15.0
+23:27:06  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=+15.0
+23:30:14  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=+15.0
+23:32:38  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=+15.0
+23:35:28  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=+15.0
+23:38:10  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=+15.0
+23:41:26  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=+15.0
+23:44:11  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=+15.0
+23:46:56  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=+15.0
+23:49:58  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=+15.0
+23:53:20  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=+15.0
+23:56:14  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=+15.0
+23:59:05  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=+15.0
+00:02:07  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=+15.0
+00:04:48  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=+15.0
+00:07:48  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=+15.0
+00:10:54  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=+15.0
+00:14:03  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=+15.0
+00:17:13  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=+15.0
+00:20:04  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=+15.0
+00:22:48  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=+15.0
+00:25:37  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=+15.0
+00:28:17  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=+15.0
+00:28:17  INFO        alpha=+15.0 | fitness=-0.00 | valid=100% | raw=100.00
+00:28:17  INFO      Stage 2 best: alpha=-5.0  fitness=-0.00  beats_baseline=False
+00:28:17  INFO      Final eval: alpha=-5.0  layers=[28]
+00:31:10  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=-5.0
+00:33:59  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=-5.0
+00:36:35  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=-5.0
+00:39:03  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=-5.0
+00:42:36  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=-5.0
+00:45:11  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=-5.0
+00:48:15  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=-5.0
+00:50:51  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=-5.0
+00:53:17  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=-5.0
+00:56:16  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=-5.0
+00:58:56  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=-5.0
+01:02:26  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=-5.0
+01:04:57  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=-5.0
+01:07:52  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=-5.0
+01:10:43  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=-5.0
+01:13:28  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=-5.0
+01:16:15  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=-5.0
+01:18:58  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=-5.0
+01:21:45  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=-5.0
+01:25:04  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=-5.0
+01:27:47  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=-5.0
+01:31:13  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=-5.0
+01:33:52  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=-5.0
+01:36:37  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=-5.0
+01:39:03  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=-5.0
+01:41:28  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=-5.0
+01:44:22  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=-5.0
+01:47:35  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=-5.0
+01:50:21  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=-5.0
+01:53:46  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=-5.0
+01:56:29  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=-5.0
+01:59:09  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=-5.0
+02:01:29  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=-5.0
+02:04:25  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=-5.0
+02:07:03  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=-5.0
+02:10:26  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=-5.0
+02:13:19  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=-5.0
+02:16:26  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=-5.0
+02:19:15  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=-5.0
+02:21:56  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=-5.0
+02:24:57  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=-5.0
+02:28:14  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=-5.0
+02:30:56  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=-5.0
+02:34:05  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=-5.0
+02:36:43  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=-5.0
+02:39:24  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=-5.0
+02:42:34  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=-5.0
+02:45:10  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=-5.0
+02:48:04  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=-5.0
+02:50:18  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=-5.0
+02:50:18  INFO      Saved: results/ultimatum/llm_vs_rulebased/qwen2.5-32b-gptq_ayman_32b_L28/L28/responder/greed/final_best.json
+
+======================================================================
+ULTIMATUM GRIDSEARCH  |  model=qwen2.5-32b-gptq  dim=greed  role=responder
+  n_games=50  coarse_alphas=[-5.0, 5.0, 15.0]  rulebased=True
+======================================================================
+
+=================================================================
+ULTIMATUM GAME — ACTIVATION STEERING
+  Role: RESPONDER   Dimension: greed   α=-5.0
+  Games: 300   Valid: 300   Parse errors: 0
+=================================================================
+  Accept rate:          100.0%  (300/300)
+  Mean proposer offer:  62.5%  (std 25.5%)
+  Mean proposer payoff: 62.5% of pool
+  Mean responder payoff:37.5% of pool
+=================================================================
+==> Running responder/fairness_norm on Layer 28
+02:50:22  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=fairness_norm | role=responder
+02:50:22  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:410: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:418: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  @custom_bwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+02:50:23  WARNING   CUDA extension not installed.
+02:50:23  WARNING   CUDA extension not installed.
+`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+02:50:25  INFO      We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:00<00:01,  2.58it/s]Loading checkpoint shards:  40%|████      | 2/5 [00:00<00:01,  2.52it/s]Loading checkpoint shards:  60%|██████    | 3/5 [00:01<00:00,  2.50it/s]Loading checkpoint shards:  80%|████████  | 4/5 [00:01<00:00,  2.48it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  2.63it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  2.57it/s]
+02:50:27  INFO      number_of_layers=64
+02:50:27  INFO      Computing baseline (alpha=0, 50 games, rulebased)...
+02:53:28  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+0.0
+02:56:25  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+0.0
+02:59:05  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=+0.0
+03:01:46  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=+0.0
+03:04:08  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=+0.0
+03:07:17  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=+0.0
+03:10:23  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=+0.0
+03:12:58  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=+0.0
+03:15:40  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=+0.0
+03:18:26  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=+0.0
+03:21:00  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=+0.0
+03:23:38  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=+0.0
+03:26:33  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=+0.0
+03:29:08  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=+0.0
+03:32:06  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=+0.0
+03:34:49  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=+0.0
+03:37:31  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=+0.0
+03:40:06  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=+0.0
+03:42:45  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=+0.0
+03:44:54  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=+0.0
+03:47:19  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=+0.0
+03:50:12  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=+0.0
+03:53:04  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=+0.0
+03:55:37  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=+0.0
+03:58:26  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=+0.0
+04:01:12  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=+0.0
+04:03:50  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=+0.0
+04:07:03  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=+0.0
+04:09:46  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=+0.0
+04:12:37  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=+0.0
+04:15:27  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=+0.0
+04:18:06  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=+0.0
+04:20:45  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=+0.0
+04:23:47  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=+0.0
+04:26:22  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=+0.0
+04:29:24  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=+0.0
+04:32:17  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=+0.0
+04:35:51  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=+0.0
+04:38:36  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=+0.0
+04:41:27  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=+0.0
+04:44:10  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=+0.0
+04:47:24  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=+0.0
+04:50:24  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=+0.0
+04:53:42  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=+0.0
+04:56:43  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=+0.0
+04:59:36  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=+0.0
+05:02:19  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=+0.0
+05:04:58  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=+0.0
+05:07:53  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=+0.0
+05:10:47  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=+0.0
+05:10:47  INFO      Baseline computed.
+05:10:47  INFO      Stage 2 (coarse alpha search): alphas=[-5.0, 5.0, 15.0]
+05:10:47  INFO        -> Optimizing for Expected Direction: Decrease metric
+05:13:36  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=-5.0
+05:16:38  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=-5.0
+05:19:35  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=-5.0
+05:22:09  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=-5.0
+05:24:59  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=-5.0
+05:27:40  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=-5.0
+05:30:51  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=-5.0
+05:33:36  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=-5.0
+05:36:25  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=-5.0
+05:39:13  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=-5.0
+05:42:14  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=-5.0
+05:44:49  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=-5.0
+05:48:08  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=-5.0
+05:51:04  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=-5.0
+05:53:47  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=-5.0
+05:56:08  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=-5.0
+05:58:54  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=-5.0
+06:01:13  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=-5.0
+06:03:54  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=-5.0
+06:06:45  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=-5.0
+06:09:28  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=-5.0
+06:12:29  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=-5.0
+06:15:00  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=-5.0
+06:17:58  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=-5.0
+06:20:37  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=-5.0
+06:23:04  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=-5.0
+06:26:02  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=-5.0
+06:29:04  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=-5.0
+06:31:42  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=-5.0
+06:34:33  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=-5.0
+06:36:59  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=-5.0
+06:39:47  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=-5.0
+06:42:23  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=-5.0
+06:45:10  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=-5.0
+06:48:11  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=-5.0
+06:51:04  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=-5.0
+06:54:01  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=-5.0
+06:58:11  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=-5.0
+07:01:02  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=-5.0
+07:03:46  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=-5.0
+07:07:13  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=-5.0
+07:09:52  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=-5.0
+07:12:45  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=-5.0
+07:15:43  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=-5.0
+07:18:40  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=-5.0
+07:21:07  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=-5.0
+07:24:14  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=-5.0
+07:26:55  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=-5.0
+07:29:43  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=-5.0
+07:32:21  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=-5.0
+07:32:21  INFO        alpha=-5.0 | fitness=-0.00 | valid=100% | raw=100.00
+07:35:47  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+5.0
+07:38:50  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+5.0
+07:41:58  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=+5.0
+07:44:29  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=+5.0
+07:47:22  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=+5.0
+07:50:27  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=+5.0
+07:53:21  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=+5.0
+07:56:02  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=+5.0
+07:58:39  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=+5.0
+08:01:29  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=+5.0
+08:04:02  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=+5.0
+08:06:56  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=+5.0
+08:09:49  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=+5.0
+08:12:31  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=+5.0
+08:15:19  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=+5.0
+08:18:04  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=+5.0
+08:20:40  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=+5.0
+08:24:02  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=+5.0
+08:26:58  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=+5.0
+08:29:44  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=+5.0
+08:32:14  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=+5.0
+08:35:08  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=+5.0
+08:37:44  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=+5.0
+08:40:15  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=+5.0
+08:42:40  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=+5.0
+08:45:15  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=+5.0
+08:48:53  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=+5.0
+08:52:28  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=+5.0
+08:55:10  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=+5.0
+08:58:10  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=+5.0
+09:00:45  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=+5.0
+09:03:30  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=+5.0
+09:05:58  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=+5.0
+09:09:31  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=+5.0
+09:12:21  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=+5.0
+09:15:02  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=+5.0
+09:18:16  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=+5.0
+09:21:17  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=+5.0
+09:24:01  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=+5.0
+09:26:45  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=+5.0
+09:29:39  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=+5.0
+09:32:26  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=+5.0
+09:35:43  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=+5.0
+09:38:43  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=+5.0
+09:41:30  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=+5.0
+09:43:55  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=+5.0
+09:46:36  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=+5.0
+09:50:32  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=+5.0
+09:53:04  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=+5.0
+09:55:35  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=+5.0
+09:55:35  INFO        alpha=+5.0 | fitness=-0.00 | valid=100% | raw=100.00
+09:58:25  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+15.0
+10:01:57  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+15.0
+10:04:54  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=+15.0
+10:07:49  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=+15.0
+10:10:33  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=+15.0
+10:13:33  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=+15.0
+10:16:18  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=+15.0
+10:19:02  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=+15.0
+10:21:50  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=+15.0
+10:24:46  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=+15.0
+10:27:37  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=+15.0
+10:30:25  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=+15.0
+10:33:40  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=+15.0
+10:36:52  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=+15.0
+10:39:29  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=+15.0
+10:42:23  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=+15.0
+10:45:06  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=+15.0
+10:48:08  INFO      [G018] pool=$064  threshold_sweep  accepted=5/6  α=+15.0
+10:50:45  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=+15.0
+10:53:21  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=+15.0
+10:55:55  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=+15.0
+10:58:45  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=+15.0
+11:02:16  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=+15.0
+11:05:13  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=+15.0
+11:07:43  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=+15.0
+11:10:35  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=+15.0
+11:13:32  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=+15.0
+11:16:28  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=+15.0
+11:19:12  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=+15.0
+11:21:52  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=+15.0
+11:24:22  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=+15.0
+11:27:05  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=+15.0
+11:29:41  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=+15.0
+11:33:11  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=+15.0
+11:36:05  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=+15.0
+11:39:11  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=+15.0
+11:42:23  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=+15.0
+11:44:48  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=+15.0
+11:47:55  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=+15.0
+11:50:47  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=+15.0
+11:54:01  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=+15.0
+11:56:41  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=+15.0
+12:00:10  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=+15.0
+12:03:32  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=+15.0
+12:06:24  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=+15.0
+12:08:59  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=+15.0
+12:11:49  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=+15.0
+12:14:19  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=+15.0
+12:16:52  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=+15.0
+12:19:14  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=+15.0
+12:19:14  INFO        alpha=+15.0 | fitness=+0.33 | valid=100% | raw=99.67
+12:19:14  INFO      Stage 2 best: alpha=+15.0  fitness=+0.33  beats_baseline=True
+12:19:14  INFO      Final eval: alpha=+15.0  layers=[28]
+12:22:15  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+15.0
+12:24:59  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+15.0
+12:29:01  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=+15.0
+12:32:25  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=+15.0
+12:35:18  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=+15.0
+12:38:34  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=+15.0
+12:41:34  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=+15.0
+12:44:46  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=+15.0
+12:47:31  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=+15.0
+12:50:39  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=+15.0
+12:53:14  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=+15.0
+12:56:33  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=+15.0
+13:00:34  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=+15.0
+13:03:34  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=+15.0
+13:06:09  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=+15.0
+13:08:50  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=+15.0
+13:11:35  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=+15.0
+13:14:12  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=+15.0
+13:17:06  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=+15.0
+13:19:40  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=+15.0
+13:22:24  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=+15.0
+13:25:56  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=+15.0
+13:28:55  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=+15.0
+13:31:50  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=+15.0
+13:34:09  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=+15.0
+13:36:59  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=+15.0
+13:39:47  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=+15.0
+13:43:34  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=+15.0
+13:46:17  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=+15.0
+13:49:03  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=+15.0
+13:51:43  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=+15.0
+13:54:24  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=+15.0
+13:57:26  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=+15.0
+14:00:27  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=+15.0
+14:03:22  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=+15.0
+14:06:42  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=+15.0
+14:09:58  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=+15.0
+14:12:54  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=+15.0
+14:15:55  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=+15.0
+14:19:06  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=+15.0
+14:22:22  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=+15.0
+14:25:03  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=+15.0
+14:28:00  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=+15.0
+14:31:48  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=+15.0
+14:34:39  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=+15.0
+14:37:26  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=+15.0
+14:40:06  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=+15.0
+14:42:54  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=+15.0
+14:45:50  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=+15.0
+14:48:19  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=+15.0
+14:48:19  INFO      Saved: results/ultimatum/llm_vs_rulebased/qwen2.5-32b-gptq_ayman_32b_L28/L28/responder/fairness_norm/final_best.json
+
+======================================================================
+ULTIMATUM GRIDSEARCH  |  model=qwen2.5-32b-gptq  dim=fairness_norm  role=responder
+  n_games=50  coarse_alphas=[-5.0, 5.0, 15.0]  rulebased=True
+======================================================================
+
+=================================================================
+ULTIMATUM GAME — ACTIVATION STEERING
+  Role: RESPONDER   Dimension: fairness_norm   α=+15.0
+  Games: 300   Valid: 300   Parse errors: 0
+=================================================================
+  Accept rate:          100.0%  (300/300)
+  Mean proposer offer:  62.5%  (std 25.5%)
+  Mean proposer payoff: 62.5% of pool
+  Mean responder payoff:37.5% of pool
+=================================================================
+==> Running responder/flattery on Layer 28
+14:48:23  INFO      Model Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4 | dim=flattery | role=responder
+14:48:23  INFO      Loading model: Qwen/Qwen2.5-32B-Instruct-GPTQ-Int4
+`torch_dtype` is deprecated! Use `dtype` instead!
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:410: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:418: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  @custom_bwd
+/cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/lib/python3.11/site-packages/auto_gptq/nn_modules/triton_utils/kernels.py:461: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd(cast_inputs=torch.float16)
+14:48:24  WARNING   CUDA extension not installed.
+14:48:24  WARNING   CUDA extension not installed.
+`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+14:48:25  INFO      We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:00<00:01,  2.58it/s]Loading checkpoint shards:  40%|████      | 2/5 [00:00<00:01,  2.52it/s]Loading checkpoint shards:  60%|██████    | 3/5 [00:01<00:00,  2.49it/s]Loading checkpoint shards:  80%|████████  | 4/5 [00:01<00:00,  2.47it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  2.62it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  2.57it/s]
+14:48:28  INFO      number_of_layers=64
+14:48:28  INFO      Computing baseline (alpha=0, 50 games, rulebased)...
+14:51:48  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+0.0
+14:54:26  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+0.0
+14:57:44  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=+0.0
+15:00:35  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=+0.0
+15:04:07  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=+0.0
+15:07:16  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=+0.0
+15:10:10  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=+0.0
+15:12:45  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=+0.0
+15:15:41  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=+0.0
+15:18:49  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=+0.0
+15:21:31  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=+0.0
+15:24:49  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=+0.0
+15:27:37  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=+0.0
+15:31:05  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=+0.0
+15:34:04  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=+0.0
+15:36:48  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=+0.0
+15:39:52  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=+0.0
+15:42:28  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=+0.0
+15:45:24  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=+0.0
+15:47:55  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=+0.0
+15:50:40  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=+0.0
+15:53:19  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=+0.0
+15:56:06  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=+0.0
+15:58:58  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=+0.0
+16:01:34  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=+0.0
+16:04:12  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=+0.0
+16:06:53  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=+0.0
+16:09:54  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=+0.0
+16:12:33  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=+0.0
+16:15:25  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=+0.0
+16:18:21  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=+0.0
+16:20:54  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=+0.0
+16:23:26  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=+0.0
+16:26:57  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=+0.0
+16:30:05  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=+0.0
+16:32:52  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=+0.0
+16:35:52  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=+0.0
+16:38:34  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=+0.0
+16:41:23  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=+0.0
+16:44:01  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=+0.0
+16:47:28  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=+0.0
+16:50:07  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=+0.0
+16:52:56  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=+0.0
+16:56:08  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=+0.0
+16:58:47  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=+0.0
+17:01:34  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=+0.0
+17:04:24  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=+0.0
+17:07:09  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=+0.0
+17:10:07  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=+0.0
+17:13:18  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=+0.0
+17:13:18  INFO      Baseline computed.
+17:13:18  INFO      Stage 2 (coarse alpha search): alphas=[-5.0, 5.0, 15.0]
+17:13:18  INFO        -> Optimizing for Expected Direction: Increase metric
+17:16:53  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=-5.0
+17:19:35  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=-5.0
+17:22:34  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=-5.0
+17:25:07  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=-5.0
+17:28:15  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=-5.0
+17:31:03  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=-5.0
+17:34:04  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=-5.0
+17:36:50  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=-5.0
+17:39:17  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=-5.0
+17:42:21  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=-5.0
+17:44:54  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=-5.0
+17:47:50  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=-5.0
+17:50:25  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=-5.0
+17:53:01  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=-5.0
+17:55:35  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=-5.0
+17:58:47  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=-5.0
+18:01:36  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=-5.0
+18:04:21  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=-5.0
+18:07:00  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=-5.0
+18:09:40  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=-5.0
+18:11:59  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=-5.0
+18:14:36  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=-5.0
+18:16:52  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=-5.0
+18:19:46  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=-5.0
+18:22:29  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=-5.0
+18:25:18  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=-5.0
+18:28:09  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=-5.0
+18:31:42  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=-5.0
+18:35:05  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=-5.0
+18:37:39  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=-5.0
+18:40:41  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=-5.0
+18:43:33  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=-5.0
+18:46:17  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=-5.0
+18:49:05  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=-5.0
+18:52:13  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=-5.0
+18:55:42  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=-5.0
+18:58:47  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=-5.0
+19:02:04  INFO      [G038] pool=$039  threshold_sweep  accepted=6/6  α=-5.0
+19:04:52  INFO      [G039] pool=$068  threshold_sweep  accepted=6/6  α=-5.0
+19:07:26  INFO      [G040] pool=$079  threshold_sweep  accepted=6/6  α=-5.0
+19:10:38  INFO      [G041] pool=$042  threshold_sweep  accepted=6/6  α=-5.0
+19:13:22  INFO      [G042] pool=$076  threshold_sweep  accepted=6/6  α=-5.0
+19:16:23  INFO      [G043] pool=$043  threshold_sweep  accepted=6/6  α=-5.0
+19:19:43  INFO      [G044] pool=$047  threshold_sweep  accepted=6/6  α=-5.0
+19:22:22  INFO      [G045] pool=$054  threshold_sweep  accepted=6/6  α=-5.0
+19:24:44  INFO      [G046] pool=$055  threshold_sweep  accepted=6/6  α=-5.0
+19:27:48  INFO      [G047] pool=$057  threshold_sweep  accepted=6/6  α=-5.0
+19:30:23  INFO      [G048] pool=$038  threshold_sweep  accepted=6/6  α=-5.0
+19:33:24  INFO      [G049] pool=$044  threshold_sweep  accepted=6/6  α=-5.0
+19:36:07  INFO      [G050] pool=$082  threshold_sweep  accepted=6/6  α=-5.0
+19:36:07  INFO        alpha=-5.0 | fitness=+0.00 | valid=100% | raw=100.00
+19:38:48  INFO      [G001] pool=$065  threshold_sweep  accepted=6/6  α=+5.0
+19:41:35  INFO      [G002] pool=$063  threshold_sweep  accepted=6/6  α=+5.0
+19:44:23  INFO      [G003] pool=$059  threshold_sweep  accepted=6/6  α=+5.0
+19:47:00  INFO      [G004] pool=$050  threshold_sweep  accepted=6/6  α=+5.0
+19:49:54  INFO      [G005] pool=$041  threshold_sweep  accepted=6/6  α=+5.0
+19:52:38  INFO      [G006] pool=$089  threshold_sweep  accepted=6/6  α=+5.0
+19:55:21  INFO      [G007] pool=$066  threshold_sweep  accepted=6/6  α=+5.0
+19:57:51  INFO      [G008] pool=$048  threshold_sweep  accepted=6/6  α=+5.0
+20:00:31  INFO      [G009] pool=$071  threshold_sweep  accepted=6/6  α=+5.0
+20:03:10  INFO      [G010] pool=$056  threshold_sweep  accepted=6/6  α=+5.0
+20:06:12  INFO      [G011] pool=$073  threshold_sweep  accepted=6/6  α=+5.0
+20:09:00  INFO      [G012] pool=$061  threshold_sweep  accepted=6/6  α=+5.0
+20:11:38  INFO      [G013] pool=$051  threshold_sweep  accepted=6/6  α=+5.0
+20:14:16  INFO      [G014] pool=$040  threshold_sweep  accepted=6/6  α=+5.0
+20:17:16  INFO      [G015] pool=$081  threshold_sweep  accepted=6/6  α=+5.0
+20:19:51  INFO      [G016] pool=$080  threshold_sweep  accepted=6/6  α=+5.0
+20:22:42  INFO      [G017] pool=$049  threshold_sweep  accepted=6/6  α=+5.0
+20:25:33  INFO      [G018] pool=$064  threshold_sweep  accepted=6/6  α=+5.0
+20:28:45  INFO      [G019] pool=$077  threshold_sweep  accepted=6/6  α=+5.0
+20:31:30  INFO      [G020] pool=$037  threshold_sweep  accepted=6/6  α=+5.0
+20:34:04  INFO      [G021] pool=$086  threshold_sweep  accepted=6/6  α=+5.0
+20:36:34  INFO      [G022] pool=$058  threshold_sweep  accepted=6/6  α=+5.0
+20:39:09  INFO      [G023] pool=$075  threshold_sweep  accepted=6/6  α=+5.0
+20:41:51  INFO      [G024] pool=$092  threshold_sweep  accepted=6/6  α=+5.0
+20:44:41  INFO      [G025] pool=$083  threshold_sweep  accepted=6/6  α=+5.0
+20:47:14  INFO      [G026] pool=$072  threshold_sweep  accepted=6/6  α=+5.0
+20:49:59  INFO      [G027] pool=$070  threshold_sweep  accepted=6/6  α=+5.0
+20:53:20  INFO      [G028] pool=$060  threshold_sweep  accepted=6/6  α=+5.0
+20:56:05  INFO      [G029] pool=$062  threshold_sweep  accepted=6/6  α=+5.0
+20:59:16  INFO      [G030] pool=$085  threshold_sweep  accepted=6/6  α=+5.0
+21:02:06  INFO      [G031] pool=$090  threshold_sweep  accepted=6/6  α=+5.0
+21:04:44  INFO      [G032] pool=$078  threshold_sweep  accepted=6/6  α=+5.0
+21:07:12  INFO      [G033] pool=$074  threshold_sweep  accepted=6/6  α=+5.0
+21:10:05  INFO      [G034] pool=$087  threshold_sweep  accepted=6/6  α=+5.0
+21:12:50  INFO      [G035] pool=$052  threshold_sweep  accepted=6/6  α=+5.0
+21:15:47  INFO      [G036] pool=$093  threshold_sweep  accepted=6/6  α=+5.0
+21:18:28  INFO      [G037] pool=$091  threshold_sweep  accepted=6/6  α=+5.0
+Terminated
+==> All dimensions in Group 2 complete for Layer 28.
