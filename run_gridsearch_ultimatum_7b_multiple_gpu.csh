@@ -1,26 +1,19 @@
 #!/bin/csh
-# run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh
+# run_gridsearch_ultimatum_7b_multiple_gpu.csh
 # Grid search over negotiation dimensions using the Ultimatum Game.
-# Qwen 2.5-32B GPTQ-Int4, rule-based opponent, fully reproducible.
+# Qwen 2.5-7B, rule-based opponent, fully reproducible.
 #
 # Two modes:
-#   Dispatch:  csh run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh <username>
-#              SSHes into free GPU machines and launches one (layer, dim_group) per machine.
-#              7 layers × 3 dim groups = 21 jobs across available machines.
+#   Dispatch:  csh run_gridsearch_ultimatum_7b_multiple_gpu.csh <username>
+#              SSHes into free GPU machines and launches one layer per machine.
 #
-#   Local:     csh run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh <layer_number> <group_number>
-#              Runs the gridsearch for that layer + dimension group on the current machine.
-#              Each group runs both proposer and responder roles.
+#   Local:     csh run_gridsearch_ultimatum_7b_multiple_gpu.csh <layer_number>
+#              Runs the gridsearch for that layer on the current machine.
 
 # ═══════════════════════════════════════════════════════════════════════
 # EDIT THESE
 # ═══════════════════════════════════════════════════════════════════════
-set LAYERS = ( 32 )
-
-# Dimension groups (3 groups: 4 + 3 + 3 = 10)
-# Group 1: firmness empathy spite narcissism
-# Group 2: greed fairness_norm flattery
-# Group 3: composure anchoring undecidedness
+set LAYERS = ( 10 12 14 16 )
 
 set MACHINES = ( \
     aylesbury-l \
@@ -51,16 +44,11 @@ set MACHINES = ( \
 if ( $#argv < 1 ) then
     echo "Usage:"
     echo "  Dispatch: csh $0 <username>"
-    echo "  Local:    csh $0 <layer_number> <group_number>"
-    echo ""
-    echo "  Groups: 1 = firmness"
-    echo "          2 = empathy"
-    echo "          3 = spite"
-    echo "          4 = narcissism"
+    echo "  Local:    csh $0 <layer_number>"
     exit 1
 endif
 
-# Detect mode: if first arg is a number, run locally. Otherwise, dispatch.
+# Detect mode: if arg is a number, run locally. Otherwise, dispatch.
 echo "$argv[1]" | grep -q '^[0-9][0-9]*$'
 if ( $status == 0 ) then
     goto local_run
@@ -69,102 +57,74 @@ else
 endif
 
 # ═══════════════════════════════════════════════════════════════════════
-# DISPATCH MODE — SSH into free machines, one (layer, dim_group) per machine
+# DISPATCH MODE — SSH into free machines, launch one layer per machine
 # ═══════════════════════════════════════════════════════════════════════
 dispatch:
     set UCL_USER    = "$argv[1]"
+    set JUMP_HOST   = "${UCL_USER}@knuckles.cs.ucl.ac.uk"
     set DOMAIN      = "cs.ucl.ac.uk"
     set PROJECT_DIR = "/cs/student/projects3/2022/${UCL_USER}/comp0087_snlp_cwk"
+    set VENV_ACTIVATE = "/cs/student/projects3/2022/${UCL_USER}/.venv/bin/activate.csh"
     set SSH_OPTS    = "-o ConnectTimeout=10 -o StrictHostKeyChecking=no -o BatchMode=yes"
-    set NUM_GROUPS  = 4
-
-    set total_jobs = 0
-    @ total_jobs = $#LAYERS * $NUM_GROUPS
 
     echo "============================================================"
-    echo "Dispatch mode: ${#LAYERS} layers x ${NUM_GROUPS} dim groups = ${total_jobs} jobs"
+    echo "Dispatch mode: ${#LAYERS} layers across ${#MACHINES} machines"
     echo "User: ${UCL_USER}"
     echo "Layers: ${LAYERS}"
-    echo "Groups: 1=firmness  2=empathy  3=spite  4=narcissism"
     echo "============================================================"
     echo ""
 
+    # Track which machine index to start from (so we don't reuse machines)
     set machine_idx = 1
 
     foreach layer ( $LAYERS )
-        foreach group ( 1 2 3 4 )
-            set found = 0
+        set found = 0
 
-            while ( $machine_idx <= $#MACHINES )
-                set machine = $MACHINES[$machine_idx]
+        while ( $machine_idx <= $#MACHINES )
+            set machine = $MACHINES[$machine_idx]
 
-                set raw = `ssh $SSH_OPTS ${machine}.${DOMAIN} '/bin/bash -c "nvidia-smi --query-compute-apps=pid --format=csv,noheader 2>/dev/null | wc -l"' |& grep '^[0-9]' | tr -d ' '`
+            # Check GPU availability
+            set raw = `ssh $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} "nvidia-smi --query-compute-apps=pid --format=csv,noheader | wc -l" |& grep '^[0-9]' | tr -d ' '`
 
-                if ( "$raw" == "0" ) then
-                    echo "==> Layer ${layer}, Group ${group} -> ${machine} (GPU free)"
+            if ( "$raw" == "0" ) then
+                echo "==> Layer ${layer} -> ${machine} (GPU free)"
 
-                    set LOG = "${PROJECT_DIR}/logs/gridsearch_32b_${UCL_USER}_L${layer}_G${group}.log"
+                set LOG = "${PROJECT_DIR}/logs/gridsearch_7b_${UCL_USER}_L${layer}.log"
 
-        #            ssh $SSH_OPTS ${machine}.${DOMAIN} \
-        #                "nohup /bin/bash -c 'cd ${PROJECT_DIR} && csh run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh ${layer} ${group} > ${LOG} 2>&1' &"
-                ssh -f $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} \
-                    "/bin/bash -c 'cd ${PROJECT_DIR} && nohup csh run_gridsearch_ultimatum_ayman_32b_multiple_gpu.csh ${layer} > ${LOG} 2>&1 &'"
+                ssh $SSH_OPTS -l $UCL_USER -J $JUMP_HOST ${machine}.${DOMAIN} \
+                    "cd ${PROJECT_DIR} && source ${VENV_ACTIVATE} && nohup csh run_gridsearch_ultimatum_7b_multiple_gpu.csh ${layer} >& ${LOG} &"
 
-                    set found = 1
-                    @ machine_idx++
-                    sleep 2
-                    break
-                else
-                    echo "    ${machine}: GPU busy (${raw} procs), skipping"
-                    @ machine_idx++
-                    sleep 1
-                endif
-            end
-
-            if ( $found == 0 ) then
-                echo "==> WARNING: No free machine for Layer ${layer}, Group ${group}"
+                set found = 1
+                @ machine_idx++
+                sleep 2
+                break
+            else
+                echo "    ${machine}: GPU busy (${raw} procs), skipping"
+                @ machine_idx++
+                sleep 1
             endif
         end
+
+        if ( $found == 0 ) then
+            echo "==> WARNING: No free machine for Layer ${layer}"
+        endif
     end
 
     echo ""
     echo "============================================================"
     echo "Dispatch complete. Check logs at:"
-    echo "  ${PROJECT_DIR}/logs/gridsearch_32b_${UCL_USER}_L*_G*.log"
+    echo "  ${PROJECT_DIR}/logs/gridsearch_7b_${UCL_USER}_L*.log"
     echo "============================================================"
     exit 0
 
 # ═══════════════════════════════════════════════════════════════════════
-# LOCAL MODE — Run gridsearch for a single layer + dimension group
+# LOCAL MODE — Run gridsearch for a single layer on this machine
 # ═══════════════════════════════════════════════════════════════════════
 local_run:
-    if ( $#argv < 2 ) then
-        echo "Local mode requires two arguments: <layer_number> <group_number>"
-        echo "  Groups: 1 = firmness  2 = empathy  3 = spite  4 = narcissism"
-        exit 1
-    endif
-
     set FIXED_LAYERS = ( $argv[1] )
-    set GROUP_NUM    = $argv[2]
-
-    # Map group number to dimensions
-    if ( "$GROUP_NUM" == "1" ) then
-        set DIMS = ( firmness )
-    else if ( "$GROUP_NUM" == "2" ) then
-        set DIMS = ( empathy )
-    else if ( "$GROUP_NUM" == "3" ) then
-        set DIMS = ( spite )
-    else if ( "$GROUP_NUM" == "4" ) then
-        set DIMS = ( narcissism )
-    else
-        echo "Invalid group number: ${GROUP_NUM} (must be 1-4)"
-        exit 1
-    endif
 
     set FIXED_POOL  = ""   # leave empty to use variable pool sizes
-    # Set prompt to avoid "Undefined variable" in non-interactive shells
-    if ( ! $?prompt ) set prompt = ""
-    source /cs/student/projects3/2022/asaeed/comp0087_snlp_cwk/env/bin/activate.csh
+
     setenv HF_HOME .hf_cache
     if ( $?HF_TOKEN ) then
         setenv HF_TOKEN "$HF_TOKEN"
@@ -172,13 +132,24 @@ local_run:
 
     set RULEBASED   = (--rulebased)
 
-    set MODEL       = "qwen2.5-32b-gptq"
+    set MODEL       = "qwen2.5-7b"
     set VECTORS_DIR = "vectors/ultimatum_10dim_20pairs_general_matched/negotiation"
-    set SUFFIX      = "_ayman_32b_L${FIXED_LAYERS}"
+    set SUFFIX      = "_7b_L${FIXED_LAYERS}"
 
     set OUT_DIR = "results/ultimatum/llm_vs_rulebased/${MODEL}${SUFFIX}"
 
-    echo "==> Layer ${FIXED_LAYERS}, Group ${GROUP_NUM}: ${DIMS}"
+    set DIMS = ( \
+        firmness \
+        empathy \
+        composure \
+        anchoring \
+        greed \
+        fairness_norm \
+        flattery \
+        narcissism \
+        spite \
+        undecidedness \
+    )
 
     foreach layer ( $FIXED_LAYERS )
         foreach role ( proposer responder )
@@ -204,7 +175,7 @@ local_run:
                         --dimension     "${dim}" \
                         --role          "${role}" \
                         --vectors_dir   "${VECTORS_DIR}" \
-                        --coarse_alphas -5 5 15 \
+                        --coarse_alphas -15 -5 5 15 \
                         --n_games       50 \
                         --output_suffix "${SUFFIX}" \
                         --output_dir    "${CURRENT_OUT_DIR}" \
@@ -216,5 +187,5 @@ local_run:
         end
     end
 
-    echo "==> All dimensions in Group ${GROUP_NUM} complete for Layer ${FIXED_LAYERS}."
+    echo "==> All dimensions complete for Layer ${FIXED_LAYERS}."
     exit 0
