@@ -7,7 +7,7 @@ VECTORS=vectors/ultimatum_10dim_20pairs_general_matched/negotiation
 OUTDIR=results/ultimatum/top5_200games
 COMMON="--model qwen2.5-7b --dimension empathy --steered_role proposer \
   --game ultimatum --n_games 200 --variable_pools --paired \
-  --temperature 0.0 --dtype float16 \
+  --temperature 0.0 --dtype bfloat16 \
   --vectors_dir $VECTORS --output_dir $OUTDIR"
 
 echo "=== Top 5 UG configs, n=200 ==="
