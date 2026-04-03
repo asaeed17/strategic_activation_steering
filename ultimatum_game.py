@@ -1128,6 +1128,9 @@ def main() -> None:
             load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16,
             bnb_4bit_use_double_quant=True, bnb_4bit_quant_type="nf4",
         )
+    elif getattr(cfg, "is_gptq", False) or getattr(cfg, "is_awq", False):
+        # Pre-quantized models: transformers auto-detects GPTQ/AWQ from model config
+        pass
     else:
         load_kwargs["torch_dtype"] = dtype_map[args.dtype]
 

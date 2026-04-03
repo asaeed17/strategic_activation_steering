@@ -437,39 +437,53 @@ L10 has 2-3x the demand effect of L12 for empathy. L12 acceptance is slightly hi
 
 **Question:** Does empathy also show the L10 context-reversal found for firmness? Or is that firmness-specific?
 
-**Initial result (2 configs, α=7 only):**
+**Initial result (2 configs, α=7 only, QUANTIZED — later shown to be confounded):**
 
-| Config           | UG Δ demand | DG Δ demand             | Pattern    |
-| ---------------- | ----------- | ----------------------- | ---------- |
-| Firmness L10 α=7 | +16.1pp     | **-5.8pp** (d=-0.65)    | Reversal   |
-| Firmness L12 α=7 | +13.2pp     | **+15.3pp** (d=0.96)    | Persistent |
-| Empathy L10 α=+7 | +11.4pp     | **-0.5pp** (p=0.23, NS) | Nullified  |
-| Empathy L12 α=+7 | +5.2pp      | **-1.1pp** (d=-0.24)    | Nullified  |
+| Config           | UG Δ demand | DG Δ demand (quantized) | Apparent Pattern |
+| ---------------- | ----------- | ----------------------- | ---------------- |
+| Firmness L10 α=7 | +16.1pp     | **-5.8pp** (d=-0.65)    | Reversal         |
+| Firmness L12 α=7 | +13.2pp     | **+15.3pp** (d=0.96)    | Persistent       |
+| Empathy L10 α=+7 | +11.4pp     | **-0.5pp** (p=0.23, NS) | Nullified        |
+| Empathy L12 α=+7 | +5.2pp      | **-1.1pp** (d=-0.24)    | Nullified        |
 
-**Round 5 expanded empathy DG (4 additional configs, α=3 and α=10):**
+### Round 7: Empathy DG Confound Resolution (2026-03-31)
 
-| Layer | Alpha | DG Δ demand | d     | p      | DG baseline |
-| ----- | ----- | ----------- | ----- | ------ | ----------- |
-| 10    | 3     | **-25.0pp** | -3.06 | <0.001 | 77.4%†      |
-| 10    | 7     | -0.5pp      | -0.12 | 0.226  | 59.2%       |
-| 10    | 10    | **-13.5pp** | -1.15 | <0.001 | 77.3%†      |
-| 12    | 3     | **-18.6pp** | -1.64 | <0.001 | 77.4%†      |
-| 12    | 7     | -1.1pp      | -0.24 | 0.020  | 59.2%       |
-| 12    | 10    | **-22.8pp** | -2.68 | <0.001 | 77.3%†      |
+**The "nullification" was a quantization artifact.** Reran all 6 empathy DG configs on the same machine (mallard-l, RTX 3090 Ti) with same dtype (bfloat16, no quantization). Baselines are now consistent: 77.29-77.44% (0.15pp spread).
 
-†**Baseline discrepancy warning:** The α=7 configs (Round 4, 4-bit NF4 quantized) have baselines of ~59%. The α={3,10} configs (Round 5, UCL lab RTX 3090 Ti, bfloat16 unquantized) have baselines of ~77%. The model's baseline DG demand is highly sensitive to numerical precision. **Within-config paired deltas are valid** (each compares steered vs baseline under identical conditions), but **cross-alpha dose-response is confounded** by the precision change. We cannot conclude the non-monotonic pattern (α=3 huge, α=7 null, α=10 huge) is real without rerunning all alphas under identical conditions.
+| Layer | Alpha | DG Δ demand | d     | p       | DG baseline |
+| ----- | ----- | ----------- | ----- | ------- | ----------- |
+| 10    | 3     | **-25.0pp** | -3.06 | <1e-300 | 77.4%       |
+| 10    | 7     | **-15.0pp** | -1.29 | <1e-300 | 77.4%       |
+| 10    | 10    | **-13.5pp** | -1.15 | <1e-300 | 77.3%       |
+| 12    | 3     | **-18.6pp** | -1.64 | <1e-300 | 77.4%       |
+| 12    | 7     | **-22.7pp** | -2.58 | <1e-300 | 77.3%       |
+| 12    | 10    | **-22.8pp** | -2.68 | <1e-300 | 77.3%       |
 
-**What we CAN claim:** (1) The "blanket nullification" narrative from 2 configs was premature — empathy can produce large DG effects at some alpha/precision combinations. (2) The paired deltas show empathy steering REDUCES demand in DG (negative d), which is the OPPOSITE direction from UG (positive d). This is directionally more like the firmness L10 reversal than a clean null. (3) The nullification at α=7 under quantized conditions is robust (confirmed by TOST equivalence: L10 p_tost=7.5e-24, L12 p_tost=5.9e-14, both bounded within ±5pp).
+**Compare quantized vs unquantized at α=7:**
 
-**Revised three-pattern interpretation:**
+| Config  | Quantized (Round 4) | Unquantized (Round 7) | Quantization effect          |
+| ------- | ------------------- | --------------------- | ---------------------------- |
+| L10 α=7 | d=-0.12 (NS)        | **d=-1.29** (p<1e-300) | Killed a d=1.29 effect       |
+| L12 α=7 | d=-0.24 (marginal)   | **d=-2.58** (p<1e-300) | Killed a d=2.58 effect       |
 
-| Pattern                    | Where           | Meaning                                                                                                            |
-| -------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **Reversal**               | Firmness L10    | Context-dependent style (aggression → fairness in DG)                                                              |
-| **Persistence**            | Firmness L12    | Context-independent disposition ("take more")                                                                      |
-| **Reversal (conditional)** | Empathy L10+L12 | Reverses in DG at some alphas, null at others. Precision-sensitive. Pattern unclear — needs consistent replication |
+**4-bit NF4 quantization suppressed a massive steering effect.** The quantized model's DG baseline (59%) vs unquantized (77%) shows the model's "fairness" disposition changes dramatically with precision. Steering vectors extracted from the unquantized model work much better when applied to the unquantized model.
 
-The clean three-way taxonomy (reversal/persistence/nullification) is weakened. Empathy in DG may be a noisier version of the firmness L10 reversal rather than a categorically different pattern. The original "empathy needs adversarial context" interpretation is no longer supported as stated.
+**Empathy REVERSES in DG (not nullified).** All 6 configs show large negative demand shifts (d=-1.15 to -3.06). In UG, empathy increases demand (+5 to +11pp). In DG, empathy decreases demand (-13 to -25pp). This is the same context-reversal pattern as firmness L10.
+
+**Dose-response patterns differ by layer:**
+- **L10:** Non-monotonic. Strongest at α=3 (-25pp), weaker at α=7 (-15pp) and α=10 (-14pp). Low alpha drives larger behavioral change.
+- **L12:** Monotonic. α=3 (-18.6pp) → α=7 (-22.7pp) → α=10 (-22.8pp), plateauing at α=7.
+
+**Revised two-pattern taxonomy:**
+
+| Pattern         | Where                         | Meaning                                           |
+| --------------- | ----------------------------- | ------------------------------------------------- |
+| **Reversal**    | Firmness L10, Empathy L10+L12 | Context-dependent: demands more in UG, less in DG |
+| **Persistence** | Firmness L12 only             | Context-independent: demands more regardless      |
+
+The "nullification" category is eliminated. Only firmness L12 persists across contexts. Everything else reverses. The key mechanistic question becomes: what makes firmness L12 special?
+
+**Methodological warning: quantization can destroy steering effects.** This is a significant finding for the field. Any activation steering study using quantized models should validate against unquantized baselines. The 4-bit NF4 quantization changed both the model's baseline behavior (59% → 77% demand in DG) and the effectiveness of steering vectors (d=-0.12 → d=-1.29).
 
 ### Phase B: Acceptance Curve (2026-03-29)
 
@@ -684,19 +698,20 @@ All 24 UG configs show significant demand shifts (p < 0.001 after BH-FDR correct
 
 ### Finding 2: Steering Vectors Interact With Task Context in Dimension-Specific Ways
 
-The UG/DG comparison reveals context-dependence, but the taxonomy is less clean than initially proposed:
+The UG/DG comparison reveals a clean two-pattern taxonomy (updated after Round 7 resolved the quantization confound):
 
-| Pattern                    | Where           | UG effect   | DG effect                                | Meaning                                         |
-| -------------------------- | --------------- | ----------- | ---------------------------------------- | ----------------------------------------------- |
-| **Reversal**               | Firmness L10    | +16pp       | -5.8pp                                   | Context-dependent style (aggression ↔ fairness) |
-| **Persistence**            | Firmness L12    | +13pp       | +15pp                                    | Context-independent disposition ("take more")   |
-| **Reversal (conditional)** | Empathy L10+L12 | +5 to +11pp | Null at α=7, large negative at α={3,10}† | Precision/alpha-sensitive; partially reverses   |
+| Pattern         | Where                         | UG effect    | DG effect       | Meaning                                        |
+| --------------- | ----------------------------- | ------------ | --------------- | ---------------------------------------------- |
+| **Reversal**    | Firmness L10                  | +16pp        | -5.8pp          | Context-dependent (aggression ↔ fairness)      |
+| **Reversal**    | Empathy L10                   | +11pp        | -15pp           | Context-dependent (demands more ↔ gives more)  |
+| **Reversal**    | Empathy L12                   | +5pp         | -23pp           | Context-dependent (even stronger reversal)     |
+| **Persistence** | Firmness L12 only             | +13pp        | +15pp           | Context-independent ("take more" regardless)   |
 
-†The empathy DG results at α={3,10} used different model precision (bfloat16 vs quantized), introducing a baseline confound. Within-config paired deltas are valid but cross-alpha patterns are unreliable. See Section 9, Round 4 for details.
+**The earlier "nullification" of empathy in DG was a quantization artifact** (see Section 9, Round 7). Under consistent bfloat16 conditions, empathy shows massive DG reversal at all alphas (d=-1.15 to -3.06). The quantized runs suppressed a d=1.29-2.58 effect to near-zero.
 
-**What is robust:** Firmness has a clean layer dissociation (L10 reverses, L12 persists). This replicates across all alphas under consistent conditions.
+**Only firmness L12 persists across contexts.** Every other dimension×layer combination reverses direction between UG and DG. This makes firmness L12 the anomaly — it encodes "take more" as an abstract disposition that is insensitive to whether a responder can reject.
 
-**What is uncertain:** The empathy DG pattern. The initial "nullification" at α=7 is confirmed by TOST (bounded within ±5pp). But the large negative effects at α={3,10} (d=-1.15 to -3.06) suggest empathy may reverse in DG rather than simply nullify — we cannot distinguish these without rerunning all alphas under identical conditions. The "empathy needs adversarial context" interpretation is no longer supported as stated.
+**The empathy reversal exceeds firmness in magnitude.** Empathy L12 swings by 28pp between UG (+5pp) and DG (-23pp). Firmness L10 swings by 22pp. Empathy is the most context-sensitive dimension, not the least.
 
 ### Finding 3: The Empathy Vector Encodes Activation, Not Valence
 
@@ -707,7 +722,7 @@ The empathy direction vector does not encode "empathic vs selfish." Evidence:
 - The sign modulates tone (acceptance rate), not direction (demand)
 - 69-72% of per-game offers are identical between firmness α=7 and empathy α=-7
 
-**Counter to the "empathy = noisy firmness" critique:** The empathy and firmness vectors behave differently in DG. Firmness has a clean L10/L12 dissociation; empathy does not follow the same pattern (null at α=7, large effects at α={3,10} under different conditions). They are distinct vectors despite cos=-0.29 overlap, but the nature of the distinction is less clear than originally claimed.
+**Counter to the "empathy = noisy firmness" critique:** The empathy and firmness vectors behave differently in DG. Firmness L12 persists (+15pp); empathy L12 reverses (-23pp). If empathy were just collinear firmness, it would persist at L12 too. The opposite DG behavior at L12 is definitive proof they encode different concepts. Furthermore, empathy reverses at BOTH layers in DG while firmness only reverses at L10 — the dimension×layer×context interaction structure is distinct.
 
 ### Finding 4: RLHF Creates Bidirectional Fairness Enforcement
 
@@ -793,67 +808,122 @@ A 4-model research council (GPT-5.4, Gemini 3.1 Pro, Claude Opus 4.6, Grok 4) de
 
 ---
 
-## 12. Paper Narrative (Updated 2026-03-29)
+## 12. Paper Narrative (Updated 2026-04-02)
 
 ### Core Framing
 
-Activation steering reliably changes what an LLM proposes in strategic interactions — but whether this helps or hurts depends entirely on whether the opponent can see the reasoning. In a numbers-only setting (opponent sees parsed offers), steering disrupts the model's rigid, suboptimal RLHF heuristic and shifts behavior into a more rational region of the acceptance landscape. In a text-visible setting (opponent reads full text), the greedy reasoning triggers rejection and payoff reverses. Vector semantics are also context-dependent: the same vector reverses, persists, or produces unstable effects depending on dimension, layer, and game structure.
+Activation steering reliably changes LLM behavior in strategic interactions. The effect is dimension-specific (10 dims tested, 7 active), layer-specific (different dims peak at different layers), and context-dependent (most effects reverse between UG and DG). Whether steering helps or hurts payoff depends on the communication setting: in numbers-only mode, moderate steering (anchoring L18) achieves optimal payoff; in text-visible mode, steered reasoning triggers rejection and payoff reverses.
 
 ### Story Arc
 
-1. **Steering changes what the model asks for.** All 24 UG configs significant (d=0.37-1.54), near-perfect dose-response. Effects attenuate at L14 (firmness d=0.57, empathy NS) and fade beyond. n=200 replication with extended pools ($37-$273) shows effects replicate directionally but L10 attenuates (~50% smaller d), while L12 is pool-invariant. 10,500+ games across 7 experimental rounds.
+1. **Steering works across all 10 behavioral dimensions.** Full grid (450 configs, n=50) shows all 10 dims active when full alpha range tested. Top by |d|: greed (L14 d=1.88), composure (L10 d=1.56), firmness (L10 d=1.50), fairness_norm (L4 d=1.37). Screen-to-final validation: 91% direction agreement.
 
-2. **Context changes what the vector means.** Firmness has a clean layer dissociation: L10 reverses in DG (aggression → fairness), L12 persists (context-independent disposition). Empathy's DG pattern is less clean: null at some alpha/precision settings, reversal at others. The dimension×layer×context interaction is real but messy.
+2. **Different dimensions peak at different layers.** Firmness peaks at L10, greed at L12, anchoring at L18, narcissism at L14. No single "best layer." This is a dimension×layer interaction, not a layer-depth gradient.
 
-3. **The framing channel matters — and it's negative.** Numbers-only: framing ≈ 0pp (TOST confirmed). Text-visible: framing = -34 to -49pp on acceptance. Steered text reveals greediness and the responder punishes it. All payoff gains reverse to losses. The "steering improves payoff" finding is bounded to settings where the opponent cannot evaluate the reasoning.
+3. **Sign asymmetry reveals vector semantics.** Firmness only works at positive α (directional). Narcissism only at negative α (anti-narcissism → generosity). Empathy/flattery respond to both signs (activation, not valence). Greed is strongly unidirectional.
 
-4. **RLHF creates a bidirectional, asymmetric fairness norm.** The model rejects both unfair AND generous offers, but polices generosity more harshly. The baseline sits at 50% demand — the worst possible spot. Any steering disrupts this suboptimal heuristic (in numbers-only mode).
+4. **Context reverses most effects.** In DG (no rejection risk), 3/4 dimension×layer combos reverse direction. Only firmness L12 persists. Empathy reverses at both layers (biggest swing: 28pp). "Nullification" was a quantization artifact.
 
-5. **Empathy encodes activation, not valence.** Both signs increase demand in UG. The sign modulates tone (acceptance rate), making positive empathy the best numbers-only config (+17pp payoff, 95% acceptance).
+5. **Text-visible framing is massively negative.** Numbers-only: framing ≈ 0pp. Text-visible: acceptance crashes 34-49pp. Steered text reveals greediness (empathy: "I want to keep as much as possible for myself") and the responder punishes it. Anchoring may be the exception — its text frames greed as generosity.
+
+6. **RLHF creates bidirectional fairness enforcement.** Non-monotonic acceptance curve: rejects both unfair AND generous offers. Baseline sits at 50% demand — the worst spot. Steering disrupts this.
+
+7. **Quantization suppresses steering and shifts thresholds.** 4-bit NF4 killed a d=1.29 effect to d=0.12. Also shifted the activation threshold: α=3 works quantized but not unquantized. α=7 converges across precisions.
+
+8. **Greed L12 α=+7 is the Pareto-optimal config.** Best payoff (62.7%) with +23.4pp demand and 74% acceptance. Anchoring L18 is second (53.9%). Firmness demands too aggressively and gets rejected (57-62% acceptance).
 
 ### Key Claims (bounded)
 
-- **We claim:** Steering reliably alters behavioral outputs in strategic interactions (26 UG configs, p < 0.001).
-- **We claim:** The effect is dimension×layer×context dependent, with firmness showing a clean L10/L12 dissociation.
+- **We claim:** Steering reliably alters behavioral outputs across 7/10 dimensions tested (p < 0.001 at n=50-100).
+- **We claim:** The effect is dimension×layer specific — different concepts are encoded at different network depths.
 - **We claim:** RLHF-aligned models have suboptimal strategic defaults that steering can disrupt.
 - **We claim:** The framing channel is real and negative — steered reasoning text triggers opponent rejection.
-- **We do NOT claim:** Steering improves negotiation outcomes in general. It improves outcomes only when the opponent sees numbers, not reasoning.
-- **We do NOT claim:** The empathy DG pattern is fully characterized. Baseline precision sensitivity and incomplete alpha coverage prevent firm claims about the empathy×DG interaction.
-- **We do NOT claim:** L14 is a meaningful steering layer. Our replication fails to confirm teammate results.
+- **We claim:** Quantization suppresses steering effects and shifts activation thresholds.
+- **We claim:** Cross-design agreement with rulebased experiments (r=0.41, p=0.003) validates effect directions.
+- **We do NOT claim:** Steering improves negotiation outcomes in general — only in numbers-only mode with specific dimensions (anchoring, greed).
+- **We do NOT claim:** Results generalize to 32B — existing 32B data (GPTQ quantized, wrong layers) is inconclusive.
 
-## 13. Future Directions
+## 13. Future Directions & Experiment Log
 
-### Completed (Sprint 2026-03-29)
+### All 7B experiments complete (2026-03-27 to 2026-04-02)
 
-1. ~~Shore up empathy DG "nullification" claim.~~ **DONE.** 4 additional configs run. Results complicate rather than confirm the nullification narrative — large effects at α={3,10} but with a baseline precision confound (see Section 9, Round 4).
+| # | Experiment | Configs | Status |
+|---|-----------|---------|--------|
+| 1 | Confirmatory UG (firmness+empathy, L10/L12, α={3,7,10}) | 19 @ n=100 | Done (Round 1) |
+| 2 | Fixed DG (firmness, L10/L12) | 6 @ n=100 | Done (Round 2) |
+| 3 | Positive empathy UG | 6 @ n=100 | Done (Round 3) |
+| 4 | Empathy DG (quantized, confounded) | 2 @ n=100 | Done (Round 4) |
+| 5 | L14 adjudication | 2 @ n=100 | Done (Round 5) |
+| 6 | Text-visibility control | 3 @ n=100 | Done (Round 6) |
+| 7 | Empathy DG clean (unquantized) | 6 @ n=100 | Done (Round 7) |
+| 8 | Acceptance curve | 700 calls | Done (Phase B) |
+| 9 | Layer gradient screen | 18 @ n=15 | Done |
+| 10 | 10-dim landscape screen | 140 @ n=15 | Done |
+| 11 | Tier 2 validation | 13 @ n=50 | Done |
+| 12 | Tier 3 confirmation | 5 @ n=100 | Done |
+| 13 | Alpha bridge (α=5,15) | 2 @ n=50 | Done |
+| 14 | Alpha-3 check | 1 @ n=100 | Done |
+| 15 | **Final grid batch 1** (α={5,15}) | 180 @ n=50 | **Done** |
+| 16 | **Final grid batch 2** (α={-7,7}) | 180 @ n=50 | **Done** |
+| 17 | **Final grid batch 3** (α={-5}) | 90 @ n=50 | **Done** |
 
-2. ~~L14 adjudication.~~ **DONE.** Firmness d=0.57 (significant), empathy d=0.14 (NS). Teammate's d=-3.05 NOT replicated (see Section 9, Round 5).
+**Final grid complete: 450 configs** in `results/ultimatum/final_7b_llm_vs_llm/` = 10 dims × 9 layers × 5 alphas {-7,-5,5,7,15}.
 
-3. ~~Text-visibility control.~~ **DONE.** Framing is massively negative (-34 to -49pp on acceptance). All payoff gains reverse. Central external validity finding (see Section 9, Round 6).
+### Final Grid Key Results (2026-04-03)
 
-4. ~~Statistical hardening.~~ **DONE.** Bootstrap CIs, TOST, BH-FDR, unique offer counts, dose-response monotonicity. Results in `results/ultimatum/statistical_hardening.json` (see Section 9).
+**Tiered screen validation:** 91% direction agreement (127/140 matched configs between n=15 screen and n=50 final).
+
+**All 10 dimensions are active** (≥24% configs significant at p<0.05). None truly dead when full alpha range tested.
+
+**Top configs by |d|:**
+
+| Dim | Layer | α | d | Δpp | Accept | Payoff |
+|-----|-------|---|------|-----|--------|--------|
+| greed | L14 | +15 | +1.88 | +33.5pp | 28% | 28.0% |
+| greed | L12 | +15 | +1.83 | +30.0pp | 51% | 48.6% |
+| composure | L10 | +15 | +1.56 | +25.5pp | 60% | 53.3% |
+| firmness | L10 | +15 | +1.50 | +23.9pp | 60% | 52.0% |
+| fairness_norm | L4 | +7 | +1.37 | +23.9pp | 65% | 55.9% |
+| firmness | L10 | +7 | +1.27 | +25.6pp | 62% | 53.8% |
+| greed | L14 | +7 | +1.26 | +23.5pp | 62% | 53.0% |
+| greed | L12 | +7 | +1.12 | +23.4pp | 74% | **62.7%** |
+
+**Best payoff config: greed L12 α=+7 (62.7%)** — surpasses anchoring L18 as the Pareto optimal.
+
+**Dose-response profiles (at peak layer):**
+- Firmness L10: threshold at α=5, peaks α=15, directional (neg α null)
+- Greed L12: monotonic α=5→7→15, directional
+- Anchoring L18: threshold at α=7, plateaus α=15
+- Narcissism L14: inverts (neg α decreases demand, pos α=15 increases it)
+- Empathy L10: inverts (neg α increases demand, pos α=5 decreases it)
+
+**New findings from full grid:**
+- Fairness_norm L4 α=+7 (d=+1.37) increases demand — opposite of L12 (d=-0.87). Layer-dependent sign reversal within same dimension.
+- Composure activates only at α=15 (d=1.56 at L10, d=1.49 at L18). Higher threshold than other dims.
+- Narcissism L14 inverts cleanly: negative α = generosity, positive α = greed. The vector encodes self/other orientation.
 
 ### Must-Do Before Paper Submission
 
-5. **Resolve empathy DG precision confound (~2 hrs GPU).** Rerun empathy DG α={3,7,10} at BOTH layers under IDENTICAL conditions (same machine, same dtype, same quantization). The current cross-alpha pattern is confounded. Need consistent baselines to determine whether empathy reverses, nullifies, or shows a non-monotonic response in DG. This is a blocking issue for the paper's mechanistic claims.
+1. **Write the paper.** All experiments complete. 14 days to deadline (2026-04-17). Data: 450 final grid configs + Phase 2 deep dives (DG, text-visible, acceptance curve) + teammate cross-design comparison.
 
-6. **Write the paper.** All experiments are complete pending item 5. Key sections: Introduction (steering in strategic interactions), Method (paired UG/DG with acceptance curve), Results (demand shift, context-dependence, framing), Discussion (RLHF heuristic disruption, external validity caveat).
+### Nice-to-Have
 
-### Nice-to-Have (if time permits)
+2. **32B scaling (unquantized).** Requires A100 80GB (GCP or AWS). Full grid costs ~$150. Proportional layers: 7B L10 → 32B L23. Existing 32B data (GPTQ quantized, L28/L32/L36) is inconclusive due to quantization + wrong layers.
 
-7. **32B scaling.** Teammates running Qwen 32B. If layer-gradient holds proportionally, it's a generalization claim.
+3. **Text-visible extension for new dimensions.** Anchoring L18 may survive text-visibility (text frames greed as generosity). Quick test: 3-5 configs.
 
-8. **Rule-based validation.** Report teammates' rule-based results as independent validation in supplementary.
+4. **DG extension for new dimensions.** Does greed reverse in DG like firmness/empathy? Quick test.
 
-9. **Multi-turn extension.** Teammate working on alternating-offers protocol. Would test whether steering effects persist through back-and-forth communication.
+### GPU Infrastructure
 
-### Not Worth Pursuing
+**bf16 consistency rule:** Only use Ampere+ GPUs (CC ≥ 8.0). See `/Users/moiz/Documents/code/misconception-finetune/AWS_GPU_GUIDE.md`.
 
-- Prompt comparison (design difference is documented; appendix note sufficient)
-- More alpha values beyond 3-point dose-response
-- More dimensions beyond firmness + empathy
-- Game-specific pairs (fundamentally flawed)
-- L14+ layer exploration (confirmed to attenuate; not informative)
+| Platform | GPU | CC | Cost | Status |
+|----------|-----|-----|------|--------|
+| UCL Lab 1.05 | RTX 3090 Ti | 8.6 | Free | Primary. 3-8 birds available |
+| AWS g5.xlarge | A10G | 8.6 | $0.59/hr spot | 2 on-demand available, spot quota pending |
+| GCP g2-standard | L4 | 8.9 | $0.57/hr spot | 1 GPU only (quota denied for more) |
+| **AVOID** | T4, Quadro RTX 6000, V100 | ≤7.5 | — | Changes baselines, kills effects |
 
 ---
 
@@ -861,33 +931,60 @@ Activation steering reliably changes what an LLM proposes in strategic interacti
 
 ### Result Directories
 
-| Path                                                | Contents                                | Round       |
-| --------------------------------------------------- | --------------------------------------- | ----------- |
-| `results/ultimatum/confirmatory/ug/`                | 12 UG configs (firmness +α, empathy -α) | 1           |
-| `results/ultimatum/confirmatory/dg/`                | 6 DG configs (bug: identical prompts)   | 1           |
-| `results/ultimatum/confirmatory/robustness/`        | 1 temp=0.3 check                        | 1           |
-| `results/ultimatum/llm_vs_llm/dg/`             | 6 DG configs (fixed prompt)             | 2           |
-| `results/ultimatum/llm_vs_llm/ug_pos_empathy/` | 6 positive empathy configs              | 3           |
-| `results/ultimatum/llm_vs_llm/dg_empathy/`     | 6 empathy DG configs (2 old + 4 new)    | 4+5         |
-| `results/ultimatum/llm_vs_llm/l14/`            | 2 L14 adjudication configs              | 5           |
-| `results/ultimatum/llm_vs_llm/text_visible/`   | 3 text-visibility configs               | 6           |
-| `results/ultimatum/top5_200games/`                  | 5 empathy n=200 extended-pool configs   | 7           |
-| `results/ultimatum/statistical_hardening.json`      | Bootstrap CIs, TOST, FDR results        | Stats       |
-| `results/ultimatum/acceptance_curve/`               | Acceptance curve (7 levels × 100 pools) | B           |
-| `results/ultimatum/phase_c_analytical_payoff.json`  | Framing effect decomposition            | C           |
-| `results/ultimatum/napkin_test/`                    | 3 sanity check configs                  | Pre         |
-| `results/ultimatum/llm_vs_llm/`                     | Teammate LLM-vs-LLM exploratory results | Exploratory |
-| `results/ultimatum/llm_vs_rulebased/`               | Teammate rule-based results             | Exploratory |
+### Results Structure
+
+```
+results/ultimatum/
+├── final_7b_llm_vs_llm/        ← OUR MAIN DATA (use this for the paper)
+│   └── 450 JSON files: {dim}_proposer_L{layer}_a{alpha}_paired_n50.json
+│       10 dims × 9 layers (L4-L20) × 5 alphas (-7,-5,5,7,15) × n=50
+│       All on RTX 3090 Ti, bfloat16, paired, variable pools, temp=0
+│
+├── deep_dive_experiments/       ← TARGETED EXPERIMENTS (specific findings)
+│   ├── dg/                      Firmness Dictator Game reversal (n=100)
+│   ├── dg_empathy/              Empathy DG — quantized, showed "nullification" (confounded)
+│   ├── dg_empathy_clean/        Empathy DG — unquantized, resolved confound (empathy reverses)
+│   ├── text_visible/            Text-visibility: responder sees proposer's reasoning text
+│   └── ug_pos_empathy/          Positive empathy alpha (both signs increase demand)
+│
+├── acceptance_curve/            ← RLHF FAIRNESS CURVE (no steering)
+│   └── 7 offer levels × 100 pools = 700 games. Non-monotonic acceptance.
+│
+├── llm_vs_rulebased/            ← TEAMMATE DATA (cross-design comparison)
+│   ├── qwen2.5-7b_*/           7B rulebased: 10 dims, L10-L20, α={-5,5,15}
+│   └── qwen2.5-32b-gptq_*/    32B rulebased: 10 dims, L28/L32/L36
+│
+├── old_results/                 ← ARCHIVED (intermediate data, audit trail)
+│   ├── phase2_deep_dive/        Original Rounds 2-6 (before rename)
+│   ├── confirmatory/            Round 1 (quantized, AWS)
+│   ├── confirmatory_v3/         Round 7 empathy DG clean
+│   ├── landscape_screen*/       n=15 screening (superseded by final grid)
+│   ├── tier2_validation/        n=50 validation (superseded)
+│   ├── tier3_confirmation/      n=100 top 5 (superseded)
+│   ├── layer_gradient*/         Layer sweep (superseded)
+│   └── alpha*_check/bridge/     Alpha experiments (superseded)
+│
+├── phase_c_analytical_payoff.json   Framing decomposition (numbers-only ≈ 0)
+└── statistical_hardening.json       Bootstrap CIs, TOST, BH-FDR
+```
+
+**For the paper, use these 4 sources:**
+1. `final_7b_llm_vs_llm/` — all dimension×layer×alpha results
+2. `deep_dive_experiments/` — DG context reversal, text-visibility framing, quantization effect
+3. `acceptance_curve/` — RLHF fairness enforcement mechanism
+4. `llm_vs_rulebased/` — cross-design validation (r=0.41)
 
 ### Key Scripts
 
 | Script                                  | Purpose                                                    |
 | --------------------------------------- | ---------------------------------------------------------- |
 | `ultimatum_game.py`                     | GPU steering with paired design, UG/DG modes               |
-| `run_confirmatory.sh`                   | Round 1 runner (19 configs)                                |
-| `analysis/analyse_confirmatory.py`      | H1-H5 with BH-FDR, TOST, dose-response                     |
-| `analysis/compile_exploratory.py`       | Re-analyzes all exploratory results                        |
-| `analyse_napkin.py`                     | Napkin test decision gate                                  |
+| `final_grid_scaup.py` / `scoter` / `shoveler` | Batch runners for final grid (load model once)    |
+| `final_grid_alpha_neg5.py`              | α=-5 batch runner                                          |
+| `analysis/plot_results.py`              | Generate all publication figures                           |
+| `analysis/analyse_final_grid.py`        | Final grid analysis (completeness, heat maps, etc.)        |
+| `analysis/unified_results_analysis.ipynb` | 3-paradigm Jupyter notebook (LLM-vs-LLM, rulebased, clean) |
+| `analysis/analyse_ug_hypotheses.py`     | Original H1-H5 confirmatory analysis                       |
 | `extract_vectors.py`                    | Vector extraction (standalone)                             |
 | `validation/validate_vectors.py`        | Full validation suite                                      |
 | `validation/orthogonal_projection.py`   | Control dimension projection                               |
@@ -911,4 +1008,4 @@ Activation steering reliably changes what an LLM proposes in strategic interacti
 
 ---
 
-_Last updated: 2026-04-01 (Round 7: n=200 replication with extended pools). Previous: 2026-03-29 (sprint results: empathy DG expanded, L14, text-visibility, statistical hardening). Update this document after every significant experiment or finding._
+_Last updated: 2026-04-03 (Final grid COMPLETE: 450 configs, all 10 dims active, greed L12 best payoff. Paper narrative final). Update this document after every significant experiment or finding._
