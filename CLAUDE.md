@@ -12,28 +12,69 @@ COMP0087 Statistical NLP group project (UCL, due 2026-04-17). Activation steerin
 
 When the user asks about results, hypotheses, or experimental context, consult the research log first. When new experiments complete, add the results to the log in the same format.
 
-## Project Status (2026-03-29)
+## Project Status (2026-04-02)
 
 > **For detailed findings, exact numbers, and per-config results, see `RESEARCH_LOG.md`.**
 
-**Phase 1 (complete):** CraigslistBargains. Behavioral changes real (27x hedge suppression) but outcomes not significant (p=0.87). Task too noisy. See RESEARCH_LOG Section 2.
+**Phase 1 (complete):** CraigslistBargains on Qwen 3B. Behavioral changes real but outcomes not significant. Task too noisy → pivoted to Ultimatum Game.
 
-**Phase 2 (complete):** Ultimatum Game experiments. 10,000+ games across 6 rounds + acceptance curve + analytical decomposition + text-visibility control. See RESEARCH_LOG Sections 7-11.
+**Phase 2 (complete):** Ultimatum Game on Qwen 7B. Deep-dive on firmness + empathy (Rounds 1-7, n=100, DG, text-visibility, acceptance curve). 10,000+ games.
 
-**Main findings (Phase 2):**
-1. **Steering reliably shifts behavior** — all 24 UG configs significant (p<0.001, d=0.37-1.54), near-perfect dose-response. L14 attenuates (firmness d=0.57, empathy NS).
-2. **Dimension×layer×context interaction** — firmness L10 reverses in DG (-5.8pp), firmness L12 persists (+15pp). Empathy DG pattern uncertain: null at α=7 (TOST confirmed) but large effects at other alphas under different model precision (confounded — needs replication).
-3. **Empathy vector encodes activation, not valence** — both positive and negative alpha increase demand in UG. Sign modulates tone (acceptance rate), not direction. Best payoff: empathy L10 α=+7 (+17pp) in numbers-only mode.
-4. **RLHF creates bidirectional fairness enforcement** — acceptance curve is non-monotonic. Rejects BOTH unfair and generous offers. Baseline sits at 50% demand — the worst spot.
-5. **Framing is massively negative when text visible** — numbers-only: framing ≈ 0pp. Text-visible: acceptance crashes by 34-49pp, all payoff gains reverse. "Steering improves payoff" is bounded to numbers-only settings.
-6. **General pairs >> game-specific pairs** — 16pp effect vs ~0pp for firmness at L10.
-7. **Teammate's L14 peak NOT replicated** — empathy L14 d=0.14 (NS) vs their d=-3.05. Design differences explain discrepancy.
+**Phase 3 (complete):** Full landscape grid. 10 dims × 9 layers × 5 alphas {-7, -5, 5, 7, 15} × n=50 = **450 configs, 22,500 paired games** on RTX 3090 Ti (bf16). Results in `results/ultimatum/final_7b_llm_vs_llm/`. All batches done.
 
-**Current status:** Paper writing. One blocking experiment remains: rerun empathy DG under consistent conditions to resolve precision confound. Teammate working on multi-turn and 32B.
+### Main Findings
 
-**Key design choices:** Paired design, variable pools ($37-$157), temp=0, Qwen 7B, general-domain pairs, mean difference extraction, 100 games per config, BH-FDR correction. See RESEARCH_LOG Section 4 for rationale.
+**Behavioral steering (from 450-config final grid):**
+1. **All 10 dimensions produce significant effects** when the full alpha range is tested. Top by |d|: greed (L14 d=1.88), composure (L10 d=1.56), firmness (L10 d=1.50), fairness_norm (L4 d=1.37), greed (L12 d=1.12).
+2. **Different dimensions peak at different layers** — firmness L10, greed L12-L14, composure L10/L18, anchoring L18, narcissism L14. Not a single "best layer."
+3. **Sign matters** — firmness/greed/anchoring: positive α only. Narcissism: negative α only. Empathy/composure: sign inverts direction.
+4. **Dose-response profiles vary** — firmness/anchoring threshold at α=5-7. Greed monotonic. Narcissism inverts between negative and positive α. Composure needs α=15 to activate.
 
-**Teammate divergences to track:** Different prompt ("Your aim: earn as much as you can"), rule-based responder mode, 32B model. Results not directly comparable to confirmatory — different baselines, no true pairing. See RESEARCH_LOG Section 10.
+**Context and framing:**
+5. **3/4 dimension×layer combos reverse between UG and DG.** Only firmness L12 persists. Empathy reverses at both layers.
+6. **Text-visible framing is massively negative** — acceptance crashes 34-49pp when responder reads steered text. Payoff reverses.
+7. **RLHF creates bidirectional fairness enforcement** — rejects both unfair AND generous offers.
+
+**Methodological:**
+8. **Quantization suppresses steering effects** — 4-bit NF4 killed a d=1.29 effect to d=0.12. Shifted activation threshold (α=3 works quantized, not unquantized).
+9. **Hardware matters** — Turing GPUs (T4, Quadro RTX 6000) produce different baselines than Ampere (3090 Ti, A10G). Use CC ≥ 8.0 only.
+10. **Cross-design agreement** — our clean pipeline correlates r=0.41 (p=0.003) with teammate rulebased across 50 matched configs.
+
+### Current Status
+- **Final grid COMPLETE.** 450/450 configs in `results/ultimatum/final_7b_llm_vs_llm/`.
+- **Paper writing** is the bottleneck. 14 days to deadline (2026-04-17).
+- **Figures ready** in `results/figures/` — 9 publication figures (heat maps, layer gradients, Pareto frontier, sign comparison, quantization, cross-design).
+- **Analysis notebook** at `analysis/unified_results_analysis.ipynb` — 3-paradigm comparison.
+
+### Results Structure (for teammates)
+
+| Folder | What | Use for |
+|--------|------|---------|
+| `final_7b_llm_vs_llm/` | **450 configs** (10d×9L×5α, n=50, RTX 3090 Ti bf16) | All main results, heat maps, dose-response |
+| `deep_dive_experiments/` | DG reversal, text-visibility, empathy sign, quantization | Context-dependence, framing, methodology findings |
+| `acceptance_curve/` | 700 unsteered games, 7 offer levels | RLHF fairness enforcement mechanism |
+| `llm_vs_rulebased/` | Teammate 7B+32B rulebased data | Cross-design validation (r=0.41) |
+| `old_results/` | All intermediate/superseded data | Audit trail only, don't use for paper |
+
+### Design Choices (Final Grid)
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| Dimensions | All 10 | Full landscape; 5 focus dims for paper |
+| Layers | L4-L20 (9 layers) | Different dims peak at different layers |
+| Alphas | {-7, -5, 5, 7, 15} | Sign coverage + rulebased bridge + sweet spot |
+| n per config | 50 | Detects d>0.5 at 80% power |
+| Hardware | RTX 3090 Ti only | Ampere CC 8.6, native bf16. Turing/quantization changes results |
+| Temperature | 0.0 | Variable pools provide variance |
+| Responder | Unsteered LLM | Strategic interaction, not threshold check |
+
+### Teammate Experiments (Not Directly Comparable)
+| Who | What | Design differences |
+|-----|------|-------------------|
+| Ayman | 7B rulebased L10-L20, 32B rulebased L28/L32/L36 | temp=0.3, "aim" prompt, rule-based responder, GPTQ quantized |
+| Damon | 7B LLM-vs-LLM L12/L16/L19, scalar safety analysis | temp=0.3, different prompt, different alpha range {-5,5,15} |
+| Ayman | Resource exchange game (32B) | Multi-turn, different game structure entirely |
+
+Cross-design correlation r=0.41 (p=0.003) confirms effects replicate directionally. Effect sizes differ 3-10x due to rulebased responder inflating Cohen's d.
 
 ## Commands
 
@@ -78,18 +119,21 @@ python analysis/audit_pairs.py
 ```
 
 ```bash
-# Phase 2: Ultimatum Game experiments
+# Phase 2/3: Ultimatum Game experiments (DO NOT use --quantize — changes results)
 python ultimatum_game.py --model qwen2.5-7b --dimension firmness \
     --vectors_dir vectors/ultimatum_10dim_20pairs_general_matched/negotiation \
     --layers 10 --alpha 7 --steered_role proposer --game ultimatum \
-    --n_games 100 --variable_pools --paired --temperature 0.0 \
-    --quantize --output_dir results/ultimatum/my_run
+    --n_games 50 --variable_pools --paired --temperature 0.0 \
+    --output_dir results/ultimatum/final_7b_grid
 
-# Confirmatory analysis (CPU, reads JSON results)
-python analysis/analyse_confirmatory.py \
-    --results_dir results/ultimatum/confirmatory/ug \
-    --dg_dir results/ultimatum/confirmatory_v2/dg \
-    --empathy_alpha_list -3 -7 -10
+# Final grid analysis (CPU, reads all JSON results)
+python analysis/analyse_final_grid.py
+
+# Unified notebook (CPU, 3-paradigm comparison)
+jupyter notebook analysis/unified_results_analysis.ipynb
+
+# Generate figures
+python analysis/plot_results.py
 ```
 
 Core deps: `torch`, `transformers`, `numpy`, `scikit-learn`, `tqdm`, `optuna`, `scipy`. Optional: `bitsandbytes` (for `--quantize`), `google-genai groq openai` (for `llm_judge.py`).
