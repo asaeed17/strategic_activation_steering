@@ -1,0 +1,5658 @@
+{
+  "config": {
+    "game": "resource_exchange",
+    "model": "qwen2.5-32b-gptq",
+    "dimension": "firmness",
+    "method": "mean_diff",
+    "layers": [
+      23
+    ],
+    "alpha": -50.0,
+    "steered_player": 1,
+    "rulebased": false,
+    "n_games": 50,
+    "variable_configs": true,
+    "max_turns": 8,
+    "proposals_per_player": 3,
+    "temperature": 0.0,
+    "seed": 42,
+    "vectors_dir": "vectors/ultimatum_10dim_20pairs_general_matched/negotiation",
+    "private_info": true,
+    "timestamp": "2026-04-03T08:54:19.960381"
+  },
+  "summary": {
+    "n_games": 50,
+    "player": 1,
+    "mean_score": 27.58,
+    "std_score": 9.45254527864839,
+    "mean_trades": 0.98,
+    "mean_game_length": 3.38,
+    "mean_balance": 0.47407533127739077,
+    "acceptance_rate": 0.98,
+    "total_parse_errors": 0,
+    "mean_word_count": 28.680473372781066,
+    "mean_hedge_count": 0.047337278106508875,
+    "mean_fairness_count": 0.40236686390532544
+  },
+  "games": [
+    {
+      "config": [
+        25,
+        5,
+        5,
+        25
+      ],
+      "p1_initial": {
+        "X": 25,
+        "Y": 5
+      },
+      "p2_initial": {
+        "X": 5,
+        "Y": 25
+      },
+      "p1_final": {
+        "X": 20,
+        "Y": 15
+      },
+      "p2_final": {
+        "X": 10,
+        "Y": 15
+      },
+      "p1_score": 35,
+      "p2_score": 25,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.75,
+      "p2_balance": 0.6666666666666666,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving me 5 Y in exchange for 10 X? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving me 5 Y in exchange for 10 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I'm short on X. How about giving you 10 Y for 5 X instead?\n\nTRADE: GIVE 10 Y, RECEIVE 5 X",
+          "message": "Hi Player RED, your proposal sounds interesting but I'm short on X. How about giving you 10 Y for 5 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 29,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, that sounds like a better deal for both of us. I'll ACCEPT your proposal.\n\nACCEPT",
+          "message": "Hi Player BLUE, that sounds like a better deal for both of us. I'll ACCEPT your proposal.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 18,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 0
+    },
+    {
+      "config": [
+        20,
+        10,
+        10,
+        20
+      ],
+      "p1_initial": {
+        "X": 20,
+        "Y": 10
+      },
+      "p2_initial": {
+        "X": 10,
+        "Y": 20
+      },
+      "p1_final": {
+        "X": 30,
+        "Y": 3
+      },
+      "p2_final": {
+        "X": 0,
+        "Y": 27
+      },
+      "p1_score": 33,
+      "p2_score": 27,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.1,
+      "p2_balance": 0.0,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 Y in exchange for 10 X? This way, we both benefit. \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 Y in exchange for 10 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 20,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I'd like to slightly adjust the quantities. How about giving me 7 Y in exchange for 10 X instead? \n\nTRADE: GIVE 10 X, RECEIVE 7 Y",
+          "message": "Hi Player RED, your proposal sounds interesting but I'd like to slightly adjust the quantities. How about giving me 7 Y in exchange for 10 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 7,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 20
+          },
+          "metrics": {
+            "word_count": 34,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I can work with that. Let's go with giving you 10 X for 7 Y.\n\nACCEPT",
+          "message": "Hi Player BLUE, I can work with that. Let's go with giving you 10 X for 7 Y.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 20,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 19,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 1
+    },
+    {
+      "config": [
+        30,
+        5,
+        5,
+        30
+      ],
+      "p1_initial": {
+        "X": 30,
+        "Y": 5
+      },
+      "p2_initial": {
+        "X": 5,
+        "Y": 30
+      },
+      "p1_final": {
+        "X": 25,
+        "Y": 15
+      },
+      "p2_final": {
+        "X": 10,
+        "Y": 20
+      },
+      "p1_score": 40,
+      "p2_score": 30,
+      "p1_initial_score": 35,
+      "p2_initial_score": 35,
+      "p1_balance": 0.6,
+      "p2_balance": 0.5,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving me 5 Y in exchange for 10 X? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving me 5 Y in exchange for 10 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems generous, but I have plenty of Y and not enough X. How about giving you 10 Y for 5 X instead?\n\nTRADE: GIVE 10 Y, RECEIVE 5 X",
+          "message": "Hi Player RED, your proposal seems generous, but I have plenty of Y and not enough X. How about giving you 10 Y for 5 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 30
+          },
+          "metrics": {
+            "word_count": 34,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, let's go for your proposal then. It sounds like a good deal for both of us.\n\nACCEPT",
+          "message": "Hi Player BLUE, let's go for your proposal then. It sounds like a good deal for both of us.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 20,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 2
+    },
+    {
+      "config": [
+        15,
+        5,
+        5,
+        15
+      ],
+      "p1_initial": {
+        "X": 15,
+        "Y": 5
+      },
+      "p2_initial": {
+        "X": 5,
+        "Y": 15
+      },
+      "p1_final": {
+        "X": 12,
+        "Y": 9
+      },
+      "p2_final": {
+        "X": 8,
+        "Y": 11
+      },
+      "p1_score": 21,
+      "p2_score": 19,
+      "p1_initial_score": 20,
+      "p2_initial_score": 20,
+      "p1_balance": 0.75,
+      "p2_balance": 0.7272727272727273,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 X in exchange for 3 Y? This way, we both benefit a bit. \n\nTRADE: GIVE 5 X, RECEIVE 3 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 X in exchange for 3 Y? This way, we both benefit a bit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 15,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems a bit one-sided since I would be giving up a significant portion of my Y resources for less in return. How about you give me 5 Y for 2 X? This way, we both gain more resources.\n\nTRADE: GIVE 2 X, RECEIVE 5 Y",
+          "message": "Hi Player RED, your proposal seems a bit one-sided since I would be giving up a significant portion of my Y resources for less in return. How about you give me 5 Y for 2 X? This way, we both gain more resources.",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 15
+          },
+          "metrics": {
+            "word_count": 50,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I appreciate your proposal, but since I have more X than Y, I would prefer to get more Y in exchange for X. How about giving me 4 Y for 3 X?\n\nTRADE: GIVE 3 X, RECEIVE 4 Y",
+          "message": "Hi Player BLUE, I appreciate your proposal, but since I have more X than Y, I would prefer to get more Y in exchange for X. How about giving me 4 Y for 3 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "X",
+            "receive_qty": 4,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 15,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 42,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, your proposal is more balanced. I can accept this trade as it allows us both to gain more resources.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal is more balanced. I can accept this trade as it allows us both to gain more resources.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 15
+          },
+          "metrics": {
+            "word_count": 23,
+            "hedge_count": 0,
+            "fairness_count": 2
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 3
+    },
+    {
+      "config": [
+        20,
+        5,
+        5,
+        20
+      ],
+      "p1_initial": {
+        "X": 20,
+        "Y": 5
+      },
+      "p2_initial": {
+        "X": 5,
+        "Y": 20
+      },
+      "p1_final": {
+        "X": 15,
+        "Y": 10
+      },
+      "p2_final": {
+        "X": 10,
+        "Y": 15
+      },
+      "p1_score": 25,
+      "p2_score": 25,
+      "p1_initial_score": 25,
+      "p2_initial_score": 25,
+      "p1_balance": 0.6666666666666666,
+      "p2_balance": 0.6666666666666666,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 3 Y in exchange for 10 X? This way, we both benefit. \n\nTRADE: GIVE 10 X, RECEIVE 3 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 3 Y in exchange for 10 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 20,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I have plenty of Y and not enough X. How about I give you 5 Y for 5 X instead?\n\nTRADE: GIVE 5 Y, RECEIVE 5 X",
+          "message": "Hi Player RED, your proposal sounds interesting but I have plenty of Y and not enough X. How about I give you 5 Y for 5 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 20
+          },
+          "metrics": {
+            "word_count": 35,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, your counterproposal sounds fair. I'll ACCEPT it to move forward.\n\nACCEPT",
+          "message": "Hi Player BLUE, your counterproposal sounds fair. I'll ACCEPT it to move forward.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 20,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 14,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 4
+    },
+    {
+      "config": [
+        25,
+        10,
+        10,
+        25
+      ],
+      "p1_initial": {
+        "X": 25,
+        "Y": 10
+      },
+      "p2_initial": {
+        "X": 10,
+        "Y": 25
+      },
+      "p1_final": {
+        "X": 15,
+        "Y": 15
+      },
+      "p2_final": {
+        "X": 20,
+        "Y": 20
+      },
+      "p1_score": 30,
+      "p2_score": 40,
+      "p1_initial_score": 35,
+      "p2_initial_score": 35,
+      "p1_balance": 1.0,
+      "p2_balance": 1.0,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y for 10 of my X? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y for 10 of my X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds good as it helps in diversifying my resources. ACCEPT\n\nACCEPT",
+          "message": "Hi Player RED, your proposal sounds good as it helps in diversifying my resources. ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 16,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 5
+    },
+    {
+      "config": [
+        30,
+        10,
+        10,
+        30
+      ],
+      "p1_initial": {
+        "X": 30,
+        "Y": 10
+      },
+      "p2_initial": {
+        "X": 10,
+        "Y": 30
+      },
+      "p1_final": {
+        "X": 20,
+        "Y": 15
+      },
+      "p2_final": {
+        "X": 20,
+        "Y": 25
+      },
+      "p1_score": 35,
+      "p2_score": 45,
+      "p1_initial_score": 40,
+      "p2_initial_score": 40,
+      "p1_balance": 0.75,
+      "p2_balance": 0.8,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y for 10 of my X? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y for 10 of my X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds good as it helps diversify my resources. ACCEPT\n\nACCEPT",
+          "message": "Hi Player RED, your proposal sounds good as it helps diversify my resources. ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 30
+          },
+          "metrics": {
+            "word_count": 15,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 6
+    },
+    {
+      "config": [
+        15,
+        10,
+        10,
+        15
+      ],
+      "p1_initial": {
+        "X": 15,
+        "Y": 10
+      },
+      "p2_initial": {
+        "X": 10,
+        "Y": 15
+      },
+      "p1_final": {
+        "X": 10,
+        "Y": 14
+      },
+      "p2_final": {
+        "X": 15,
+        "Y": 11
+      },
+      "p1_score": 24,
+      "p2_score": 26,
+      "p1_initial_score": 25,
+      "p2_initial_score": 25,
+      "p1_balance": 0.7142857142857143,
+      "p2_balance": 0.7333333333333333,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 X in exchange for 4 Y? This way, we both gain more resources. \n\nTRADE: GIVE 5 X, RECEIVE 4 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 X in exchange for 4 Y? This way, we both gain more resources.",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 4,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 15,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems fair. I will accept it to increase our total resources.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal seems fair. I will accept it to increase our total resources.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 15
+          },
+          "metrics": {
+            "word_count": 17,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 7
+    },
+    {
+      "config": [
+        35,
+        5,
+        5,
+        35
+      ],
+      "p1_initial": {
+        "X": 35,
+        "Y": 5
+      },
+      "p2_initial": {
+        "X": 5,
+        "Y": 35
+      },
+      "p1_final": {
+        "X": 40,
+        "Y": 0
+      },
+      "p2_final": {
+        "X": 0,
+        "Y": 40
+      },
+      "p1_score": 40,
+      "p2_score": 40,
+      "p1_initial_score": 40,
+      "p2_initial_score": 40,
+      "p1_balance": 0.0,
+      "p2_balance": 0.0,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I have a decent amount of X and very little Y. How about giving me some Y in exchange for X? Let's see what you propose. \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I have a decent amount of X and very little Y. How about giving me some Y in exchange for X? Let's see what you propose.",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 35,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, I see your proposal. Unfortunately, I only have 5 X, so I cannot give you 10 X. How about you give me 5 Y and I will give you all my X? \n\nTRADE: GIVE 5 X, RECEIVE 5 Y",
+          "message": "Hi Player RED, I see your proposal. Unfortunately, I only have 5 X, so I cannot give you 10 X. How about you give me 5 Y and I will give you all my X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 35
+          },
+          "metrics": {
+            "word_count": 42,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I appreciate your offer, but since I only have 5 Y, I can't give you 5 Y. How about I give you all my Y and you give me 5 X?\n\nTRADE: GIVE 5 Y, RECEIVE 5 X",
+          "message": "Hi Player BLUE, I appreciate your offer, but since I only have 5 Y, I can't give you 5 Y. How about I give you all my Y and you give me 5 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 35,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 41,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, that sounds like a fair trade to me. I'll ACCEPT your proposal.\n\nACCEPT",
+          "message": "Hi Player RED, that sounds like a fair trade to me. I'll ACCEPT your proposal.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 35
+          },
+          "metrics": {
+            "word_count": 16,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 8
+    },
+    {
+      "config": [
+        40,
+        5,
+        5,
+        40
+      ],
+      "p1_initial": {
+        "X": 40,
+        "Y": 5
+      },
+      "p2_initial": {
+        "X": 5,
+        "Y": 40
+      },
+      "p1_final": {
+        "X": 35,
+        "Y": 7
+      },
+      "p2_final": {
+        "X": 10,
+        "Y": 38
+      },
+      "p1_score": 42,
+      "p2_score": 48,
+      "p1_initial_score": 45,
+      "p2_initial_score": 45,
+      "p1_balance": 0.2,
+      "p2_balance": 0.2631578947368421,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving me 10 X for 3 Y? This way, we both benefit. \n\nTRADE: GIVE 10 X, RECEIVE 3 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving me 10 X for 3 Y? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 40,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 41,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, thanks for the proposal. However, I don't have enough X to give 10 units. How about a different trade? \n\nNONE",
+          "message": "Hi Player RED, thanks for the proposal. However, I don't have enough X to give 10 units. How about a different trade?",
+          "action": {
+            "type": "none"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 40
+          },
+          "metrics": {
+            "word_count": 23,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Sure, let's adjust the proposal. How about giving me 5 X for 2 Y?\n\nTRADE: GIVE 5 X, RECEIVE 2 Y",
+          "message": "Sure, let's adjust the proposal. How about giving me 5 X for 2 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 40,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 21,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "ACCEPT",
+          "message": "ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 40
+          },
+          "metrics": {
+            "word_count": 1,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 9
+    },
+    {
+      "config": [
+        18,
+        12,
+        12,
+        18
+      ],
+      "p1_initial": {
+        "X": 18,
+        "Y": 12
+      },
+      "p2_initial": {
+        "X": 12,
+        "Y": 18
+      },
+      "p1_final": {
+        "X": 26,
+        "Y": 6
+      },
+      "p2_final": {
+        "X": 4,
+        "Y": 24
+      },
+      "p1_score": 32,
+      "p2_score": 28,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.23076923076923078,
+      "p2_balance": 0.16666666666666666,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y in exchange for 8 X? \n\nTRADE: GIVE 8 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y in exchange for 8 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 8,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 18,
+            "Y": 12
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I'd like to tweak it a bit. How about giving me 6 Y in exchange for 8 X instead?\n\nTRADE: GIVE 8 X, RECEIVE 6 Y",
+          "message": "Hi Player RED, your proposal sounds interesting but I'd like to tweak it a bit. How about giving me 6 Y in exchange for 8 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 8,
+            "give_res": "X",
+            "receive_qty": 6,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 12,
+            "Y": 18
+          },
+          "metrics": {
+            "word_count": 34,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I can work with that. Let's go with giving you 6 Y in exchange for 8 X.\n\nACCEPT",
+          "message": "Hi Player BLUE, I can work with that. Let's go with giving you 6 Y in exchange for 8 X.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 18,
+            "Y": 12
+          },
+          "metrics": {
+            "word_count": 21,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 10
+    },
+    {
+      "config": [
+        22,
+        8,
+        8,
+        22
+      ],
+      "p1_initial": {
+        "X": 22,
+        "Y": 8
+      },
+      "p2_initial": {
+        "X": 8,
+        "Y": 22
+      },
+      "p1_final": {
+        "X": 12,
+        "Y": 13
+      },
+      "p2_final": {
+        "X": 18,
+        "Y": 17
+      },
+      "p1_score": 25,
+      "p2_score": 35,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.9230769230769231,
+      "p2_balance": 0.9444444444444444,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 Y in exchange for 10 X? This way, we both benefit. \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 Y in exchange for 10 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 22,
+            "Y": 8
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I have plenty of Y and could use more X. How about giving me 5 Y in exchange for 10 X instead?\n\nTRADE: GIVE 5 Y, RECEIVE 10 X",
+          "message": "Hi Player RED, your proposal sounds interesting but I have plenty of Y and could use more X. How about giving me 5 Y in exchange for 10 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "Y",
+            "receive_qty": 10,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 8,
+            "Y": 22
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 1,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, let's go with your proposal then. It seems like a fair trade and we both get what we need.\n\nACCEPT",
+          "message": "Hi Player BLUE, let's go with your proposal then. It seems like a fair trade and we both get what we need.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 22,
+            "Y": 8
+          },
+          "metrics": {
+            "word_count": 23,
+            "hedge_count": 0,
+            "fairness_count": 2
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 11
+    },
+    {
+      "config": [
+        16,
+        14,
+        14,
+        16
+      ],
+      "p1_initial": {
+        "X": 16,
+        "Y": 14
+      },
+      "p2_initial": {
+        "X": 14,
+        "Y": 16
+      },
+      "p1_final": {
+        "X": 9,
+        "Y": 19
+      },
+      "p2_final": {
+        "X": 21,
+        "Y": 11
+      },
+      "p1_score": 28,
+      "p2_score": 32,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.47368421052631576,
+      "p2_balance": 0.5238095238095238,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my resources. How about giving me 5 Y in exchange for 7 X? This way, we both get more of what we need. \n\nTRADE: GIVE 7 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my resources. How about giving me 5 Y in exchange for 7 X? This way, we both get more of what we need.",
+          "action": {
+            "type": "propose",
+            "give_qty": 7,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 16,
+            "Y": 14
+          },
+          "metrics": {
+            "word_count": 39,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds good as it increases my total resources. ACCEPT\n\nACCEPT",
+          "message": "Hi Player RED, your proposal sounds good as it increases my total resources. ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 14,
+            "Y": 16
+          },
+          "metrics": {
+            "word_count": 15,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 12
+    },
+    {
+      "config": [
+        28,
+        7,
+        7,
+        28
+      ],
+      "p1_initial": {
+        "X": 28,
+        "Y": 7
+      },
+      "p2_initial": {
+        "X": 7,
+        "Y": 28
+      },
+      "p1_final": {
+        "X": 23,
+        "Y": 12
+      },
+      "p2_final": {
+        "X": 12,
+        "Y": 23
+      },
+      "p1_score": 35,
+      "p2_score": 35,
+      "p1_initial_score": 35,
+      "p2_initial_score": 35,
+      "p1_balance": 0.5217391304347826,
+      "p2_balance": 0.5217391304347826,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y in exchange for 10 X? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y in exchange for 10 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 28,
+            "Y": 7
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal would significantly alter my resource balance. How about a compromise? GIVE 5 Y, RECEIVE 5 X. \n\nTRADE: GIVE 5 Y, RECEIVE 5 X",
+          "message": "Hi Player RED, your proposal would significantly alter my resource balance. How about a compromise? GIVE 5 Y, RECEIVE 5 X.",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 7,
+            "Y": 28
+          },
+          "metrics": {
+            "word_count": 28,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I think your compromise sounds fair. Let's go for it!\n\nACCEPT",
+          "message": "Hi Player BLUE, I think your compromise sounds fair. Let's go for it!",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 28,
+            "Y": 7
+          },
+          "metrics": {
+            "word_count": 14,
+            "hedge_count": 1,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 13
+    },
+    {
+      "config": [
+        24,
+        6,
+        6,
+        24
+      ],
+      "p1_initial": {
+        "X": 24,
+        "Y": 6
+      },
+      "p2_initial": {
+        "X": 6,
+        "Y": 24
+      },
+      "p1_final": {
+        "X": 28,
+        "Y": 0
+      },
+      "p2_final": {
+        "X": 2,
+        "Y": 30
+      },
+      "p1_score": 28,
+      "p2_score": 32,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.0,
+      "p2_balance": 0.06666666666666667,
+      "trades_completed": 1,
+      "game_length": 7,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I have a decent amount of X and not much Y. How about giving me some Y in exchange for X? \n\nTRADE: GIVE 10 X, RECEIVE 3 Y",
+          "message": "Hi Player BLUE, I have a decent amount of X and not much Y. How about giving me some Y in exchange for X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 24,
+            "Y": 6
+          },
+          "metrics": {
+            "word_count": 31,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems one-sided as I would be giving more value than receiving. How about this: GIVE 5 X, RECEIVE 10 Y?\n\nTRADE: GIVE 5 X, RECEIVE 10 Y",
+          "message": "Hi Player RED, your proposal seems one-sided as I would be giving more value than receiving. How about this: GIVE 5 X, RECEIVE 10 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 10,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 6,
+            "Y": 24
+          },
+          "metrics": {
+            "word_count": 32,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I appreciate your proposal, but I don't have enough Y to make that trade. How about we both give a bit more flexibility in our offers?\n\nNONE",
+          "message": "Hi Player BLUE, I appreciate your proposal, but I don't have enough Y to make that trade. How about we both give a bit more flexibility in our offers?",
+          "action": {
+            "type": "none"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 24,
+            "Y": 6
+          },
+          "metrics": {
+            "word_count": 30,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Alright, let's find a middle ground. How about this offer: GIVE 3 X, RECEIVE 8 Y?\n\nTRADE: GIVE 3 X, RECEIVE 8 Y",
+          "message": "Alright, let's find a middle ground. How about this offer: GIVE 3 X, RECEIVE 8 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "X",
+            "receive_qty": 8,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 6,
+            "Y": 24
+          },
+          "metrics": {
+            "word_count": 23,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 4,
+          "player": 1,
+          "text": "Hi Player BLUE, I really appreciate your effort, but I don't have enough Y to meet this proposal. How about we trade 5 X for 3 Y?\n\nTRADE: GIVE 5 X, RECEIVE 3 Y",
+          "message": "Hi Player BLUE, I really appreciate your effort, but I don't have enough Y to meet this proposal. How about we trade 5 X for 3 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 24,
+            "Y": 6
+          },
+          "metrics": {
+            "word_count": 34,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 5,
+          "player": 2,
+          "text": "Hi Player RED, let's try to make a deal that benefits both. How about giving 4 X for 6 Y?\n\nTRADE: GIVE 4 X, RECEIVE 6 Y",
+          "message": "Hi Player RED, let's try to make a deal that benefits both. How about giving 4 X for 6 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 4,
+            "give_res": "X",
+            "receive_qty": 6,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 6,
+            "Y": 24
+          },
+          "metrics": {
+            "word_count": 27,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 6,
+          "player": 1,
+          "text": "Hi Player BLUE, I really appreciate your proposal. Let's go for it!\n\nACCEPT",
+          "message": "Hi Player BLUE, I really appreciate your proposal. Let's go for it!",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 24,
+            "Y": 6
+          },
+          "metrics": {
+            "word_count": 13,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 14
+    },
+    {
+      "config": [
+        10,
+        3,
+        3,
+        10
+      ],
+      "p1_initial": {
+        "X": 10,
+        "Y": 3
+      },
+      "p2_initial": {
+        "X": 3,
+        "Y": 10
+      },
+      "p1_final": {
+        "X": 8,
+        "Y": 4
+      },
+      "p2_final": {
+        "X": 5,
+        "Y": 9
+      },
+      "p1_score": 12,
+      "p2_score": 14,
+      "p1_initial_score": 13,
+      "p2_initial_score": 13,
+      "p1_balance": 0.5,
+      "p2_balance": 0.5555555555555556,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for some Y. How about giving me 2 Y in exchange for 4 X? This would help me diversify my resources. \n\nTRADE: GIVE 4 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for some Y. How about giving me 2 Y in exchange for 4 X? This would help me diversify my resources.",
+          "action": {
+            "type": "propose",
+            "give_qty": 4,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 39,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I need more Y to make it worth giving up my X. How about you give me 3 Y for my 2 X?\n\nTRADE: GIVE 2 X, RECEIVE 3 Y",
+          "message": "Hi Player RED, your proposal sounds interesting but I need more Y to make it worth giving up my X. How about you give me 3 Y for my 2 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I understand your position, but I actually have very few Y to give. How about I give you 2 X for 1 Y instead?\n\nTRADE: GIVE 2 X, RECEIVE 1 Y",
+          "message": "Hi Player BLUE, I understand your position, but I actually have very few Y to give. How about I give you 2 X for 1 Y instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "X",
+            "receive_qty": 1,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 34,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, your new proposal is more reasonable. I can ACCEPT this trade.\n\nACCEPT",
+          "message": "Hi Player RED, your new proposal is more reasonable. I can ACCEPT this trade.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 15,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 15
+    },
+    {
+      "config": [
+        12,
+        4,
+        4,
+        12
+      ],
+      "p1_initial": {
+        "X": 12,
+        "Y": 4
+      },
+      "p2_initial": {
+        "X": 4,
+        "Y": 12
+      },
+      "p1_final": {
+        "X": 9,
+        "Y": 7
+      },
+      "p2_final": {
+        "X": 7,
+        "Y": 9
+      },
+      "p1_score": 16,
+      "p2_score": 16,
+      "p1_initial_score": 16,
+      "p2_initial_score": 16,
+      "p1_balance": 0.7777777777777778,
+      "p2_balance": 0.7777777777777778,
+      "trades_completed": 1,
+      "game_length": 5,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 2 Y in exchange for 4 X? This way, we both benefit. \n\nTRADE: GIVE 4 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 2 Y in exchange for 4 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 4,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 12,
+            "Y": 4
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I'd like to get more Y since I have an abundance of it. How about giving me 3 Y in exchange for 2 X?\n\nTRADE: GIVE 2 X, RECEIVE 3 Y",
+          "message": "Hi Player RED, your proposal sounds interesting but I'd like to get more Y since I have an abundance of it. How about giving me 3 Y in exchange for 2 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 4,
+            "Y": 12
+          },
+          "metrics": {
+            "word_count": 39,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I understand your position, but I actually need more Y to make that trade worthwhile for me. How about this: I give you 4 X and you give me 2 Y? \n\nTRADE: GIVE 4 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I understand your position, but I actually need more Y to make that trade worthwhile for me. How about this: I give you 4 X and you give me 2 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 4,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 12,
+            "Y": 4
+          },
+          "metrics": {
+            "word_count": 41,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, I appreciate your counteroffer. To make it more beneficial for both of us, how about you give me 3 X and I give you 3 Y?\n\nTRADE: GIVE 3 Y, RECEIVE 3 X",
+          "message": "Hi Player RED, I appreciate your counteroffer. To make it more beneficial for both of us, how about you give me 3 X and I give you 3 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "Y",
+            "receive_qty": 3,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 4,
+            "Y": 12
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 4,
+          "player": 1,
+          "text": "Hi Player BLUE, that sounds like a fair trade. Let's go with that.\n\nACCEPT",
+          "message": "Hi Player BLUE, that sounds like a fair trade. Let's go with that.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 12,
+            "Y": 4
+          },
+          "metrics": {
+            "word_count": 14,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 16
+    },
+    {
+      "config": [
+        8,
+        2,
+        2,
+        8
+      ],
+      "p1_initial": {
+        "X": 8,
+        "Y": 2
+      },
+      "p2_initial": {
+        "X": 2,
+        "Y": 8
+      },
+      "p1_final": {
+        "X": 6,
+        "Y": 6
+      },
+      "p2_final": {
+        "X": 4,
+        "Y": 4
+      },
+      "p1_score": 12,
+      "p2_score": 8,
+      "p1_initial_score": 10,
+      "p2_initial_score": 10,
+      "p1_balance": 1.0,
+      "p2_balance": 1.0,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for some Y. How about giving me 2 Y in exchange for 4 X? This way, we both benefit. \n\nTRADE: GIVE 4 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for some Y. How about giving me 2 Y in exchange for 4 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 4,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 8,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I'm short on X. How about giving you 4 Y for 2 X instead?\n\nTRADE: GIVE 4 Y, RECEIVE 2 X",
+          "message": "Hi Player RED, your proposal sounds interesting but I'm short on X. How about giving you 4 Y for 2 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 4,
+            "give_res": "Y",
+            "receive_qty": 2,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 2,
+            "Y": 8
+          },
+          "metrics": {
+            "word_count": 29,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, that sounds like a good deal since it helps us both. I'll ACCEPT your proposal.\n\nACCEPT",
+          "message": "Hi Player BLUE, that sounds like a good deal since it helps us both. I'll ACCEPT your proposal.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 8,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 19,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 17
+    },
+    {
+      "config": [
+        35,
+        10,
+        10,
+        35
+      ],
+      "p1_initial": {
+        "X": 35,
+        "Y": 10
+      },
+      "p2_initial": {
+        "X": 10,
+        "Y": 35
+      },
+      "p1_final": {
+        "X": 25,
+        "Y": 15
+      },
+      "p2_final": {
+        "X": 20,
+        "Y": 30
+      },
+      "p1_score": 40,
+      "p2_score": 50,
+      "p1_initial_score": 45,
+      "p2_initial_score": 45,
+      "p1_balance": 0.6,
+      "p2_balance": 0.6666666666666666,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving you 10 X in exchange for 5 Y? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving you 10 X in exchange for 5 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 35,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems fair. I will accept it to improve our resources.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal seems fair. I will accept it to improve our resources.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 35
+          },
+          "metrics": {
+            "word_count": 16,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 18
+    },
+    {
+      "config": [
+        40,
+        10,
+        10,
+        40
+      ],
+      "p1_initial": {
+        "X": 40,
+        "Y": 10
+      },
+      "p2_initial": {
+        "X": 10,
+        "Y": 40
+      },
+      "p1_final": {
+        "X": 30,
+        "Y": 15
+      },
+      "p2_final": {
+        "X": 20,
+        "Y": 35
+      },
+      "p1_score": 45,
+      "p2_score": 55,
+      "p1_initial_score": 50,
+      "p2_initial_score": 50,
+      "p1_balance": 0.5,
+      "p2_balance": 0.5714285714285714,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving you 10 X in exchange for 5 Y? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving you 10 X in exchange for 5 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 40,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds reasonable. Let's go ahead with it.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal sounds reasonable. Let's go ahead with it.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 40
+          },
+          "metrics": {
+            "word_count": 13,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 19
+    },
+    {
+      "config": [
+        25,
+        10,
+        5,
+        20
+      ],
+      "p1_initial": {
+        "X": 25,
+        "Y": 10
+      },
+      "p2_initial": {
+        "X": 5,
+        "Y": 20
+      },
+      "p1_final": {
+        "X": 10,
+        "Y": 20
+      },
+      "p2_final": {
+        "X": 20,
+        "Y": 10
+      },
+      "p1_score": 30,
+      "p2_score": 30,
+      "p1_initial_score": 35,
+      "p2_initial_score": 25,
+      "p1_balance": 0.5,
+      "p2_balance": 0.5,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y for 10 of my X? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y for 10 of my X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I'd like to get a bit more X for my Y. How about giving you 10 Y for 15 of your X?\n\nTRADE: GIVE 10 Y, RECEIVE 15 X",
+          "message": "Hi Player RED, your proposal sounds interesting but I'd like to get a bit more X for my Y. How about giving you 10 Y for 15 of your X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "Y",
+            "receive_qty": 15,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 20
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, your counterproposal sounds fair. I'll ACCEPT it to move forward.\n\nACCEPT",
+          "message": "Hi Player BLUE, your counterproposal sounds fair. I'll ACCEPT it to move forward.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 14,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 20
+    },
+    {
+      "config": [
+        30,
+        5,
+        10,
+        25
+      ],
+      "p1_initial": {
+        "X": 30,
+        "Y": 5
+      },
+      "p2_initial": {
+        "X": 10,
+        "Y": 25
+      },
+      "p1_final": {
+        "X": 25,
+        "Y": 15
+      },
+      "p2_final": {
+        "X": 15,
+        "Y": 15
+      },
+      "p1_score": 40,
+      "p2_score": 30,
+      "p1_initial_score": 35,
+      "p2_initial_score": 35,
+      "p1_balance": 0.6,
+      "p2_balance": 1.0,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving me 5 Y in exchange for 10 X? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving me 5 Y in exchange for 10 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems interesting but I would like to maximize the resources. How about giving 10 Y to receive 5 X instead?\n\nTRADE: GIVE 10 Y, RECEIVE 5 X",
+          "message": "Hi Player RED, your proposal seems interesting but I would like to maximize the resources. How about giving 10 Y to receive 5 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 32,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I see your proposal, but I need to ensure I get more X since I have plenty of Y. How about giving you 10 Y for 5 X instead?\n\nTRADE: GIVE 5 X, RECEIVE 10 Y",
+          "message": "Hi Player BLUE, I see your proposal, but I need to ensure I get more X since I have plenty of Y. How about giving you 10 Y for 5 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 10,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 39,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, your proposal is fair. I will ACCEPT this trade.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal is fair. I will ACCEPT this trade.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 13,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 21
+    },
+    {
+      "config": [
+        20,
+        15,
+        10,
+        10
+      ],
+      "p1_initial": {
+        "X": 20,
+        "Y": 15
+      },
+      "p2_initial": {
+        "X": 10,
+        "Y": 10
+      },
+      "p1_final": {
+        "X": 10,
+        "Y": 20
+      },
+      "p2_final": {
+        "X": 20,
+        "Y": 5
+      },
+      "p1_score": 30,
+      "p2_score": 25,
+      "p1_initial_score": 35,
+      "p2_initial_score": 20,
+      "p1_balance": 0.5,
+      "p2_balance": 0.25,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y for 10 of my X? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y for 10 of my X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 20,
+            "Y": 15
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds good. I'll accept it to increase my X resources significantly.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal sounds good. I'll accept it to increase my X resources significantly.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 17,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 22
+    },
+    {
+      "config": [
+        15,
+        5,
+        10,
+        25
+      ],
+      "p1_initial": {
+        "X": 15,
+        "Y": 5
+      },
+      "p2_initial": {
+        "X": 10,
+        "Y": 25
+      },
+      "p1_final": {
+        "X": 12,
+        "Y": 10
+      },
+      "p2_final": {
+        "X": 13,
+        "Y": 20
+      },
+      "p1_score": 22,
+      "p2_score": 33,
+      "p1_initial_score": 20,
+      "p2_initial_score": 35,
+      "p1_balance": 0.8333333333333334,
+      "p2_balance": 0.65,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 X in exchange for 3 Y? This way, we both benefit a bit. \n\nTRADE: GIVE 5 X, RECEIVE 3 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 X in exchange for 3 Y? This way, we both benefit a bit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 15,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems a bit unfavorable for me right now. How about this: GIVE 5 Y, RECEIVE 3 X?\n\nTRADE: GIVE 5 Y, RECEIVE 3 X",
+          "message": "Hi Player RED, your proposal seems a bit unfavorable for me right now. How about this: GIVE 5 Y, RECEIVE 3 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "Y",
+            "receive_qty": 3,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 29,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I see your proposal. I'm willing to accept this trade as it allows us both to gain resources. \n\nACCEPT",
+          "message": "Hi Player BLUE, I see your proposal. I'm willing to accept this trade as it allows us both to gain resources.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 15,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 22,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 23
+    },
+    {
+      "config": [
+        25,
+        5,
+        10,
+        20
+      ],
+      "p1_initial": {
+        "X": 25,
+        "Y": 5
+      },
+      "p2_initial": {
+        "X": 10,
+        "Y": 20
+      },
+      "p1_final": {
+        "X": 15,
+        "Y": 10
+      },
+      "p2_final": {
+        "X": 20,
+        "Y": 15
+      },
+      "p1_score": 25,
+      "p2_score": 35,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.6666666666666666,
+      "p2_balance": 0.75,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving me 5 Y in exchange for 10 X? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving me 5 Y in exchange for 10 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems fair. I'll accept it to improve our resources.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal seems fair. I'll accept it to improve our resources.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 20
+          },
+          "metrics": {
+            "word_count": 15,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 24
+    },
+    {
+      "config": [
+        5,
+        25,
+        25,
+        5
+      ],
+      "p1_initial": {
+        "X": 5,
+        "Y": 25
+      },
+      "p2_initial": {
+        "X": 25,
+        "Y": 5
+      },
+      "p1_final": {
+        "X": 1,
+        "Y": 30
+      },
+      "p2_final": {
+        "X": 29,
+        "Y": 0
+      },
+      "p1_score": 31,
+      "p2_score": 29,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.03333333333333333,
+      "p2_balance": 0.0,
+      "trades_completed": 1,
+      "game_length": 5,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my Y for X since I have a surplus of Y. How about giving me 10 Y in exchange for 3 X? \n\nTRADE: GIVE 10 Y, RECEIVE 3 X",
+          "message": "Hi Player BLUE, I'm open to trading some of my Y for X since I have a surplus of Y. How about giving me 10 Y in exchange for 3 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "Y",
+            "receive_qty": 3,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "I appreciate your offer, but I believe I need more Y to make the trade worthwhile. How about giving me 5 X for 10 Y?\n\nTRADE: GIVE 10 Y, RECEIVE 5 X",
+          "message": "I appreciate your offer, but I believe I need more Y to make the trade worthwhile. How about giving me 5 X for 10 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 32,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "invalid_trade": true
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I understand your need for more Y. How about this: I give you 4 X for 15 Y? This way, we both benefit more from the trade.\n\nTRADE: GIVE 4 X, RECEIVE 15 Y",
+          "message": "Hi Player BLUE, I understand your need for more Y. How about this: I give you 4 X for 15 Y? This way, we both benefit more from the trade.",
+          "action": {
+            "type": "propose",
+            "give_qty": 4,
+            "give_res": "X",
+            "receive_qty": 15,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "I appreciate your proposal, but I only have 5 Y. How about you give me 4 X and I give you all my Y?\n\nTRADE: GIVE 5 Y, RECEIVE 4 X",
+          "message": "I appreciate your proposal, but I only have 5 Y. How about you give me 4 X and I give you all my Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "Y",
+            "receive_qty": 4,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 31,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 4,
+          "player": 1,
+          "text": "Hi Player BLUE, that works for me. Let's go with your proposal.\n\nACCEPT",
+          "message": "Hi Player BLUE, that works for me. Let's go with your proposal.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 13,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 25
+    },
+    {
+      "config": [
+        10,
+        20,
+        20,
+        10
+      ],
+      "p1_initial": {
+        "X": 10,
+        "Y": 20
+      },
+      "p2_initial": {
+        "X": 20,
+        "Y": 10
+      },
+      "p1_final": {
+        "X": 7,
+        "Y": 25
+      },
+      "p2_final": {
+        "X": 23,
+        "Y": 5
+      },
+      "p1_score": 32,
+      "p2_score": 28,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.28,
+      "p2_balance": 0.21739130434782608,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my Y for X. How about giving me 5 Y in exchange for 3 X? This way we both get some of what we need. \n\nTRADE: GIVE 3 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my Y for X. How about giving me 5 Y in exchange for 3 X? This way we both get some of what we need.",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 20
+          },
+          "metrics": {
+            "word_count": 41,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems fair. I will accept it to improve our resources.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal seems fair. I will accept it to improve our resources.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 20,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 16,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 26
+    },
+    {
+      "config": [
+        5,
+        30,
+        30,
+        5
+      ],
+      "p1_initial": {
+        "X": 5,
+        "Y": 30
+      },
+      "p2_initial": {
+        "X": 30,
+        "Y": 5
+      },
+      "p1_final": {
+        "X": 5,
+        "Y": 30
+      },
+      "p2_final": {
+        "X": 30,
+        "Y": 5
+      },
+      "p1_score": 35,
+      "p2_score": 35,
+      "p1_initial_score": 35,
+      "p2_initial_score": 35,
+      "p1_balance": 0.16666666666666666,
+      "p2_balance": 0.16666666666666666,
+      "trades_completed": 0,
+      "game_length": 8,
+      "game_ended_naturally": false,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my Y for X since I have a surplus of Y. How about giving me 10 Y in exchange for 3 X? \n\nTRADE: GIVE 10 Y, RECEIVE 3 X",
+          "message": "Hi Player BLUE, I'm open to trading some of my Y for X since I have a surplus of Y. How about giving me 10 Y in exchange for 3 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "Y",
+            "receive_qty": 3,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 30
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "I appreciate your offer, but I need more Y for my X. How about giving me 5 X for 15 Y?\n\nTRADE: GIVE 15 Y, RECEIVE 5 X",
+          "message": "I appreciate your offer, but I need more Y for my X. How about giving me 5 X for 15 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 15,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 28,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "invalid_trade": true
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I understand your need for more Y. How about this: I give you 4 X for 15 Y?\n\nTRADE: GIVE 4 X, RECEIVE 15 Y",
+          "message": "Hi Player BLUE, I understand your need for more Y. How about this: I give you 4 X for 15 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 4,
+            "give_res": "X",
+            "receive_qty": 15,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 30
+          },
+          "metrics": {
+            "word_count": 28,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "I can see we have a gap in our valuations. How about a compromise? 10 Y for 4 X?\n\nTRADE: GIVE 10 Y, RECEIVE 4 X",
+          "message": "I can see we have a gap in our valuations. How about a compromise? 10 Y for 4 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "Y",
+            "receive_qty": 4,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 26,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "invalid_trade": true
+        },
+        {
+          "turn": 4,
+          "player": 1,
+          "text": "That sounds like a fair compromise, Player BLUE. Let's go with that.\n\nACCEPT",
+          "message": "That sounds like a fair compromise, Player BLUE. Let's go with that.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 30
+          },
+          "metrics": {
+            "word_count": 13,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 5,
+          "player": 2,
+          "text": "ACCEPT",
+          "message": "ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 1,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "accept_failed": true
+        },
+        {
+          "turn": 6,
+          "player": 1,
+          "text": "The trade has been accepted. Thank you for the compromise, Player BLUE.\n\nNONE",
+          "message": "The trade has been accepted. Thank you for the compromise, Player BLUE.",
+          "action": {
+            "type": "none"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 30
+          },
+          "metrics": {
+            "word_count": 13,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 7,
+          "player": 2,
+          "text": "It seems there's a misunderstanding. I ACCEPT the previous compromise of giving 15 Y for 4 X.\n\nACCEPT",
+          "message": "It seems there's a misunderstanding. I ACCEPT the previous compromise of giving 15 Y for 4 X.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 18,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "accept_failed": true
+        }
+      ],
+      "game_id": 27
+    },
+    {
+      "config": [
+        10,
+        25,
+        25,
+        10
+      ],
+      "p1_initial": {
+        "X": 10,
+        "Y": 25
+      },
+      "p2_initial": {
+        "X": 25,
+        "Y": 10
+      },
+      "p1_final": {
+        "X": 15,
+        "Y": 13
+      },
+      "p2_final": {
+        "X": 20,
+        "Y": 22
+      },
+      "p1_score": 28,
+      "p2_score": 42,
+      "p1_initial_score": 35,
+      "p2_initial_score": 35,
+      "p1_balance": 0.8666666666666667,
+      "p2_balance": 0.9090909090909091,
+      "trades_completed": 1,
+      "game_length": 5,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my Y for X. How about giving me 10 Y in exchange for 5 X? This way we both benefit. \n\nTRADE: GIVE 10 Y, RECEIVE 5 X",
+          "message": "Hi Player BLUE, I'm open to trading some of my Y for X. How about giving me 10 Y in exchange for 5 X? This way we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I'd like to get more Y in return for my X. How about giving you 5 X and receiving 15 Y instead?\n\nTRADE: GIVE 5 X, RECEIVE 15 Y",
+          "message": "Hi Player RED, your proposal sounds interesting but I'd like to get more Y in return for my X. How about giving you 5 X and receiving 15 Y instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 15,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I understand your perspective. How about this: I give you 10 Y and you give me 5 X? This way, we both gain more resources.\n\nTRADE: GIVE 10 Y, RECEIVE 5 X",
+          "message": "Hi Player BLUE, I understand your perspective. How about this: I give you 10 Y and you give me 5 X? This way, we both gain more resources.",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 35,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, I appreciate your proposal. Let's make a compromise. How about you give me 12 Y and I give you 5 X?\n\nTRADE: GIVE 5 X, RECEIVE 12 Y",
+          "message": "Hi Player RED, I appreciate your proposal. Let's make a compromise. How about you give me 12 Y and I give you 5 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 12,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 10
+          },
+          "metrics": {
+            "word_count": 31,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 4,
+          "player": 1,
+          "text": "Hi Player BLUE, that sounds like a fair compromise. I ACCEPT your proposal.\n\nACCEPT",
+          "message": "Hi Player BLUE, that sounds like a fair compromise. I ACCEPT your proposal.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 10,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 14,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 28
+    },
+    {
+      "config": [
+        5,
+        15,
+        15,
+        5
+      ],
+      "p1_initial": {
+        "X": 5,
+        "Y": 15
+      },
+      "p2_initial": {
+        "X": 15,
+        "Y": 5
+      },
+      "p1_final": {
+        "X": 7,
+        "Y": 11
+      },
+      "p2_final": {
+        "X": 13,
+        "Y": 9
+      },
+      "p1_score": 18,
+      "p2_score": 22,
+      "p1_initial_score": 20,
+      "p2_initial_score": 20,
+      "p1_balance": 0.6363636363636364,
+      "p2_balance": 0.6923076923076923,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my Y for X since I have more Y. How about giving me 5 Y in exchange for 3 X? \n\nTRADE: GIVE 5 Y, RECEIVE 3 X",
+          "message": "Hi Player BLUE, I'm open to trading some of my Y for X since I have more Y. How about giving me 5 Y in exchange for 3 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "Y",
+            "receive_qty": 3,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 15
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, I'm willing to trade but would prefer to give fewer X for more Y. How about 2 X for 5 Y?\n\nTRADE: GIVE 2 X, RECEIVE 5 Y",
+          "message": "Hi Player RED, I'm willing to trade but would prefer to give fewer X for more Y. How about 2 X for 5 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 15,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 31,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I understand your preference. How about this: I give you 4 Y and you give me 2 X? \n\nTRADE: GIVE 4 Y, RECEIVE 2 X",
+          "message": "Hi Player BLUE, I understand your preference. How about this: I give you 4 Y and you give me 2 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 4,
+            "give_res": "Y",
+            "receive_qty": 2,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 15
+          },
+          "metrics": {
+            "word_count": 28,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, your new proposal sounds fair. I'll accept it.\n\nACCEPT",
+          "message": "Hi Player RED, your new proposal sounds fair. I'll accept it.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 15,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 12,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 29
+    },
+    {
+      "config": [
+        15,
+        15,
+        15,
+        15
+      ],
+      "p1_initial": {
+        "X": 15,
+        "Y": 15
+      },
+      "p2_initial": {
+        "X": 15,
+        "Y": 15
+      },
+      "p1_final": {
+        "X": 5,
+        "Y": 20
+      },
+      "p2_final": {
+        "X": 25,
+        "Y": 10
+      },
+      "p1_score": 25,
+      "p2_score": 35,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.25,
+      "p2_balance": 0.4,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some resources. How about giving me 5 Y in exchange for 10 X? This way, we both get more of what we might need. \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some resources. How about giving me 5 Y in exchange for 10 X? This way, we both get more of what we might need.",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 15,
+            "Y": 15
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 1,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds good and it increases our total resources. ACCEPT\n\nACCEPT",
+          "message": "Hi Player RED, your proposal sounds good and it increases our total resources. ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 15,
+            "Y": 15
+          },
+          "metrics": {
+            "word_count": 15,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 30
+    },
+    {
+      "config": [
+        20,
+        20,
+        20,
+        20
+      ],
+      "p1_initial": {
+        "X": 20,
+        "Y": 20
+      },
+      "p2_initial": {
+        "X": 20,
+        "Y": 20
+      },
+      "p1_final": {
+        "X": 5,
+        "Y": 30
+      },
+      "p2_final": {
+        "X": 35,
+        "Y": 10
+      },
+      "p1_score": 35,
+      "p2_score": 45,
+      "p1_initial_score": 40,
+      "p2_initial_score": 40,
+      "p1_balance": 0.16666666666666666,
+      "p2_balance": 0.2857142857142857,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my resources. How about giving me 10 Y in exchange for 15 X? This way, we both benefit. \n\nTRADE: GIVE 15 X, RECEIVE 10 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my resources. How about giving me 10 Y in exchange for 15 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 15,
+            "give_res": "X",
+            "receive_qty": 10,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 20,
+            "Y": 20
+          },
+          "metrics": {
+            "word_count": 34,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds good. I'll accept it to improve our resources.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal sounds good. I'll accept it to improve our resources.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 20,
+            "Y": 20
+          },
+          "metrics": {
+            "word_count": 15,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 31
+    },
+    {
+      "config": [
+        14,
+        16,
+        16,
+        14
+      ],
+      "p1_initial": {
+        "X": 14,
+        "Y": 16
+      },
+      "p2_initial": {
+        "X": 16,
+        "Y": 14
+      },
+      "p1_final": {
+        "X": 7,
+        "Y": 21
+      },
+      "p2_final": {
+        "X": 23,
+        "Y": 9
+      },
+      "p1_score": 28,
+      "p2_score": 32,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.3333333333333333,
+      "p2_balance": 0.391304347826087,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my resources. How about giving me 5 Y in exchange for 7 X? This way, we both get more of what we need. \n\nTRADE: GIVE 7 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my resources. How about giving me 5 Y in exchange for 7 X? This way, we both get more of what we need.",
+          "action": {
+            "type": "propose",
+            "give_qty": 7,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 14,
+            "Y": 16
+          },
+          "metrics": {
+            "word_count": 39,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds good as it increases my total resources. ACCEPT\n\nACCEPT",
+          "message": "Hi Player RED, your proposal sounds good as it increases my total resources. ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 16,
+            "Y": 14
+          },
+          "metrics": {
+            "word_count": 15,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 32
+    },
+    {
+      "config": [
+        13,
+        17,
+        17,
+        13
+      ],
+      "p1_initial": {
+        "X": 13,
+        "Y": 17
+      },
+      "p2_initial": {
+        "X": 17,
+        "Y": 13
+      },
+      "p1_final": {
+        "X": 16,
+        "Y": 12
+      },
+      "p2_final": {
+        "X": 14,
+        "Y": 18
+      },
+      "p1_score": 28,
+      "p2_score": 32,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.75,
+      "p2_balance": 0.7777777777777778,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my Y for more X. How about giving me 5 Y in exchange for 3 X? This way, we both gain more resources. \n\nTRADE: GIVE 5 Y, RECEIVE 3 X",
+          "message": "Hi Player BLUE, I'm open to trading some of my Y for more X. How about giving me 5 Y in exchange for 3 X? This way, we both gain more resources.",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "Y",
+            "receive_qty": 3,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 13,
+            "Y": 17
+          },
+          "metrics": {
+            "word_count": 39,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems fair. I will accept it to increase our total resources.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal seems fair. I will accept it to increase our total resources.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 17,
+            "Y": 13
+          },
+          "metrics": {
+            "word_count": 17,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 33
+    },
+    {
+      "config": [
+        12,
+        18,
+        18,
+        12
+      ],
+      "p1_initial": {
+        "X": 12,
+        "Y": 18
+      },
+      "p2_initial": {
+        "X": 18,
+        "Y": 12
+      },
+      "p1_final": {
+        "X": 15,
+        "Y": 13
+      },
+      "p2_final": {
+        "X": 15,
+        "Y": 17
+      },
+      "p1_score": 28,
+      "p2_score": 32,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.8666666666666667,
+      "p2_balance": 0.8823529411764706,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my Y for more X. How about giving me 5 Y in exchange for 3 X? This way, we both gain more resources. \n\nTRADE: GIVE 5 Y, RECEIVE 3 X",
+          "message": "Hi Player BLUE, I'm open to trading some of my Y for more X. How about giving me 5 Y in exchange for 3 X? This way, we both gain more resources.",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "Y",
+            "receive_qty": 3,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 12,
+            "Y": 18
+          },
+          "metrics": {
+            "word_count": 39,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems fair. I will accept it to increase our total resources.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal seems fair. I will accept it to increase our total resources.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 18,
+            "Y": 12
+          },
+          "metrics": {
+            "word_count": 17,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 34
+    },
+    {
+      "config": [
+        30,
+        2,
+        2,
+        30
+      ],
+      "p1_initial": {
+        "X": 30,
+        "Y": 2
+      },
+      "p2_initial": {
+        "X": 2,
+        "Y": 30
+      },
+      "p1_final": {
+        "X": 31,
+        "Y": 0
+      },
+      "p2_final": {
+        "X": 1,
+        "Y": 32
+      },
+      "p1_score": 31,
+      "p2_score": 33,
+      "p1_initial_score": 32,
+      "p2_initial_score": 32,
+      "p1_balance": 0.0,
+      "p2_balance": 0.03125,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I have a decent amount of X and very few Y. How about we trade some X for Y? \n\nTRADE: GIVE 10 X, RECEIVE 1 Y",
+          "message": "Hi Player BLUE, I have a decent amount of X and very few Y. How about we trade some X for Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 1,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 29,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, it seems like your proposal is not feasible as I only have 2 X. How about you give me 5 Y and I will give you 2 X?\n\nTRADE: GIVE 2 X, RECEIVE 5 Y",
+          "message": "Hi Player RED, it seems like your proposal is not feasible as I only have 2 X. How about you give me 5 Y and I will give you 2 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 2,
+            "Y": 30
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, it seems there's a misunderstanding since I only have 2 Y to trade. How about I give you 2 Y and you give me 1 X?\n\nTRADE: GIVE 2 Y, RECEIVE 1 X",
+          "message": "Hi Player BLUE, it seems there's a misunderstanding since I only have 2 Y to trade. How about I give you 2 Y and you give me 1 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "Y",
+            "receive_qty": 1,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 30,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems fair given the constraints. I will ACCEPT this trade.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal seems fair given the constraints. I will ACCEPT this trade.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 2,
+            "Y": 30
+          },
+          "metrics": {
+            "word_count": 16,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 35
+    },
+    {
+      "config": [
+        35,
+        3,
+        3,
+        35
+      ],
+      "p1_initial": {
+        "X": 35,
+        "Y": 3
+      },
+      "p2_initial": {
+        "X": 3,
+        "Y": 35
+      },
+      "p1_final": {
+        "X": 37,
+        "Y": 1
+      },
+      "p2_final": {
+        "X": 1,
+        "Y": 37
+      },
+      "p1_score": 38,
+      "p2_score": 38,
+      "p1_initial_score": 38,
+      "p2_initial_score": 38,
+      "p1_balance": 0.02702702702702703,
+      "p2_balance": 0.02702702702702703,
+      "trades_completed": 1,
+      "game_length": 5,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 X for 2 Y? \n\nTRADE: GIVE 2 Y, RECEIVE 5 X",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 X for 2 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 35,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 35,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, I appreciate your proposal, but I'm not willing to give away 5 X for only 2 Y. How about giving you 3 X for 10 Y? \n\nTRADE: GIVE 3 X, RECEIVE 10 Y",
+          "message": "Hi Player RED, I appreciate your proposal, but I'm not willing to give away 5 X for only 2 Y. How about giving you 3 X for 10 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "X",
+            "receive_qty": 10,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 35
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, thanks for your proposal. I only have 3 Y, so I can't give you 10 Y. How about you give me 3 X and I give you all my Y?\n\nTRADE: GIVE 3 Y, RECEIVE 3 X",
+          "message": "Hi Player BLUE, thanks for your proposal. I only have 3 Y, so I can't give you 10 Y. How about you give me 3 X and I give you all my Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "Y",
+            "receive_qty": 3,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 35,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 40,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, I see your situation. Let's make a fair trade. How about you give me 2 Y and I give you 2 X?\n\nTRADE: GIVE 2 X, RECEIVE 2 Y",
+          "message": "Hi Player RED, I see your situation. Let's make a fair trade. How about you give me 2 Y and I give you 2 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 35
+          },
+          "metrics": {
+            "word_count": 32,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 4,
+          "player": 1,
+          "text": "Hi Player BLUE, that sounds fair. Let's go for it.\n\nACCEPT",
+          "message": "Hi Player BLUE, that sounds fair. Let's go for it.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 35,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 11,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 36
+    },
+    {
+      "config": [
+        28,
+        2,
+        2,
+        28
+      ],
+      "p1_initial": {
+        "X": 28,
+        "Y": 2
+      },
+      "p2_initial": {
+        "X": 2,
+        "Y": 28
+      },
+      "p1_final": {
+        "X": 23,
+        "Y": 3
+      },
+      "p2_final": {
+        "X": 7,
+        "Y": 27
+      },
+      "p1_score": 26,
+      "p2_score": 34,
+      "p1_initial_score": 30,
+      "p2_initial_score": 30,
+      "p1_balance": 0.13043478260869565,
+      "p2_balance": 0.25925925925925924,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I have a decent amount of X and would be willing to trade some for Y if you're interested. How about giving me 10 X for 1 Y? \n\nTRADE: GIVE 10 X, RECEIVE 1 Y",
+          "message": "Hi Player BLUE, I have a decent amount of X and would be willing to trade some for Y if you're interested. How about giving me 10 X for 1 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 1,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 28,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "I appreciate your offer, but since I only have 2 X, we might consider a different trade. How about you give me 10 Y and I give you 1 X?\n\nTRADE: GIVE 1 X, RECEIVE 10 Y",
+          "message": "I appreciate your offer, but since I only have 2 X, we might consider a different trade. How about you give me 10 Y and I give you 1 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 1,
+            "give_res": "X",
+            "receive_qty": 10,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 2,
+            "Y": 28
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 1,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, it seems there might be a misunderstanding since I only have 2 Y. How about I give you 5 X for 1 Y instead?\n\nTRADE: GIVE 5 X, RECEIVE 1 Y",
+          "message": "Hi Player BLUE, it seems there might be a misunderstanding since I only have 2 Y. How about I give you 5 X for 1 Y instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 1,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 28,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 34,
+            "hedge_count": 1,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "That sounds like a fair trade given the circumstances.\n\nACCEPT",
+          "message": "That sounds like a fair trade given the circumstances.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 2,
+            "Y": 28
+          },
+          "metrics": {
+            "word_count": 10,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 37
+    },
+    {
+      "config": [
+        40,
+        3,
+        3,
+        40
+      ],
+      "p1_initial": {
+        "X": 40,
+        "Y": 3
+      },
+      "p2_initial": {
+        "X": 3,
+        "Y": 40
+      },
+      "p1_final": {
+        "X": 41,
+        "Y": 0
+      },
+      "p2_final": {
+        "X": 2,
+        "Y": 43
+      },
+      "p1_score": 41,
+      "p2_score": 45,
+      "p1_initial_score": 43,
+      "p2_initial_score": 43,
+      "p1_balance": 0.0,
+      "p2_balance": 0.046511627906976744,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I have a decent amount of X and very few Y. How about we trade some X for Y? \n\nTRADE: GIVE 10 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I have a decent amount of X and very few Y. How about we trade some X for Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 40,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 29,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal seems one-sided as I don't have enough Y to trade for your X. How about you give me 10 Y for 1 X? \n\nTRADE: GIVE 1 X, RECEIVE 10 Y",
+          "message": "Hi Player RED, your proposal seems one-sided as I don't have enough Y to trade for your X. How about you give me 10 Y for 1 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 1,
+            "give_res": "X",
+            "receive_qty": 10,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 40
+          },
+          "metrics": {
+            "word_count": 35,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "I see the issue, but I only have 3 Y. How about I give you all my Y for 1 X?\n\nTRADE: GIVE 3 Y, RECEIVE 1 X",
+          "message": "I see the issue, but I only have 3 Y. How about I give you all my Y for 1 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "Y",
+            "receive_qty": 1,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 40,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 28,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "ACCEPT",
+          "message": "ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 40
+          },
+          "metrics": {
+            "word_count": 1,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 38
+    },
+    {
+      "config": [
+        25,
+        2,
+        2,
+        25
+      ],
+      "p1_initial": {
+        "X": 25,
+        "Y": 2
+      },
+      "p2_initial": {
+        "X": 2,
+        "Y": 25
+      },
+      "p1_final": {
+        "X": 20,
+        "Y": 4
+      },
+      "p2_final": {
+        "X": 7,
+        "Y": 23
+      },
+      "p1_score": 24,
+      "p2_score": 30,
+      "p1_initial_score": 27,
+      "p2_initial_score": 27,
+      "p1_balance": 0.2,
+      "p2_balance": 0.30434782608695654,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving 10 X for 1 Y? \n\nTRADE: GIVE 10 X, RECEIVE 1 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y since I have more X than Y. How about giving 10 X for 1 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 1,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 35,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, while your offer is interesting, I believe a more balanced trade would be beneficial for both of us. How about giving 5 X and receiving 5 Y?\n\nTRADE: GIVE 5 X, RECEIVE 5 Y",
+          "message": "Hi Player RED, while your offer is interesting, I believe a more balanced trade would be beneficial for both of us. How about giving 5 X and receiving 5 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 2,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 2
+          },
+          "invalid_trade": true
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I appreciate your suggestion, but I currently have very few Y to trade. How about giving 5 X and receiving 2 Y instead?\n\nTRADE: GIVE 5 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I appreciate your suggestion, but I currently have very few Y to trade. How about giving 5 X and receiving 2 Y instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 25,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 33,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, I understand your situation. I'll accept your last proposal to move forward.\n\nACCEPT",
+          "message": "Hi Player RED, I understand your situation. I'll accept your last proposal to move forward.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 2,
+            "Y": 25
+          },
+          "metrics": {
+            "word_count": 16,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 39
+    },
+    {
+      "config": [
+        19,
+        7,
+        7,
+        19
+      ],
+      "p1_initial": {
+        "X": 19,
+        "Y": 7
+      },
+      "p2_initial": {
+        "X": 7,
+        "Y": 19
+      },
+      "p1_final": {
+        "X": 14,
+        "Y": 10
+      },
+      "p2_final": {
+        "X": 12,
+        "Y": 16
+      },
+      "p1_score": 24,
+      "p2_score": 28,
+      "p1_initial_score": 26,
+      "p2_initial_score": 26,
+      "p1_balance": 0.7142857142857143,
+      "p2_balance": 0.75,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 3 Y in exchange for 5 X? This way, we both benefit. \n\nTRADE: GIVE 5 X, RECEIVE 3 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 3 Y in exchange for 5 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 19,
+            "Y": 7
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but let's balance it a bit more. How about giving me 4 Y in exchange for 5 X instead?\n\nTRADE: GIVE 5 X, RECEIVE 4 Y",
+          "message": "Hi Player RED, your proposal sounds interesting but let's balance it a bit more. How about giving me 4 Y in exchange for 5 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 4,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 7,
+            "Y": 19
+          },
+          "metrics": {
+            "word_count": 33,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I see your point. To make it fair, how about we adjust it to 3 Y for 5 X? This way, we both gain resources without feeling shortchanged.\n\nTRADE: GIVE 5 X, RECEIVE 3 Y",
+          "message": "Hi Player BLUE, I see your point. To make it fair, how about we adjust it to 3 Y for 5 X? This way, we both gain resources without feeling shortchanged.",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 19,
+            "Y": 7
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 2
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, let's go with your last proposal then. ACCEPT\n\nACCEPT",
+          "message": "Hi Player RED, let's go with your last proposal then. ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 7,
+            "Y": 19
+          },
+          "metrics": {
+            "word_count": 12,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 40
+    },
+    {
+      "config": [
+        23,
+        9,
+        9,
+        23
+      ],
+      "p1_initial": {
+        "X": 23,
+        "Y": 9
+      },
+      "p2_initial": {
+        "X": 9,
+        "Y": 23
+      },
+      "p1_final": {
+        "X": 13,
+        "Y": 14
+      },
+      "p2_final": {
+        "X": 19,
+        "Y": 18
+      },
+      "p1_score": 27,
+      "p2_score": 37,
+      "p1_initial_score": 32,
+      "p2_initial_score": 32,
+      "p1_balance": 0.9285714285714286,
+      "p2_balance": 0.9473684210526315,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 Y in exchange for 10 X? This way, we both benefit. \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 5 Y in exchange for 10 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 23,
+            "Y": 9
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I'd like to tweak it a bit. How about giving me 7 Y in exchange for 10 X? This way, I receive more Y while you still get a significant amount of X.\n\nTRADE: GIVE 10 X, RECEIVE 7 Y",
+          "message": "Hi Player RED, your proposal sounds interesting but I'd like to tweak it a bit. How about giving me 7 Y in exchange for 10 X? This way, I receive more Y while you still get a significant amount of X.",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 7,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 9,
+            "Y": 23
+          },
+          "metrics": {
+            "word_count": 48,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "invalid_trade": true
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "That sounds like a fair adjustment. I'll accept your proposal.\n\nACCEPT",
+          "message": "That sounds like a fair adjustment. I'll accept your proposal.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 23,
+            "Y": 9
+          },
+          "metrics": {
+            "word_count": 11,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "ACCEPT",
+          "message": "ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 9,
+            "Y": 23
+          },
+          "metrics": {
+            "word_count": 1,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 41
+    },
+    {
+      "config": [
+        27,
+        11,
+        11,
+        27
+      ],
+      "p1_initial": {
+        "X": 27,
+        "Y": 11
+      },
+      "p2_initial": {
+        "X": 11,
+        "Y": 27
+      },
+      "p1_final": {
+        "X": 22,
+        "Y": 16
+      },
+      "p2_final": {
+        "X": 16,
+        "Y": 22
+      },
+      "p1_score": 38,
+      "p2_score": 38,
+      "p1_initial_score": 38,
+      "p2_initial_score": 38,
+      "p1_balance": 0.7272727272727273,
+      "p2_balance": 0.7272727272727273,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y in exchange for 10 X? \n\nTRADE: GIVE 10 X, RECEIVE 5 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for more Y if that works for you. How about giving me 5 Y in exchange for 10 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 10,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 27,
+            "Y": 11
+          },
+          "metrics": {
+            "word_count": 37,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal would significantly alter my resource balance. How about a compromise? GIVE 5 Y, RECEIVE 5 X. \n\nTRADE: GIVE 5 Y, RECEIVE 5 X",
+          "message": "Hi Player RED, your proposal would significantly alter my resource balance. How about a compromise? GIVE 5 Y, RECEIVE 5 X.",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "Y",
+            "receive_qty": 5,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 11,
+            "Y": 27
+          },
+          "metrics": {
+            "word_count": 28,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I think your compromise sounds fair. Let's go for it!\n\nACCEPT",
+          "message": "Hi Player BLUE, I think your compromise sounds fair. Let's go for it!",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 27,
+            "Y": 11
+          },
+          "metrics": {
+            "word_count": 14,
+            "hedge_count": 1,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 42
+    },
+    {
+      "config": [
+        17,
+        6,
+        6,
+        17
+      ],
+      "p1_initial": {
+        "X": 17,
+        "Y": 6
+      },
+      "p2_initial": {
+        "X": 6,
+        "Y": 17
+      },
+      "p1_final": {
+        "X": 23,
+        "Y": 1
+      },
+      "p2_final": {
+        "X": 0,
+        "Y": 22
+      },
+      "p1_score": 24,
+      "p2_score": 22,
+      "p1_initial_score": 23,
+      "p2_initial_score": 23,
+      "p1_balance": 0.043478260869565216,
+      "p2_balance": 0.0,
+      "trades_completed": 1,
+      "game_length": 3,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 4 Y in exchange for 6 X? This way, we both benefit. \n\nTRADE: GIVE 6 X, RECEIVE 4 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 4 Y in exchange for 6 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 6,
+            "give_res": "X",
+            "receive_qty": 4,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 17,
+            "Y": 6
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I'd like to slightly adjust the quantities. How about giving me 5 Y in exchange for 6 X instead? \n\nTRADE: GIVE 6 X, RECEIVE 5 Y",
+          "message": "Hi Player RED, your proposal sounds interesting but I'd like to slightly adjust the quantities. How about giving me 5 Y in exchange for 6 X instead?",
+          "action": {
+            "type": "propose",
+            "give_qty": 6,
+            "give_res": "X",
+            "receive_qty": 5,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 6,
+            "Y": 17
+          },
+          "metrics": {
+            "word_count": 34,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I can work with that. Let's go with giving you 5 Y in exchange for 6 X.\n\nACCEPT",
+          "message": "Hi Player BLUE, I can work with that. Let's go with giving you 5 Y in exchange for 6 X.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 17,
+            "Y": 6
+          },
+          "metrics": {
+            "word_count": 21,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 43
+    },
+    {
+      "config": [
+        21,
+        3,
+        3,
+        21
+      ],
+      "p1_initial": {
+        "X": 21,
+        "Y": 3
+      },
+      "p2_initial": {
+        "X": 3,
+        "Y": 21
+      },
+      "p1_final": {
+        "X": 24,
+        "Y": 0
+      },
+      "p2_final": {
+        "X": 0,
+        "Y": 24
+      },
+      "p1_score": 24,
+      "p2_score": 24,
+      "p1_initial_score": 24,
+      "p2_initial_score": 24,
+      "p1_balance": 0.0,
+      "p2_balance": 0.0,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I have a decent amount of X and very few Y. How about we trade some X for Y? \n\nTRADE: GIVE 5 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I have a decent amount of X and very few Y. How about we trade some X for Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 21,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 29,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, I see we could benefit from trading. However, 5 X for 2 Y seems a bit imbalanced given my current resources. How about giving me more Y in return for my X?\n\nTRADE: GIVE 3 X, RECEIVE 10 Y",
+          "message": "Hi Player RED, I see we could benefit from trading. However, 5 X for 2 Y seems a bit imbalanced given my current resources. How about giving me more Y in return for my X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "X",
+            "receive_qty": 10,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 21
+          },
+          "metrics": {
+            "word_count": 42,
+            "hedge_count": 1,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I understand your proposal, but I only have 3 Y. How about I give you all my Y for 3 X?\n\nTRADE: GIVE 3 Y, RECEIVE 3 X",
+          "message": "Hi Player BLUE, I understand your proposal, but I only have 3 Y. How about I give you all my Y for 3 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "Y",
+            "receive_qty": 3,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 21,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 31,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, I understand your constraints. Let's make this work.\n\nACCEPT",
+          "message": "Hi Player RED, I understand your constraints. Let's make this work.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 21
+          },
+          "metrics": {
+            "word_count": 12,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 44
+    },
+    {
+      "config": [
+        6,
+        2,
+        2,
+        6
+      ],
+      "p1_initial": {
+        "X": 6,
+        "Y": 2
+      },
+      "p2_initial": {
+        "X": 2,
+        "Y": 6
+      },
+      "p1_final": {
+        "X": 8,
+        "Y": 1
+      },
+      "p2_final": {
+        "X": 0,
+        "Y": 7
+      },
+      "p1_score": 9,
+      "p2_score": 7,
+      "p1_initial_score": 8,
+      "p2_initial_score": 8,
+      "p1_balance": 0.125,
+      "p2_balance": 0.0,
+      "trades_completed": 1,
+      "game_length": 6,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for some Y. How about giving me 2 Y in exchange for 3 X? This would allow us both to gain some of the resource we're low on. \n\nTRADE: GIVE 3 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for some Y. How about giving me 2 Y in exchange for 3 X? This would allow us both to gain some of the resource we're low on.",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 6,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 46,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I'm short on X. How about giving me 1 Y in exchange for 2 X? \n\nTRADE: GIVE 2 X, RECEIVE 1 Y",
+          "message": "Hi Player RED, your proposal sounds interesting but I'm short on X. How about giving me 1 Y in exchange for 2 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "X",
+            "receive_qty": 1,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 2,
+            "Y": 6
+          },
+          "metrics": {
+            "word_count": 30,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I understand your position. How about this: I give you 1 Y and you give me 3 X? This way, I can still keep a good amount of X while you get more of what you need.\n\nTRADE: GIVE 1 Y, RECEIVE 3 X",
+          "message": "Hi Player BLUE, I understand your position. How about this: I give you 1 Y and you give me 3 X? This way, I can still keep a good amount of X while you get more of what you need.",
+          "action": {
+            "type": "propose",
+            "give_qty": 1,
+            "give_res": "Y",
+            "receive_qty": 3,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 6,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 47,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, I appreciate your offer, but I'm looking to gain more resources. How about you give me 2 Y for my 2 X?\n\nTRADE: GIVE 2 X, RECEIVE 2 Y",
+          "message": "Hi Player RED, I appreciate your offer, but I'm looking to gain more resources. How about you give me 2 Y for my 2 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 2,
+            "Y": 6
+          },
+          "metrics": {
+            "word_count": 32,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 4,
+          "player": 1,
+          "text": "Hi Player BLUE, I see your perspective. Let's make a deal that benefits both of us. How about I give you 1 Y for 2 X? This way, I can still keep some Y while you gain more X.\n\nTRADE: GIVE 1 Y, RECEIVE 2 X",
+          "message": "Hi Player BLUE, I see your perspective. Let's make a deal that benefits both of us. How about I give you 1 Y for 2 X? This way, I can still keep some Y while you gain more X.",
+          "action": {
+            "type": "propose",
+            "give_qty": 1,
+            "give_res": "Y",
+            "receive_qty": 2,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 6,
+            "Y": 2
+          },
+          "metrics": {
+            "word_count": 46,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 5,
+          "player": 2,
+          "text": "Hi Player RED, I think your last proposal is fair. Let's go for it.\n\nACCEPT",
+          "message": "Hi Player RED, I think your last proposal is fair. Let's go for it.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 2,
+            "Y": 6
+          },
+          "metrics": {
+            "word_count": 15,
+            "hedge_count": 1,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 45
+    },
+    {
+      "config": [
+        7,
+        3,
+        3,
+        7
+      ],
+      "p1_initial": {
+        "X": 7,
+        "Y": 3
+      },
+      "p2_initial": {
+        "X": 3,
+        "Y": 7
+      },
+      "p1_final": {
+        "X": 4,
+        "Y": 5
+      },
+      "p2_final": {
+        "X": 6,
+        "Y": 5
+      },
+      "p1_score": 9,
+      "p2_score": 11,
+      "p1_initial_score": 10,
+      "p2_initial_score": 10,
+      "p1_balance": 0.8,
+      "p2_balance": 0.8333333333333334,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 2 Y in exchange for 3 X? This way, we both benefit. \n\nTRADE: GIVE 3 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 2 Y in exchange for 3 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 7,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds fair. I ACCEPT your trade.\n\nACCEPT",
+          "message": "Hi Player RED, your proposal sounds fair. I ACCEPT your trade.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 7
+          },
+          "metrics": {
+            "word_count": 12,
+            "hedge_count": 0,
+            "fairness_count": 1
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 46
+    },
+    {
+      "config": [
+        9,
+        1,
+        1,
+        9
+      ],
+      "p1_initial": {
+        "X": 9,
+        "Y": 1
+      },
+      "p2_initial": {
+        "X": 1,
+        "Y": 9
+      },
+      "p1_final": {
+        "X": 10,
+        "Y": 0
+      },
+      "p2_final": {
+        "X": 0,
+        "Y": 10
+      },
+      "p1_score": 10,
+      "p2_score": 10,
+      "p1_initial_score": 10,
+      "p2_initial_score": 10,
+      "p1_balance": 0.0,
+      "p2_balance": 0.0,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y if you're interested. How about giving me 2 Y in exchange for 5 X? \n\nTRADE: GIVE 5 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y if you're interested. How about giving me 2 Y in exchange for 5 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 9,
+            "Y": 1
+          },
+          "metrics": {
+            "word_count": 34,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I only have 1 X. How about you give me 3 Y and I give you 1 X?\n\nTRADE: GIVE 1 X, RECEIVE 3 Y",
+          "message": "Hi Player RED, your proposal sounds interesting but I only have 1 X. How about you give me 3 Y and I give you 1 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 1,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 1,
+            "Y": 9
+          },
+          "metrics": {
+            "word_count": 33,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, it seems there's a misunderstanding since I only have 1 Y to trade. How about I give you 1 Y and you give me 1 X?\n\nTRADE: GIVE 1 Y, RECEIVE 1 X",
+          "message": "Hi Player BLUE, it seems there's a misunderstanding since I only have 1 Y to trade. How about I give you 1 Y and you give me 1 X?",
+          "action": {
+            "type": "propose",
+            "give_qty": 1,
+            "give_res": "Y",
+            "receive_qty": 1,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 9,
+            "Y": 1
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "ACCEPT",
+          "message": "ACCEPT",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 1,
+            "Y": 9
+          },
+          "metrics": {
+            "word_count": 1,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 47
+    },
+    {
+      "config": [
+        5,
+        3,
+        3,
+        5
+      ],
+      "p1_initial": {
+        "X": 5,
+        "Y": 3
+      },
+      "p2_initial": {
+        "X": 3,
+        "Y": 5
+      },
+      "p1_final": {
+        "X": 3,
+        "Y": 6
+      },
+      "p2_final": {
+        "X": 5,
+        "Y": 2
+      },
+      "p1_score": 9,
+      "p2_score": 7,
+      "p1_initial_score": 8,
+      "p2_initial_score": 8,
+      "p1_balance": 0.5,
+      "p2_balance": 0.4,
+      "trades_completed": 1,
+      "game_length": 4,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 2 Y in exchange for 3 X? This way, we both benefit. \n\nTRADE: GIVE 3 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 2 Y in exchange for 3 X? This way, we both benefit.",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 36,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal sounds interesting but I would like to slightly adjust the quantities. How about giving me 2 X in exchange for 3 Y? \n\nTRADE: GIVE 3 Y, RECEIVE 2 X",
+          "message": "Hi Player RED, your proposal sounds interesting but I would like to slightly adjust the quantities. How about giving me 2 X in exchange for 3 Y?",
+          "action": {
+            "type": "propose",
+            "give_qty": 3,
+            "give_res": "Y",
+            "receive_qty": 2,
+            "receive_res": "X"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 34,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 2,
+          "player": 1,
+          "text": "Hi Player BLUE, I appreciate your counteroffer. However, I would prefer to give 2.5 X for 3 Y, but since we can't trade fractions, how about giving 2 X for 3 Y and we both benefit a bit?\n\nTRADE: GIVE 2 X, RECEIVE 3 Y",
+          "message": "Hi Player BLUE, I appreciate your counteroffer. However, I would prefer to give 2.5 X for 3 Y, but since we can't trade fractions, how about giving 2 X for 3 Y and we both benefit a bit?",
+          "action": {
+            "type": "propose",
+            "give_qty": 2,
+            "give_res": "X",
+            "receive_qty": 3,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 5,
+            "Y": 3
+          },
+          "metrics": {
+            "word_count": 45,
+            "hedge_count": 0,
+            "fairness_count": 1
+          }
+        },
+        {
+          "turn": 3,
+          "player": 2,
+          "text": "Hi Player RED, your latest proposal works for me. Let's go with that.\n\nACCEPT",
+          "message": "Hi Player RED, your latest proposal works for me. Let's go with that.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 3,
+            "Y": 5
+          },
+          "metrics": {
+            "word_count": 14,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 48
+    },
+    {
+      "config": [
+        11,
+        4,
+        4,
+        11
+      ],
+      "p1_initial": {
+        "X": 11,
+        "Y": 4
+      },
+      "p2_initial": {
+        "X": 4,
+        "Y": 11
+      },
+      "p1_final": {
+        "X": 6,
+        "Y": 6
+      },
+      "p2_final": {
+        "X": 9,
+        "Y": 9
+      },
+      "p1_score": 12,
+      "p2_score": 18,
+      "p1_initial_score": 15,
+      "p2_initial_score": 15,
+      "p1_balance": 1.0,
+      "p2_balance": 1.0,
+      "trades_completed": 1,
+      "game_length": 2,
+      "game_ended_naturally": true,
+      "parse_errors": 0,
+      "steered_player": 1,
+      "transcript": [
+        {
+          "turn": 0,
+          "player": 1,
+          "text": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 2 Y in exchange for 5 X? This would help me diversify my resources. \n\nTRADE: GIVE 5 X, RECEIVE 2 Y",
+          "message": "Hi Player BLUE, I'm open to trading some of my X for Y. How about giving me 2 Y in exchange for 5 X? This would help me diversify my resources.",
+          "action": {
+            "type": "propose",
+            "give_qty": 5,
+            "give_res": "X",
+            "receive_qty": 2,
+            "receive_res": "Y"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 11,
+            "Y": 4
+          },
+          "metrics": {
+            "word_count": 38,
+            "hedge_count": 0,
+            "fairness_count": 0
+          }
+        },
+        {
+          "turn": 1,
+          "player": 2,
+          "text": "Hi Player RED, your proposal would significantly increase my X resources. I'm inclined to accept this trade as it improves my total resources. \n\nACCEPT",
+          "message": "Hi Player RED, your proposal would significantly increase my X resources. I'm inclined to accept this trade as it improves my total resources.",
+          "action": {
+            "type": "accept"
+          },
+          "parse_error": false,
+          "resources_before": {
+            "X": 4,
+            "Y": 11
+          },
+          "metrics": {
+            "word_count": 24,
+            "hedge_count": 0,
+            "fairness_count": 0
+          },
+          "trade_executed": true
+        }
+      ],
+      "game_id": 49
+    }
+  ]
+}
