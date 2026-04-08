@@ -647,6 +647,175 @@ Applied bootstrap CIs (10,000 resamples), TOST equivalence tests (ε=5pp), and B
 - **Unique offer diversity:** Mean 84% unique offer pairs across configs. Range: 59% (empathy L12 α=3, weakest config) to 100%. Confirms variable-pool design generates genuine between-game variance
 - Full results in `results/ultimatum/statistical_hardening.json`
 
+### Interpretability Suite (2026-04-08)
+
+**Goal:** Add mechanistic evidence without relying on fragile GPU forward-hook analyses. The revised suite is CPU-first and operates on saved vectors plus finalized behavioral JSONs. Practically, each test asks a different question:
+
+- **Cosine evolution:** Are two named dimensions actually the same direction, opposite directions, or something in between?
+- **PCA / effective dimensionality:** Do the 10 dimensions span 10 genuinely independent mechanisms, or a smaller shared negotiation subspace?
+- **Control contamination vs effect:** Are the strongest behavioral effects just surface confounds like hedging, sentiment, or verbosity?
+- **Logit lens:** Can we read off a human-interpretable vocabulary signature from the raw vector itself?
+
+**Files:**
+
+- `results/interpretability/cosine_evolution.json`
+- `results/interpretability/pca_analysis.json`
+- `results/interpretability/contamination_analysis.json`
+- `results/interpretability/logit_lens_results.json`
+- `results/interpretability/figures/fig9_cosine_heatmaps.*`
+- `results/interpretability/figures/fig10_cosine_evolution.*`
+- `results/interpretability/figures/fig11_pca_steering_space.*`
+- `results/interpretability/figures/fig12_contamination_vs_effect.*`
+
+#### Test 1: Cosine Similarity Evolution Across Layers
+
+**What it measures:** Pairwise cosine similarity between all 10 negotiation vectors at each layer.
+
+**Practical relevance:** This tells us whether two behavior labels are really distinct mechanisms or just near-duplicates with different names. If two vectors are highly aligned, they may steer the model through similar internal channels. If they are opposed, then one dimension is effectively the inverse of another.
+
+**Tracked pairs across depth:**
+
+| Pair | L4 | L10 | L12 | L20 | Interpretation |
+| ---- | -- | --- | --- | --- | -------------- |
+| Firmness ↔ Empathy | -0.517 | -0.287 | -0.349 | -0.284 | Consistently opposed, but not identical inverses |
+| Greed ↔ Narcissism | +0.546 | +0.544 | +0.569 | +0.598 | Stable cluster, strengthens with depth |
+| Empathy ↔ Flattery | +0.766 | +0.607 | +0.583 | +0.446 | Very similar early, then progressively disentangle |
+| Firmness ↔ Undecidedness | -0.647 | -0.373 | -0.414 | -0.213 | Strong assertiveness-vs-hesitation opposition |
+
+**Additional layer-specific structure:**
+
+- **L4:** strongest negative pair is firmness ↔ undecidedness (-0.647); strongest positive pair is empathy ↔ flattery (+0.766).
+- **L10:** strongest negative pair is fairness_norm ↔ undecidedness (-0.476); strongest positive pair is empathy ↔ flattery (+0.607), with greed ↔ narcissism close behind (+0.544).
+- **L12:** same broad geometry as L10, but firmness ↔ empathy becomes slightly more negative and greed ↔ narcissism slightly more positive.
+- **L20:** fairness_norm separates sharply from greed (-0.588) and narcissism (-0.436), while greed ↔ narcissism remains the clearest positive cluster (+0.598).
+
+**Interpretation:** The dimensions occupy **distinct but overlapping subspaces** rather than isolated one-hot directions. The layer dependence matters. Empathy and flattery are almost interchangeable early, but not later. Greed and narcissism remain tightly coupled at every layer. Firmness and empathy are anti-correlated, but not so strongly that one can be reduced to the other. This is important for the paper because the DG results already showed that empathy and firmness behave differently despite their negative cosine overlap.
+
+**Most useful claim for the paper:** different behavioral dimensions are geometrically related in systematic ways, and those relations shift with network depth rather than staying fixed.
+
+#### Test 2: Effective Dimensionality (PCA of Steering Space)
+
+**What it measures:** At each layer, stack the 10 negotiation vectors and ask how many principal components are needed to explain 90% of their variance.
+
+**Practical relevance:** This tells us whether the 10 dimensions are really 10 independent steering handles. If the answer were 2-3, then many dimensions would just be aliases of the same latent factor. If the answer were 10, they would be almost fully independent. The true answer is in between.
+
+**Key numbers:**
+
+| Layer | Components for 90% variance | PC1 variance | PC2 variance | Cumulative variance by PC4 |
+| ----- | --------------------------- | ------------ | ------------ | -------------------------- |
+| 0     | 7                           | 39.0%        | 15.7%        | 76.1%                      |
+| 4     | 6                           | 42.0%        | 17.5%        | 79.8%                      |
+| 10    | 7                           | 34.3%        | 15.0%        | 73.6%                      |
+| 12    | 7                           | 32.4%        | 16.1%        | 73.0%                      |
+| 20    | 7                           | 31.7%        | 19.9%        | 72.5%                      |
+| 27    | 6                           | 53.6%        | 13.5%        | 84.1%                      |
+
+**L10 PCA scatter (most behaviorally active mid-layer):**
+
+- `firmness` = (-0.714, +0.313)
+- `fairness_norm` = (-0.794, -0.346)
+- `spite` = (-0.459, -0.553)
+- `composure` = (-0.449, +0.459)
+- `empathy` = (+0.572, -0.398)
+- `flattery` = (+0.468, -0.265)
+- `undecidedness` = (+0.662, +0.113)
+- `greed` = (+0.291, +0.432)
+- `narcissism` = (+0.319, +0.123)
+- `anchoring` = (+0.104, +0.123)
+
+**Interpretation:** The steering space is **low-rank but not trivial**. Across most layers, **6-7 principal components** are enough to explain 90% of the variance. So the dimensions are not fully independent, but they also do not collapse to a single “good vs bad negotiator” axis.
+
+The practical picture at L10 is:
+
+- `greed` and `narcissism` sit close together, consistent with their similar behavioral profile.
+- `empathy`, `flattery`, and `undecidedness` occupy one side of PC1.
+- `firmness`, `fairness_norm`, and `spite` occupy the opposite side.
+- `composure` is separated mainly along PC2.
+- `anchoring` sits closer to the center, consistent with it being a more specialized strategic dimension rather than a broad style axis.
+
+**Most useful claim for the paper:** the 10 steering dimensions span a **shared negotiation subspace with about 6-7 effective degrees of freedom**, which helps explain why some dimensions cluster behaviorally while others remain distinct.
+
+#### Test 3: Control Contamination vs Behavioral Effect
+
+**What it measures:** For each negotiation dimension at each tested layer, compute the strongest absolute cosine overlap with any control vector (`verbosity`, `formality`, `hedging`, `sentiment`, `specificity`), then compare that overlap to behavioral effect size (`|Cohen's d|`).
+
+**Practical relevance:** This is the direct confound test. If the strongest behavioral effects came from the highest overlap with hedging or sentiment, then the project could be criticized as “steering surface style, not negotiation behavior.” This test asks whether that critique is empirically true.
+
+**Headline result:** it is **not** true.
+
+- Pearson correlation between contamination and `|Cohen's d|`: **-0.094**
+- Spearman correlation: **-0.002**
+
+These are both essentially zero. Higher control overlap does **not** predict larger behavioral effects.
+
+**Strongest effects versus their contamination:**
+
+| Config | |d| | Max contamination | Closest control dim | Interpretation |
+| ------ | --- | ----------------- | ------------------- | -------------- |
+| fairness_norm L4 | 1.370 | 0.356 | sentiment | Very strong effect, only moderate contamination |
+| firmness L10 | 1.266 | 0.469 | hedging | Strong effect, contamination present but not dominant |
+| greed L14 | 1.262 | 0.232 | specificity | Strong effect with low contamination |
+| greed L12 | 1.123 | 0.301 | specificity | Strong effect with low-moderate contamination |
+| anchoring L18 | 0.618 | 0.103 | specificity | Clear effect with almost no control overlap |
+
+**Highest contamination cases:**
+
+| Config | Max contamination | Closest control dim | |d| | Interpretation |
+| ------ | ----------------- | ------------------- | --- | -------------- |
+| undecidedness L10 | 0.819 | hedging | 0.434 | Strong overlap with hedging, only moderate behavioral effect |
+| undecidedness L12 | 0.816 | hedging | 0.210 | Very high contamination, weak effect |
+| undecidedness L14 | 0.815 | hedging | 0.466 | Same pattern |
+| undecidedness L20 | 0.803 | hedging | 0.098 | Near-null effect despite huge contamination |
+
+**Interpretation:** This is exactly the pattern we hoped to see. The dimension with the strongest control contamination is `undecidedness`, and the contaminating control is `hedging`, which is intuitively sensible. But that high overlap does **not** translate into the strongest bargaining effects. Meanwhile, the strongest payoff- and demand-relevant configs (`fairness_norm`, `firmness`, `greed`, `anchoring`) are not the most contaminated.
+
+So the practical conclusion is:
+
+- some dimensions do overlap with surface controls
+- this overlap is **dimension-specific**, not universal
+- but the strongest steering effects are **not** explained by those overlaps
+
+This materially strengthens the argument against the “it’s just sentiment/hedging/verbosity” critique.
+
+#### Test 4: Logit Lens on Raw Steering Vectors
+
+**What it measures:** Project each saved vector through the model’s final normalization layer and unembedding matrix to see which tokens it promotes or suppresses.
+
+**Practical relevance:** In principle, this should give the most intuitive explanation of a vector: if `firmness` promotes tokens like `keep`, `$80`, or `demand`, then we can say the vector has a direct vocabulary-level signature.
+
+**Observed result:** the probe is **not semantically reliable** in this setup.
+
+Examples:
+
+- `firmness` L10 top tokens: `Composition`, `bondage`, `rai`, `chez`, `wur`
+- `greed` L12 top tokens: `Composition`, `Emily`, `chez`, `asm`, `rig`
+- `empathy` L10 top tokens: `ellipse`, `rai`, `elial`, `sofort`, `leh`
+- `fairness_norm` L4 top tokens: `bondage`, `Composition`, `rai`, `Hindered`, `studs`
+
+The repetition is the key warning sign:
+
+- `Composition` is the top-1 token in **30** dimension-layer cells
+- `ellipse` is top-1 in **12**
+- `bondage` is top-1 in **11**
+- the most common promoted tokens overall are `Emily`, `Composition`, `bondage`, `rai`, `Missile`, `elial`, `sofort`, `chez`
+
+This is not a believable bargaining vocabulary signature. It is almost certainly an artifact of applying the final norm + unembedding to an **isolated direction vector** rather than an in-context residual stream state.
+
+**Conclusion for write-up:** treat logit lens as a **negative or auxiliary result**, not as primary evidence. It is useful because it shows that naive vocabulary projection of raw steering vectors is unstable here. But it should not be used to support semantic claims like “the firmness vector literally encodes money/demand words.”
+
+### Interpretability Conclusion
+
+The interpretability suite supports three strong claims and one explicit non-claim:
+
+1. **The steering dimensions have structured geometry.** They are not arbitrary labels attached to unrelated vectors.
+2. **That geometry is layer-dependent.** Relationships such as empathy↔flattery and fairness_norm↔greed shift substantially with depth.
+3. **The negotiation space is low-rank but not collapsed.** About 6-7 effective components explain the 10 dimensions.
+4. **The strongest behavioral effects are not explained by control overlap.** This is the most practically important interpretability result because it addresses the surface-confound critique directly.
+
+**Non-claim:** The current raw-vector logit lens does **not** yield reliable vocabulary semantics, so we should not over-interpret it.
+
+**Most useful paper takeaway:** the behavioral dimensions are best understood as a **structured, partially overlapping negotiation subspace** whose geometry changes across layers, rather than as independent word-level concepts.
+
 ---
 
 ## 10. Teammate Experiments (2026-03-28 to 2026-03-29)
@@ -790,6 +959,30 @@ Firmness attenuates from L10 (d=1.38) → L12 (d=1.21) → L14 (d=0.57). Empathy
 
 Teammate's empathy L14 d=-3.05 is NOT replicated (we get d=+0.14 with opposite sign). The discrepancy likely reflects their different prompt ("Your aim: earn as much as you can"), different alpha value (gridsearch-selected), and/or different baselines. L14 is not a special layer for steering; it's just further along the decay gradient.
 
+### Finding 10: The Steering Dimensions Form a Structured, Low-Rank Negotiation Subspace
+
+The new interpretability analyses (Section 9, 2026-04-08) show that the 10 dimensions are neither orthogonal nor redundant. Across layers, the space requires **6-7 principal components** to explain 90% of variance. This means the dimensions share underlying structure, but do not collapse to a single scalar like "niceness" or "aggression."
+
+The geometry is also behaviorally meaningful:
+
+- `greed` and `narcissism` are stably aligned (+0.54 to +0.60 from L4-L20)
+- `firmness` and `undecidedness` are stably opposed (-0.65 to -0.21)
+- `empathy` and `flattery` are highly aligned early (+0.77) but separate later (+0.45 by L20)
+- `firmness` and `empathy` are consistently anti-correlated, but not enough to treat one as a simple sign-flip of the other
+
+**Interpretation:** steering operates in a shared negotiation manifold whose internal geometry changes with layer depth. This is a stronger and more precise claim than "different layers work for different dimensions."
+
+### Finding 11: Surface-Style Overlap Does Not Explain the Strongest Effects
+
+Control contamination has essentially zero relationship with behavioral effect size:
+
+- Pearson r(contamination, |d|) = **-0.094**
+- Spearman r(contamination, |d|) = **-0.002**
+
+This is important because it directly answers the confound critique. The strongest effects (`fairness_norm` L4, `firmness` L10, `greed` L12/L14) do **not** occur at the highest contamination levels. The most contaminated dimension is `undecidedness`, driven by overlap with `hedging`, but its behavioral effects are only moderate.
+
+**Interpretation:** some dimensions contain traceable surface-style overlap, but the main negotiation effects are not reducible to hedging, sentiment, specificity, verbosity, or formality.
+
 ### Research Council Insights (2026-03-29)
 
 A 4-model research council (GPT-5.4, Gemini 3.1 Pro, Claude Opus 4.6, Grok 4) deliberated on next steps. Key insights not previously identified:
@@ -818,7 +1011,7 @@ Activation steering reliably changes LLM behavior in strategic interactions. The
 
 1. **Steering works across all 10 behavioral dimensions.** Full grid (450 configs, n=50) shows all 10 dims active when full alpha range tested. Top by |d|: greed (L14 d=1.88), composure (L10 d=1.56), firmness (L10 d=1.50), fairness_norm (L4 d=1.37). Screen-to-final validation: 91% direction agreement.
 
-2. **Different dimensions peak at different layers.** Firmness peaks at L10, greed at L12, anchoring at L18, narcissism at L14. No single "best layer." This is a dimension×layer interaction, not a layer-depth gradient.
+2. **Different dimensions peak at different layers, and the dimensions occupy a structured shared subspace.** Firmness peaks at L10, greed at L12, anchoring at L18, narcissism at L14. No single "best layer." The interpretability suite shows this is not a simple depth gradient: the pairwise geometry between dimensions also changes with layer.
 
 3. **Sign asymmetry reveals vector semantics.** Firmness only works at positive α (directional). Narcissism only at negative α (anti-narcissism → generosity). Empathy/flattery respond to both signs (activation, not valence). Greed is strongly unidirectional.
 
@@ -835,10 +1028,11 @@ Activation steering reliably changes LLM behavior in strategic interactions. The
 ### Key Claims (bounded)
 
 - **We claim:** Steering reliably alters behavioral outputs across 7/10 dimensions tested (p < 0.001 at n=50-100).
-- **We claim:** The effect is dimension×layer specific — different concepts are encoded at different network depths.
+- **We claim:** The effect is dimension×layer specific — different concepts are encoded at different network depths, within a low-rank shared negotiation subspace.
 - **We claim:** RLHF-aligned models have suboptimal strategic defaults that steering can disrupt.
 - **We claim:** The framing channel is real and negative — steered reasoning text triggers opponent rejection.
 - **We claim:** Quantization suppresses steering effects and shifts activation thresholds.
+- **We claim:** The strongest effects are not explained by overlap with surface control dimensions.
 - **We claim:** Cross-design agreement with rulebased experiments (r=0.41, p=0.003) validates effect directions.
 - **We do NOT claim:** Steering improves negotiation outcomes in general — only in numbers-only mode with specific dimensions (anchoring, greed).
 - **We do NOT claim:** Results generalize to 32B — existing 32B data (GPTQ quantized, wrong layers) is inconclusive.
@@ -991,6 +1185,7 @@ results/ultimatum/
 | `run_acceptance_curve.py`               | Phase B acceptance curve sweep                             |
 | `analysis/phase_c_analytical_payoff.py` | Phase C framing decomposition                              |
 | `analysis/statistical_hardening.py`     | Bootstrap CIs, TOST, BH-FDR, dose-response monotonicity    |
+| `analysis/interpretability.py`          | CPU interpretability suite + optional logit lens           |
 | `run_sprint_empathy_dg.sh`              | Empathy DG thin cells (4 configs)                          |
 | `run_sprint_l14.sh`                     | L14 adjudication (2 configs)                               |
 | `run_sprint_text_vis.sh`                | Text-visibility control (3 configs)                        |
@@ -1008,4 +1203,4 @@ results/ultimatum/
 
 ---
 
-_Last updated: 2026-04-03 (Final grid COMPLETE: 450 configs, all 10 dims active, greed L12 best payoff. Paper narrative final). Update this document after every significant experiment or finding._
+_Last updated: 2026-04-08 (Interpretability suite added: cosine geometry, PCA steering space, control contamination, logit-lens negative result). Update this document after every significant experiment or finding._
