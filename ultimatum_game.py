@@ -151,8 +151,8 @@ def build_responder_system(
         f"  - If you Accept, you get ${responder_share} and they get ${proposer_share}.\n"
         f"  - If you Reject, you BOTH get $0.\n"
         f"\n"
-        f"Respond with 1-2 sentences explaining your reasoning, then end with:\n"
-        f"ACCEPT or REJECT\n"
+        f"Respond with 1-2 sentences explaining your reasoning, "
+        f"then state your final decision as a single word: ACCEPT or REJECT.\n"
     )
     return text
 
@@ -234,16 +234,22 @@ def parse_offer(text: str, pool: int = DEFAULT_POOL) -> Optional[Tuple[int, int]
     return (a, b)
 
 
+_INSTRUCTION_ECHO_RE = re.compile(r"\bACCEPT\s+or\s+REJECT\b", re.IGNORECASE)
+
+
 def parse_response(text: str) -> Optional[str]:
-    has_accept = _ACCEPT_RE.search(text)
-    has_reject = _REJECT_RE.search(text)
+    # Strip echoed instruction phrase ("ACCEPT or REJECT") before parsing —
+    # smaller models (3B) echo this literally as deliberation text.
+    cleaned = _INSTRUCTION_ECHO_RE.sub("", text)
+    has_accept = _ACCEPT_RE.search(cleaned)
+    has_reject = _REJECT_RE.search(cleaned)
     if has_reject and not has_accept:
         return "reject"
     if has_accept and not has_reject:
         return "accept"
     if has_accept and has_reject:
-        last_accept = max(m.end() for m in _ACCEPT_RE.finditer(text))
-        last_reject = max(m.end() for m in _REJECT_RE.finditer(text))
+        last_accept = max(m.end() for m in _ACCEPT_RE.finditer(cleaned))
+        last_reject = max(m.end() for m in _REJECT_RE.finditer(cleaned))
         return "accept" if last_accept > last_reject else "reject"
     return None
 
@@ -1148,8 +1154,11 @@ def main() -> None:
 
     # torch.compile: fuses ops for ~10-30% speedup (skipped for quantized models)
     if not args.quantize:
-        model = torch.compile(model)
-        log.info("torch.compile() applied.")
+        try:
+            model = torch.compile(model)
+            log.info("torch.compile() applied.")
+        except Exception as e:
+            log.warning("torch.compile() failed (%s), running in eager mode.", e)
 
     # --- Prepare pool sizes ---
     if args.variable_pools:
