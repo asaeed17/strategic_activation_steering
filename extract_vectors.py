@@ -486,7 +486,6 @@ def extract_for_model(
         )
     elif config.is_gptq:
         from auto_gptq import AutoGPTQForCausalLM
-        import torch
         n_gpus = torch.cuda.device_count()
         max_memory = {i: "22GiB" for i in range(n_gpus)}
         model = AutoGPTQForCausalLM.from_quantized(
