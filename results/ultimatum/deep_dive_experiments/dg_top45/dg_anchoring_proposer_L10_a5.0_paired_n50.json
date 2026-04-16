@@ -1,0 +1,2502 @@
+{
+  "config": {
+    "game": "dictator",
+    "model": "qwen2.5-7b",
+    "dimension": "anchoring",
+    "method": "mean_diff",
+    "layers": [
+      10
+    ],
+    "alpha": 5.0,
+    "steered_role": "proposer",
+    "paired": true,
+    "n_games": 50,
+    "variable_pools": true,
+    "pool": 100,
+    "temperature": 0.0,
+    "seed": 42,
+    "dtype": "bfloat16",
+    "vectors_dir": "vectors/ultimatum_10dim_20pairs_general_matched/negotiation",
+    "proposer_enhancement": null,
+    "responder_enhancement": null,
+    "text_visible": false,
+    "timestamp": "2026-04-16T17:46:46.948675"
+  },
+  "summary": {
+    "n_games": 50,
+    "n_valid": 50,
+    "n_usable_pairs": 47,
+    "n_parse_errors": 0,
+    "steered_role": "proposer",
+    "steered_mean_proposer_pct": 73.06,
+    "baseline_mean_proposer_pct": 83.74,
+    "delta_proposer_pct": -10.68,
+    "std_delta": 11.58,
+    "paired_ttest_t": -6.3239,
+    "paired_ttest_p": 0.0,
+    "cohens_d": -0.9224,
+    "steered_accept_rate": 1.0,
+    "baseline_accept_rate": 1.0,
+    "steered_mean_payoff_pct": 73.06,
+    "baseline_mean_payoff_pct": 83.74,
+    "steered_mean_word_count": 25.4,
+    "baseline_mean_word_count": 26.9,
+    "steered_mean_hedge_count": 0.0,
+    "baseline_mean_hedge_count": 0.0,
+    "steered_mean_fairness_count": 0.62,
+    "baseline_mean_fairness_count": 0.06,
+    "elapsed_seconds": 1242.8
+  },
+  "games": [
+    {
+      "game_id": 0,
+      "pool": 65,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 15,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 15,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly greedy. OFFER=50,15",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 65,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 10,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 10,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=55,10",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 65,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 1,
+      "pool": 63,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 13,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 13,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not take everything. OFFER=50,13",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 63,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 58,
+        "responder_share": 5,
+        "response": "accept",
+        "proposer_payoff": 58,
+        "responder_payoff": 5,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=58,5",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 63,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 2,
+      "pool": 59,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 4,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 4,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be considerate and not take everything. OFFER=55,4",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 4,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 4,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=55,4",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 3,
+      "pool": 50,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the power to decide, but I'll also consider giving Player B something to ensure they receive some benefit. OFFER=30,20",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 50,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 5,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 5,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=45,5",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 50,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 4,
+      "pool": 41,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 11,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 11,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be considerate and not take everything. OFFER=30,11",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 31,
+        "responder_share": 10,
+        "response": "accept",
+        "proposer_payoff": 31,
+        "responder_payoff": 10,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they accept the offer. OFFER=31,10",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 5,
+      "pool": 89,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 14,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 14,
+        "parse_error": null,
+        "proposer_text": "I'll keep the majority for myself since the game mechanics ensure the offer is accepted regardless, but I'll still be considerate. OFFER=75,14",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 22,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 14,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 14,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=75,14",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 6,
+      "pool": 66,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 16,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 16,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly greedy. OFFER=50,16",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 66,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 11,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 11,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=55,11",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 66,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 7,
+      "pool": 48,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 32,
+        "responder_share": 16,
+        "response": "accept",
+        "proposer_payoff": 32,
+        "responder_payoff": 16,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly greedy. OFFER=32,16",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 48,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 3,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 3,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=45,3",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 48,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 8,
+      "pool": 71,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 21,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 21,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be considerate and not take everything. OFFER=50,21",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 16,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 16,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they receive something. OFFER=55,16",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 9,
+      "pool": 56,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 48,
+        "responder_share": 8,
+        "response": "accept",
+        "proposer_payoff": 48,
+        "responder_payoff": 8,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure the offer is accepted regardless, but I'll be considerate and split it reasonably. OFFER=48,8",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 56,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 6,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 6,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=50,6",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 56,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 10,
+      "pool": 73,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 23,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 23,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll also consider being somewhat fair. OFFER=50,23",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": null,
+        "responder_share": null,
+        "response": null,
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": "proposer",
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they receive something. OFFER=65,7",
+        "responder_text": null,
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 11,
+      "pool": 61,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 11,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 11,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be considerate and not take everything. OFFER=50,11",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 6,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 6,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=55,6",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 12,
+      "pool": 51,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 16,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 16,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be generous and give Player B some money to maintain a fair image. OFFER=35,16",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 51,
+        "proposer_metrics": {
+          "word_count": 32,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": null,
+        "responder_share": null,
+        "response": null,
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": "proposer",
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they receive something. OFFER=45,7",
+        "responder_text": null,
+        "pool": 51,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 13,
+      "pool": 40,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 10,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 10,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the power to decide, but I'll also consider giving Player B something to ensure they receive some benefit. OFFER=30,10",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 40,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 10,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 10,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=30,10",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 40,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 14,
+      "pool": 81,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 31,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 31,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure the offer is accepted regardless, but I'll be fair and not overly greedy. OFFER=50,31",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 81,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 11,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 11,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they receive something. OFFER=70,11",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 81,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 15,
+      "pool": 80,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 30,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 30,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll also consider being somewhat fair. OFFER=50,30",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 80,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 10,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 10,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also consider giving Player B something to ensure they have some benefit. OFFER=70,10",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 80,
+        "proposer_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 16,
+      "pool": 49,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 14,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 14,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly selfish. OFFER=35,14",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 49,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 45,
+        "responder_share": 4,
+        "response": "accept",
+        "proposer_payoff": 45,
+        "responder_payoff": 4,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=45,4",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 49,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 17,
+      "pool": 64,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 14,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 14,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure the offer is accepted regardless, but I'll be fair and not overly greedy. OFFER=50,14",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 64,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 58,
+        "responder_share": 6,
+        "response": "accept",
+        "proposer_payoff": 58,
+        "responder_payoff": 6,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=58,6",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 64,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 18,
+      "pool": 77,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 27,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 27,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll also consider being somewhat fair. OFFER=50,27",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 77,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 12,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 12,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=65,12",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 77,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 19,
+      "pool": 37,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 25,
+        "responder_share": 12,
+        "response": "accept",
+        "proposer_payoff": 25,
+        "responder_payoff": 12,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly greedy. OFFER=25,12",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 7,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 7,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=30,7",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 20,
+      "pool": 86,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 36,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 36,
+        "parse_error": null,
+        "proposer_text": "I'll keep the majority for myself since the game mechanics ensure the offer is accepted regardless, but I'll still consider giving a fair share. OFFER=50,36",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 86,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 16,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 16,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they receive something. OFFER=70,16",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 86,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 21,
+      "pool": 58,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 58,
+        "responder_share": 0,
+        "response": "accept",
+        "proposer_payoff": 58,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll try to be fair by giving Player B a significant portion. OFFER=58,0",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 58,
+        "proposer_metrics": {
+          "word_count": 30,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 53,
+        "responder_share": 5,
+        "response": "accept",
+        "proposer_payoff": 53,
+        "responder_payoff": 5,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=53,5",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 58,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 22,
+      "pool": 75,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll also consider being somewhat fair. OFFER=55,20",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 75,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 10,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 10,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=65,10",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 75,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 23,
+      "pool": 92,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 22,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 22,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly greedy. OFFER=70,22",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 92,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 80,
+        "responder_share": 12,
+        "response": "accept",
+        "proposer_payoff": 80,
+        "responder_payoff": 12,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they receive something. OFFER=80,12",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 92,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 24,
+      "pool": 83,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 33,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 33,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly greedy. OFFER=50,33",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 8,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 8,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=75,8",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 25,
+      "pool": 72,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 22,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 22,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the power to decide, but I'll also consider giving Player B something to ensure they receive some benefit. OFFER=50,22",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 72,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 54,
+        "responder_share": 18,
+        "response": "accept",
+        "proposer_payoff": 54,
+        "responder_payoff": 18,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=54,18",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 72,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 26,
+      "pool": 70,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the power to decide, but I'll also consider giving Player B something to ensure they receive some benefit. OFFER=50,20",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 70,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 55,
+        "responder_share": 15,
+        "response": "accept",
+        "proposer_payoff": 55,
+        "responder_payoff": 15,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=55,15",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 70,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 27,
+      "pool": 60,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 10,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 10,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the power to decide, but I'll also consider giving Player B something to ensure they receive some benefit. OFFER=50,10",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 60,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 10,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 10,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=50,10",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 60,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 28,
+      "pool": 62,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 12,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 12,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly greedy. OFFER=50,12",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 62,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 58,
+        "responder_share": 4,
+        "response": "accept",
+        "proposer_payoff": 58,
+        "responder_payoff": 4,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=58,4",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 62,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 29,
+      "pool": 85,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 15,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 15,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly greedy. OFFER=70,15",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 85,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 15,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 15,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=70,15",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 85,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 30,
+      "pool": 90,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the power to decide, but I'll also consider giving Player B something to ensure they receive some benefit. OFFER=70,20",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 90,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=70,20",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 90,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 31,
+      "pool": 78,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 28,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 28,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll also consider being somewhat fair. OFFER=50,28",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 78,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 13,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 13,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=65,13",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 78,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 32,
+      "pool": 74,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 24,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 24,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll also consider being somewhat fair. OFFER=50,24",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 74,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 9,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 9,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they receive something. OFFER=65,9",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 74,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 33,
+      "pool": 87,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 37,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 37,
+        "parse_error": null,
+        "proposer_text": "I'll keep the majority for myself but will offer a fair share to Player B to ensure mutual benefit. OFFER=50,37",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 87,
+        "proposer_metrics": {
+          "word_count": 20,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 22,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 22,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=65,22",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 87,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 34,
+      "pool": 52,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 48,
+        "responder_share": 4,
+        "response": "accept",
+        "proposer_payoff": 48,
+        "responder_payoff": 4,
+        "parse_error": null,
+        "proposer_text": "I'll keep the majority for myself since the game mechanics ensure the offer is accepted regardless, but I'll still consider giving a fair share. OFFER=48,4",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 52,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 22,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 22,
+        "parse_error": null,
+        "proposer_text": "I'll keep it simple and fair, giving Player B a significant portion to ensure they receive something valuable. OFFER=30,22",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 52,
+        "proposer_metrics": {
+          "word_count": 19,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 35,
+      "pool": 93,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 23,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 23,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be considerate and not take everything. OFFER=70,23",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 93,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 75,
+        "responder_share": 18,
+        "response": "accept",
+        "proposer_payoff": 75,
+        "responder_payoff": 18,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they receive something. OFFER=75,18",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 93,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 36,
+      "pool": 91,
+      "steered": {
+        "agreed": false,
+        "proposer_share": null,
+        "responder_share": null,
+        "response": null,
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": "proposer",
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted regardless. OFFER=85,5",
+        "responder_text": null,
+        "pool": 91,
+        "proposer_metrics": {
+          "word_count": 18,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 21,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 21,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they accept the offer. OFFER=70,21",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 91,
+        "proposer_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 37,
+      "pool": 39,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 25,
+        "responder_share": 14,
+        "response": "accept",
+        "proposer_payoff": 25,
+        "responder_payoff": 14,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be considerate and not take everything. OFFER=25,14",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 39,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 4,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 4,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=35,4",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 39,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 38,
+      "pool": 68,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 18,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 18,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure the offer is accepted regardless, but I'll be considerate and split it reasonably. OFFER=50,18",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 68,
+        "proposer_metrics": {
+          "word_count": 26,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 18,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 18,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also consider giving Player B a fair share to ensure both players benefit. OFFER=50,18",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 68,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 39,
+      "pool": 79,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 59,
+        "responder_share": 20,
+        "response": "accept",
+        "proposer_payoff": 59,
+        "responder_payoff": 20,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll also consider being somewhat fair. OFFER=59,20",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 14,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 14,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=65,14",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 40,
+      "pool": 42,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 25,
+        "responder_share": 17,
+        "response": "accept",
+        "proposer_payoff": 25,
+        "responder_payoff": 17,
+        "parse_error": null,
+        "proposer_text": "I'll keep it simple and fair, offering a bit more than half to ensure Player B has a decent share while also keeping a significant portion for myself. OFFER=25,17",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 42,
+        "proposer_metrics": {
+          "word_count": 29,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 12,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 12,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=30,12",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 42,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 41,
+      "pool": 76,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 26,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 26,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll also consider being somewhat fair. OFFER=50,26",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 76,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 65,
+        "responder_share": 11,
+        "response": "accept",
+        "proposer_payoff": 65,
+        "responder_payoff": 11,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=65,11",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 76,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 42,
+      "pool": 43,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 13,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 13,
+        "parse_error": null,
+        "proposer_text": "I'll keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll also consider being somewhat fair. OFFER=30,13",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 43,
+        "proposer_metrics": {
+          "word_count": 23,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 8,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 8,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=35,8",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 43,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 43,
+      "pool": 47,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 17,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 17,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be considerate and not take everything. OFFER=30,17",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 12,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 12,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=35,12",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 44,
+      "pool": 54,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 48,
+        "responder_share": 6,
+        "response": "accept",
+        "proposer_payoff": 48,
+        "responder_payoff": 6,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll also consider being somewhat fair. OFFER=48,6",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 54,
+        "proposer_metrics": {
+          "word_count": 24,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 4,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 4,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=50,4",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 54,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 45,
+      "pool": 55,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 40,
+        "responder_share": 15,
+        "response": "accept",
+        "proposer_payoff": 40,
+        "responder_payoff": 15,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly greedy. OFFER=40,15",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 55,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 5,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 5,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=50,5",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 55,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 46,
+      "pool": 57,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 7,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 7,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be considerate and not take everything. OFFER=50,7",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 57,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 7,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 7,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they receive something. OFFER=50,7",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 57,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 47,
+      "pool": 38,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 25,
+        "responder_share": 13,
+        "response": "accept",
+        "proposer_payoff": 25,
+        "responder_payoff": 13,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be considerate and not take everything. OFFER=25,13",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 38,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 8,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 8,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=30,8",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 38,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 48,
+      "pool": 44,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 30,
+        "responder_share": 14,
+        "response": "accept",
+        "proposer_payoff": 30,
+        "responder_payoff": 14,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be fair and not overly greedy. OFFER=30,14",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 44,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 9,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 9,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B something to ensure they accept the offer. OFFER=35,9",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 44,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 49,
+      "pool": 82,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 50,
+        "responder_share": 32,
+        "response": "accept",
+        "proposer_payoff": 50,
+        "responder_payoff": 32,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since the game mechanics ensure my offer is accepted, but I'll be considerate and not take everything. OFFER=50,32",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 82,
+        "proposer_metrics": {
+          "word_count": 25,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 70,
+        "responder_share": 12,
+        "response": "accept",
+        "proposer_payoff": 70,
+        "responder_payoff": 12,
+        "parse_error": null,
+        "proposer_text": "I will keep the majority for myself since I have the decision-making power, but I'll also give Player B some amount to ensure they receive something. OFFER=70,12",
+        "responder_text": "[dictator game: auto-accept]",
+        "pool": 82,
+        "proposer_metrics": {
+          "word_count": 27,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    }
+  ]
+}
