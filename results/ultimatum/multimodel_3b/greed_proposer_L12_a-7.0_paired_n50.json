@@ -1,0 +1,2502 @@
+{
+  "config": {
+    "game": "ultimatum",
+    "model": "qwen2.5-3b",
+    "dimension": "greed",
+    "method": "mean_diff",
+    "layers": [
+      12
+    ],
+    "alpha": -7.0,
+    "steered_role": "proposer",
+    "paired": true,
+    "n_games": 50,
+    "variable_pools": true,
+    "pool": 100,
+    "temperature": 0.0,
+    "seed": 42,
+    "dtype": "bfloat16",
+    "vectors_dir": "vectors/ultimatum_10dim_20pairs_general_matched/negotiation",
+    "proposer_enhancement": null,
+    "responder_enhancement": null,
+    "text_visible": false,
+    "timestamp": "2026-04-15T23:01:18.813027"
+  },
+  "summary": {
+    "n_games": 50,
+    "n_valid": 50,
+    "n_usable_pairs": 44,
+    "n_parse_errors": 0,
+    "steered_role": "proposer",
+    "steered_mean_proposer_pct": 60.15,
+    "baseline_mean_proposer_pct": 53.44,
+    "delta_proposer_pct": 6.71,
+    "std_delta": 38.31,
+    "paired_ttest_t": 1.1624,
+    "paired_ttest_p": 0.2515,
+    "cohens_d": 0.1752,
+    "steered_accept_rate": 0.114,
+    "baseline_accept_rate": 0.136,
+    "steered_mean_payoff_pct": 5.68,
+    "baseline_mean_payoff_pct": 6.82,
+    "steered_mean_word_count": 46.1,
+    "baseline_mean_word_count": 45.2,
+    "steered_mean_hedge_count": 0.25,
+    "baseline_mean_hedge_count": 0.41,
+    "steered_mean_fairness_count": 1.09,
+    "baseline_mean_fairness_count": 1.02,
+    "elapsed_seconds": 88.7
+  },
+  "games": [
+    {
+      "game_id": 0,
+      "pool": 65,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 55,
+        "responder_share": 10,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my share. Let's propose a 55-10 split, which is quite favorable for me.\nOFFER=55,10",
+        "responder_text": "This proposal is extremely unfair; I would expect at least some portion of the money to be split more equally. Given the stark choice, I will reject it to avoid getting nothing. REJECT",
+        "pool": 65,
+        "proposer_metrics": {
+          "word_count": 38,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 33,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 32,
+        "responder_share": 33,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game's nature, I should aim to keep as much for myself as possible while still making an acceptable offer to avoid rejection. Let's propose an equal split of $32.50 each, which is a fair compromise. OFFER=32,33",
+        "responder_text": "REJECT",
+        "pool": 65,
+        "proposer_metrics": {
+          "word_count": 39,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 1,
+      "pool": 63,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 51,
+        "responder_share": 12,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $1 for myself and $62 for them seems like a good balance. Let me propose $51 for me and $12 for them.\nOFFER=51,12",
+        "responder_text": "REJECT",
+        "pool": 63,
+        "proposer_metrics": {
+          "word_count": 51,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 1,
+        "responder_share": 62,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $1 for myself and $62 for them seems like a good balance. OFFER=1,62",
+        "responder_text": "REJECT",
+        "pool": 63,
+        "proposer_metrics": {
+          "word_count": 41,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 2,
+      "pool": 59,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 58,
+        "responder_share": 1,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim to keep as much money for myself as possible while still making an acceptable offer to Player B. An offer of $58 for me and $1 for Player B seems fair and likely to be accepted, as it's a significant portion of the total.\nOFFER=58,1",
+        "responder_text": "REJECT",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 51,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 58,
+        "responder_share": 1,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $58 to myself and $1 to Player B, it's a generous offer that might be accepted as it's not too unfair. OFFER=58,1",
+        "responder_text": "REJECT",
+        "pool": 59,
+        "proposer_metrics": {
+          "word_count": 39,
+          "hedge_count": 1,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 3,
+      "pool": 50,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 49,
+        "responder_share": 1,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject it as they would prefer getting nothing. So, I'll offer them $1 and keep $49 for myself. OFFER=49,1",
+        "responder_text": "REJECT",
+        "pool": 50,
+        "proposer_metrics": {
+          "word_count": 41,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 29,
+        "responder_share": 21,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. Let's see, if I offer $1, they would get $49 and might reject it as too unfair. Offering $29 for them and $21 for me seems fair and likely to be accepted. \nOFFER=29,21",
+        "responder_text": "REJECT",
+        "pool": 50,
+        "proposer_metrics": {
+          "word_count": 47,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 4,
+      "pool": 41,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 21,
+        "responder_share": 20,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a high offer since Player B can only reject if they feel it's too low. However, I want to ensure Player B still has something. Let's propose $21 for me and $20 for Player B.\nOFFER=21,20",
+        "responder_text": "REJECT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 45,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 21,
+        "responder_share": 20,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $21 seems like a good balance, where they can keep $20 but still feel like they're getting something. OFFER=21,20",
+        "responder_text": "REJECT",
+        "pool": 41,
+        "proposer_metrics": {
+          "word_count": 47,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 5,
+      "pool": 89,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 39,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my share. Let's propose a 50/39 split, which totals $89.\nOFFER=50,39",
+        "responder_text": "REJECT",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 35,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 1,
+        "responder_share": 88,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would reject it as they could get at least $1 if we split it evenly. So, I'll offer $1 for myself and $88 for Player B. OFFER=1,88",
+        "responder_text": "This proposal is extremely unfair; I would expect at least a small portion for myself. Given the stark choice, I will reject it to avoid getting nothing. REJECT",
+        "pool": 89,
+        "proposer_metrics": {
+          "word_count": 46,
+          "hedge_count": 1,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 28,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 6,
+      "pool": 66,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 33,
+        "responder_share": 33,
+        "response": "accept",
+        "proposer_payoff": 33,
+        "responder_payoff": 33,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $33 for myself and $33 for them seems like a balanced and likely acceptable offer for Player B. OFFER=33,33",
+        "responder_text": "This offer is fair, splitting the total equally. I will ACCEPT.",
+        "pool": 66,
+        "proposer_metrics": {
+          "word_count": 47,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 33,
+        "responder_share": 33,
+        "response": "accept",
+        "proposer_payoff": 33,
+        "responder_payoff": 33,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $33 for myself and $33 for them seems like a balanced and likely acceptable offer. OFFER=33,33",
+        "responder_text": "This offer is fair, splitting the total equally. I will ACCEPT.",
+        "pool": 66,
+        "proposer_metrics": {
+          "word_count": 44,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 7,
+      "pool": 48,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 36,
+        "responder_share": 12,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $30 to Player B, they might feel slighted but it's better than rejection which would leave us with nothing. So, I'll propose $36 for me and $12 for Player B.\nOFFER=36,12",
+        "responder_text": "REJECT",
+        "pool": 48,
+        "proposer_metrics": {
+          "word_count": 48,
+          "hedge_count": 1,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 24,
+        "responder_share": 24,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not worth their while. Offering $24 for myself and $24 for them seems fair and likely to be accepted. OFFER=24,24",
+        "responder_text": "REJECT",
+        "pool": 48,
+        "proposer_metrics": {
+          "word_count": 45,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 8,
+      "pool": 71,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 51,
+        "responder_share": 20,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my own gain. An offer of $51 for me and $20 for Player B seems fair and generous, hoping it won't be rejected.\nOFFER=51,20",
+        "responder_text": "REJECT",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 48,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 51,
+        "responder_share": 20,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $51 to myself and $20 to Player B, it's generous enough for them to accept, ensuring I keep the higher amount. OFFER=51,20",
+        "responder_text": "REJECT",
+        "pool": 71,
+        "proposer_metrics": {
+          "word_count": 39,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 9,
+      "pool": 56,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 35,
+        "responder_share": 21,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a high offer since Player B can reject it if they don't like it. However, I want to still leave some money for myself. Let's propose $35 for me and $21 for Player B.\nOFFER=35,21",
+        "responder_text": "REJECT",
+        "pool": 56,
+        "proposer_metrics": {
+          "word_count": 44,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 28,
+        "responder_share": 28,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $28 to myself and $28 to Player B, it's a fair split and likely to be accepted as it's not too generous for Player B. OFFER=28,28",
+        "responder_text": "REJECT",
+        "pool": 56,
+        "proposer_metrics": {
+          "word_count": 43,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 10,
+      "pool": 73,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 1,
+        "responder_share": 72,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim for a split that seems fair but also maximizes my gain. Offering $1 and $72 would likely be accepted as it's a very generous offer. OFFER=1,72",
+        "responder_text": "REJECT",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 32,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 23,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim to keep as much money for myself as possible while still making an acceptable offer to avoid rejection. Let's propose a fair split where I keep more but not too much to risk rejection. I'll offer $50 to myself and $23 to Player B.\nOFFER=50,23",
+        "responder_text": "REJECT",
+        "pool": 73,
+        "proposer_metrics": {
+          "word_count": 51,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 11,
+      "pool": 61,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 51,
+        "responder_share": 10,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim for a split that seems generous enough to at least get Player B to accept, while still maximizing my share. Let's propose $51 for me and $10 for Player B. This seems like a fair split where they might feel comfortable accepting it.\nOFFER=51,10",
+        "responder_text": "REJECT",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 50,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 11,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $50 seems like a reasonable balance where they might feel they're getting something. OFFER=50,11",
+        "responder_text": "REJECT",
+        "pool": 61,
+        "proposer_metrics": {
+          "word_count": 42,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 12,
+      "pool": 51,
+      "steered": {
+        "agreed": false,
+        "proposer_share": null,
+        "responder_share": null,
+        "response": null,
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": "proposer",
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my gain. Let's propose a 49 to 12 split, which is quite favorable to me.\nOFFER=49,12",
+        "responder_text": null,
+        "pool": 51,
+        "proposer_metrics": {
+          "word_count": 40,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 29,
+        "responder_share": 22,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not worth their while. Offering $29 for myself and $22 for them seems fair and likely to be accepted. OFFER=29,22",
+        "responder_text": "REJECT",
+        "pool": 51,
+        "proposer_metrics": {
+          "word_count": 45,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 13,
+      "pool": 40,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 1,
+        "responder_share": 39,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $39 to Player B, they would have to take it since rejecting would result in getting nothing. So, I'll offer $1 for myself and $39 for Player B.\nOFFER=1,39",
+        "responder_text": "REJECT",
+        "pool": 40,
+        "proposer_metrics": {
+          "word_count": 46,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 39,
+        "responder_share": 1,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $39 to Player B, they will likely accept as it's not significantly unfair. OFFER=39,1",
+        "responder_text": "REJECT",
+        "pool": 40,
+        "proposer_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 14,
+      "pool": 81,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 40,
+        "responder_share": 41,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my own gain. An offer of $40 for Player B and $41 for myself seems fair and generous, hoping it will be accepted.\nOFFER=40,41",
+        "responder_text": "REJECT",
+        "pool": 81,
+        "proposer_metrics": {
+          "word_count": 48,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": null,
+        "responder_share": null,
+        "response": null,
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": "proposer",
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $10 seems like a good balance where they might feel they're getting something. OFFER=70,10",
+        "responder_text": null,
+        "pool": 81,
+        "proposer_metrics": {
+          "word_count": 42,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 15,
+      "pool": 80,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 70,
+        "responder_share": 10,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer them $10, they would receive $70, which seems fair as it's not too much for me. OFFER=70,10",
+        "responder_text": "REJECT",
+        "pool": 80,
+        "proposer_metrics": {
+          "word_count": 34,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 30,
+        "responder_share": 50,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer them $10, they can only reject it, leaving us both with nothing. Offering $30 for myself and $50 for Player B seems fair and likely to be accepted. OFFER=30,50",
+        "responder_text": "REJECT",
+        "pool": 80,
+        "proposer_metrics": {
+          "word_count": 46,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 16,
+      "pool": 49,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 35,
+        "responder_share": 14,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my own gain. Let's propose a 35 to 14 split, which is quite favorable to me.\nOFFER=35,14",
+        "responder_text": "REJECT",
+        "pool": 49,
+        "proposer_metrics": {
+          "word_count": 41,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 35,
+        "responder_share": 14,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game's nature, I should aim to keep as much for myself as possible while still making an acceptable offer to avoid rejection. Let's propose an amount where I get more than half but not too much that Player B would reject it. \n\nOFFER=35,14",
+        "responder_text": "REJECT",
+        "pool": 49,
+        "proposer_metrics": {
+          "word_count": 46,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 17,
+      "pool": 64,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 32,
+        "responder_share": 32,
+        "response": "accept",
+        "proposer_payoff": 32,
+        "responder_payoff": 32,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my own gain. An offer of $32 for me and $32 for Player B seems fair and balanced, hoping it won't be seen as too low by Player B.\nOFFER=32,32",
+        "responder_text": "This offer is fair, splitting the total equally. I will ACCEPT.",
+        "pool": 64,
+        "proposer_metrics": {
+          "word_count": 54,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 32,
+        "responder_share": 32,
+        "response": "accept",
+        "proposer_payoff": 32,
+        "responder_payoff": 32,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would reject it as they could get at least $1 if we split it evenly. So, I'll offer $32 to myself and $32 to Player B. This seems fair and likely to be accepted.\nOFFER=32,32",
+        "responder_text": "This offer is fair, splitting the total equally. I will ACCEPT.",
+        "pool": 64,
+        "proposer_metrics": {
+          "word_count": 54,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 18,
+      "pool": 77,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 27,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems fair but also maximizes my gain. Let's consider splitting it 50/27. This way, I keep more while still offering a reasonable amount to Player B.\nOFFER=50,27",
+        "responder_text": "REJECT",
+        "pool": 77,
+        "proposer_metrics": {
+          "word_count": 39,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 35,
+        "responder_share": 42,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $50 to Player B, they might feel slighted but it's better than rejection which would leave us with nothing. So, I'll propose $35 for me and $42 for Player B.\nOFFER=35,42",
+        "responder_text": "REJECT",
+        "pool": 77,
+        "proposer_metrics": {
+          "word_count": 48,
+          "hedge_count": 1,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 19,
+      "pool": 37,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 18,
+        "responder_share": 19,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $18 to Player B, they would receive $19, which is not too bad for them. This way, I keep the majority of the money and Player B gets a fair share.\nOFFER=18,19",
+        "responder_text": "REJECT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 49,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 19,
+        "responder_share": 18,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $18 to Player B, they might think it's too low and reject it, leaving us both with nothing. Offering $19 instead gives Player B a choice to accept or reject, ensuring at least some money for me. OFFER=19,18",
+        "responder_text": "REJECT",
+        "pool": 37,
+        "proposer_metrics": {
+          "word_count": 55,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 20,
+      "pool": 86,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 53,
+        "responder_share": 33,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim for a split that seems fair but also maximizes my gain. Offering $53 to myself and $33 to Player B seems like a reasonable compromise, as it's not too generous for Player B while still leaving me with a decent amount.\nOFFER=53,33",
+        "responder_text": "REJECT",
+        "pool": 86,
+        "proposer_metrics": {
+          "word_count": 48,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 40,
+        "responder_share": 46,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $53 to Player B, they might think it's too low and reject it, leaving us both with nothing. However, if I offer $40, Player B is likely to accept as it's not significantly less than half of the total. OFFER=40,46",
+        "responder_text": "REJECT",
+        "pool": 86,
+        "proposer_metrics": {
+          "word_count": 57,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 21,
+      "pool": 58,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 57,
+        "responder_share": 1,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim to keep as much money for myself as possible while still making an acceptable offer to Player B. An offer of $57 for me and $1 for Player B seems fair and likely to be accepted, as it's not too generous but also not stingy.\nOFFER=57,1",
+        "responder_text": "REJECT",
+        "pool": 58,
+        "proposer_metrics": {
+          "word_count": 52,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 1,
+        "responder_share": 57,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $58 to Player B and keep $0 for myself, they will likely reject it as it's not fair. So, I'll propose $1, which is a very small amount for me but might be acceptable to Player B. OFFER=1,57",
+        "responder_text": "REJECT",
+        "pool": 58,
+        "proposer_metrics": {
+          "word_count": 55,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 22,
+      "pool": 75,
+      "steered": {
+        "agreed": false,
+        "proposer_share": null,
+        "responder_share": null,
+        "response": null,
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": "proposer",
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my own gain. Let's propose a 50/25 split, where I keep $37.50 and give $37.50 to Player B. This is a fair split that seems reasonable.\nOFFER=37.5,37.5",
+        "responder_text": null,
+        "pool": 75,
+        "proposer_metrics": {
+          "word_count": 51,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": null,
+        "responder_share": null,
+        "response": null,
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": "proposer",
+        "proposer_text": "Given the ultimatum game's nature, I should aim to keep as much for myself as possible while still making an acceptable offer to avoid rejection. Let's propose an equal split of $37.50 each, which is a fair compromise.\nOFFER=37.5,37.5",
+        "responder_text": null,
+        "pool": 75,
+        "proposer_metrics": {
+          "word_count": 39,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 23,
+      "pool": 92,
+      "steered": {
+        "agreed": false,
+        "proposer_share": null,
+        "responder_share": null,
+        "response": null,
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": "proposer",
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer them $1, I'm keeping $91 for myself, which is a good amount. If they reject, we both get nothing. So, I'll propose $85 for me and $5 for them.\nOFFER=85,5",
+        "responder_text": null,
+        "pool": 92,
+        "proposer_metrics": {
+          "word_count": 47,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 10,
+        "responder_share": 82,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would reject it as they could get at least $2 if we split it 50/50. So, I'll offer $10 for myself and $82 for them. OFFER=10,82",
+        "responder_text": "REJECT",
+        "pool": 92,
+        "proposer_metrics": {
+          "word_count": 45,
+          "hedge_count": 1,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 24,
+      "pool": 83,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 33,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim for a split that seems fair but also maximizes my gain. Offering $50 to myself and $33 to Player B seems like a reasonable compromise, as it's not too generous for me while still providing a decent amount to Player B. OFFER=50,33",
+        "responder_text": "REJECT",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 48,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 33,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim to keep as much for myself as possible while still making an acceptable offer to avoid rejection. Let's propose an amount where I get more than half but not too much that Player B would reject it. An offer of $50 for me and $33 for them seems fair and reasonable.\nOFFER=50,33",
+        "responder_text": "REJECT",
+        "pool": 83,
+        "proposer_metrics": {
+          "word_count": 58,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 25,
+      "pool": 72,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 36,
+        "responder_share": 36,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my own gain. An offer of $36 for me and $36 for Player B seems fair and balanced, hoping it won't be seen as too low.\nOFFER=36,36",
+        "responder_text": "REJECT",
+        "pool": 72,
+        "proposer_metrics": {
+          "word_count": 51,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 36,
+        "responder_share": 36,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would reject it as they could get more if they accept. Offering $36 for myself and $36 for them seems fair and likely to be accepted. OFFER=36,36",
+        "responder_text": "REJECT",
+        "pool": 72,
+        "proposer_metrics": {
+          "word_count": 46,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 26,
+      "pool": 70,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 35,
+        "responder_share": 35,
+        "response": "accept",
+        "proposer_payoff": 35,
+        "responder_payoff": 35,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $35 to myself and $35 to Player B, it's a fair split and likely to be accepted since it's not too generous for Player B. OFFER=35,35",
+        "responder_text": "This offer is fair, splitting the total equally. I will ACCEPT.",
+        "pool": 70,
+        "proposer_metrics": {
+          "word_count": 43,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 20,
+        "responder_share": 50,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $35 to Player B, they might think it's too low and reject it, leaving us both with nothing. Offering $20 seems fair and reasonable, giving Player B a decent amount to accept. OFFER=20,50",
+        "responder_text": "REJECT",
+        "pool": 70,
+        "proposer_metrics": {
+          "word_count": 50,
+          "hedge_count": 1,
+          "fairness_count": 3
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 27,
+      "pool": 60,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 59,
+        "responder_share": 1,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer them $1, I'll keep $59, which is a good amount for me. Let's see if they'll accept it.\nOFFER=59,1",
+        "responder_text": "REJECT",
+        "pool": 60,
+        "proposer_metrics": {
+          "word_count": 36,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 59,
+        "responder_share": 1,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer them $1 and keep $59, they can't reject it as it's better than getting nothing. OFFER=59,1",
+        "responder_text": "REJECT",
+        "pool": 60,
+        "proposer_metrics": {
+          "word_count": 33,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 28,
+      "pool": 62,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 51,
+        "responder_share": 11,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my own gain. An offer of $51 for me and $11 for Player B seems fair and generous, hoping it won't be rejected.\nOFFER=51,11",
+        "responder_text": "REJECT",
+        "pool": 62,
+        "proposer_metrics": {
+          "word_count": 48,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 51,
+        "responder_share": 11,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $51 and keeping $11 seems like a good balance where they might feel generous enough to accept. OFFER=51,11",
+        "responder_text": "REJECT",
+        "pool": 62,
+        "proposer_metrics": {
+          "word_count": 46,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 29,
+      "pool": 85,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 70,
+        "responder_share": 15,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems fair but also maximizes my gain. Let's propose a slightly higher amount for myself while still leaving some for Player B. An offer of $70 for me and $15 for them seems reasonable and might increase the chances of acceptance.\nOFFER=70,15",
+        "responder_text": "REJECT",
+        "pool": 85,
+        "proposer_metrics": {
+          "word_count": 54,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 40,
+        "responder_share": 45,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $40 seems like a reasonable compromise where they might feel they're getting something. OFFER=40,45",
+        "responder_text": "REJECT",
+        "pool": 85,
+        "proposer_metrics": {
+          "word_count": 42,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 30,
+      "pool": 90,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 80,
+        "responder_share": 10,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer them $10, they would receive $80, which seems fair as it's not too much for me and should be acceptable to them. OFFER=80,10",
+        "responder_text": "This proposal is unfair; I deserve more than this. REJECT",
+        "pool": 90,
+        "proposer_metrics": {
+          "word_count": 40,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 10,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 1,
+        "responder_share": 89,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer them $10, they can only reject it, leaving us both with nothing. Offering $1, I give them the majority of the money, and if they accept, we both get something. OFFER=1,89",
+        "responder_text": "REJECT",
+        "pool": 90,
+        "proposer_metrics": {
+          "word_count": 48,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 31,
+      "pool": 78,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 59,
+        "responder_share": 19,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B to accept, while still maximizing my own gain. Let's propose $59 for me and $19 for Player B. This is a significant portion of the total, which might encourage acceptance.\nOFFER=59,19",
+        "responder_text": "REJECT",
+        "pool": 78,
+        "proposer_metrics": {
+          "word_count": 52,
+          "hedge_count": 1,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 59,
+        "responder_share": 19,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $59 to myself and $19 to Player B, it's generous enough for them to accept, but still leaves me with a significant amount. OFFER=59,19",
+        "responder_text": "REJECT",
+        "pool": 78,
+        "proposer_metrics": {
+          "word_count": 41,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 32,
+      "pool": 74,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 24,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim for a split that seems fair but also maximizes my gain. Offering $50 to myself and $24 to Player B seems like a reasonable compromise, as it's not too generous for me while still giving Player B a decent amount. OFFER=50,24",
+        "responder_text": "REJECT",
+        "pool": 74,
+        "proposer_metrics": {
+          "word_count": 47,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 37,
+        "responder_share": 37,
+        "response": "accept",
+        "proposer_payoff": 37,
+        "responder_payoff": 37,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not worth accepting such a low amount. Offering $37 and keeping $37 seems fair and likely to be accepted. OFFER=37,37",
+        "responder_text": "This offer is fair, splitting the total equally. I will ACCEPT.",
+        "pool": 74,
+        "proposer_metrics": {
+          "word_count": 45,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 33,
+      "pool": 87,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 37,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems fair but also maximizes my gain. Let's consider splitting it 50/37, which totals $87. This way, I get more while still offering a reasonable amount to Player B. OFFER=50,37",
+        "responder_text": "REJECT",
+        "pool": 87,
+        "proposer_metrics": {
+          "word_count": 42,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 40,
+        "responder_share": 47,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $40 seems like a reasonable compromise where they might feel they're getting something. OFFER=40,47",
+        "responder_text": "REJECT",
+        "pool": 87,
+        "proposer_metrics": {
+          "word_count": 42,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 34,
+      "pool": 52,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 26,
+        "responder_share": 26,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a very generous offer to maximize my payoff while still getting something. Let's offer $26 each, which is fair and ensures acceptance from Player B as they would receive more than nothing if they reject.\n\nOFFER=26,26",
+        "responder_text": "REJECT",
+        "pool": 52,
+        "proposer_metrics": {
+          "word_count": 45,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": null,
+        "responder_share": null,
+        "response": null,
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": "proposer",
+        "proposer_text": "Given the ultimatum, I should aim to keep as much money for myself as possible while still making an acceptable offer to avoid rejection. Let's propose a fair yet advantageous split.\nOFFER=46,8",
+        "responder_text": null,
+        "pool": 52,
+        "proposer_metrics": {
+          "word_count": 32,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 35,
+      "pool": 93,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 1,
+        "responder_share": 92,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject it as they would prefer getting nothing. Offering $1 for myself and $92 for them seems fair and likely to be accepted. OFFER=1,92",
+        "responder_text": "This proposal is extremely unfair; I would expect at least some portion of the money to be allocated to me. Given the stark choice between accepting a very small share or rejecting nothing, I must choose what's best for me. REJECT",
+        "pool": 93,
+        "proposer_metrics": {
+          "word_count": 46,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 41,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 43,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $50 seems like a reasonable balance where they might feel they're getting something. OFFER=50,43",
+        "responder_text": "REJECT",
+        "pool": 93,
+        "proposer_metrics": {
+          "word_count": 42,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 36,
+      "pool": 91,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 51,
+        "responder_share": 40,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems generous enough to at least get Player B's acceptance while maximizing my gain. An offer of $51 for me and $40 for Player B seems fair and generous, hoping it won't be rejected.\nOFFER=51,40",
+        "responder_text": "REJECT",
+        "pool": 91,
+        "proposer_metrics": {
+          "word_count": 47,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 20,
+        "responder_share": 71,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would reject it as they could get at least $2 if we split it 50/50. Offering $20 seems fair and likely to be accepted. OFFER=20,71",
+        "responder_text": "REJECT",
+        "pool": 91,
+        "proposer_metrics": {
+          "word_count": 44,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 37,
+      "pool": 39,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 18,
+        "responder_share": 21,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $19 to Player B, they might think it's too low and reject it, leaving us both with nothing. Offering $18 instead gives Player B a choice between keeping $18 and getting nothing, which seems more acceptable. So, I'll propose $18 for me and $21 for Player B.\nOFFER=18,21",
+        "responder_text": "REJECT",
+        "pool": 39,
+        "proposer_metrics": {
+          "word_count": 65,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 10,
+        "responder_share": 29,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $10 seems like a reasonable compromise where they might feel they're getting something. OFFER=10,29",
+        "responder_text": "REJECT",
+        "pool": 39,
+        "proposer_metrics": {
+          "word_count": 42,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 38,
+      "pool": 68,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 34,
+        "responder_share": 34,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer them $1, I'll keep $67, which is a good amount for me. If they reject, we both get nothing. Offering $34 to Player B and keeping $34 for myself seems fair and likely to be accepted.\nOFFER=34,34",
+        "responder_text": "REJECT",
+        "pool": 68,
+        "proposer_metrics": {
+          "word_count": 54,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 34,
+        "responder_share": 34,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not worth accepting. Offering $34 for myself and $34 for them seems fair and likely to be accepted. OFFER=34,34",
+        "responder_text": "REJECT",
+        "pool": 68,
+        "proposer_metrics": {
+          "word_count": 44,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 39,
+      "pool": 79,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 29,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems fair but also maximizes my gain. Let's consider splitting it 50/29. This way, I keep more while still offering a reasonable amount to Player B.\nOFFER=50,29",
+        "responder_text": "REJECT",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 39,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 50,
+        "responder_share": 29,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game's nature, I should aim to keep as much for myself as possible while still making an acceptable offer to avoid rejection. Let's propose an amount where I get more than half but not too much that Player B would reject it. \n\nOFFER=50,29",
+        "responder_text": "REJECT",
+        "pool": 79,
+        "proposer_metrics": {
+          "word_count": 46,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 40,
+      "pool": 42,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 28,
+        "responder_share": 14,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $21, it's a fair split, but if I offer less, Player B might reject it. So, I'll propose $28 for myself and $14 for Player B. This seems like a reasonable compromise.\nOFFER=28,14",
+        "responder_text": "REJECT",
+        "pool": 42,
+        "proposer_metrics": {
+          "word_count": 50,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 21,
+        "responder_share": 21,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not fair. Offering $21 seems like a good balance, where they can keep half and I get the other half. OFFER=21,21",
+        "responder_text": "REJECT",
+        "pool": 42,
+        "proposer_metrics": {
+          "word_count": 46,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 41,
+      "pool": 76,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 30,
+        "responder_share": 46,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $38 to Player B, they might think it's too low and reject it, leaving us both with nothing. Offering $30 seems fair and reasonable, giving Player B a decent amount while keeping more for myself. OFFER=30,46",
+        "responder_text": "REJECT",
+        "pool": 76,
+        "proposer_metrics": {
+          "word_count": 53,
+          "hedge_count": 1,
+          "fairness_count": 3
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 38,
+        "responder_share": 38,
+        "response": "accept",
+        "proposer_payoff": 38,
+        "responder_payoff": 38,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would reject it as they would get nothing. Offering $38 and keeping $38 seems fair and likely to be accepted. OFFER=38,38",
+        "responder_text": "This offer is fair, splitting the total equally. I will ACCEPT.",
+        "pool": 76,
+        "proposer_metrics": {
+          "word_count": 40,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 42,
+      "pool": 43,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 20,
+        "responder_share": 23,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim for a split that seems fair but also maximizes my gain. Offering $20 to myself and $23 to Player B seems like a reasonable compromise, as it's not too generous for me while still being acceptable to Player B who might feel slighted by a lower offer. OFFER=20,23",
+        "responder_text": "REJECT",
+        "pool": 43,
+        "proposer_metrics": {
+          "word_count": 54,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 25,
+        "responder_share": 18,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim to keep as much money for myself as possible while still making an acceptable offer to avoid rejection. Let's propose an amount where I keep more than half but not too much that Player B would definitely reject it. An offer of $25 for me and $18 for them seems fair and reasonable.\nOFFER=25,18",
+        "responder_text": "REJECT",
+        "pool": 43,
+        "proposer_metrics": {
+          "word_count": 60,
+          "hedge_count": 0,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 43,
+      "pool": 47,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 1,
+        "responder_share": 46,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim for a split that seems fair but also maximizes my gain. Offering $1 and $46 would seem generous to Player B, who could accept and still have more than they would if we both kept our money. OFFER=1,46",
+        "responder_text": "REJECT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 44,
+          "hedge_count": 1,
+          "fairness_count": 2
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 46,
+        "responder_share": 1,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim to keep as much money for myself as possible while still making an acceptable offer to avoid rejection. Let's propose $46 for me and $1 for Player B. This is a generous offer that maximizes my gain without risking rejection.\nOFFER=46,1",
+        "responder_text": "REJECT",
+        "pool": 47,
+        "proposer_metrics": {
+          "word_count": 47,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 44,
+      "pool": 54,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 27,
+        "responder_share": 27,
+        "response": "accept",
+        "proposer_payoff": 27,
+        "responder_payoff": 27,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $27, it's a fair split where both of us get half of the money. This seems like a reasonable compromise that should be accepted.\nOFFER=27,27",
+        "responder_text": "This offer is fair, splitting the total equally. I will ACCEPT.",
+        "pool": 54,
+        "proposer_metrics": {
+          "word_count": 42,
+          "hedge_count": 0,
+          "fairness_count": 3
+        },
+        "responder_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 30,
+        "responder_share": 24,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would have to reject as it's not worth their while. Offering $30 seems fair and likely to be accepted as it's a significant portion for me but still leaves them with a decent amount. OFFER=30,24",
+        "responder_text": "REJECT",
+        "pool": 54,
+        "proposer_metrics": {
+          "word_count": 54,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 45,
+      "pool": 55,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 30,
+        "responder_share": 25,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a high offer since Player B can reject it if they don't like it. However, I want to still leave some money for myself. Let's propose $30 for me and $25 for Player B.\nOFFER=30,25",
+        "responder_text": "REJECT",
+        "pool": 55,
+        "proposer_metrics": {
+          "word_count": 44,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 55,
+        "responder_share": 0,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $55 to Player B, they will likely accept as it's more than nothing. OFFER=55,0",
+        "responder_text": "REJECT",
+        "pool": 55,
+        "proposer_metrics": {
+          "word_count": 31,
+          "hedge_count": 0,
+          "fairness_count": 0
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 46,
+      "pool": 57,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 56,
+        "responder_share": 1,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum, I should aim to keep as much money for myself as possible while still making an acceptable offer to Player B. An offer of $56 for me and $1 for Player B seems fair and likely to be accepted, as it's not too generous but also not stingy.\nOFFER=56,1",
+        "responder_text": "REJECT",
+        "pool": 57,
+        "proposer_metrics": {
+          "word_count": 52,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": null,
+        "responder_share": null,
+        "response": null,
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": "proposer",
+        "proposer_text": "Given the ultimatum, I should aim to keep as much money for myself as possible while still making an acceptable offer to avoid rejection. Let's propose $53 for me and $14 for Player B. This seems like a fair compromise. OFFER=53,14",
+        "responder_text": null,
+        "pool": 57,
+        "proposer_metrics": {
+          "word_count": 41,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 0,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 47,
+      "pool": 38,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 18,
+        "responder_share": 20,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $19, it's a fair split, but if I offer less, Player B might reject it. So, I'll propose $18 for me and $20 for Player B.\nOFFER=18,20",
+        "responder_text": "REJECT",
+        "pool": 38,
+        "proposer_metrics": {
+          "word_count": 44,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": false,
+        "proposer_share": 20,
+        "responder_share": 18,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $19, it's a fair split, but I can try to go slightly higher. Offering $20 for me and $18 for Player B seems like a good balance. OFFER=20,18",
+        "responder_text": "REJECT",
+        "pool": 38,
+        "proposer_metrics": {
+          "word_count": 45,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 48,
+      "pool": 44,
+      "steered": {
+        "agreed": true,
+        "proposer_share": 22,
+        "responder_share": 22,
+        "response": "accept",
+        "proposer_payoff": 22,
+        "responder_payoff": 22,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $22 to myself and $22 to Player B, it's a fair split and likely to be accepted since it's not too generous for Player B. OFFER=22,22",
+        "responder_text": "This offer is fair and equal; it ensures neither party feels exploited. I will ACCEPT.",
+        "pool": 44,
+        "proposer_metrics": {
+          "word_count": 43,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 15,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 22,
+        "responder_share": 22,
+        "response": "accept",
+        "proposer_payoff": 22,
+        "responder_payoff": 22,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $22 to myself and $22 to Player B, it's a fair split and likely to be accepted as it's not significantly unfair. OFFER=22,22",
+        "responder_text": "This offer is fair and equal; it ensures neither party feels exploited. I will ACCEPT.",
+        "pool": 44,
+        "proposer_metrics": {
+          "word_count": 40,
+          "hedge_count": 0,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 15,
+          "hedge_count": 0,
+          "fairness_count": 2
+        }
+      },
+      "parse_error": null
+    },
+    {
+      "game_id": 49,
+      "pool": 82,
+      "steered": {
+        "agreed": false,
+        "proposer_share": 51,
+        "responder_share": 31,
+        "response": "reject",
+        "proposer_payoff": 0,
+        "responder_payoff": 0,
+        "parse_error": null,
+        "proposer_text": "Given the ultimatum game nature, I should aim for a split that seems fair but also maximizes my gain. Let's see, if I offer $51 to myself, Player B would get $31. This is a generous offer, but it might still be accepted as it's not too unfair. OFFER=51,31",
+        "responder_text": "REJECT",
+        "pool": 82,
+        "proposer_metrics": {
+          "word_count": 49,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 1,
+          "hedge_count": 0,
+          "fairness_count": 0
+        }
+      },
+      "baseline": {
+        "agreed": true,
+        "proposer_share": 41,
+        "responder_share": 41,
+        "response": "accept",
+        "proposer_payoff": 41,
+        "responder_payoff": 41,
+        "parse_error": null,
+        "proposer_text": "I want to maximize my gain while still having Player B accept the offer. If I offer $1, they would reject it as they could get more if they accept. Offering $41 and keeping $41 seems fair and likely to be accepted. OFFER=41,41",
+        "responder_text": "This offer is fair, splitting the total equally. I will ACCEPT.",
+        "pool": 82,
+        "proposer_metrics": {
+          "word_count": 43,
+          "hedge_count": 1,
+          "fairness_count": 1
+        },
+        "responder_metrics": {
+          "word_count": 11,
+          "hedge_count": 0,
+          "fairness_count": 1
+        }
+      },
+      "parse_error": null
+    }
+  ]
+}
